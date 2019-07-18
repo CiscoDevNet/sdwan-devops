@@ -1,0 +1,7 @@
+virl:
+  subtype: vEdge
+  interfaces:
+    - network: site1-wan
+      name: ge0/0
+    - network: site1-lan
+      name: ge0/1

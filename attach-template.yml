@@ -1,0 +1,51 @@
+- name: Attach Templates
+  hosts: viptela:&virl_hosts
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+    state: present
+  tasks:
+    - block:
+      - name: Attach template to device
+        vmanage_device_attachment:
+          user: "{{ ansible_user }}"
+          host: "{{ vmanage_ip }}"
+          password: "{{ ansible_password }}"
+          device: "{{ inventory_hostname }}"
+          template: "{{ viptela.template.name }}"
+          variables: "{{ viptela.template.variables | default(omit) }}"
+          wait: yes
+          state: "{{ state }}"
+        delegate_to: localhost
+        when: viptela.template is defined
+        register: attachment_results
+
+#      - debug:
+#          var: attachment_results
+#      - block:
+#        - name: Attach template to device
+#          vmanage_device_action_status:
+#            user: "{{ ansible_user }}"
+#            host: "{{ vmanage_ip }}"
+#            password: "{{ ansible_password }}"
+#            id: "{{ attachment_results.action_id }}"
+#          when: attachment_results.action_id is defined
+#          register: action_status
+#          until: action_status.json.data[0].statusId != 'in_progress'
+#          retries: 48
+#          delay: 5
+#
+#
+#        - debug:
+#            msg: "{{ action_status.json.data[0].statusId }}: {{ action_status.json.data[0].currentActivity}}"
+#          when: attachment_results.changed
+#          failed_when: action_status.json.data[0].statusId == 'failure'
+
+      when: viptela is defined
+
+      delegate_to: localhost
+

@@ -1,0 +1,17 @@
+interfaces:
+  eth1:
+    enabled: true
+    ip:
+      primary: 172.17.0.10/24
+
+static_routes:
+  global:
+    - network: 10.0.0.0/8
+      fwd_list:
+        - fwd: 172.17.0.1
+    - network: 172.16.0.0/12
+      fwd_list:
+        - fwd: 172.17.0.1
+    - network: 192.168.0.0/16
+      fwd_list:
+        - fwd: 172.17.0.1

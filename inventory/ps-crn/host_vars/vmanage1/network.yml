@@ -1,0 +1,12 @@
+vpn_instances:
+  - vpn_id: 0
+    interfaces:
+      - if_name: eth1
+        ip:
+          address: 172.20.1.10/24
+        tunnel_interface:
+        enabled: yes
+    routes:
+      - prefix: 0.0.0.0/0
+        next_hop:
+          address: 172.20.1.1

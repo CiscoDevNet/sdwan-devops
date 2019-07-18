@@ -1,0 +1,41 @@
+- name: Configure licensing
+  hosts: firewall:&virl_hosts
+  gather_facts: no
+  connection: network_cli
+  tasks:
+    - name: Check to make sure that we have a Smart License token
+      assert:
+        that:
+          - license_token is defined and license_token
+        fail_msg: "Did not find Smart License token"
+        success_msg: "Found Smart License token"
+
+    - name: check license status
+      cli_command:
+        command: show license status
+      register: initial_check
+
+    - block:
+      - name: Update certificates
+        cli_command:
+          command: "crypto ca trustpool import url http://www.cisco.com/security/pki/trs/ios_core.p7b"
+          prompt: continue?
+          answer: y
+
+      - name: Register to smart account
+        cli_command:
+          command: "license smart register idtoken {{ license_token }}"
+
+      - name: Save configuration
+        asa_config:
+          save: yes
+
+      - name: Waiting for successful registration
+        cli_command:
+          command: show license status
+        register: license_status
+        until: "'AUTHORIZED' in license_status.stdout"
+        ignore_errors: yes
+        retries: 60
+        delay: 10
+      when: initial_check.stdout is not search("AUTHORIZED")

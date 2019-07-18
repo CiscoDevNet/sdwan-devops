@@ -1,0 +1,64 @@
+- name: Configure licensing
+  hosts: firewall:&virl_hosts
+  gather_facts: no
+  connection: network_cli
+  tasks:
+    - name: Deregister from smart account
+      asa_command:
+        commands:
+          - "license smart deregister"
+      ignore_errors: yes
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    virl_session: "{{ lookup('env', 'VIRL_SESSION') | default('') }}"
+  tasks:
+  - set_fact:
+      sim_id: "{{ virl_session if virl_session != '' else lookup('file', virl_sim_file, errors='ignore') | default('') }}"
+
+#  - name: Find previsouly created certs
+#    find:
+#      paths: "{{ viptela_cert_dir }}"
+#      patterns: '*.pem,*.key,*.csr,*.crt'
+#    register: find_results
+#
+#  - name: Delete previsouly created certs
+#    file:
+#      path: "{{ item['path'] }}"
+#      state: absent
+#    with_items: "{{ find_results['files'] }}"
+
+  - name: Delete cert dir
+    file:
+      path: "{{ viptela_cert_dir }}"
+      state: absent
+
+  - name: Remove host from known_hosts
+    known_hosts:
+      name: "{{ hostvars[item].ansible_host }}"
+      state: absent
+    when: hostvars[item].ansible_host is defined
+    loop: "{{ groups.all }}"
+
+  - block:
+    - debug:
+        msg: "Deleting simulation: {{ sim_id }}"
+
+    - name: Destroy the simulation
+      uri:
+        url: "http://{{ virl_host }}:19399/simengine/rest/stop/{{ sim_id }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        method: GET
+        return_content: yes
+      no_log: false  # Don't show output as your password will be on the URI string
+      register: uri_results
+      ignore_errors: yes
+    when: sim_id != ""
+
+  - name: Delete Simulation ID File
+    file:
+      path: "{{ virl_sim_file }}"
+      state: absent

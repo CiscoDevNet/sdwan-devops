@@ -1,0 +1,16 @@
+viptela:
+  site_id: 100
+  system_ip: 10.255.100.1
+  vbond:
+    remote: 172.20.1.11
+  template:
+    name: 'colo-vedge'
+    variables:
+      'vpn0_internet_ipv4_address': 172.21.0.6/24
+      'vpn0_default_gateway': 172.21.0.1
+      'vpn10_ipv4_address': 10.21.3.3/24
+      'vpn11_ipv4_address': 10.21.4.3/24
+      'vpn10_bgp_neighbor_address': 10.21.3.1
+      'vpn10_bgp_neighbor_remote_as': 65021
+      'vpn11_bgp_neighbor_address': 10.21.4.1
+      'vpn11_bgp_neighbor_remote_as': 65021

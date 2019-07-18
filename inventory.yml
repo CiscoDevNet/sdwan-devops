@@ -1,0 +1,13 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    # - debug:
+    #     msg: "Name: {{ item }}, Address: {{ hostvars[item].ansible_host | default('none') }}"
+    #   loop: "{{ groups.all }}"
+
+    # - debug:
+    #     var: hostvars[item]
+    #   loop: "{{ groups.all }}"
+    - debug:
+        var: virl_host

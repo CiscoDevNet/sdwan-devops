@@ -1,0 +1,30 @@
+Content-Type: multipart/mixed; boundary="===============6560338015520979320=="
+MIME-Version: 1.0
+
+--===============6560338015520979320==
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="vedge.cloud-config"
+
+#cloud-config
+vinitparam:
+ - format-partition : 1
+
+--===============6560338015520979320==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="vedge.init-config"
+
+#cloud-boothook
+
+vpn 0
+ no interface eth0
+
+vpn 512
+ interface eth0
+  ip dhcp-client
+  no shutdown
+ !
+ --===============6560338015520979320==--

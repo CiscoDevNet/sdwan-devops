@@ -1,0 +1,4 @@
+---
+virl_env: default
+virl_tag: "{{ lookup('env', 'USER') | default(virl_env) }}"
+virl_sim_file: ".virl/{{ virl_env }}/id"

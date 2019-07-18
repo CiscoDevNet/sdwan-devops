@@ -1,0 +1,17 @@
+[defaults]
+roles_path = ${PWD}/roles
+host_key_checking = False
+inventory = ./inventory
+local_tmp = /tmp/ansible/${USER}
+remote_tmp = /tmp/ansible/${USER}
+
+[persistent_connection]
+connect_timeout = 60
+command_timeout = 60
+
+# [inventory]
+# enable_plugins = auto, yaml, virl
+
+[ssh_connection]
+ssh_args = -C -o ControlMaster=auto -o ControlPersist=60s
+control_path = /dev/shm/cp%%h-%%p-%%r

@@ -1,0 +1,14 @@
+vpn_instances:
+  - vpn_id: 0
+    interfaces:
+      - if_name: ge0/0
+        ip:
+          address: 172.16.23.2/24
+        tunnel_interface:
+          allow_service:
+            - netconf
+        shutdown: false
+    routes:
+      - prefix: 0.0.0.0/0
+        next_hop:
+          address: 172.16.23.1

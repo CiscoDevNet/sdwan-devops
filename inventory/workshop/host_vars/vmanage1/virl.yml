@@ -1,0 +1,6 @@
+virl:
+  subtype: vManage
+  interfaces:
+    - network: hq-dmz
+      name: eth1
+  config_template:  virl/vmanage.j2

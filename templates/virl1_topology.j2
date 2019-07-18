@@ -1,0 +1,62 @@
+{#                                                                           #}
+{# Globals                                                                   #}
+{#                                                                           #}
+{% set network_connections = {} %}
+{% set global = {} %}
+{% set _ = global.update({'node_count': 1}) %}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.95" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.95/virl.xsd">
+    <extensions>
+        <entry key="management_network" type="String">flat</entry>
+{#        <entry key="management_lxc-iperf" type="Boolean">false</entry>#}
+    </extensions>
+{#                                                                           #}
+{# Network Nodes                                                             #}
+{#                                                                           #}
+{% for node in groups.virl_nodes %}
+{# Add each host in the inventory to the topology if they have the 'virl'    #}
+{# information defined                                                       #}
+{%  if hostvars[node].virl is defined %}
+{%   set node_number = global.node_count %}
+    <node name="{{ node }}" type="{{ hostvars[node].virl.type|default('SIMPLE') }}" subtype="{{ hostvars[node].virl.subtype }}">
+        <extensions>
+            <entry key="ansible_group" type="String">virl_node</entry>
+{%  if hostvars[node].day0_config is defined %}
+{#                                                                           #}
+{# Add day0 config                                                           #}
+{#                                                                           #}
+            <entry key="config" type="String">{{ hostvars[node].day0_config }}</entry>
+{%  endif %}{# virl.config is defined  #}
+        </extensions>
+{%   for interface in hostvars[node].virl.interfaces|default([]) %}
+{%    set network = network_connections[interface.network]|default([]) %}
+{%    set network = network + [{'node': node_number, 'interface': loop.index}] %}
+{%    set _ = network_connections.update({interface.network: network}) %}
+        <interface id="{{ loop.index0 }}" name="{{ interface.name }}"/>
+{%   endfor %}
+    </node>
+{%   set _ = global.update({'node_count': node_number + 1}) %}
+{%  endif %}{# virl is defined #}
+{% endfor %}
+{#                                                                           #}
+{# Networks                                                                  #}
+{#                                                                           #}
+{% for network, connections in network_connections.items() %}
+{%  set node_count = global.node_count %}
+    <node name="{{ network }}" type="SIMPLE" subtype="Unmanaged Switch">
+{%  for connection in connections %}
+        <interface id="{{ loop.index0 }}" name="link{{ loop.index0 }}"/>
+{%  endfor %}
+    </node>
+{% endfor %}
+{#                                                                           #}
+{# Connections                                                               #}
+{#                                                                           #}
+{% for network, connections in network_connections.items() %}
+{%  set node_count = global.node_count %}
+{%  set node_number = loop.index0 + node_count %}
+{%  for connection in connections %}
+    <connection dst="/virl:topology/virl:node[{{ node_number }}]/virl:interface[{{ loop.index }}]" src="/virl:topology/virl:node[{{ connection.node }}]/virl:interface[{{ connection.interface }}]"/>
+{%  endfor %}
+{% endfor %}
+</topology>

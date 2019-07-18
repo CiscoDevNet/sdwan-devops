@@ -1,0 +1,377 @@
+- name: Check playbook reqiurements
+  hosts: localhost
+  connection: network_cli
+  tags:
+    - control
+    - edge
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Check for the license file
+      stat:
+        path: "{{ serial_number_file }}"
+      register: stat_result
+      delegate_to: localhost
+      run_once: yes
+
+    - assert:
+        that:
+          - stat_result.stat.exists
+          - organization_name != ""
+        msg: "'organization_name' must be defined and {{ serial_number_file }} must exist.  Verify the requirements in README are met."
+      delegate_to: localhost
+      run_once: yes
+
+- name: Check initial topology connectivity
+  hosts: internet
+  connection: network_cli
+  tags:
+    - check_control
+    - check_all
+    - control
+    - edge
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Ping outside interface of Internet routers
+      ios_ping:
+        dest: "{{ hostvars[item].interfaces.GigabitEthernet2.ip.primary | ipaddr('address') }}"
+      loop: "{{ groups.internet_routers | intersect(groups.virl_hosts) }}"
+      register: result
+      retries: 60
+      delay: 10
+      until: result is not failed
+
+    - name: Ping inside interface of Internet routers
+      ios_ping:
+        dest: "{{ hostvars[item].interfaces.GigabitEthernet3.ip.primary | ipaddr('address') }}"
+      loop: "{{ groups.internet_routers | intersect(groups.virl_hosts) }}"
+      register: result
+      retries: 60
+      delay: 10
+      until: result is not failed
+
+- name: Verify that vManage is fully operational
+  hosts: localhost
+  connection: local
+  tags:
+    - check_control
+    - check_all
+    - control
+    - edge
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Waiting for vManage API to start
+      uri:
+        url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/controllers"
+        method: POST
+        body:
+          j_username: "{{ viptela_api_username }}"
+          j_password: "{{ viptela_api_password }}"
+        body_format: form-urlencoded
+        return_content: yes
+        validate_certs: no
+      no_log: true
+      register: uri_results
+      delegate_to: localhost
+      failed_when: false
+      until: uri_results.msg.find("OK") != -1
+      retries: 60
+      delay: 10
+
+- name: Create local CA
+  hosts: localhost
+  connection: local
+  tags:
+    - control
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Ensure directory exists for local self-signed TLS certs.
+      file:
+        path: "{{ viptela_cert_dir }}"
+        state: directory
+
+    - name: Generate an OpenSSL private key.
+      openssl_privatekey:
+        cipher: des3
+        passphrase: "{{ viptela_CA_passphrase }}"
+        path: "{{ viptela_cert_dir }}/myCA.key"
+
+    - name: Generate an OpenSSL CSR.
+      openssl_csr:
+        path: "{{ viptela_cert_dir }}/myCA.csr"
+        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
+        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
+        common_name: viptelaCA.local
+
+    - name: Generate a Self Signed OpenSSL certificate.
+      openssl_certificate:
+        path: "{{ viptela_cert_dir }}/myCA.pem"
+        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
+        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
+        csr_path: "{{ viptela_cert_dir }}/myCA.csr"
+        # select_crypto_backend: pyopenssl
+        provider: selfsigned
+
+- name: Configuring Viptela components
+  hosts: viptela_control:&virl_hosts
+  connection: netconf
+  tags:
+    - control
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Push NETCONF template
+      netconf_config:
+        content: "{{ lookup('template', 'viptela/netconf.j2') }}"
+
+- name: Check connetivty to Viptela control plane
+  hosts: internet_routers:&virl_hosts
+  connection: network_cli
+  tags:
+    - control
+    - edge
+    - check_control
+    - check_all
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - ios_ping:
+        dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
+      loop: "{{ groups.viptela_control }}"
+      register: result
+      retries: 60
+      delay: 10
+      until: result is not failed
+
+- name: Verify that vManage is fully operational
+  hosts: localhost
+  connection: local
+  tags:
+    - check_control
+    - check_all
+    - control
+    - edge
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Waiting for vManage API to start
+      uri:
+        url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/controllers"
+        method: POST
+        body:
+          j_username: "{{ viptela_api_username }}"
+          j_password: "{{ viptela_api_password }}"
+        body_format: form-urlencoded
+        return_content: yes
+        validate_certs: no
+      no_log: true
+      register: uri_results
+      delegate_to: localhost
+      failed_when: false
+      until: uri_results.msg.find("OK") != -1
+      retries: 60
+      delay: 10
+
+- name: Copy CA to controllers
+  hosts: vbond1:vsmart1
+  tags:
+    - control
+    - debug
+  any_errors_fatal: true
+  gather_facts: no
+  vars:
+    ansible_network_os: ios
+  tasks:
+    - name: Copy Root CA to controllers
+      copy:
+        src: "{{ viptela_cert_dir }}/myCA.pem"
+        dest: /home/admin
+      register: copy_results
+
+    - name: Install RootCA
+      cli_command:
+        command: "request root-cert-chain install /home/admin/myCA.pem"
+      register: command_result
+      connection: network_cli
+      failed_when: "'Failed' in command_result.stdout"
+
+- name: Configure vmanage
+  hosts: vmanage1
+  connection: local
+  roles:
+    - ansible-viptela
+  tags:
+    - control
+    - vmanage
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - debug:
+        msg: "vManage IP: {{ vmanage_ip }}"
+
+    - name: Set organization
+      include_role:
+        name: ansible-viptela
+        tasks_from: set-org
+      vars:
+        org_name: "{{ organization_name }}"
+
+    - set_fact:
+        vbond_controller: "{{ groups.vbond_hosts[0] }}"
+
+    - name: Set vBond
+      include_role:
+        name: ansible-viptela
+        tasks_from: set-vbond
+      vars:
+        vbond_ip: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
+
+    - name: Set Enterprise Root CA
+      include_role:
+        name: ansible-viptela
+        tasks_from: set-rootca
+      vars:
+        root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
+
+    - name: Add vBond Hosts
+      include_role:
+        name: ansible-viptela
+        tasks_from: add-controller
+      vars:
+        device_hostname: "{{ item }}"
+        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
+        device_personality: vbond
+      loop: "{{ groups.vbond_hosts }}"
+
+    - name: Add vSmart Hosts
+      include_role:
+        name: ansible-viptela
+        tasks_from: add-controller
+      vars:
+        device_hostname: "{{ item }}"
+        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
+        device_personality: vsmart
+      loop: "{{ groups.vsmart_hosts }}"
+
+    - name: Get Controler CSR
+      include_role:
+        name: ansible-viptela
+        tasks_from: get-csr
+      vars:
+        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
+        device_hostname: "{{ item }}"
+        csr_filename: "{{ viptela_cert_dir }}/{{ item }}.csr"
+      loop: "{{ groups.viptela_control }}"
+
+    - name: Sign Controller Cert
+      openssl_certificate:
+        csr_path: "{{ viptela_cert_dir }}/{{ item }}.csr"
+        path: "{{ viptela_cert_dir }}/{{ item }}.crt"
+        provider: ownca
+        ownca_path: "{{ viptela_cert_dir }}/myCA.pem"
+        ownca_privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
+        ownca_privatekey_passphrase: "{{ viptela_CA_passphrase }}"
+        # select_crypto_backend: pyopenssl
+      loop: "{{ groups.viptela_control }}"
+      delegate_to: localhost
+
+    - name: Install Controller Certificate
+      include_role:
+        name: ansible-viptela
+        tasks_from: install-cert
+      vars:
+        device_cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
+      loop: "{{ groups.viptela_control }}"
+
+    - name: Install Serial File
+      vmanage_fileupload:
+        host: "{{ vmanage_ip }}"
+        user: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        file: "{{ serial_number_file }}"
+      delegate_to: localhost
+
+- name: Configuring vEdges
+  hosts: viptela_vedge:&virl_hosts
+  connection: netconf
+  tags:
+    - edge
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Push NETCONF template
+      netconf_config:
+        content: "{{ lookup('template', 'viptela/netconf.j2') }}"
+
+- name: Check connetivty to edges
+  hosts: colo_routers:&virl_hosts
+  tags:
+    - edge
+    - check_all
+    - check_edge
+  any_errors_fatal: true
+  connection: network_cli
+  gather_facts: no
+  tasks:
+    - ios_ping:
+        dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
+      loop: "{{ groups.viptela_vedge | intersect(groups.virl_hosts) }}"
+      when: hostvars[item].vpn_instances is defined
+      register: result
+      retries: 60
+      delay: 10
+      until: result is not failed
+
+- name: Bootstrap vEdges
+  hosts: viptela_vedge:&virl_hosts
+  tags:
+    - edge
+  any_errors_fatal: true
+  gather_facts: no
+  serial: 1
+  vars:
+    viptela_api_username: admin
+    viptela_api_password: admin
+    viptela_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
+    ansible_network_os: ios
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Bootstrap vEdge
+      include_role:
+        name: ansible-viptela
+        tasks_from: bootstrap-vedge
+      vars:
+        device_ip: "{{ hostvars[item].ansible_host }}"
+        root_ca_file: "{{ viptela_cert_dir }}/myCA.pem"
+
+    - name: Do the thing
+      uri:
+        url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/sync/rootcertchain"
+        method: GET
+        headers:
+          Cookie: "{{ viptela_api_cookie }}"
+        validate_certs: no
+        return_content: yes
+      register: uri_results
+      delegate_to: localhost

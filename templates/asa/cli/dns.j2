@@ -1,0 +1,13 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+{% if dns_servers is defined %}
+{%   if dns_interface is defined %}
+dns domain-lookup {{ dns_interface }}
+{%   endif  %}
+dns server-group DefaultDNS
+{%  for server in dns_servers|default([]) %}
+name-server {{ server }}
+{%  endfor %}
+{%  if domain_name is defined %}
+domain-name {{ domain_name }}
+{%  endif %}
+{% endif %}

@@ -1,0 +1,47 @@
+#cloud-config
+password: {{ ansible_password }}
+chpasswd: { expire: False }
+ssh_pwauth: True
+{#bootcmd:#}
+{#- ln -s -t /etc/rc.d /etc/rc.local#}
+hostname: {{ inventory_hostname }}
+manage_etc_hosts: true
+runcmd:
+    - systemctl start rc-local
+    - sed -i -e 's/%admin ALL=(ALL) ALL/%admin ALL=NOPASSWD:ALL/g' /etc/sudoers
+{#    - sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config#}
+{#    - echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config#}
+{#    - service ssh restart#}
+{#    - service sshd restart#}
+users:
+{#    - default#}
+    - name: virl
+      plain-text-passwd: {{ ansible_password }}
+      gecos: User configured by VIRL Configuration Engine 0.23.10
+      groups: admin
+      lock-passwd: false
+      shell: /bin/bash
+{#      ssh-authorized-keys:#}
+{#        - VIRL-USER-SSH-PUBLIC-KEY#}
+{#write_files:#}
+{#- path: /etc/systemd/system/dhclient@.service#}
+{#  content: |#}
+{#    [Unit]#}
+{#    Description=Run dhclient on %i interface#}
+{#    After=network.target#}
+{#    [Service]#}
+{#    Type=oneshot#}
+{#    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease#}
+{#    RemainAfterExit=yes#}
+{#  owner: root:root#}
+{#  permissions: '0644'#}
+{#- path: /etc/rc.local#}
+{#  owner: root:root#}
+{#  permissions: '0755'#}
+{#  content: |-#}
+{#    #!/bin/sh#}
+{#    ifconfig eth1 up 192.168.1.10 netmask 255.255.255.0#}
+{#    ip route add 10.0.0.0/8 via 192.168.1.1#}
+{#    ip route add 172.20.0.0/16 via 192.168.1.1#}
+{#    ip route add 192.168.0.0/16 via 192.168.1.1#}
+{#    exit 0f#}

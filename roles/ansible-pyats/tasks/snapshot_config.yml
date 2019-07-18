@@ -1,0 +1,8 @@
+- name: Parse config
+  pyats_parse_config:
+  register: command_output
+
+- name: Save snapshot to file {{ file }}
+  copy:
+    content: "{{ command_output.structured | to_nice_json }}"
+    dest: "{{ file }}"

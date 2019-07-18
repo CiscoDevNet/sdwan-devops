@@ -1,0 +1,38 @@
+- name: Update RTBH
+  hosts: vmanage1
+  connection: local
+  roles:
+    - ansible-viptela
+  vars:
+    policy_list_name: blocked_prefixes
+    file: vmanage_policy.yml
+  gather_facts: no
+  tasks:
+    - name: Reading file {{ file }}
+      tags:
+        - policy_lists
+        - policy_definitions
+        - central_policy
+      include_vars:
+        file: "{{ file }}"
+        name: vmanage_policy
+
+    - set_fact:
+        policy_list_entries: "{{ (vmanage_policy.vmanage_policy_lists.dataprefix | selectattr('name', 'equalto', policy_list_name) | map(attribute='entries') | list)[0] }}"
+
+    - debug:
+        var: policy_list_entries
+
+    - name: Update RTBH
+      vmanage_policy_list:
+        user: "{{ ansible_user }}"
+        host: "{{ ansible_host }}"
+        password: "{{ ansible_password }}"
+        name: "{{ policy_list_name }}"
+        entries: "{{ policy_list_entries }}"
+        type: dataprefix
+        push: yes
+        force: yes
+      register: policy_list_facts
+      delegate_to: localhost
+      when: policy_list_entries | length > 0

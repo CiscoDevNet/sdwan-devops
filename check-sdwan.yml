@@ -1,0 +1,20 @@
+- name: Ping hosts
+  hosts: vmanage1
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+    state: present
+  tasks:
+    - include_role:
+        name: ansible-viptela
+        tasks_from: ping-test
+      vars:
+        ping_dst_ip: "{{ item.dst_ip }}"
+        ping_vedge: "{{ item.vedge }}"
+        ping_vpn: "{{ item.vpn }}"
+        ping_pass: "{{ item.pass }}"
+      loop: "{{ vmanage_ping_tests|default([]) }}"

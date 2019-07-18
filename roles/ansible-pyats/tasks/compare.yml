@@ -1,0 +1,16 @@
+- name: Running command
+  cli_command:
+    command: "{{ command }}"
+  register: cli_output
+
+- name: Parsing output
+  set_fact:
+    parsed_output: "{{ cli_output.stdout | genie_parser(command, 'iosxe') }}"
+
+- name: Read in snaphot file {{ snapshot_file }}
+  set_fact:
+    snapshot_data: "{{ lookup('file', snapshot_file, errors='ignore') | from_json }}"
+
+- name: Diff current and snapshot
+  set_fact:
+    diff_output: "{{ parsed_output | genie_diff(snapshot_data) }}"

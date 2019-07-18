@@ -1,0 +1,38 @@
+- name: Delete vManage Templates
+  connection: local
+  hosts: localhost
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+    file: vmanage_templates.yml
+  gather_facts: no
+  tasks:
+    - name: Get templates
+      vmanage_template_facts:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+      register: template_facts
+
+    - name: Delete device templates
+      vmanage_device_template:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+        state: absent
+        name: "{{ item.templateName }}"
+      loop: "{{ template_facts.templates.device_templates }}"
+
+    - name: Delete feature templates
+      vmanage_feature_template:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+        state: absent
+        name: "{{ item.templateName }}"
+      loop: "{{ template_facts.templates.feature_templates }}"
+#
+#    - debug:
+#        var: policy_facts

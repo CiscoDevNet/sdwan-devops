@@ -1,0 +1,64 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+{# --- #}
+{# BGP #}
+{# --- #}
+{% if router is defined %}
+{%   if router.bgp is defined %}
+router bgp {{ router.bgp.id }}
+{%     if router.bgp.address_family is defined %}
+{%       for address_family, address_family_config in router.bgp.address_family.items() %}
+address-family {{ address_family }} unicast
+{# Networks #}
+{%         for network in address_family_config.networks|default([]) %}
+network {{ network.network|ipaddr('network') }} mask {{ network.network|ipaddr('netmask') }}
+{%         endfor %}
+{%         for aggregate in address_family_config.aggregate_address|default([]) %}
+{%           set options = '' %}
+{%           if aggregate.summary_only is sameas true %}
+{%             set options = options + ' summary-only' %}
+{%           endif %}
+aggregate-address {{ aggregate.network|ipaddr('network') }} {{ aggregate.network|ipaddr('netmask') }} {{ options | trim }}
+{%         endfor %}
+{# Neighbors #}
+{%         for neighbor in address_family_config.neighbors|default([]) %}
+neighbor {{ neighbor.id }} remote-as {{ neighbor.remote_as }}
+{%           if neighbor.activate is sameas true %}
+neighbor {{ neighbor.id }} activate
+{%           endif %}
+{%           if neighbor.next_hop_self is sameas true %}
+neighbor {{ neighbor.id }} next-hop-self
+{%           endif %}
+{%           if neighbor.prefix_lists is defined %}
+{%             for direction, prefix_list in neighbor.prefix_lists.items() %}
+neighbor {{ neighbor.id }} prefix-list {{ prefix_list }} {{ direction }}
+{%             endfor %}
+{%           endif %}
+{%         endfor %}
+{# Redistribute #}
+{%         if address_family_config.redistribute is defined %}
+{%           if address_family_config.redistribute.connected is defined %}
+{%             set options = '' %}
+{%             if address_family_config.redistribute.connected.route_map is defined %}
+{%               set options = options + ' route_map ' +  address_family_config.redistribute.connected.route_map %}
+{%             endif %}
+{%             if address_family_config.redistribute.connected.metric is defined %}
+{%               set options = options + ' metric ' +  address_family_config.redistribute.connected.metric %}
+{%             endif %}
+redistribute connected {{ options | trim }}
+{%           endif %}
+{%         endif %}
+{# Options #}
+{%         if address_family_config.auto_summary is defined %}
+{{ 'no ' if address_family_config.auto_summary is sameas false else '' }}auto-summary
+{%         endif %}
+{%         if address_family_config.synchronization is defined %}
+{{ 'no ' if address_family_config.synchronization is sameas false else '' }}synchronization
+{%         endif %}
+exit-address-family
+{%       endfor %}
+{%     endif %}
+{%     if router.bgp.router_id %}
+bgp router-id {{ router.bgp.router_id }}
+{%     endif %}
+{%   endif %}
+{% endif %}

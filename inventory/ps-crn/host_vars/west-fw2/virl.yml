@@ -1,0 +1,16 @@
+virl:
+  subtype: ASAv
+  interfaces:
+    - network: west-asa-fail
+      name: GigabitEthernet0/0
+    - network: west-external
+      name: GigabitEthernet0/1
+    - network: west-colo
+      name: GigabitEthernet0/2
+    - network: west-cloud
+      name: GigabitEthernet0/3
+    - network: west-guest
+      name: GigabitEthernet0/4
+    - network: west-corp
+      name: GigabitEthernet0/5
+  config_template:  asa/virl.j2

@@ -1,0 +1,45 @@
+- name: Export vManage Policy Lists
+  hosts: localhost
+  connection: local
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+    file: vmanage_policy.yml
+  gather_facts: no
+  tasks:
+    - name: Get policy lists
+      vmanage_policy_list_facts:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+      register: policy_list_facts
+
+    - name: Get policy definitions
+      vmanage_policy_definition_facts:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+      register: policy_definition_facts
+
+    - name: Get central policies
+      vmanage_central_policy_facts:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+      register: central_policy_facts
+
+    - set_fact:
+        vmanage_policy:
+          vmanage_policy_lists: "{{ policy_list_facts.policy_lists }}"
+          vmanage_policy_definitions: "{{ policy_definition_facts.policy_definitions }}"
+          vmanage_central_policies: "{{ central_policy_facts.central_policies }}"
+
+#    - debug:
+#        var: vmanage_policy
+
+    - name: Write out policies to {{ file }}
+      copy:
+        content: "{{ vmanage_policy | to_nice_yaml(indent=2, width=1337) }}"
+        dest: "{{ file }}"

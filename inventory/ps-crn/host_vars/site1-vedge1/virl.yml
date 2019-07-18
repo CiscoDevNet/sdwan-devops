@@ -1,0 +1,10 @@
+virl:
+  subtype: vEdge
+  interfaces:
+    - network: site1-wan
+      name: ge0/0
+    - network: site1-guest-lan
+      name: ge0/1
+    - network: site1-corp-lan
+      name: ge0/2
+  config_template:  viptela/vedge.j2

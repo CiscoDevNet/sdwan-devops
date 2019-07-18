@@ -1,0 +1,30 @@
+viptela:
+  system_ip: 2.2.2.2
+  transport_ip: 172.20.1.11
+  site_id: 2
+  vbond:
+    remote: 172.20.1.11
+    local: true
+
+vpn_instances:
+  - vpn_id: 0
+    interfaces:
+      - if_name: ge0/0
+        ip:
+          address: 172.20.1.11/24
+        tunnel_interface:
+          allow_service:
+            - netconf
+        enabled: yes
+        allow_service:
+          - all
+    routes:
+      - prefix: 0.0.0.0/0
+        next_hop:
+          address: 172.20.1.1
+virl:
+  subtype: vBond
+  interfaces:
+    - network: east-colo
+      name: eth1
+  config_template: viptela/virl.j2

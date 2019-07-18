@@ -1,0 +1,5 @@
+viptela:
+  site_id: 100
+  system_ip: 10.255.100.2
+  vbond:
+    remote: 172.20.1.11

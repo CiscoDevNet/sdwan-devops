@@ -1,0 +1,6 @@
+virl:
+  subtype: vManage
+  interfaces:
+    - network: east-colo
+      name: eth1
+  config_template: viptela/virl.j2

@@ -1,0 +1,8 @@
+virl:
+  subtype: CSR1000v
+  interfaces:
+    - network: west-wan
+      name: GigabitEthernet2
+    - network: west-external
+      name: GigabitEthernet3
+  config_template: ios/virl.j2

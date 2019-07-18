@@ -1,0 +1,11 @@
+- name: Read in snaphot file {{ file }}
+  set_fact:
+    snapshot_data: "{{ lookup('file', file) | from_json }}"
+
+- name: Parse Command
+  pyats_parse_config:
+    compare: "{{ snapshot_data }}"
+  register: command_output
+
+- debug:
+    var: command_output.diff

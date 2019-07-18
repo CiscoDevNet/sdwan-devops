@@ -1,0 +1,31 @@
+interfaces:
+  GigabitEthernet1:
+    vrf: Mgmt-intf
+    enabled: true
+    ip:
+      primary: dhcp
+  GigabitEthernet2:
+    enabled: true
+    ip:
+      primary: 172.16.17.2/24
+  GigabitEthernet3:
+    enabled: true
+    ip:
+      primary: 172.17.0.1/24
+
+router:
+  bgp:
+    id: 65017
+    log_neighbor_changes: true
+    router_id: 172.16.17.2
+    neighbors:
+      - id: 172.16.17.1
+        remote_as: 65016
+    address_family:
+      global:
+        ipv4:
+          neighbors:
+            - id: 172.16.17.1
+              activate: true
+          networks:
+            - network: 172.17.0.0/24

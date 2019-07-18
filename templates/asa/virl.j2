@@ -1,0 +1,80 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+{# -------- #}
+{# System   #}
+{# -------- #}
+{{ lookup('template', 'asa/cli/system.j2') }}
+!
+username {{ ansible_user }} password {{ ansible_password }}
+aaa authorization exec LOCAL auto-enable
+!
+interface Management0/0
+ shut
+interface Management0/0
+ management-only
+ nameif management
+ ip address dhcp setroute
+ no shut
+!
+{# ---------- #}
+{# Interfaces #}
+{# ---------- #}
+{{ lookup('template', 'asa/cli/interfaces.j2') }}
+!
+{# ------------- #}
+{# Static Routes #}
+{# ------------- #}
+{{ lookup('template', 'asa/cli/static-routes.j2') }}
+!
+{# ------------- #}
+{# Prefix_lists  #}
+{# ------------- #}
+{{ lookup('template', 'asa/cli/prefix-lists.j2') }}
+!
+{# ---- #}
+{# BGP  #}
+{# ---- #}
+{{ lookup('template', 'asa/cli/bgp.j2') }}
+!
+{# ---- #}
+{# OSPF #}
+{# ---- #}
+{{ lookup('template', 'asa/cli/ospf.j2') }}
+!
+{# --- #}
+{# NAT #}
+{# --- #}
+{{ lookup('template', 'asa/cli/nat.j2') }}
+!
+
+{# -------- #}
+{# Failover #}
+{# -------- #}
+{#{{ lookup('template', 'asa/cli/failover.j2') }}#}
+{#!#}
+!
+{# --- #}
+{# DNS #}
+{# --- #}
+{{ lookup('template', 'asa/cli/dns.j2') }}
+!
+{# --- #}
+{# NTP #}
+{# --- #}
+{{ lookup('template', 'asa/cli/ntp.j2') }}
+!
+{# --------------- #}
+{# Smart Licensing #}
+{# --------------- #}
+{{ lookup('template', 'asa/cli/license.j2') }}
+!
+same-security-traffic permit inter-interface
+!
+crypto key generate rsa modulus 2048
+ssh key-exchange group dh-group14-sha1
+ssh version 2
+aaa authentication ssh console LOCAL
+ssh 0.0.0.0 0.0.0.0 management
+!
+http server enable
+aaa authentication http console LOCAL
+http 0.0.0.0 0.0.0.0 management

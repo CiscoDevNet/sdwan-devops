@@ -1,0 +1,7 @@
+virl:
+  subtype: vEdge
+  interfaces:
+    - network: hq-dmz
+      name: ge0/0
+    - network: dc-vedge
+      name: ge0/1

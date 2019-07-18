@@ -1,0 +1,5 @@
+virl:
+  subtype: vBond
+  interfaces:
+    - network: hq-dmz
+      name: eth1

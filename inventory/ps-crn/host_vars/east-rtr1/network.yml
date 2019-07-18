@@ -1,0 +1,64 @@
+interfaces:
+  GigabitEthernet1:
+    vrf: Mgmt-intf
+    enabled: true
+    ip:
+      primary: dhcp
+  GigabitEthernet2:
+    enabled: true
+    ip:
+      primary: 172.16.20.2/24
+  GigabitEthernet3:
+    enabled: true
+    ip:
+      primary: 172.20.0.2/24
+      standby:
+        address: 172.20.0.1
+        group: 0
+        priority: 120
+        delay: 300
+#    ospf:
+#      lls: disable
+
+static_routes:
+  global:
+    - network: 172.20.0.0/16
+      fwd_list:
+        - fwd: Null0
+
+router:
+  bgp:
+    id: 65020
+    log_neighbor_changes: true
+    router_id: 172.16.20.2
+    neighbors:
+      - id: 172.16.20.1
+        remote_as: 65016
+      - id: 172.20.0.4
+        remote_as: 65020
+    address_family:
+      global:
+        ipv4:
+          neighbors:
+            - id: 172.16.20.1
+              activate: true
+            - id: 172.20.0.4
+              activate: true
+              next_hop_self: yes
+          networks:
+            - network: 172.20.0.0/16
+          aggregate_address:
+            - network: 172.20.0.0/16
+              summary_only: yes
+
+#  ospf:
+#    id: 65020
+#    router_id: 172.20.0.2
+#    redistribute:
+#      - protocol: bgp
+#        protocol_id: 65020
+#        options:
+#          - subnets
+#    networks:
+#      - network: 172.20.0.0/24
+#        area: 0

@@ -1,0 +1,39 @@
+{# --- #}
+{# BGP #}
+{# --- #}
+{% if router is defined %}
+{%   if router.bgp is defined %}
+router bgp {{ router.bgp.id }}
+{%     if router.bgp.router_id %}
+ bgp router-id {{ router.bgp.router_id }}
+{%     endif %}
+{%     for neighbor in router.bgp.neighbors|default([]) %}
+ neighbor {{ neighbor.id }} remote-as {{ neighbor.remote_as }}
+{%     endfor %}
+{%     if router.bgp.address_family is defined %}
+{%       for vrf, address_family_list in router.bgp.address_family.items() %}
+{%         for address_family, address_family_config in address_family_list.items() %}
+ address-family {{ address_family }} {{ '' if vrf == 'global' else 'vrf ' + address_family }}
+{%           for network in address_family_config.networks|default([]) %}
+  network {{ network.network|ipaddr('network') }} mask {{ network.network|ipaddr('netmask') }}
+{%           endfor %}
+{%           for aggregate in address_family_config.aggregate_address|default([]) %}
+{%             set options = '' %}
+{%             if aggregate.summary_only is sameas true %}
+{%               set options = options + ' summary-only' %}
+{%             endif %}
+  aggregate-address {{ aggregate.network|ipaddr('network') }} {{ aggregate.network|ipaddr('netmask') }} {{ options | trim }}
+{%           endfor %}
+{%           for neighbor in address_family_config.neighbors|default([]) %}
+{%             if neighbor.activate is sameas true %}
+  neighbor {{ neighbor.id }} activate
+{%             endif %}
+{%             if neighbor.next_hop_self is sameas true %}
+  neighbor {{ neighbor.id }} next-hop-self
+{%             endif %}
+{%           endfor %}
+{%         endfor %}
+{%       endfor %}
+{%     endif %}
+{%   endif %}
+{% endif %}

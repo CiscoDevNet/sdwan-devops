@@ -1,0 +1,13 @@
+- name: Running command
+  cli_command:
+    command: "{{ command }}"
+  register: cli_output
+
+- name: Parsing output
+  set_fact:
+    parsed_output: "{{ cli_output.stdout | genie_parser(command, 'iosxe') }}"
+
+- name: Save snapshot to file {{ snapshot_file }}
+  copy:
+    content: "{{ parsed_output }}"
+    dest: "{{ snapshot_file }}"

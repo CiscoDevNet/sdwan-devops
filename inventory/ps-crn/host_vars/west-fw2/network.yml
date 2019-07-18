@@ -1,0 +1,99 @@
+interfaces:
+  Management0/0:
+    enabled: true
+    nameif: management
+    ip:
+      primary: dhcp
+  GigabitEthernet0/0:
+    enabled: true
+  GigabitEthernet0/1:
+    enabled: true
+    nameif: outside
+    security_level: 0
+    ip:
+      primary: 172.21.0.4/24
+      standby: 172.21.0.5
+  GigabitEthernet0/2:
+    enabled: true
+    nameif: colo
+    security_level: 0
+    ip:
+      primary: 172.21.1.1/24
+      standby: 172.21.1.2
+  GigabitEthernet0/3:
+    enabled: true
+    nameif: cloud
+    security_level: 0
+    ip:
+      primary: 10.21.2.1/24
+      standby: 10.21.2.2
+  GigabitEthernet0/4:
+    enabled: true
+    nameif: guest
+    security_level: 0
+    ip:
+      primary: 10.21.3.1/24
+      standby: 10.21.3.2
+  GigabitEthernet0/5:
+    enabled: true
+    nameif: corp
+    security_level: 0
+    ip:
+      primary: 10.21.4.1/24
+      standby: 10.21.4.2
+
+
+failover:
+  role: secondary
+  ip: 10.255.255.1/30
+  peer_ip: 10.255.255.2/30
+  interface: GigabitEthernet0/0
+
+router:
+  ospf:
+    id: 65021
+    router_id: 172.21.0.4
+    default_information_originate: true
+    networks:
+      - network: 172.21.0.0/24
+        area: 0
+      - network: 172.21.1.0/24
+        area: 1
+      - network: 10.21.2.0/24
+        area: 2
+      - network: 10.21.3.0/24
+        area: 10
+      - network: 10.21.4.0/24
+        area: 11
+
+    areas:
+      - number: 1
+        options:
+          - nssa
+          - no-redistribution
+          - default-information-originate
+          - no-summary
+      - number: 2
+        options:
+          - nssa
+          - no-redistribution
+          - default-information-originate
+          - no-summary
+      - number: 3
+        options:
+          - nssa
+          - no-redistribution
+          - default-information-originate
+          - no-summary
+      - number: 10
+        options:
+          - nssa
+          - no-redistribution
+          - default-information-originate
+          - no-summary
+      - number: 11
+        options:
+          - nssa
+          - no-redistribution
+          - default-information-originate
+          - no-summary

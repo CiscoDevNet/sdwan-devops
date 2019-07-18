@@ -1,0 +1,5 @@
+virl:
+  subtype: vSmart
+  interfaces:
+    - network: hq-dmz
+      name: eth1

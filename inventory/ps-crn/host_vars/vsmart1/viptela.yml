@@ -1,0 +1,33 @@
+viptela:
+  system_ip: 3.3.3.3
+  transport_ip: 172.20.1.12
+  site_id: 3
+  vbond:
+    remote: 172.20.1.11
+  template:
+    name: 'vsmart'
+    variables:
+      'vpn0_internet_ipv4_address': 172.20.1.12/24
+      'vpn0_default_gateway': 172.20.1.1
+
+vpn_instances:
+  - vpn_id: 0
+    interfaces:
+      - if_name: eth1
+        ip:
+          address: 172.20.1.12/24
+        tunnel_interface:
+          allow_service:
+            - netconf
+        enabled: yes
+    routes:
+      - prefix: 0.0.0.0/0
+        next_hop:
+          address: 172.20.1.1
+
+virl:
+  subtype: vSmart
+  interfaces:
+    - network: east-colo
+      name: eth1
+  config_template: viptela/virl.j2

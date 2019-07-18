@@ -1,0 +1,53 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+{{ lookup('template', './cli/system.j2') }}
+!
+license smart enable
+!
+username {{ ansible_user }} privilege 15 secret {{ ansible_password }}
+crypto key generate rsa modulus 2048
+!
+vrf definition Mgmt-intf
+ address-family ipv4
+ exit-address-family
+ address-family ipv6
+ exit-address-family
+!
+{# ---------- #}
+{# Interfaces #}
+{# ---------- #}
+{{ lookup('template', './cli/interfaces.j2') }}
+!
+{# ------------- #}
+{# Static Routes #}
+{# ------------- #}
+{{ lookup('template', './cli/static-routes.j2') }}
+
+ip route vrf Mgmt-intf 0.0.0.0 0.0.0.0 ${NICID_0_GATEWAY}
+!
+{# ----------------- #}
+{# Routing Protocols #}
+{# ----------------- #}
+{# --- #}
+{# BGP #}
+{# --- #}
+{{ lookup('template', './cli/bgp.j2') }}
+!
+{# ---- #}
+{# OSPF #}
+{# ---- #}
+{{ lookup('template', './cli/ospf.j2') }}
+!
+{# --- #}
+{# DNS #}
+{# --- #}
+{{ lookup('template', './cli/dns.j2') }}
+!
+{# --- #}
+{# NTP #}
+{# --- #}
+{{ lookup('template', './cli/ntp.j2') }}
+!
+line vty 0 4
+ login local
+ transport input ssh
+exit

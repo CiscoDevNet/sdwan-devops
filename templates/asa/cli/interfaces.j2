@@ -1,0 +1,47 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+{% for key, value in interfaces.items() %}
+interface {{ key }}
+{%  if value.vlan is defined %}
+ vlan {{ value.vlan }}
+{%  endif %}{# value.vlan is defined #}
+{%  if value.nameif is defined %}
+ nameif {{ value.nameif }}
+{%  endif %}{# value.vlan is defined #}
+{%  if (value.management_only is defined) and (value.management_only is sameas true) %}
+ management-only
+{%  endif %}{# management-only is defined #}
+{%  if value.security_level is defined %}
+ security-level {{ value.security_level }}
+{%  endif %}{# value.security_level is defined #}
+{%  if value.description is defined %}
+ description {{ interface_item.description }}
+{%  endif %}
+{%  if value.ip is defined %}
+{%   if value.ip.primary is defined %}
+{%    if value.ip.primary == 'dhcp' %}
+ ip address dhcp setroute
+{%    elif value.ip.standby is defined %}
+ ip address {{ value.ip.primary|ipaddr('address') }} {{ value.ip.primary|ipaddr('netmask') }} standby {{ value.ip.standby|ipaddr('address') }}
+{%    else %}
+ ip address {{ value.ip.primary|ipaddr('address') }} {{ value.ip.primary|ipaddr('netmask') }}
+{%    endif %}{# value.ip.primary == 'dhcp' #}
+{%   endif %}{# if value.ip.primary is defined #}
+{%  endif %}{# if value.ip is defined  #}
+{%  if value.enabled is sameas true %}
+ no shut
+{%   if value.vlan is defined %}
+interface {{ key | regex_replace('^([a-zA-Z0-9\/]+)\.[^a-zA-Z]+', '\\1') }}
+ no shut
+{%   endif %}{# value.vlan is defined #}
+{%  else %}{# disabled #}
+ shut
+{%  endif %}{# enabled #}
+{# ------------- #}
+{# Default Route #}
+{# ------------- #}
+{%  if value.ip is defined %}
+{%   if value.ip.gateway is defined %}
+route {{ value.nameif }} 0.0.0.0 0.0.0.0 {{ value.ip.gateway }}
+{%   endif %}{# value.ip.primary.gateway is defined #}
+{%  endif %}
+{% endfor %}{# interfaces #}

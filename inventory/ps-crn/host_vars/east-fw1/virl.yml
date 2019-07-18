@@ -1,0 +1,16 @@
+virl:
+  subtype: ASAv
+  interfaces:
+    - network: east-asa-fail
+      name: GigabitEthernet0/0
+    - network: east-external
+      name: GigabitEthernet0/1
+    - network: east-colo
+      name: GigabitEthernet0/2
+    - network: east-cloud
+      name: GigabitEthernet0/3
+    - network: east-guest
+      name: GigabitEthernet0/4
+    - network: east-corp
+      name: GigabitEthernet0/5
+  config_template:  asa/virl.j2

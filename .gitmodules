@@ -1,0 +1,6 @@
+[submodule "roles/ansible-virl"]
+	path = roles/ansible-virl
+	url = https://github.com/CiscoDevNet/ansible-virl.git
+[submodule "roles/ansible-viptela"]
+	path = roles/ansible-viptela
+	url = https://github.com/CiscoDevNet/ansible-viptela.git

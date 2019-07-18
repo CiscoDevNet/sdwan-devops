@@ -1,0 +1,10 @@
+virl:
+  subtype: vEdge
+  interfaces:
+    - network: east-external
+      name: ge0/0
+    - network: east-guest
+      name: ge0/1
+    - network: east-corp
+      name: ge0/2
+  config_template: viptela/virl.j2

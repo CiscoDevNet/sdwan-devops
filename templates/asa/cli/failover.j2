@@ -1,0 +1,10 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+{% if failover is defined %}
+failover
+failover lan unit {{ failover.role }}
+failover lan interface asa_fail {{ failover.interface }}
+failover interface ip asa_fail {{ failover.ip | ipaddr('address') }} {{ failover.ip | ipaddr('netmask') }} standby {{ failover.peer_ip | ipaddr('address') }}
+{%  for interface in failover.ignore_interface|default([]) %}
+no monitor-interface {{ interface }}
+{%  endfor %}
+{% endif %}{# failover is defined #}

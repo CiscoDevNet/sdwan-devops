@@ -1,0 +1,66 @@
+- name: Add host to topology
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tags:
+    - cull
+  vars:
+    include_groups: 'all'
+    exclude_groups: 'ha'
+    include_hosts: []
+  tasks:
+    - set_fact:
+        include_hosts: "{{ include_hosts|default([]) + groups[item] }}"
+      loop: "{{ include_groups.split(',') }}"
+
+    - set_fact:
+        exclude_hosts: "{{ exclude_hosts|default([]) + groups[item]|default([]) }}"
+      loop: "{{ exclude_groups.split(',') | difference(include_groups.split(',')) }}"
+
+    - add_host:
+        name: "{{ item }}"
+        groups: virl_nodes
+      when: hostvars[item].virl is defined
+      loop: "{{ include_hosts | difference(exclude_hosts) }}"
+
+- name: Generating day0 config
+  hosts: virl_nodes
+  gather_facts: no
+  tags:
+    - config
+  tasks:
+    - set_fact:
+        day0_config: "{{ lookup('template', virl.config_template) }}"
+      when: virl.config_template is defined
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    topo_file: topo.virl
+    topo_name: "{{ topo_file.split('.')[0] }}"
+    topo_id: "{{ lookup('password', '/dev/null length=4 chars=ascii_letters') }}"
+    session: "{{ lookup('env', 'VIRL_SESSION') | default('') }}"
+  tasks:
+    - block:
+      - name: Check for session id file
+        stat:
+          path: "{{ virl_sim_file }}"
+        register: stat_result
+
+      - name: Get the existing session ID
+        set_fact:
+          session: "{{lookup('file', virl_sim_file) }}"
+        when: stat_result.stat.exists
+      when: session == ""
+
+    - name: Skip if we have a session passed in
+      include_role:
+        name: ansible-virl
+        tasks_from: build
+
+    - name: Check on simulation {{ session }}
+      include_role:
+        name: ansible-virl
+        tasks_from: check
+      when: session != ""

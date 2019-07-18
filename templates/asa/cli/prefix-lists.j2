@@ -1,0 +1,8 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+{% if prefix_lists is defined %}
+{%  for list_name, list_data in prefix_lists.items() %}
+{%    for list_entry in list_data %}
+prefix-list {{ list_name }} seq {{ list_entry.seq | default(loop.index * 10) }} {{ list_entry.action | default('permit') }} {{ list_entry.network }}
+{%    endfor  %}
+{%  endfor %}
+{% endif %}

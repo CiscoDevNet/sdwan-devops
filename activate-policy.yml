@@ -1,0 +1,19 @@
+- name: Activate central policy
+  hosts: localhost
+  connection: local
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+    file: vmanage_central_policy.yml
+  gather_facts: no
+  tasks:
+    - name: Activate central policy
+      vmanage_central_policy:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+        state: activated
+        name: central_policy
+        wait: yes

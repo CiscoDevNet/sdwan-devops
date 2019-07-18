@@ -1,0 +1,15 @@
+domain_name: virl.local
+
+ntp_servers:
+  - 192.5.41.40
+  - 192.5.41.41
+
+name_servers:
+  - 208.67.222.222
+  - 208.67.220.220
+
+ntp_server_list:
+  - { ip-address: 192.5.41.40 }
+  - { ip-address: 192.5.41.41 }
+
+login_banner: This system is for the use of authorized clients only.

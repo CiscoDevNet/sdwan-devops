@@ -1,0 +1,22 @@
+- name: Wait for vEdge Sync
+  hosts: vmanage1
+  connection: local
+  roles:
+    - ansible-viptela
+  gather_facts: no
+  tasks:
+    - name: Get device facts
+      vmanage_device_facts:
+        user: "{{ ansible_user }}"
+        host: "{{ ansible_host }}"
+        password: "{{ ansible_password }}"
+      register: device_facts
+      delegate_to: localhost
+      until: (all_vedges | difference(device_facts.vedges | selectattr('configStatusMessage', 'defined') | selectattr('configStatusMessage', 'equalto', 'In Sync') | map(attribute='host-name') | list) | length) == 0
+      retries: 60
+      delay: 10
+      vars:
+        all_vedges: "{{ groups.viptela_vedge | intersect(groups.virl_hosts) }}"
+
+    - debug:
+        msg: "vEdge in sync: {{ device_facts.vedges | selectattr('configStatusMessage', 'defined') | selectattr('configStatusMessage', 'equalto', 'In Sync') | map(attribute='host-name') | list }}"

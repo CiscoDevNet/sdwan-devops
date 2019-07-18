@@ -1,0 +1,33 @@
+- name: Add host to topology
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tags:
+    - cull
+  vars:
+    include_groups: 'all'
+    exclude_groups: 'ha'
+    include_hosts: []
+  tasks:
+    - set_fact:
+        include_hosts: "{{ include_hosts|default([]) + groups[item] }}"
+      loop: "{{ include_groups.split(',') }}"
+
+    - set_fact:
+        exclude_hosts: "{{ exclude_hosts|default([]) + groups[item]|default([]) }}"
+      loop: "{{ exclude_groups.split(',') | difference(include_groups.split(',')) }}"
+
+    - add_host:
+        name: "{{ item }}"
+        groups: virl_nodes
+      when: hostvars[item].virl is defined
+      loop: "{{ include_hosts | difference(exclude_hosts) }}"
+
+- name: Generating day0 config
+  hosts: virl_nodes
+  gather_facts: no
+  tags:
+    - config
+  tasks:
+    - debug:
+        msg: "{{ lookup('template', virl.config_template) }}"

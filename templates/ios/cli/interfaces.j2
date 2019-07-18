@@ -1,0 +1,40 @@
+{% for key, value in interfaces.items() %}
+interface {{ key }}
+{%  if value.vlan is defined %}
+ encapsulation dot1Q {{ value.vlan }}
+{%  endif %}{# value.vlan is defined #}
+{%  if value.vrf is defined %}
+ vrf forwarding {{ value.vrf }}
+{%  endif %}{# value.vrf is defined #}
+{%  if value.description is defined %}
+ description {{ value.description }}
+{%  endif %}
+{%  if value.ip.primary.address is defined %}
+ ip address {{ value.ip.primary.address }} {{ value.ip.primary.mask }}
+{%  endif %}
+{%  if value.ip is defined %}
+{%   if value.ip.primary is defined %}
+{%    if value.ip.primary == 'dhcp' %}
+ ip address dhcp
+{%    else %}
+ ip address {{ value.ip.primary|ipaddr('address') }} {{ value.ip.primary|ipaddr('netmask') }}
+{%    endif %}{# if value.ip.primary is defined #}
+{%    if value.ip.standby is defined %}
+ standby {{ value.ip.standby.group }} priority {{ value.ip.standby.priority }}
+ standby {{ value.ip.standby.group }} ip {{ value.ip.standby.address }}
+{%    endif %}{# if value.ip.standby is defined #}
+{%   endif %}{# value.ip.primary == 'dhcp' #}
+{%  endif %}{# if value.ip is defined  #}
+{%  if value.ospf is defined %}
+{%   if value.ospf.lls == 'disable' %}
+ ip ospf lls disable
+{%   endif %}{# value.ospf.lls == 'disable' #}
+{%  endif %}{# value.ospf is defined #}
+{%  if value.enabled is sameas true %}
+ no shut
+{%   if value.vlan is defined %}
+interface {{ key | regex_replace('^([a-zA-Z0-9\/]+)\.[^a-zA-Z]+', '\\1') }}
+ no shut
+{%   endif %}{# value.vlan is defined  #}
+{%  endif %}{# enabled #}
+{% endfor %}{# interfaces #}
