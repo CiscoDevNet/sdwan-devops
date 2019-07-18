@@ -1,0 +1,9 @@
+*.pyc
+*.retry
+/myCA
+viptela_api_cookie
+topo.virl
+/licenses/serialFile.viptela
+/group_vars/all/local.yml
+.virlrc
+/.virl
