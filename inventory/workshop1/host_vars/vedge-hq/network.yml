@@ -30,7 +30,9 @@ vpn_instances:
         ip:
           address: 10.0.0.13/24
         tunnel_interface:
-        enabled: true
+          allow_service:
+            - netconf
+        shutdown: false
     routes:
       - prefix: 0.0.0.0/0
         next_hop:

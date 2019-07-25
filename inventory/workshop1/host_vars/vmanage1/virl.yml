@@ -3,4 +3,4 @@ virl:
   interfaces:
     - network: hq-dmz
       name: eth1
-  config_template:  virl/vmanage.j2
+  config_template: virl/vmanage.j2

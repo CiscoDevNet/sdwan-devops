@@ -16,7 +16,9 @@ vpn_instances:
         ip:
           address: 10.0.0.11/24
         tunnel_interface:
-        enabled: true
+          allow_service:
+            - netconf
+        enabled: yes
         allow_service:
           - all
     routes:
