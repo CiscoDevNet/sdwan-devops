@@ -14,10 +14,10 @@ vpn_instances:
       - if_name: eth1
         ip:
           address: 10.0.0.12/24
-        tunnel_interface: true
-        allow_service:
-        - all
-        enabled: true
+        tunnel_interface:
+          allow_service:
+            - netconf
+        enabled: yes
     routes:
       - prefix: 10.0.0.0/16
         next_hop:

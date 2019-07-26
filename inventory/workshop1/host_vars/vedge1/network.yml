@@ -27,7 +27,9 @@ vpn_instances:
         ip:
           address: 172.20.0.10/30
         tunnel_interface:
-        enabled: true
+          allow_service:
+            - netconf
+        shutdown: false
     routes:
       - prefix: 0.0.0.0/0
         next_hop:

@@ -3,3 +3,4 @@ virl:
   interfaces:
     - network: hq-dmz
       name: eth1
+  config_template: viptela/virl.j2
