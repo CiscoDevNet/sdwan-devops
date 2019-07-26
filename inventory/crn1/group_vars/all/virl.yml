@@ -2,3 +2,7 @@
 virl_env: default
 virl_tag: "{{ lookup('env', 'USER') | default(virl_env) }}"
 virl_sim_file: ".virl/{{ virl_env }}/id"
+virl_vedge_subtype: vEdge-19.1.0
+virl_vmanage_subtype: vManage-19.1.0
+virl_vbond_subtype: vBond-19.1.0
+virl_vsmart_subtype: vSmart-19.1.0

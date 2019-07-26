@@ -1,5 +1,5 @@
 virl:
-  subtype: vEdge
+  subtype: "{{ virl_vedge_subtype }}"
   interfaces:
     - network: east-external
       name: ge0/0

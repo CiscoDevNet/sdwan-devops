@@ -24,10 +24,3 @@ vpn_instances:
       - prefix: 0.0.0.0/0
         next_hop:
           address: 172.20.1.1
-
-virl:
-  subtype: vSmart
-  interfaces:
-    - network: east-colo
-      name: eth1
-  config_template: viptela/virl.j2
