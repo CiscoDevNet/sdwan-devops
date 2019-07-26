@@ -1,7 +1,7 @@
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
-{% if virl.subtype == 'vManage' %}
+{% if virl.subtype.startswith('vManage') %}
 --==BOUNDARY==
 Content-Type: text/cloud-config; charset="us-ascii"
 
@@ -21,8 +21,8 @@ system
 {% if site_id is defined %}
  site-id                 {{ site_id }}
 {% endif %}
-{% if viptela_org is defined %}
- organization-name       "{{ viptela_org }}"
+{% if organization_name is defined %}
+ organization-name       "{{ organization_name }}"
 {% endif %}
 {% if vbond is defined %}
  vbond                   {{ vbond.remote }} {{ 'local' if vbond.local is sameas true else '' }}
