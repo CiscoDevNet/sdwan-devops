@@ -1,5 +1,5 @@
 virl:
-  subtype: vSmart
+  subtype: "{{ virl_vsmart_subtype }}"
   interfaces:
     - network: hq-dmz
       name: eth1

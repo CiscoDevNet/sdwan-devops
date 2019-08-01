@@ -1,5 +1,5 @@
 virl:
-  subtype: vBond
+  subtype: "{{ virl_vbond_subtype }}"
   interfaces:
     - network: hq-dmz
       name: eth1

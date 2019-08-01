@@ -1,5 +1,5 @@
 virl:
-  subtype: vEdge
+  subtype: "{{ virl_vedge_subtype }}"
   interfaces:
     - network: site1-wan
       name: ge0/0
