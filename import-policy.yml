@@ -6,17 +6,17 @@
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-    file: vmanage_policy.yml
+    # file: vmanage_policy.yml
   gather_facts: no
   tasks:
-    - name: Reading file {{ file }}
-      tags:
-        - policy_lists
-        - policy_definitions
-        - central_policy
-      include_vars:
-        file: "{{ file }}"
-        name: vmanage_policy
+    # - name: Reading file {{ file }}
+    #   tags:
+    #     - policy_lists
+    #     - policy_definitions
+    #     - central_policy
+    #   include_vars:
+    #     file: "{{ file }}"
+    #     name: vmanage_policy
 
     - name: Import policy lists
       tags:
@@ -28,7 +28,7 @@
         type: "{{ item.key }}"
         state: present
         aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy.vmanage_policy_lists) }}"
+      loop: "{{ lookup('dict', vmanage_policy_lists) }}"
       when: item.value
       register: policy_list_facts
 
@@ -42,7 +42,7 @@
         type: "{{ item.key }}"
         state: present
         aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy.vmanage_policy_definitions) }}"
+      loop: "{{ lookup('dict', vmanage_policy_definitions) }}"
       when: item.value
       register: policy_list_facts
 
@@ -54,4 +54,4 @@
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
         state: present
-        aggregate: "{{ vmanage_policy.vmanage_central_policies }}"
+        aggregate: "{{ vmanage_central_policies }}"

@@ -1,4 +1,4 @@
-device_templates:
+vmanage_device_templates:
 -   attached_devices:
     - site1-vedge1
     - site2-vedge1
@@ -200,7 +200,7 @@ device_templates:
     templateDescription: vsmart
     templateId: 29596205-d8dc-4172-a934-f8595ff3b078
     templateName: vsmart
-feature_templates:
+vmanage_feature_templates:
 -   '@rid': 418
     attachedMastersCount: 1
     configType: xml
