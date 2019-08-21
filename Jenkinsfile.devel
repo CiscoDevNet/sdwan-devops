@@ -55,17 +55,8 @@ pipeline {
                 echo 'Check SD-WAN...'
                 ansiblePlaybook disableHostKeyChecking: true, playbook: 'check-sdwan.yml'
            }
-        }
-/*        
-        stage('Clean Environment') {
-            steps {
-                echo 'Running build.yml...'
-                ansiblePlaybook disableHostKeyChecking: true, playbook: 'clean.yml'
-                cleanWs()
-            }
-        }
+        }      
     }    
-*/
     post {
         always {
             ansiblePlaybook disableHostKeyChecking: true, playbook: 'clean.yml'
