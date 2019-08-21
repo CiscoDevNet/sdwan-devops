@@ -18,7 +18,7 @@ RUN echo "===> install GCC ****" && \
     \
     \
     echo "===> Installing dependancies..."  && \
-    apk --update add sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev && \
+    apk --update add sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen && \
     \
     \
     echo "===> Installing PIP Requirements..."  && \
