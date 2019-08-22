@@ -38,10 +38,6 @@ pipeline {
                 ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/workshop1', playbook: 'waitfor-sync.yml'
                 echo 'Attaching Templates...'
                 ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/workshop1', playbook: 'attach-template.yml'
-                echo 'Loading Policy...'
-                ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/workshop1', playbook: 'import-policy.yml'
-                echo 'Activating Policy...'
-                ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/workshop1', playbook: 'activate-policy.yml'
            }
         }
         stage('Running Tests') {
