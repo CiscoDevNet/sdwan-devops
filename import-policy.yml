@@ -28,7 +28,7 @@
         type: "{{ item.key }}"
         state: present
         aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy_lists) }}"
+      with_dict: "{{ vmanage_policy_lists | default ({}) }}"
       when: item.value
       register: policy_list_facts
 
@@ -42,7 +42,7 @@
         type: "{{ item.key }}"
         state: present
         aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy_definitions) }}"
+      with_dict: "{{ vmanage_policy_definitions | default ({}) }}"
       when: item.value
       register: policy_list_facts
 
@@ -54,4 +54,5 @@
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
         state: present
-        aggregate: "{{ vmanage_central_policies }}"
+        aggregate: "{{ vmanage_central_policies | default ({}) }}"
+      when: vmanage_central_policies is defined
