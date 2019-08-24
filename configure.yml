@@ -298,6 +298,11 @@
         device_cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
       loop: "{{ groups.viptela_control }}"
 
+    - name: Push Certs to Controllers
+      include_role:
+        name: ansible-viptela
+        tasks_from: push-certs
+
     - name: Install Serial File
       vmanage_fileupload:
         host: "{{ vmanage_ip }}"
