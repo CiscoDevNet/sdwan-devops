@@ -174,36 +174,6 @@
       connection: network_cli
       failed_when: "'Failed' in command_result.stdout"
 
-- name: Verify that vManage is fully operational
-  hosts: localhost
-  connection: local
-  tags:
-    - check_control
-    - check_all
-    - control
-    - edge
-    - CA
-  any_errors_fatal: true
-  gather_facts: no
-  tasks:
-    - name: Waiting for vManage API to start
-      uri:
-        url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/controllers"
-        method: POST
-        body:
-          j_username: "{{ viptela_api_username }}"
-          j_password: "{{ viptela_api_password }}"
-        body_format: form-urlencoded
-        return_content: yes
-        validate_certs: no
-      no_log: true
-      register: uri_results
-      delegate_to: localhost
-      failed_when: false
-      until: uri_results.msg.find("OK") != -1
-      retries: 60
-      delay: 10
-
 - name: Configure vmanage
   hosts: vmanage1
   connection: local
@@ -236,6 +206,10 @@
         vbond: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
         ca_type: enterprise
         root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
+      register: vmanage_setting
+      retries: 60
+      delay: 10
+      until: vmanage_setting is not failed 
 
     - name: Add vBond Hosts
       include_role:
