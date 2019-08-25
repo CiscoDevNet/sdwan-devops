@@ -151,7 +151,30 @@
       delay: 10
       until: result is not failed
 
-- name: Verify that vManage is fully operational
+- name: Copy CA to controllers
+  hosts: vbond1:vsmart1
+  tags:
+    - control
+    - debug
+  any_errors_fatal: true
+  gather_facts: no
+  vars:
+    ansible_network_os: ios
+  tasks:
+    - name: Copy Root CA to controllers
+      copy:
+        src: "{{ viptela_cert_dir }}/myCA.pem"
+        dest: /home/admin
+      register: copy_results
+
+    - name: Install RootCA
+      cli_command:
+        command: "request root-cert-chain install /home/admin/myCA.pem"
+      register: command_result
+      connection: network_cli
+      failed_when: "'Failed' in command_result.stdout"
+
+      - name: Verify that vManage is fully operational
   hosts: localhost
   connection: local
   tags:
@@ -180,29 +203,6 @@
       until: uri_results.msg.find("OK") != -1
       retries: 60
       delay: 10
-
-- name: Copy CA to controllers
-  hosts: vbond1:vsmart1
-  tags:
-    - control
-    - debug
-  any_errors_fatal: true
-  gather_facts: no
-  vars:
-    ansible_network_os: ios
-  tasks:
-    - name: Copy Root CA to controllers
-      copy:
-        src: "{{ viptela_cert_dir }}/myCA.pem"
-        dest: /home/admin
-      register: copy_results
-
-    - name: Install RootCA
-      cli_command:
-        command: "request root-cert-chain install /home/admin/myCA.pem"
-      register: command_result
-      connection: network_cli
-      failed_when: "'Failed' in command_result.stdout"
 
 - name: Configure vmanage
   hosts: vmanage1
