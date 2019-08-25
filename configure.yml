@@ -224,28 +224,17 @@
     - debug:
         msg: "vManage IP: {{ vmanage_ip }}"
 
-    - name: Set organization
-      include_role:
-        name: ansible-viptela
-        tasks_from: set-org
-      vars:
-        org_name: "{{ organization_name }}"
-
     - set_fact:
         vbond_controller: "{{ groups.vbond_hosts[0] }}"
 
-    - name: Set vBond
-      include_role:
-        name: ansible-viptela
-        tasks_from: set-vbond
-      vars:
-        vbond_ip: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
-
-    - name: Set Enterprise Root CA
-      include_role:
-        name: ansible-viptela
-        tasks_from: set-rootca
-      vars:
+    - name: vManage Settings
+      vmanage_settings:
+        host: "{{ vmanage_ip }}"
+        user: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        organization: "{{ organization_name }}"
+        vbond: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
+        ca_type: enterprise
         root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
 
     - name: Add vBond Hosts
