@@ -262,9 +262,11 @@
       loop: "{{ groups.viptela_control }}"
 
     - name: Push Certs to Controllers
-      include_role:
-        name: ansible-viptela
-        tasks_from: push-certs
+      vmanage_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        push: yes
 
     - name: Install Serial File
       vmanage_fileupload:
