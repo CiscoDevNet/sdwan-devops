@@ -174,7 +174,7 @@
       connection: network_cli
       failed_when: "'Failed' in command_result.stdout"
 
-      - name: Verify that vManage is fully operational
+- name: Verify that vManage is fully operational
   hosts: localhost
   connection: local
   tags:
