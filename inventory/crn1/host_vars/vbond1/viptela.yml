@@ -5,6 +5,7 @@ viptela:
   vbond:
     remote: 172.20.1.11
     local: true
+  personality: vbond
 
 vpn_instances:
   - vpn_id: 0

@@ -7,6 +7,7 @@ viptela:
   gps_location:
     latitude: 37.411343
     longitude: -121.938803
+  personality: vsmart
 
 vpn_instances:
   - vpn_id: 0
