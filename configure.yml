@@ -211,35 +211,36 @@
       delay: 10
       until: vmanage_setting is not failed 
 
-    - name: Add vBond Hosts
-      include_role:
-        name: ansible-viptela
-        tasks_from: add-controller
-      vars:
-        device_hostname: "{{ item }}"
+    - name: Add Control Hosts
+      vmanage_device:
+        host: "{{ vmanage_ip }}"
+        user: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        device_username: admin
+        device_password: admin
+        name: "{{ item }}"
+        personality: "{{ hostvars[item].viptela.personality }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
-        device_personality: vbond
-      loop: "{{ groups.vbond_hosts }}"
-
-    - name: Add vSmart Hosts
-      include_role:
-        name: ansible-viptela
-        tasks_from: add-controller
-      vars:
-        device_hostname: "{{ item }}"
-        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
-        device_personality: vsmart
-      loop: "{{ groups.vsmart_hosts }}"
-
-    - name: Get Controler CSR
-      include_role:
-        name: ansible-viptela
-        tasks_from: get-csr
-      vars:
-        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
-        device_hostname: "{{ item }}"
-        csr_filename: "{{ viptela_cert_dir }}/{{ item }}.csr"
       loop: "{{ groups.viptela_control }}"
+      register: control_devices
+
+    - name: Generate CSRs
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        name: "{{ item }}"
+        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
+        state: csr
+      loop: "{{ groups.viptela_control }}"
+      register: control_devices
+
+    - name: Write out CSR
+      copy:
+        content: "{{ item.deviceCSR }}"
+        dest: "{{ viptela_cert_dir }}/{{ item.item }}.csr"
+      loop: "{{ control_devices.results }}"
+      delegate_to: localhost
 
     - name: Sign Controller Cert
       openssl_certificate:
@@ -253,20 +254,22 @@
       loop: "{{ groups.viptela_control }}"
       delegate_to: localhost
 
-    - name: Install Controller Certificate
-      include_role:
-        name: ansible-viptela
-        tasks_from: install-cert
-      vars:
-        device_cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
-      loop: "{{ groups.viptela_control }}"
-
-    - name: Push Certs to Controllers
-      vmanage_certificate:
+    - name: Add Certificate to Control Hosts
+      vmanage_device_certificate:
         host: "{{ vmanage_ip }}"
         user: "{{ ansible_user }}"
         password: "{{ ansible_password }}"
-        push: yes
+        name: "{{ item }}"
+        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
+        cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
+      loop: "{{ groups.viptela_control }}"
+
+    - name: Push Certs to Controllers
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        state: push
 
     - name: Install Serial File
       vmanage_fileupload:
@@ -311,6 +314,7 @@
 - name: Bootstrap vEdges
   hosts: viptela_vedge:&virl_hosts
   tags:
+    - bootstrap
     - edge
   any_errors_fatal: true
   gather_facts: no
@@ -335,13 +339,13 @@
         device_ip: "{{ hostvars[item].ansible_host }}"
         root_ca_file: "{{ viptela_cert_dir }}/myCA.pem"
 
-    - name: Do the thing
-      uri:
-        url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/sync/rootcertchain"
-        method: GET
-        headers:
-          Cookie: "{{ viptela_api_cookie }}"
-        validate_certs: no
-        return_content: yes
-      register: uri_results
-      delegate_to: localhost
+    # - name: Do the thing
+    #   uri:
+    #     url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/sync/rootcertchain"
+    #     method: GET
+    #     headers:
+    #       Cookie: "{{ viptela_api_cookie }}"
+    #     validate_certs: no
+    #     return_content: yes
+    #   register: uri_results
+    #   delegate_to: localhost
