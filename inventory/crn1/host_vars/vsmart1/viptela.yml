@@ -4,6 +4,7 @@ viptela:
   site_id: 3
   vbond:
     remote: 172.20.1.11
+  personality: vsmart
   template:
     name: 'vsmart'
     variables:
