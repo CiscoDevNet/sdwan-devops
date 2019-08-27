@@ -206,10 +206,10 @@
         vbond: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
         ca_type: enterprise
         root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
-      register: vmanage_setting
-      retries: 60
+      register: result
+      retries: 10
       delay: 10
-      until: vmanage_setting is not failed 
+      until: result is not failed 
 
     - name: Add Control Hosts
       vmanage_device:
@@ -222,7 +222,10 @@
         personality: "{{ hostvars[item].viptela.personality }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
       loop: "{{ groups.viptela_control }}"
-      register: control_devices
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
 
     - name: Generate CSRs
       vmanage_device_certificate:
@@ -234,6 +237,9 @@
         state: csr
       loop: "{{ groups.viptela_control }}"
       register: control_devices
+      retries: 10
+      delay: 10
+      until: control_devices is not failed 
 
     - name: Write out CSR
       copy:
@@ -263,6 +269,10 @@
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
         cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
       loop: "{{ groups.viptela_control }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
 
     - name: Push Certs to Controllers
       vmanage_device_certificate:
@@ -270,6 +280,10 @@
         user: "{{ ansible_user }}"
         password: "{{ ansible_password }}"
         state: push
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
 
     - name: Install Serial File
       vmanage_fileupload:
@@ -278,6 +292,10 @@
         password: "{{ ansible_password }}"
         file: "{{ serial_number_file }}"
       delegate_to: localhost
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
 
 - name: Configuring vEdges
   hosts: viptela_vedge:&virl_hosts
@@ -307,9 +325,9 @@
       loop: "{{ groups.viptela_vedge | intersect(groups.virl_hosts) }}"
       when: hostvars[item].vpn_instances is defined
       register: result
-      retries: 60
+      retries: 10
       delay: 10
-      until: result is not failed
+      until: result is not failed 
 
 - name: Bootstrap vEdges
   hosts: viptela_vedge:&virl_hosts
