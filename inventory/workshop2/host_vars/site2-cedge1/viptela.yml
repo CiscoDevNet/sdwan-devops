@@ -1,0 +1,12 @@
+viptela:
+  site_id: 210
+  system_ip: 10.255.210.1
+  vbond:
+    remote: 172.20.1.11
+  template:
+    name: 'branch-vedge'
+    variables:
+      'vpn0_internet_ipv4_address': 172.16.23.2/24
+      'vpn0_default_gateway': 172.16.23.1
+      'vpn10_ipv4_address': 10.23.3.1/24
+      'vpn11_ipv4_address': 10.23.4.1/24

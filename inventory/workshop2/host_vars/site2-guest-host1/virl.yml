@@ -1,0 +1,6 @@
+virl:
+  subtype: lxc
+  interfaces:
+    - network: site2-guest-lan
+      name: eth1
+  config_template: virl/lxc.j2

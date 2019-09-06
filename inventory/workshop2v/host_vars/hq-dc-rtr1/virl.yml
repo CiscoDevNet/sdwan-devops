@@ -1,0 +1,10 @@
+virl:
+  subtype: CSR1000v
+  interfaces:
+    - network: dc-core
+      name: GigabitEthernet2
+    - network: dc-lan
+      name: GigabitEthernet3
+    - network: dc-vedge
+      name: GigabitEthernet4
+  config_template: ios/virl.j2

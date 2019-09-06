@@ -1,0 +1,52 @@
+interfaces:
+  GigabitEthernet1:
+    description: OOB Management
+    vrf: Mgmt-intf
+    enabled: true
+    ip:
+      primary: dhcp
+  GigabitEthernet2:
+    description: Internet
+    enabled: true
+    ip:
+      primary: 172.20.0.6/30
+  GigabitEthernet3:
+    description: DMZ
+    enabled: true
+    ip:
+      primary: 10.0.0.1/24
+  GigabitEthernet4:
+    description: DC Core
+    enabled: true
+    ip:
+      primary: 10.0.255.1/30
+
+static_routes:
+  global:
+    - network: 10.0.0.0/16
+      fwd_list:
+        - fwd: Null0
+
+router:
+  ospf:
+    id: 65001
+    router_id: 10.0.255.1
+    default_information_originate: true
+    networks:
+      - network: 10.0.255.0/30
+        area: 0
+  bgp:
+    id: 65001
+    log_neighbor_changes: true
+    router_id: 172.20.0.6
+    neighbors:
+      - id: 172.20.0.5
+        remote_as: 65000
+    address_family:
+      global:
+        ipv4:
+          neighbors:
+            - id: 172.20.0.5
+              activate: true
+          networks:
+            - network: 10.0.0.0/16

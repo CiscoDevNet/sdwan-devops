@@ -1,0 +1,7 @@
+organization_name: "DevNet Learning Lab"
+vbond:
+  remote: 10.0.0.11
+serial_number_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
+viptela_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
+# Encrypt/Vault this in real life
+viptela_CA_passphrase: Cisc0123

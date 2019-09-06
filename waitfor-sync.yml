@@ -16,7 +16,7 @@
       retries: 60
       delay: 10
       vars:
-        all_vedges: "{{ groups.viptela_vedge | intersect(groups.virl_hosts) }}"
+        all_vedges: "{{ groups.sdwan_edge | intersect(groups.virl_hosts) }}"
 
     - debug:
         msg: "vEdge in sync: {{ device_facts.vedges | selectattr('configStatusMessage', 'defined') | selectattr('configStatusMessage', 'equalto', 'In Sync') | map(attribute='host-name') | list }}"

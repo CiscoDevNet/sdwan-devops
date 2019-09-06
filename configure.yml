@@ -1,4 +1,4 @@
-- name: Check playbook reqiurements
+- name: Check playbook requirements
   hosts: localhost
   connection: network_cli
   tags:
@@ -120,7 +120,7 @@
         provider: selfsigned
 
 - name: Configuring Viptela components
-  hosts: viptela_control:&virl_hosts
+  hosts: sdwan_control:&virl_hosts
   connection: netconf
   tags:
     - control
@@ -145,7 +145,7 @@
   tasks:
     - ios_ping:
         dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
-      loop: "{{ groups.viptela_control }}"
+      loop: "{{ groups.sdwan_control }}"
       register: result
       retries: 60
       delay: 10
@@ -221,7 +221,7 @@
         name: "{{ item }}"
         personality: "{{ hostvars[item].viptela.personality }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
-      loop: "{{ groups.viptela_control }}"
+      loop: "{{ groups.sdwan_control }}"
       register: result
       retries: 10
       delay: 10
@@ -235,7 +235,7 @@
         name: "{{ item }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
         state: csr
-      loop: "{{ groups.viptela_control }}"
+      loop: "{{ groups.sdwan_control }}"
       register: control_devices
       retries: 10
       delay: 10
@@ -257,7 +257,7 @@
         ownca_privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
         ownca_privatekey_passphrase: "{{ viptela_CA_passphrase }}"
         # select_crypto_backend: pyopenssl
-      loop: "{{ groups.viptela_control }}"
+      loop: "{{ groups.sdwan_control }}"
       delegate_to: localhost
 
     - name: Add Certificate to Control Hosts
@@ -268,7 +268,7 @@
         name: "{{ item }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
         cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
-      loop: "{{ groups.viptela_control }}"
+      loop: "{{ groups.sdwan_control }}"
       register: result
       retries: 10
       delay: 10
@@ -298,7 +298,7 @@
       until: result is not failed 
 
 - name: Configuring vEdges
-  hosts: viptela_vedge:&virl_hosts
+  hosts: sdwan_edge:&virl_hosts
   connection: netconf
   tags:
     - edge
@@ -322,7 +322,7 @@
   tasks:
     - ios_ping:
         dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
-      loop: "{{ groups.viptela_vedge | intersect(groups.virl_hosts) }}"
+      loop: "{{ groups.sdwan_edge | intersect(groups.virl_hosts) }}"
       when: hostvars[item].vpn_instances is defined
       register: result
       retries: 10
@@ -330,7 +330,7 @@
       until: result is not failed 
 
 - name: Bootstrap vEdges
-  hosts: viptela_vedge:&virl_hosts
+  hosts: sdwan_edge:&virl_hosts
   tags:
     - bootstrap
     - edge

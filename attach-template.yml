@@ -1,5 +1,5 @@
 - name: Attach Templates
-  hosts: viptela:&virl_hosts
+  hosts: sdwan:&virl_hosts
   connection: local
   gather_facts: no
   roles:

@@ -1,13 +1,12 @@
-- hosts: localhost
+- hosts: virl_hosts
   connection: local
   gather_facts: no
+  roles:
+    - ansible-virl
   tasks:
-    # - debug:
-    #     msg: "Name: {{ item }}, Address: {{ hostvars[item].ansible_host | default('none') }}"
-    #   loop: "{{ groups.all }}"
-
-    # - debug:
-    #     var: hostvars[item]
-    #   loop: "{{ groups.all }}"
     - debug:
-        var: virl_host
+        msg: "Node: {{ inventory_hostname }}({{ virl_facts.node_definition }}), State: {{ virl_facts.state }}, Address: {{ ansible_host }}"
+    - debug:
+        var: virl_facts
+      tags:
+        - detail
