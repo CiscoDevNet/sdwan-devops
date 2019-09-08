@@ -1,45 +1,8 @@
-#cloud-config
-bootcmd:
-- ln -s -t /etc/rc.d /etc/rc.local
-hostname: {{ inventory_hostname }}
-manage_etc_hosts: true
-runcmd:
-- systemctl start rc-local
-- sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config
-- echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config
-- service ssh restart
-- service sshd restart
-users:
-- default
-- gecos: User configured by VIRL Configuration Engine 0.23.10
-  lock-passwd: false
-  name: virl
-  plain-text-passwd: admin
-  shell: /bin/bash
-  ssh-authorized-keys:
-  - VIRL-USER-SSH-PUBLIC-KEY
-  sudo: ALL=(ALL) ALL
-write_files:
-- path: /etc/systemd/system/dhclient@.service
-  content: |
-    [Unit]
-    Description=Run dhclient on %i interface
-    After=network.target
-    [Service]
-    Type=oneshot
-    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease
-    RemainAfterExit=yes
-  owner: root:root
-  permissions: '0644'
-- path: /etc/rc.local
-  owner: root:root
-  permissions: '0755'
-  content: |-
-    #!/bin/sh
+hostname {{ inventory_hostname }}
 {% if interfaces is defined %}
 {%   for key, value in interfaces.items() %}
 {%     if value.enabled is defined and value.enabled is sameas true and value.ip is defined and value.ip.primary is defined %}
-    ip address add {{ value.ip.primary }} dev {{ key }}
+ip address add {{ value.ip.primary }} dev {{ key }}
 {%     endif %}
 {%   endfor %}
 {% endif %}
@@ -47,9 +10,8 @@ write_files:
 {%  for vrf, value in static_routes.items() %}
 {%   for route in value|default([]) %}
 {%    for dest in route.fwd_list|default([]) %}
-    ip route add {{ route.network }} via {{ dest.fwd }}
+ip route add {{ route.network }} via {{ dest.fwd }}
 {%    endfor %}
 {%   endfor %}
 {%  endfor %}
 {% endif %}
-    exit 0

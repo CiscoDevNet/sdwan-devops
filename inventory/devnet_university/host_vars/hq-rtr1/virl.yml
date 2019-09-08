@@ -1,0 +1,10 @@
+virl:
+  subtype: CSR1000v
+  interfaces:
+    - network: hq-wan
+      name: GigabitEthernet2
+    - network: hq-dmz
+      name: GigabitEthernet3
+    - network: dc-core
+      name: GigabitEthernet4
+  config_template: ios/virl.j2

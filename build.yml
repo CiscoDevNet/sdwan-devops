@@ -109,3 +109,29 @@
         lab: "{{ virl_lab }}"
         state: started
         config: "{{ day0_config | default(omit) }}"
+
+- name: Start all the LXC hosts
+  hosts: system:&virl_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - hosts
+  roles:
+    - ansible-virl
+  tasks:
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ lookup('template', virl.config_template) }}"
+      when: virl.config_template is defined
+
+    - name: Start Node
+      virl_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: started
+        config: "{{ day0_config | default(omit) }}"
+

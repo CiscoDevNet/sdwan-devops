@@ -4,7 +4,7 @@
   roles:
     - ansible-pyats
   vars:
-    snapshot_file: "{{ inventory_hostname }}_bgp.json"
+    snapshot_file: "{{ inventory_hostname }}_routes.json"
   tasks:
   - set_fact:
       snapshot_data: "{{ lookup('file', snapshot_file) | from_json }}"
@@ -13,7 +13,7 @@
 #      var: snapshot_data
 #
   - pyats_parse_command:
-      command: show ip route bgp
+      command: show ip route
       compare: "{{ snapshot_data }}"
     register: command_output
 

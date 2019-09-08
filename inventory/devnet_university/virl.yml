@@ -1,0 +1,5 @@
+plugin: virl2
+host: 172.18.29.106
+username: simple
+password: simple
+lab: devnet_university

@@ -1,0 +1,12 @@
+- hosts: router
+  connection: network_cli
+  gather_facts: no
+  roles:
+    - ansible-pyats
+  tasks:
+    - include_role:
+        name: ansible-pyats
+        tasks_from: snapshot_command
+      vars:
+        command: show ip route
+        file: "{{ inventory_hostname }}_routes.json"
