@@ -1,7 +1,6 @@
-# Public Sector Cloud Ready Network DevOps Bundle
+# SDWAN DevOps Bundle
 
-This repo provides a DevOps bundle that augments the [Public Sector Cloud Ready Network](docs/CRN_Overview.md) by providing
-the following:
+This repo provides an SDWAN DevOps bundle with the following use cases:
 
 * [Architecture](docs/architecture.md) - Detailed architecture with customer-focused use cases
 * [Simulation](docs/simulation.md#topology) - Dynamic VIRL topology in which to simulate architecture
