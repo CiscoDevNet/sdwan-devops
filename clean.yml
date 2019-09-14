@@ -16,30 +16,49 @@
     - ansible-virl
   tags:
     - keys
+    - always
   tasks:
-#  - name: Find previously created certs
-#    find:
-#      paths: "{{ viptela_cert_dir }}"
-#      patterns: '*.pem,*.key,*.csr,*.crt'
-#    register: find_results
-#
-#  - name: Delete previously created certs
-#    file:
-#      path: "{{ item['path'] }}"
-#      state: absent
-#    with_items: "{{ find_results['files'] }}"
+    - name: Delete cert dir
+      file:
+        path: "{{ viptela_cert_dir }}"
+        state: absent
 
-  - name: Delete cert dir
-    file:
-      path: "{{ viptela_cert_dir }}"
-      state: absent
+    - name: Remove host from known_hosts
+      known_hosts:
+        name: "{{ hostvars[item].ansible_host }}"
+        state: absent
+      when: hostvars[item].ansible_host is defined
+      loop: "{{ groups.all }}"
 
-  - name: Remove host from known_hosts
-    known_hosts:
-      name: "{{ hostvars[item].ansible_host }}"
-      state: absent
-    when: hostvars[item].ansible_host is defined
-    loop: "{{ groups.all }}"
+- hosts: sdwan
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+    - ansible-viptela
+  tags:
+    - vmanage
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first | default('') }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default('') }}"
+      when: vmanage_host is defined
+
+    - name: Remove device from vManage
+      vmanage_device:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
+        uuid: "{{ viptela.uuid }}"
+        state: absent
+      delegate_to: localhost  
+      register: result
+      when: viptela is defined and viptela.uuid is defined
+      ignore_errors: yes
+      when: vmanage_ip is defined and vmanage_ip
+
 
 - hosts: virl_hosts
   connection: local
@@ -75,6 +94,9 @@
   gather_facts: no
   roles:
     - ansible-virl
+  tags:
+    - never
+    - destroy
   tasks:
     - name: Delete the lab
       virl_lab:

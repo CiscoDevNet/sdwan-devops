@@ -18,6 +18,35 @@ Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment; filename="vedge.init-config"
 
 #cloud-boothook
+ aaa
+  auth-order local radius tacacs
+  usergroup basic
+   task system read write
+   task interface read write
+  !
+
+  usergroup netadmin
+  !
+
+  usergroup operator
+   task system read
+   task interface read
+   task policy read
+   task routing read
+   task security read
+  !
+
+  user admin
+   password $6$u3jhmUlHRY16I1lI$OpkApAwXhGNo2xdKR.j2x7LF7OkRa9P02aSgACGMvmhidKHvxQ2poG6HTulDYp6BXfsm3clE6dz/wvOKLxA8e1
+  !
+ !
+
+ logging
+  disk
+   enable
+  !
+ !
+!
 
 vpn 0
  no interface eth0

@@ -7,4 +7,4 @@ virl:
       name: ge0/1
     - network: site2-corp-lan
       name: ge0/2
-  config_template:  viptela/virl.j2
+  config_template:  sdwan/vedge.j2

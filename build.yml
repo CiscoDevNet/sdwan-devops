@@ -5,6 +5,8 @@
     - ansible-virl
   tags:
     - build
+  vars:
+    lab_file: "{{ virl_lab }}.yaml"
   tasks:
   - name: Create the lab
     virl_lab:
@@ -13,99 +15,4 @@
       password: "{{ virl_password }}"
       lab: "{{ virl_lab }}"
       state: present
-      file: stevenca_workshop2v.yaml
-
-
-- name: Start unmanaged nodes
-  hosts: external_connector:unmanaged_switch
-  connection: local
-  gather_facts: no
-  roles:
-    - ansible-virl
-  tags:
-    - start
-    - network
-  tasks:
-    - name: Start Dumb Stuff
-      virl_node:
-        name: "{{ inventory_hostname }}"
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
-        lab: "{{ virl_lab }}"
-        state: started
-
-- name: Start the network
-  hosts: network:&virl_hosts
-  connection: local
-  gather_facts: no
-  tags:
-    - start
-    - network
-  roles:
-    - ansible-virl
-  tasks:
-    - name: Generating day0 config
-      set_fact:
-        day0_config: "{{ lookup('template', virl.config_template) }}"
-      when: virl.config_template is defined
-
-    - name: Start Node
-      virl_node:
-        name: "{{ inventory_hostname }}"
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
-        lab: "{{ virl_lab }}"
-        state: started
-        config: "{{ day0_config | default(omit) }}"
-
-- name: Start the SD-WAN control nodes
-  hosts: sdwan_control:&virl_hosts
-  connection: local
-  gather_facts: no
-  tags:
-    - start
-    - control
-  roles:
-    - ansible-virl
-  tasks:
-    - name: Generating day0 config
-      set_fact:
-        day0_config: "{{ lookup('template', virl.config_template) }}"
-      when: virl.config_template is defined
-
-    - name: Start Node
-      virl_node:
-        name: "{{ inventory_hostname }}"
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
-        lab: "{{ virl_lab }}"
-        state: started
-        config: "{{ day0_config | default(omit) }}"
-
-- name: Start the SD-WAN edge nodes
-  hosts: sdwan_edge:&virl_hosts
-  connection: local
-  gather_facts: no
-  tags:
-    - start
-    - edge
-  roles:
-    - ansible-virl
-  tasks:
-    - name: Generating day0 config
-      set_fact:
-        day0_config: "{{ lookup('template', virl.config_template) }}"
-      when: virl.config_template is defined
-
-    - name: Start Node
-      virl_node:
-        name: "{{ inventory_hostname }}"
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
-        lab: "{{ virl_lab }}"
-        state: started
-        config: "{{ day0_config | default(omit) }}"
+      file: "{{ lab_file }}"

@@ -14,19 +14,25 @@ Content-Type: text/cloud-boothook; charset="us-ascii"
 
 #cloud-boothook
 system
- host-name {{ inventory_hostname }}
-{% if system_ip is defined %}
- system-ip               {{ system_ip }}
-{% endif %}
-{% if site_id is defined %}
- site-id                 {{ site_id }}
-{% endif %}
+ personality             {{ viptela.personality }}
+ device-model            {{ viptela.device_model }}
+ host-name               {{ inventory_hostname.split('.')[0] }}
+{% if viptela.system_ip is defined %}
+ system-ip               {{ viptela.system_ip }}
+{% endif %}{# viptela.system_ip is defined #}
+{% if viptela.domain_id is defined %}
+ domain-id                 {{ viptela.domain_id }}
+{% endif %}{# viptela.domain_id is defined #}
+{% if viptela.site_id is defined %}
+ site-id                 {{ viptela.site_id }}
+{% endif %}{# viptela.site_id is defined #}
+ no route-consistency-check
 {% if organization_name is defined %}
  organization-name       "{{ organization_name }}"
-{% endif %}
-{% if vbond is defined %}
- vbond                   {{ vbond.remote }} {{ 'local' if vbond.local is sameas true else '' }}
-{% endif %}
+{% endif %}{# viptela.org is defined #}
+{% if viptela.vbond is defined %}
+ vbond                   {{ viptela.vbond.remote }} {{ 'local' if vbond.local is sameas true else '' }}
+{% endif %}{# viptela.vbond is defined #}
 !
  aaa
   auth-order local radius tacacs
@@ -84,6 +90,9 @@ vpn {{ vpn.vpn_id }}
   shutdown
 {%   endif %}{# interface.enabled is sameas true  #}
 {%  endfor %}{# for interface #}
+{%  for route in vpn.routes|default([]) %}
+  ip route {{ route.prefix }} {{ route.next_hop.address }}
+{%  endfor %}{# for routes #}
 {% endfor %}{# for vpn #}
 !
 vpn 512

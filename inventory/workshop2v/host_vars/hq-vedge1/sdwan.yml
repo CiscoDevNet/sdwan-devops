@@ -6,6 +6,9 @@ viptela:
   omp:
     advertise:
       - ospf-external
+  model: 'vedge-cloud'
+  uuid: '36b8fb11-0aa4-8f2e-5174-a7793ae246f4'
+  personality: vedge
   template:
     name: 'colo-vedge'
     variables:

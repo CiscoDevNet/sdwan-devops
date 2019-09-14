@@ -1,0 +1,7 @@
+virl:
+  mgmt_interface: eth0
+  subtype: "{{ virl_vsmart_subtype }}"
+  interfaces:
+    - network: hq-dmz
+      name: eth1
+  config_template: sdwan/virl.j2

@@ -2,8 +2,7 @@
   hosts: localhost
   connection: network_cli
   tags:
-    - control
-    - edge
+    - network
     - CA
   any_errors_fatal: true
   gather_facts: no
@@ -23,18 +22,76 @@
       delegate_to: localhost
       run_once: yes
 
+- name: Start unmanaged nodes
+  hosts: external_connector:unmanaged_switch
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+  tags:
+    - start
+    - network
+  tasks:
+    - name: Start dumb stuff (not a judgement)
+      virl_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: started
+
+- name: Start the network
+  hosts: network:&virl_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - network
+  roles:
+    - ansible-virl
+  tasks:
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ lookup('template', virl.config_template) }}"
+      when: virl.config_template is defined
+
+    - name: Start Node
+      virl_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: started
+        config: "{{ day0_config | default(omit) }}"
+
 - name: Check initial topology connectivity
   hosts: internet
-  connection: network_cli
+  connection: local
   tags:
     - check_control
     - check_all
-    - control
-    - edge
+    - network
     - CA
   any_errors_fatal: true
   gather_facts: no
   tasks:
+    - name: Wait until the mgmt interface comes up
+      virl_lab_facts:
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+      register: result
+      until: result.virl_facts.nodes[inventory_hostname].interfaces[virl.mgmt_interface].ipv4_addresses | count > 0
+      when: virl is defined and virl.mgmt_interface is defined
+      retries: 12
+      delay: 10
+
+    - name: Refresh Inventory
+      meta: refresh_inventory
+
     - name: Ping outside interface of Internet routers
       ios_ping:
         dest: "{{ hostvars[item].interfaces.GigabitEthernet2.ip.primary | ipaddr('address') }}"
@@ -43,6 +100,7 @@
       retries: 60
       delay: 10
       until: result is not failed
+      connection: network_cli
 
     - name: Ping inside interface of Internet routers
       ios_ping:
@@ -52,36 +110,32 @@
       retries: 60
       delay: 10
       until: result is not failed
+      connection: network_cli
 
-- name: Verify that vManage is fully operational
-  hosts: localhost
+- name: Start Systems
+  hosts: system:&virl_hosts
   connection: local
-  tags:
-    - check_control
-    - check_all
-    - control
-    - edge
-    - CA
-  any_errors_fatal: true
   gather_facts: no
+  roles:
+    - ansible-virl
+  tags:
+    - start
+    - network
   tasks:
-    - name: Waiting for vManage API to start
-      uri:
-        url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/controllers"
-        method: POST
-        body:
-          j_username: "{{ viptela_api_username }}"
-          j_password: "{{ viptela_api_password }}"
-        body_format: form-urlencoded
-        return_content: yes
-        validate_certs: no
-      no_log: true
-      register: uri_results
-      delegate_to: localhost
-      failed_when: false
-      until: uri_results.msg.find("OK") != -1
-      retries: 60
-      delay: 10
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ lookup('template', virl.config_template) }}"
+      when: virl.config_template is defined
+
+    - name: Start Node
+      virl_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: started
+        config: "{{ day0_config | default(omit) }}"
 
 - name: Create local CA
   hosts: localhost
@@ -119,25 +173,65 @@
         # select_crypto_backend: pyopenssl
         provider: selfsigned
 
-- name: Configuring Viptela components
+- name: Start the SD-WAN control nodes
   hosts: sdwan_control:&virl_hosts
-  connection: netconf
+  connection: local
+  gather_facts: no
+  tags:
+    - start_control
+    - control
+  roles:
+    - ansible-virl
+  tasks:
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ lookup('template', virl.config_template) }}"
+      when: virl.config_template is defined
+
+    - name: Start Node
+      virl_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: started
+        config: "{{ day0_config | default(omit) }}"
+
+- name: Configure the SD-WAN control nodes
+  hosts: vbond_hosts:&virl_hosts
+  connection: local
   tags:
     - control
     - netconf
   any_errors_fatal: true
   gather_facts: no
   tasks:
+    - name: Wait until the mgmt interface comes up
+      virl_lab_facts:
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+      register: result
+      until: result.virl_facts.nodes[inventory_hostname].interfaces[virl.mgmt_interface].ipv4_addresses | count > 0
+      when: virl is defined and virl.mgmt_interface is defined
+      retries: 12
+      delay: 10
+
+    - name: Refresh Inventory
+      meta: refresh_inventory
+
     - name: Push NETCONF template
       netconf_config:
         content: "{{ lookup('template', 'viptela/netconf.j2') }}"
+      connection: netconf
 
-- name: Check connetivty to Viptela control plane
+- name: Check connectivity to the SD-WAN control nodes
   hosts: internet_routers:&virl_hosts
   connection: network_cli
   tags:
     - control
-    - edge
     - check_control
     - check_all
   any_errors_fatal: true
@@ -152,7 +246,7 @@
       until: result is not failed
 
 - name: Copy CA to controllers
-  hosts: vbond1:vsmart1
+  hosts: vbond_hosts:vsmart1
   tags:
     - control
     - debug
@@ -174,9 +268,43 @@
       connection: network_cli
       failed_when: "'Failed' in command_result.stdout"
 
-- name: Configure vmanage
-  hosts: vmanage1
+- name: Verify that vManage is fully operational
+  hosts: localhost
   connection: local
+  tags:
+    - check_control
+    - check_all
+    - control
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Waiting for vManage API to start
+      uri:
+        url: "https://{{ vmanage_ip }}/dataservice/system/device/controllers"
+        method: POST
+        body:
+          j_username: "{{ viptela_api_username }}"
+          j_password: "{{ viptela_api_password }}"
+        body_format: form-urlencoded
+        return_content: yes
+        validate_certs: no
+      no_log: true
+      register: uri_results
+      delegate_to: localhost
+      failed_when: false
+      until: uri_results.msg.find("OK") != -1
+      retries: 60
+      delay: 10
+
+- name: Configure vmanage
+  hosts: localhost
   roles:
     - ansible-viptela
   tags:
@@ -200,12 +328,10 @@
     - name: vManage Settings
       vmanage_settings:
         host: "{{ vmanage_ip }}"
-        user: "{{ ansible_user }}"
-        password: "{{ ansible_password }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
         organization: "{{ organization_name }}"
         vbond: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
-        ca_type: enterprise
-        root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
       register: result
       retries: 10
       delay: 10
@@ -214,14 +340,26 @@
     - name: Add Control Hosts
       vmanage_device:
         host: "{{ vmanage_ip }}"
-        user: "{{ ansible_user }}"
-        password: "{{ ansible_password }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
         device_username: admin
         device_password: admin
         name: "{{ item }}"
         personality: "{{ hostvars[item].viptela.personality }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
-      loop: "{{ groups.sdwan_control }}"
+      loop: "{{ groups.vbond_hosts + groups.vsmart_hosts }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Add the Enterprise CA
+      vmanage_settings:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
+        ca_type: enterprise
+        root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
       register: result
       retries: 10
       delay: 10
@@ -230,8 +368,8 @@
     - name: Generate CSRs
       vmanage_device_certificate:
         host: "{{ vmanage_ip }}"
-        user: "{{ ansible_user }}"
-        password: "{{ ansible_password }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
         name: "{{ item }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
         state: csr
@@ -263,8 +401,8 @@
     - name: Add Certificate to Control Hosts
       vmanage_device_certificate:
         host: "{{ vmanage_ip }}"
-        user: "{{ ansible_user }}"
-        password: "{{ ansible_password }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
         name: "{{ item }}"
         device_ip: "{{ hostvars[item].viptela.transport_ip }}"
         cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
@@ -277,8 +415,8 @@
     - name: Push Certs to Controllers
       vmanage_device_certificate:
         host: "{{ vmanage_ip }}"
-        user: "{{ ansible_user }}"
-        password: "{{ ansible_password }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
         state: push
       register: result
       retries: 10
@@ -288,8 +426,8 @@
     - name: Install Serial File
       vmanage_fileupload:
         host: "{{ vmanage_ip }}"
-        user: "{{ ansible_user }}"
-        password: "{{ ansible_password }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
         file: "{{ serial_number_file }}"
       delegate_to: localhost
       register: result
@@ -297,51 +435,26 @@
       delay: 10
       until: result is not failed 
 
-- name: Configuring vEdges
-  hosts: sdwan_edge:&virl_hosts
-  connection: netconf
-  tags:
-    - edge
-    - netconf
-  any_errors_fatal: true
-  gather_facts: no
-  tasks:
-    - name: Push NETCONF template
-      netconf_config:
-        content: "{{ lookup('template', 'viptela/netconf.j2') }}"
+    # - name: Do the thing
+    #   uri:
+    #     url: "https://{{ hostvars['vmanage1'].ansible_host }}/dataservice/system/device/sync/rootcertchain"
+    #     method: GET
+    #     headers:
+    #       Cookie: "{{ viptela_api_cookie }}"
+    #     validate_certs: no
+    #     return_content: yes
+    #   register: uri_results
+    #   delegate_to: localhost
 
-- name: Check connetivty to edges
-  hosts: colo_routers:&virl_hosts
-  tags:
-    - edge
-    - check_all
-    - check_edge
-  any_errors_fatal: true
-  connection: network_cli
+- name: Import vManage Templates
+  hosts: localhost
+  connection: local
   gather_facts: no
-  tasks:
-    - ios_ping:
-        dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
-      loop: "{{ groups.sdwan_edge | intersect(groups.virl_hosts) }}"
-      when: hostvars[item].vpn_instances is defined
-      register: result
-      retries: 10
-      delay: 10
-      until: result is not failed 
-
-- name: Bootstrap vEdges
-  hosts: sdwan_edge:&virl_hosts
+  roles:
+    - ansible-viptela
   tags:
-    - bootstrap
-    - edge
-  any_errors_fatal: true
-  gather_facts: no
-  serial: 1
-  vars:
-    viptela_api_username: admin
-    viptela_api_password: admin
-    viptela_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
-    ansible_network_os: ios
+    - control
+    - templates
   tasks:
     - set_fact:
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
@@ -349,13 +462,159 @@
     - set_fact:
         vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
 
-    - name: Bootstrap vEdge
-      include_role:
-        name: ansible-viptela
-        tasks_from: bootstrap-vedge
-      vars:
-        device_ip: "{{ hostvars[item].ansible_host }}"
-        root_ca_file: "{{ viptela_cert_dir }}/myCA.pem"
+    - name: Import feature templates
+      vmanage_feature_template:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
+        state: present
+        aggregate: "{{ vmanage_feature_templates }}"
+
+    - name: Import device templates
+      vmanage_device_template:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
+        state: present
+        aggregate: "{{ vmanage_device_templates }}"
+
+- name: Attach template to device
+  hosts: sdwan_edge:&virl_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - edge
+  roles:
+    - ansible-virl
+    - ansible-viptela
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Attach template to device
+      vmanage_device_attachment:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
+        uuid: "{{ viptela.uuid }}"
+        device_name: "{{ inventory_hostname }}"
+        system_ip: "{{ viptela.system_ip }}"
+        site_id: "{{ viptela.site_id }}"
+        template: "{{ viptela.template.name }}"
+        variables: "{{ viptela.template.variables | default(omit) }}"
+        wait: yes
+        state: present
+      when: viptela.template is defined
+      register: attachment_results
+
+- name: Bootstrap the SD-WAN edge nodes
+  hosts: sdwan_edge:&virl_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - edge
+  roles:
+    - ansible-viptela
+  serial: 1
+  # This is a workaround for a bug in vmanage.  When multiple requests
+  # for boostrap are made to vmanage at the same time, it gets corrupted
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Get bootstrap info
+      vmanage_device_bootstrap:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
+        uuid: "{{ viptela.uuid }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ result.bootstrap.bootstrapConfig }}"
+      when: result.bootstrap.bootstrapConfig is defined
+
+- name: Start the SD-WAN edge nodes
+  hosts: sdwan_edge:&virl_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - edge
+  roles:
+    - ansible-virl
+  tasks:
+    - name: Start Node
+      virl_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: started
+        config: "{{ day0_config | default(omit) }}"
+
+- name: Push Certs to Controllers
+  hosts: sdwan_edge:&virl_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - edge
+  roles:
+    - ansible-virl
+    - ansible-viptela
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Push Certs to Controllers
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_password }}"
+        state: push
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+      run_once: yes
+
+
+# - name: Check connectivity to edges
+#   hosts: colo_routers:&virl_hosts
+#   tags:
+#     - edge
+#     - check_all
+#     - check_edge
+#   any_errors_fatal: true
+#   connection: network_cli
+#   gather_facts: no
+#   tasks:
+#     - ios_ping:
+#         dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
+#       loop: "{{ groups.sdwan_edge | intersect(groups.virl_hosts) }}"
+#       when: hostvars[item].vpn_instances is defined
+#       register: result
+#       retries: 10
+#       delay: 10
+#       until: result is not failed 
+
 
     # - name: Do the thing
     #   uri:

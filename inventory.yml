@@ -9,4 +9,5 @@
     - debug:
         var: virl_facts
       tags:
+        - never
         - detail

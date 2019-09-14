@@ -5,4 +5,4 @@ virl:
       name: ge0/0
     - network: dc-vedge
       name: ge0/1
-  config_template: viptela/virl.j2
+  config_template: sdwan/vedge.j2

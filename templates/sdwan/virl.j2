@@ -1,0 +1,106 @@
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+{% if viptela.personality == 'vmanage' %}
+--==BOUNDARY==
+Content-Type: text/cloud-config; charset="us-ascii"
+
+#cloud-config
+vinitparam:
+
+ - format-partition : 1
+{% endif %}
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+#cloud-boothook
+system
+ personality             {{ viptela.personality }}
+ device-model            {{ viptela.device_model }}
+ host-name               {{ inventory_hostname.split('.')[0] }}
+{% if viptela.system_ip is defined %}
+ system-ip               {{ viptela.system_ip }}
+{% endif %}{# viptela.system_ip is defined #}
+{% if viptela.domain_id is defined %}
+ domain-id                 {{ viptela.domain_id }}
+{% endif %}{# viptela.domain_id is defined #}
+{% if viptela.site_id is defined %}
+ site-id                 {{ viptela.site_id }}
+{% endif %}{# viptela.site_id is defined #}
+ no route-consistency-check
+{% if organization_name is defined %}
+ organization-name       "{{ organization_name }}"
+{% endif %}{# viptela.org is defined #}
+{% if viptela.vbond is defined %}
+ vbond                   {{ viptela.vbond.remote }} {{ 'local' if vbond.local is sameas true else '' }}
+{% endif %}{# viptela.vbond is defined #}
+!
+ aaa
+  auth-order local radius tacacs
+  usergroup basic
+   task system read write
+   task interface read write
+  !
+
+  usergroup netadmin
+  !
+
+  usergroup operator
+   task system read
+   task interface read
+   task policy read
+   task routing read
+   task security read
+  !
+
+  user admin
+   password $6$u3jhmUlHRY16I1lI$OpkApAwXhGNo2xdKR.j2x7LF7OkRa9P02aSgACGMvmhidKHvxQ2poG6HTulDYp6BXfsm3clE6dz/wvOKLxA8e1
+  !
+ !
+
+ logging
+  disk
+   enable
+  !
+ !
+!
+
+{% for vpn in vpn_instances|default([]) %}
+vpn {{ vpn.vpn_id }}
+{%  for interface in vpn.interfaces %}
+ interface {{ interface.if_name }}
+{%   if interface.ip.address == 'dhcp' %}
+  ip dhcp-client
+{%   else %}
+  ip address {{ interface.ip.address }}
+{%   endif %}{# interface.ip.address == 'dhcp' #}
+{%   if interface.tunnel_interface is defined %}
+  tunnel-interface
+   allow-service dhcp
+   allow-service dns
+   allow-service icmp
+   allow-service sshd
+   allow-service netconf
+   allow-service ntp
+   allow-service stun
+   allow-service https
+{%   endif %}{# interface.tunnel_interface is defiend #}
+{%   if interface.enabled is sameas true %}
+  no shutdown
+{%   else %}
+  shutdown
+{%   endif %}{# interface.enabled is sameas true  #}
+{%  endfor %}{# for interface #}
+{%  for route in vpn.routes|default([]) %}
+  ip route {{ route.prefix }} {{ route.next_hop.address }}
+{%  endfor %}{# for routes #}
+{% endfor %}{# for vpn #}
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  no shutdown
+ !
+!
+--==BOUNDARY==
