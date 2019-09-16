@@ -17,10 +17,32 @@
     - assert:
         that:
           - stat_result.stat.exists
-          - organization_name != ""
-        msg: "'organization_name' must be defined and {{ serial_number_file }} must exist.  Verify the requirements in README are met."
+          - vmanage_org != ""
+        msg: "'vmanage_org' must be defined and {{ serial_number_file }} must exist.  Verify the requirements in README are met."
       delegate_to: localhost
       run_once: yes
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+  tags:
+    - build
+  vars:
+    lab_file: "{{ virl_lab }}.yaml"
+  tasks:
+    - name: Create the lab
+      virl_lab:
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: present
+        file: "{{ lab_file }}"
+
+    - name: Refresh Inventory
+      meta: refresh_inventory    
 
 - name: Start unmanaged nodes
   hosts: external_connector:unmanaged_switch
@@ -330,7 +352,7 @@
         host: "{{ vmanage_ip }}"
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_password }}"
-        organization: "{{ organization_name }}"
+        organization: "{{ vmanage_org }}"
         vbond: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
       register: result
       retries: 10

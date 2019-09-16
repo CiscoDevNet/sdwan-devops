@@ -42,21 +42,22 @@
     - set_fact:
         vmanage_host: "{{ groups.vmanage_hosts | first | default('') }}"
 
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default('') }}"
-      when: vmanage_host is defined
+    - block:
+      - set_fact:
+          vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default('') }}"
+        when: vmanage_host is defined
 
-    - name: Remove device from vManage
-      vmanage_device:
-        host: "{{ vmanage_ip }}"
-        user: "{{ vmanage_user }}"
-        password: "{{ vmanage_password }}"
-        uuid: "{{ viptela.uuid }}"
-        state: absent
-      delegate_to: localhost  
-      register: result
-      when: viptela is defined and viptela.uuid is defined
-      ignore_errors: yes
+      - name: Remove device from vManage
+        vmanage_device:
+          host: "{{ vmanage_ip }}"
+          user: "{{ vmanage_user }}"
+          password: "{{ vmanage_pass }}"
+          uuid: "{{ viptela.uuid }}"
+          state: absent
+        delegate_to: localhost  
+        register: result
+        when: viptela is defined and viptela.uuid is defined
+        ignore_errors: yes
       when: vmanage_ip is defined and vmanage_ip
 
 

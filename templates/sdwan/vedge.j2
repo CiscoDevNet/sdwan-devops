@@ -16,8 +16,8 @@ vinitparam:
 {%  if sdwan_uuid is defined %}
  - uuid: {{ sdwan_uuid }}
 {% endif %}{# sdwan_uuid is defined #}
-{%  if organization_name is defined %}
- - org: {{ organization_name }}
+{%  if vmanage_org is defined %}
+ - org: {{ vmanage_org }}
 {% endif %}{# viptela.org is defined #}
 {%  if viptela.vbond is defined %}
  - vbond: {{ viptela.vbond.remote }}
@@ -46,8 +46,8 @@ system
  site-id                 {{ viptela.site_id }}
 {% endif %}{# viptela.site_id is defined #}
  no route-consistency-check
-{% if organization_name is defined %}
- organization-name       "{{ organization_name }}"
+{% if vmanage_org is defined %}
+ organization-name       "{{ vmanage_org }}"
 {% endif %}{# viptela.org is defined #}
 {% if viptela.vbond is defined %}
  vbond                   {{ viptela.vbond.remote }} {{ 'local' if vbond.local is sameas true else '' }}
