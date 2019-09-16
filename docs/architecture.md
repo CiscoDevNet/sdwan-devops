@@ -96,9 +96,9 @@ session fails, the default route from that BGP session is no longer injects and 
 traffic then fails over to the remaining router.
 
 ### Firewalls
-High availabilty at the firewall is provided by a pair of active/passive ASA firewalls.  In an active/passive configuration,
+High availability at the firewall is provided by a pair of active/passive ASA firewalls.  In an active/passive configuration,
 only one firewall has the primary interfaces and forms OSPF sessions.  When the primary firewall fails, either from
-total system failuer or the failure of a monitors interfaces, it transitions to secondary and the previously secondary
+total system failure or the failure of a monitors interfaces, it transitions to secondary and the previously secondary
 transitions to primary.
 
 ### vEdges
@@ -107,7 +107,7 @@ VPN-specific OSPF Area on the appropriate Inside Peering network.  ECMP is used 
 to vEdges.
 
 ## Hardware Stack
-<img src="colo_hardware_stack.png" width="50%">
+<img src="images/colo_hardware_stack.png" width="50%">
 
 All CoLo functions are provided in a single hardware stack.  The switching fabric is provided by a pair of Catalyst
 9500s.  A pair of Cloud Services Platforms are used to provide VNF capacity.  Physical Network functions are added
