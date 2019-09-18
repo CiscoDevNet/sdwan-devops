@@ -1,5 +1,5 @@
 interfaces:
-  eth1:
+  enp0s3:
     enabled: true
     ip:
       primary: 172.16.5.10/24

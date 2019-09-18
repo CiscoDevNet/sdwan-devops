@@ -28,10 +28,30 @@
   roles:
     - ansible-virl
   tags:
-    - build
-  vars:
-    lab_file: "{{ virl_lab }}.yaml"
+    - virl
+    - network
+  # vars:
+  #   virl_tag: "{{ lookup('env', 'USER') | default('None', true) }}"
+  #   virl_lab: "{{ virl_tag }}-{{ virl_lab_name }}"
   tasks:
+    - name: Check for the lab file
+      stat:
+        path: "{{ virl_lab_file }}"
+      register: stat_result
+      delegate_to: localhost
+      run_once: yes
+
+    - assert:
+        that:
+          - stat_result.stat.exists
+          - virl_host != ""
+          - virl_username != ""
+          - virl_password != ""
+          - virl_lab != ""
+        msg: "VIRL host, credentials, and topology file are required.  Verify the requirements in README are met."
+      delegate_to: localhost
+      run_once: yes
+
     - name: Create the lab
       virl_lab:
         host: "{{ virl_host }}"
@@ -39,7 +59,11 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: present
-        file: "{{ lab_file }}"
+        file: "{{ virl_lab_file }}"
+      register: results
+
+    - debug:
+        var: results
 
     - name: Refresh Inventory
       meta: refresh_inventory    

@@ -21,7 +21,7 @@ all:
       children:
         intranet_hosts:
           hosts:
-            web-server:
+            intranet-server:
             site20-host1:
             site30-host1:
         # internet_hosts:
