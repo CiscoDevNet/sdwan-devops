@@ -1,24 +1,3 @@
-- hosts: localhost
-  connection: local
-  gather_facts: no
-  roles:
-    - ansible-virl
-  tags:
-    - keys
-    - always
-  tasks:
-    - name: Delete cert dir
-      file:
-        path: "{{ viptela_cert_dir }}"
-        state: absent
-
-    - name: Remove host from known_hosts
-      known_hosts:
-        name: "{{ hostvars[item].ansible_host }}"
-        state: absent
-      when: hostvars[item].ansible_host is defined
-      loop: "{{ groups.all }}"
-
 - hosts: sdwan
   connection: local
   gather_facts: no
@@ -28,6 +7,14 @@
   tags:
     - vmanage
   tasks:
+
+    - name: Delete Certificates
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.csr"
+        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.crt"
 
     - block:
       - set_fact:
