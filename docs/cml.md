@@ -30,6 +30,12 @@ This playbook will:
 * Launch the lab in CML
 * Wait until the VNFs are reachable
 
+`--limit` can be used to build individual nodes:
+
+```bash
+./play.sh build-cml.yml --limit=site1-cedge1
+```
+
 ### Configure the SD-WAN fabric
 
 ```bash
