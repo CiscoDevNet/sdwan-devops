@@ -4,6 +4,11 @@ Both the control plane and the edge can be deployed in CML
 
 ## Dependencies
 
+Set the name of the lab, e.g.:
+```
+export VIRL_LAB=myusername_sdwan
+```
+
 ## Bringing up the Simulation
 
 ### Create a local CA
