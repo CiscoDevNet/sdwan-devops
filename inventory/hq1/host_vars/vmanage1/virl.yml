@@ -1,0 +1,4 @@
+virl:
+  mgmt_interface: eth0
+  image_definition: viptela-manage-18-4-3
+  config_template: sdwan/virl.j2

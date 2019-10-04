@@ -36,12 +36,12 @@ all:
             vbond_hosts:
               hosts:
                 dc1-vbond1:
-                dc2-vbond1:
+                # dc2-vbond1:
             vsmart_hosts:
               hosts:
                 dc1-vsmart1:
-                dc2-vsmart1:
-                dc3-vsmart1:
+                # dc2-vsmart1:
+                # dc3-vsmart1:
         sdwan_edge:
           children:
             dc_sites:

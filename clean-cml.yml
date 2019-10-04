@@ -1,14 +1,3 @@
-# - name: Configure licensing
-#   hosts: firewall:&virl_hosts
-#   gather_facts: no
-#   connection: network_cli
-#   tasks:
-#     - name: Deregister from smart account
-#       asa_command:
-#         commands:
-#           - "license smart deregister"
-#       ignore_errors: yes
-
 - hosts: localhost
   connection: local
   gather_facts: no
@@ -43,9 +32,6 @@
     - block:
       - set_fact:
           vmanage_host: "{{ groups.vmanage_hosts | first | default('') }}"
-
-      - debug:
-          var: vmanage_host
 
       - set_fact:
           vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default('') }}"

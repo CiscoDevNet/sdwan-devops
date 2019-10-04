@@ -1,6 +1,0 @@
-virl:
-  subtype: lxc
-  interfaces:
-    - network: site1-corp-lan
-      name: eth1
-  config_template: virl/lxc.j2

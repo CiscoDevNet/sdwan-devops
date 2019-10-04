@@ -1,0 +1,11 @@
+interfaces:
+  eth0:
+    enabled: true
+    ip:
+      primary: 10.0.1.10/24
+
+static_routes:
+  global:
+    - network: 0.0.0.0/0
+      fwd_list:
+        - fwd: 10.0.1.1

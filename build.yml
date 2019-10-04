@@ -110,6 +110,7 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
+        image_definition: "{{ virl.image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Check initial topology connectivity
@@ -181,43 +182,8 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
+        image_definition: "{{ virl.image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
-
-- name: Create local CA
-  hosts: localhost
-  connection: local
-  tags:
-    - control
-    - CA
-  any_errors_fatal: true
-  gather_facts: no
-  tasks:
-    - name: Ensure directory exists for local self-signed TLS certs.
-      file:
-        path: "{{ viptela_cert_dir }}"
-        state: directory
-
-    - name: Generate an OpenSSL private key.
-      openssl_privatekey:
-        cipher: des3
-        passphrase: "{{ viptela_CA_passphrase }}"
-        path: "{{ viptela_cert_dir }}/myCA.key"
-
-    - name: Generate an OpenSSL CSR.
-      openssl_csr:
-        path: "{{ viptela_cert_dir }}/myCA.csr"
-        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
-        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
-        common_name: viptelaCA.local
-
-    - name: Generate a Self Signed OpenSSL certificate.
-      openssl_certificate:
-        path: "{{ viptela_cert_dir }}/myCA.pem"
-        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
-        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
-        csr_path: "{{ viptela_cert_dir }}/myCA.csr"
-        # select_crypto_backend: pyopenssl
-        provider: selfsigned
 
 - name: Start the SD-WAN control nodes
   hosts: sdwan_control:&virl_hosts
@@ -242,6 +208,7 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
+        image_definition: "{{ virl.image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Configure the SD-WAN control nodes
@@ -610,6 +577,7 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
+        image_definition: "{{ virl.image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Push Certs to Controllers
