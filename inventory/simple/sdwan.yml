@@ -1,0 +1,47 @@
+all:
+  vars:
+    sdwan_vbond: 192.133.179.13
+  children:
+    sdwan:
+      children:
+        sdwan_control:
+          children:
+            vmanage_hosts:
+              vars:
+                sdwan_personality: vmanage
+                sdwan_device_model: vmanage
+              hosts:
+                cpn-rtp-vmanage1:
+                  sdwan_system_ip: 1.1.1.1
+                  sdwan_transport_ip: 192.133.179.11
+                  ansible_host: "{{ sdwan_transport_ip }}"
+                  sdwan_site_id: 1
+            vbond_hosts:
+              vars:
+                sdwan_personality: vbond
+                sdwan_device_model: vbond
+              hosts:
+                cpn-rtp-vbond1:
+                  sdwan_system_ip: 1.1.3.1
+                  sdwan_transport_ip: 192.133.179.13
+                  ansible_host: "{{ sdwan_transport_ip }}"
+                  sdwan_site_id: 3
+                # vbond2:
+            vsmart_hosts:
+              vars:
+                sdwan_personality: vsmart
+                sdwan_device_model: vsmart
+              hosts:
+                cpn-rtp-vsmart1:
+                  sdwan_system_ip: 1.1.2.1
+                  sdwan_transport_ip: 192.133.179.12
+                  ansible_host: "{{ sdwan_transport_ip }}"
+                  sdwan_site_id: 2
+                # vsmart2:
+                # vsmart3:
+        sdwan_edge:
+          children:
+            dc_sites:
+              hosts:              
+            branch_sites:
+              hosts:

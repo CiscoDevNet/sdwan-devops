@@ -1,0 +1,83 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <vpn xmlns="http://viptela.com/vpn">
+        {% for vpn in vpn_instances|default([]) %}
+        <vpn-instance>
+            <vpn-id>{{ vpn.vpn_id }}</vpn-id>
+            <interface>
+                {% for interface in vpn.interfaces %}
+                    <if-name>{{ interface.if_name }}</if-name>
+                    {% if interface.ip is defined %}
+                        <ip>
+                            {% if interface.ip.address is defined %}
+                                <address>{{ interface.ip.address }}</address>
+                            {% elif interface.ip.dhcp_client is defined %}
+                                <dhcp-client>{{ 'true' if interface.ip.dhcp_client else 'false' }}</dhcp-client>
+                            {% endif %}{# interface.ip.address #}
+                        </ip>
+                    {% endif %}{# interface.ip #}
+                    {% if interface.tunnel_interface is defined %}
+                        <tunnel-interface>
+                            {% if interface.tunnel_interface.allow_service is defined %}
+                                <allow-service>
+                                    {% for service in interface.tunnel_interface.allow_service %}
+                                        <{{ service }}>true</{{ service }}>
+                                    {% endfor %}{# service #}
+                                </allow-service>
+                            {% endif %}{# interface.allow_service #}
+                        </tunnel-interface>
+                    {% endif %}{# interface.tunnel_inteface #}
+                    {% if interface.enabled is defined %}
+                        {% if interface.enabled is sameas true %}
+                        <shutdown>false</shutdown>
+                        {% else %}
+                        <shutdown>true</shutdown>
+                        {% endif %}
+                    {% endif %}{# interface.shutdown #}
+            </interface>
+            {% endfor %}{# vpn.interfaces #}
+            {% if vpn.ospf is defined %}
+            <router>
+                <ospf>
+                    {% if vpn.ospf.redistribute is defined %}
+                        <redistribute>
+                            {% for protocol in vpn.ospf.redistribute|default([]) %}
+                                <protocol>{{ protocol }}</protocol>
+                            {% endfor %}{# vpn.redistribute.protocols #}
+                        </redistribute>
+                    {% endif %}{# vpn.redistribute #}
+                    <area>
+                    <a-num>{{ vpn.ospf.area }}</a-num>
+                    {% for interface in vpn.ospf.interfaces|default([]) %}
+                        <interface>
+                            <name>{{ interface.if_name }}</name>
+                            <hello-interval>{{ interface.hello_interval|default('10') }}</hello-interval>
+                            <dead-interval>{{ interface.dead_interval|default('40') }}</dead-interval>
+                            <retransmit-interval>{{ interface.retransmit_interval|default('5') }}</retransmit-interval>
+                            <priority>{{ interface.priority|default('1') }}</priority>
+                            <network>{{ interface.network|default('broadcast') }}</network>
+                        </interface>
+                    {% endfor %}{# vpn.ospf.interfaces #}
+                    </area>
+                </ospf>
+            </router>
+            {% endif %}{# vpn.ospf is defined #}
+            {% if vpn.routes is defined %}
+            <ip>
+                {% for route in vpn.routes|default([]) %}
+                    <route>
+                        <prefix>{{ route.prefix }}</prefix>
+                        {% if route.next_hop is defined %}
+                            <next-hop>
+                                <address>{{ route.next_hop.address }}</address>
+                                <distance>{{ route.next_hop.distance if route.next_hop.distance is defined else '1' }}</distance>
+                            </next-hop>
+                        {% endif %}{# route.next_hop #}
+                    </route>
+                {% endfor %}{# vpn.routes #}
+            </ip>
+            {% endif %}{# vpn.routes is defined #}
+        </vpn-instance>
+        {% endfor %}{# vpn_instances #}
+    </vpn>
+</config>

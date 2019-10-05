@@ -1,15 +1,3 @@
-viptela:
-  system_ip: 192.168.255.12
-  transport_ip: 10.0.0.12
-  site_id: 1
-  vbond:
-    remote: 10.0.0.11
-  personality: vsmart
-  device_model: vsmart
-  gps_location:
-    latitude: 37.411343
-    longitude: -121.938803
-
 vpn_instances:
   - vpn_id: 0
     interfaces:

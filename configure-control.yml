@@ -9,7 +9,7 @@
   tasks:
     - name: Check for the license file
       stat:
-        path: "{{ serial_number_file }}"
+        path: "{{ sdwan_serial_file }}"
       register: stat_result
       delegate_to: localhost
       run_once: yes
@@ -18,9 +18,31 @@
         that:
           - stat_result.stat.exists
           - vmanage_org != ""
-        msg: "'vmanage_org' must be defined and {{ serial_number_file }} must exist.  Verify the requirements in README are met."
+        msg: "'vmanage_org' must be defined and {{ sdwan_serial_file }} must exist.  Verify the requirements in README are met."
       delegate_to: localhost
       run_once: yes
+
+- name: Push NETCONF template
+  hosts: sdwan_control
+  connection: netconf
+  tags:
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - netconf_config:
+        content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
+
+- name: Push NETCONF template
+  hosts: vbond_hosts
+  connection: netconf
+  tags:
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - netconf_config:
+        content: "{{ lookup('template', 'sdwan/netconf/vpn.j2') }}"
 
 - name: Copy CA to controllers
   hosts: vbond_hosts:vsmart1
@@ -34,7 +56,7 @@
   tasks:
     - name: Copy Root CA to controllers
       copy:
-        src: "{{ viptela_cert_dir }}/myCA.pem"
+        src: "{{ sdwan_cert_dir }}/myCA.pem"
         dest: /home/admin
       register: copy_results
 
@@ -67,8 +89,8 @@
         url: "https://{{ vmanage_ip }}/dataservice/system/device/controllers"
         method: POST
         body:
-          j_username: "{{ viptela_api_username }}"
-          j_password: "{{ viptela_api_password }}"
+          j_username: "{{ vmanage_user }}"
+          j_password: "{{ vmanage_pass }}"
         body_format: form-urlencoded
         return_content: yes
         validate_certs: no
@@ -105,7 +127,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         organization: "{{ vmanage_org }}"
-        vbond: "{{ hostvars[vbond_controller].viptela.transport_ip }}"
+        vbond: "{{ hostvars[vbond_controller].sdwan_transport_ip }}"
       register: result
       retries: 10
       delay: 10
@@ -119,8 +141,8 @@
         device_username: admin
         device_password: admin
         name: "{{ item }}"
-        personality: "{{ hostvars[item].viptela.personality }}"
-        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
+        personality: "{{ hostvars[item].sdwan_personality }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
       loop: "{{ groups.vbond_hosts + groups.vsmart_hosts }}"
       register: result
       retries: 10
@@ -133,7 +155,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         ca_type: enterprise
-        root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
+        root_cert: "{{lookup('file', '{{ sdwan_cert_dir }}/myCA.pem')}}"
       register: result
       retries: 10
       delay: 10
@@ -145,7 +167,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         name: "{{ item }}"
-        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
         state: csr
       loop: "{{ groups.sdwan_control }}"
       register: control_devices
@@ -156,19 +178,18 @@
     - name: Write out CSR
       copy:
         content: "{{ item.deviceCSR }}"
-        dest: "{{ viptela_cert_dir }}/{{ item.item }}.csr"
+        dest: "{{ sdwan_cert_dir }}/{{ item.item }}.csr"
       loop: "{{ control_devices.results }}"
       delegate_to: localhost
 
     - name: Sign Controller Cert
       openssl_certificate:
-        csr_path: "{{ viptela_cert_dir }}/{{ item }}.csr"
-        path: "{{ viptela_cert_dir }}/{{ item }}.crt"
+        csr_path: "{{ sdwan_cert_dir }}/{{ item }}.csr"
+        path: "{{ sdwan_cert_dir }}/{{ item }}.crt"
         provider: ownca
-        ownca_path: "{{ viptela_cert_dir }}/myCA.pem"
-        ownca_privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
-        ownca_privatekey_passphrase: "{{ viptela_CA_passphrase }}"
-        # select_crypto_backend: pyopenssl
+        ownca_path: "{{ sdwan_cert_dir }}/myCA.pem"
+        ownca_privatekey_path: "{{ sdwan_cert_dir }}/myCA.key"
+        ownca_privatekey_passphrase: "{{ sdwan_CA_passphrase }}"
       loop: "{{ groups.sdwan_control }}"
       delegate_to: localhost
 
@@ -178,8 +199,8 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         name: "{{ item }}"
-        device_ip: "{{ hostvars[item].viptela.transport_ip }}"
-        cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.crt')}}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        cert: "{{lookup('file', '{{ sdwan_cert_dir }}/{{ item }}.crt')}}"
       loop: "{{ groups.sdwan_control }}"
       register: result
       retries: 10
@@ -202,7 +223,7 @@
         host: "{{ vmanage_ip }}"
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
-        file: "{{ serial_number_file }}"
+        file: "{{ sdwan_serial_file }}"
       delegate_to: localhost
       register: result
       retries: 10
@@ -220,7 +241,6 @@
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-    # file: vmanage_templates.yml
   gather_facts: no
   tasks:
     - name: Import feature templates
@@ -239,4 +259,4 @@
         password: "{{ ansible_password }}"
         state: present
         aggregate: "{{ vmanage_device_templates }}"
-      when: vmanage_device_templates
+      when: vmanage_device_templates is defined

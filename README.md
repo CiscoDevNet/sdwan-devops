@@ -1,6 +1,6 @@
 # SDWAN DevOps
 
-This repo contains a set of tools to create automated workflows and CI/CD pipelines for Cisco SDWAN.
+This repo contains a set of tools to automate workflows and build CI/CD pipelines for Cisco SDWAN.
 
 ## Installation
 
@@ -56,16 +56,54 @@ organization_name: "<your org name>"
 license_token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-## Inventories/Topologies
+## Structure
 
-This repo comes with several built-in topologies and more can be added.  In order to switch between
-topologies, either edit `ansible.cfg` and point `inventory` to the proper directory (e.g. `inventory/hq1`)
-or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml)
+The repo contains a set of playbooks, roles, templates, and inventories.
+
+### Inventories
+
+The local defaults are set in `group_vars/all/local/yml`
+
+### Topologies
+
+This repo comes with several built-in topologies located in the inventory and more can be added.  In order to switch between topologies, either edit `ansible.cfg` and point `inventory` to the proper directory (e.g. `inventory/hq1`) or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml)
+
+### Variables
+
+The following variables are used by the playbooks and must be set somewhere in the inventory:
+
+```
+sdwan_system_ip: 192.168.255.13
+sdwan_site_id: 1
+sdwan_vbond: 10.0.0.11
+sdwan_model: 'vedge-CSR-1000v'
+sdwan_uuid: 'CSR-82DEC3C6-3A28-B866-6F4A-40BEA274CA00'
+sdwan_personality: vedge
+sdwan_template:
+  name: 'hq-csr1000v'
+  variables:
+    'vpn512_interface': GigabitEthernet1
+    'vpn0_internet_ipv4_address': 10.0.0.13/24
+    'vpn0_default_gateway': 10.0.0.1
+    'vpn0_interface': GigabitEthernet2
+    'vpn1_ipv4_address': 10.0.255.6/30
+    'vpn1_interface': GigabitEthernet3
+    'vpn1_ospf_interface': GigabitEthernet3
+    'system_latitude': 37.411343
+    'system_longitude': -121.938803
+    'system_site_id': 1
+    'system_host_name': hq-cedge1
+    'system_system_ip': 192.168.255.13
+    'banner_login': "{{ login_banner }}"
+    'banner_motd': Welcome to hq-cedge1!
+```
+
+## Playbooks
 
 ## Infrastructure
 
 This tooling is capable of deploying on different infrastructure:
-* [Cisco Modelling Labs](docs/cml.md)
+* [VIRL](docs/virl.md)
 * [Vmware](docs/vmware.md)
 * AWS
 * Azure

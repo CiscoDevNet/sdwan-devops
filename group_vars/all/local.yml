@@ -2,3 +2,9 @@ vmanage_user: "{{ lookup('env','VMANAGE_USER') | default('admin', true) }}"
 vmanage_pass: "{{ lookup('env','VMANAGE_PASS') | default('admin', true) }}"
 vmanage_org: "{{ lookup('env','VMANAGE_ORG') | default('', true) }}"
 smart_token: "{{ lookup('env','SMART_TOKEN') | default('', true) }}"
+ansible_user: "{{ vmanage_user }}"
+ansible_password: "{{ vmanage_pass }}"
+sdwan_serial_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
+sdwan_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
+# Encrypt/Vault this in real life
+sdwan_CA_passphrase: Cisc0123
