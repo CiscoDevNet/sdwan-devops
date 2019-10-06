@@ -100,10 +100,23 @@ sdwan_template:
 
 ## Playbooks
 
+### `configure-control.yml`
+* Configure setting on vmanage
+* Install Enterprise CA when required
+* Add vbonds and vsmarts to vmanage
+* Create CSRs for vbonds and vsmarts
+* Install certificates into vmanage
+* Push certificates to controllers
+* Import templates if present
+* Import policy if present
+
+### `build-ca.yml`
+* Creates a local CA
+
 ## Infrastructure
 
 This tooling is capable of deploying on different infrastructure:
 * [VIRL](docs/virl.md)
-* [Vmware](docs/vmware.md)
+* [Vmware](docs/tf-vmware.md)
 * AWS
 * Azure

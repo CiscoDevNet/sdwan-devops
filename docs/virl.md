@@ -29,7 +29,7 @@ The files that define the labs are located in `{{ playbook_dir }}/files`.  The `
 ### Create a local CA
 
 ```bash
-./play.sh local-ca.yml
+./play.sh build-ca.yml
 ```
 
 ### Build the topology
