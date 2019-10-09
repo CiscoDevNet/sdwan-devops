@@ -24,6 +24,8 @@ lab: myusername_sdwan
 
 The files that define the labs are located in `{{ playbook_dir }}/files`.  The `build-virl.yml` playbooks builds the lab specified in the `virl_lab_file` fact located in `inventory/<topology_name>/group_vars/all/virl.yml`
 
+To save changes that you make in the VIRL GUI, download the lab and override the existing file.
+
 ## Bringing up the Simulation
 
 ### Create a local CA
