@@ -1,0 +1,2 @@
+virl:
+  config_template: virl/lxc.j2

@@ -1,0 +1,31 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <system xmlns="http://viptela.com/system">
+        <host-name>{{ inventory_hostname }}</host-name>
+        {% if sdwan_system_ip is defined %}
+        <system-ip>{{ sdwan_system_ip }}</system-ip>
+        {% endif %}
+        {% if sdwan_site_id is defined %}
+        <site-id>{{ sdwan_site_id }}</site-id>
+        {% endif %}
+        {% if vmanage_org is defined %}
+        <organization-name>{{ vmanage_org }}</organization-name>
+        {% endif %}
+        {% if sdwan_personality is defined and sdwan_personality == 'vbond' %}
+        <vbond>
+            <remote>{{ sdwan_transport_ip }}</remote>
+            {% if sdwan_vbond_port is defined %}
+                <port>{{ sdwan_vbond_port }}</port>
+            {% endif %}
+                <local/>
+        </vbond>
+        {% elif sdwan_vbond is defined %}
+        <vbond>
+            <remote>{{ sdwan_vbond }}</remote>
+            {% if sdwan_vbond_port is defined %}
+                <port>{{ sdwan_vbond_port }}</port>
+            {% endif %}
+        </vbond>
+        {% endif %}
+    </system>
+</config>

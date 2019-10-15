@@ -1,0 +1,3 @@
+virl:
+  mgmt_interface: GigabitEthernet1
+  config_template: ios/virl.j2

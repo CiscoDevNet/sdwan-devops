@@ -1,0 +1,35 @@
+interfaces:
+  GigabitEthernet1:
+    description: OOB Management
+    vrf: Mgmt-intf
+    enabled: true
+    ip:
+      primary: dhcp
+  GigabitEthernet2:
+    description: DC Border
+    enabled: true
+    ip:
+      primary: 10.0.255.2/30
+  GigabitEthernet3:
+    description: DC LAN
+    enabled: true
+    ip:
+      primary: 10.0.1.1/24
+  GigabitEthernet4:
+    description: hq-cedge1
+    enabled: true
+    ip:
+      primary: 10.0.255.5/30
+
+router:
+  ospf:
+    id: 65001
+    router_id: 10.0.255.5
+#    default_information_originate: true
+    networks:
+      - network: 10.0.255.0/30
+        area: 0
+      - network: 10.0.255.4/30
+        area: 0
+      - network: 10.0.1.0/24
+        area: 0

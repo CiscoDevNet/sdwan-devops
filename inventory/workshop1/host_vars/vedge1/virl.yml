@@ -1,8 +1,0 @@
-virl:
-  subtype: "{{ virl_vedge_subtype }}"
-  interfaces:
-    - network: site1-wan
-      name: ge0/0
-    - network: site1-lan
-      name: ge0/1
-  config_template: viptela/virl.j2

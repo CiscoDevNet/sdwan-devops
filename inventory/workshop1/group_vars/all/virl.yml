@@ -1,7 +1,0 @@
-virl_env: default
-virl_tag: "{{ lookup('env', 'USER') | default(virl_env) }}"
-virl_sim_file: ".virl/{{ virl_env }}/id"
-virl_vedge_subtype: vEdge
-virl_vmanage_subtype: vManage
-virl_vbond_subtype: vBond
-virl_vsmart_subtype: vSmart

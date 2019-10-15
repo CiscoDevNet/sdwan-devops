@@ -1,0 +1,20 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+  tasks:
+    - virl_lab_facts:
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+      register: result
+
+    - debug:
+        var: result.virl_facts.details
+
+    - debug:
+      #   msg: "{{ result.virl_facts.nodes['internet'].interfaces[virl.mgmt_interface].ipv4_addresses }}"
+      # when: virl is defined and virl.mgmt_interface is defined
+

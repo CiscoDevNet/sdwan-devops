@@ -1,92 +1,262 @@
-- hosts: control
+- name: Check playbook requirements
+  hosts: localhost
+  connection: network_cli
+  tags:
+    - network
+    - CA
+  any_errors_fatal: true
   gather_facts: no
-  become: yes
-  pre_tasks:
-    - name: Install python for Ansible
-      raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
-      register: output
-      changed_when: output.stdout
-    - name: Gathering Facts
-      setup:
   tasks:
-    - name: Update and upgrade apt
-      apt:
-        upgrade: yes
-        update_cache: yes
+    - name: Check for the license file
+      stat:
+        path: "{{ sdwan_serial_file }}"
+      register: stat_result
+      delegate_to: localhost
+      run_once: yes
 
-    - name: Install packages
-      apt:
-        name:
-          - python3
-          - python3-pip
-          - libssl-dev
-          - sshpass
-          - python3-setuptools
-          - python-setuptools
-          - libffi-dev
+    - assert:
+        that:
+          - stat_result.stat.exists
+          - vmanage_org != ""
+        msg: "'vmanage_org' must be defined and {{ sdwan_serial_file }} must exist.  Verify the requirements in README are met."
+      delegate_to: localhost
+      run_once: yes
 
-    - name: Install required PIP packages
-      pip:
+- name: Push NETCONF template
+  hosts: sdwan_control
+  connection: netconf
+  tags:
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - netconf_config:
+        content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
+
+- name: Push NETCONF template
+  hosts: vbond_hosts
+  connection: netconf
+  tags:
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - netconf_config:
+        content: "{{ lookup('template', 'sdwan/netconf/vpn.j2') }}"
+
+- name: Copy CA to controllers
+  hosts: vbond_hosts:vsmart1
+  tags:
+    - control
+    - debug
+  any_errors_fatal: true
+  gather_facts: no
+  vars:
+    ansible_network_os: ios
+  tasks:
+    - name: Copy Root CA to controllers
+      copy:
+        src: "{{ sdwan_cert_dir }}/myCA.pem"
+        dest: /home/admin
+      register: copy_results
+
+    - name: Install RootCA
+      cli_command:
+        command: "request root-cert-chain install /home/admin/myCA.pem"
+      register: command_result
+      connection: network_cli
+      failed_when: "'Failed' in command_result.stdout"
+
+- name: Verify that vManage is fully operational
+  hosts: localhost
+  connection: local
+  tags:
+    - check_control
+    - check_all
+    - control
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Waiting for vManage API to start
+      uri:
+        url: "https://{{ vmanage_ip }}/dataservice/system/device/controllers"
+        method: POST
+        body:
+          j_username: "{{ vmanage_user }}"
+          j_password: "{{ vmanage_pass }}"
+        body_format: form-urlencoded
+        return_content: yes
+        validate_certs: no
+      no_log: true
+      register: uri_results
+      delegate_to: localhost
+      failed_when: false
+      until: uri_results.msg.find("OK") != -1
+      retries: 60
+      delay: 10
+
+- name: Configure vmanage
+  hosts: localhost
+  roles:
+    - ansible-viptela
+  tags:
+    - control
+    - vmanage
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - set_fact:
+        vbond_controller: "{{ groups.vbond_hosts[0] }}"
+
+    - name: vManage Settings
+      vmanage_settings:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        organization: "{{ vmanage_org }}"
+        vbond: "{{ hostvars[vbond_controller].sdwan_transport_ip }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Add Control Hosts
+      vmanage_device:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        device_username: admin
+        device_password: admin
         name: "{{ item }}"
-        executable: pip3
-        requirements: requirements.txt
+        personality: "{{ hostvars[item].sdwan_personality }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+      loop: "{{ groups.vbond_hosts + groups.vsmart_hosts }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
 
+    - name: Add the Enterprise CA
+      vmanage_settings:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        ca_type: enterprise
+        root_cert: "{{lookup('file', '{{ sdwan_cert_dir }}/myCA.pem')}}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
 
-    - name: Make python 3 the default
-      alternatives:
-        name: python
-        link: /usr/bin/python
-        path: /usr/bin/python3
-        priority: 10
+    - name: Generate CSRs
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        name: "{{ item }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        state: csr
+      loop: "{{ groups.sdwan_control }}"
+      register: control_devices
+      retries: 10
+      delay: 10
+      until: control_devices is not failed 
 
-    - name: Add VIRL hosts to /etc/hosts
-      lineinfile:
-        dest: /etc/hosts
-        regexp: '.*{{ item }}$'
-        line: "{{ hostvars[item].ansible_host }} {{ item }}"
-        state: present
-      when: hostvars[item].ansible_host is defined
-      with_items: "{{ groups.virl_hosts }}"
-
-    - name: clone the repo
-      git:
-        repo: 'https://github.com/CiscoDevNet/ps-crn.git'
-        dest: /home/virl/ps-crn
-      become_user: virl
-
-    - name: Creare .virlrc
-      blockinfile:
-        path: /home/virl/.virlrc
-        create: yes
-        block: |
-          VIRL_USERNAME={{ virl_username }}
-          VIRL_PASSWORD={{ virl_password }}
-          VIRL_HOST=192.133.178.9
-
-    - name: Create simulation environment directory
-      file:
-        path: /home/virl/ps-crn/.virl/default
-        state: directory
-
-    - name: Create simulation ID file
+    - name: Write out CSR
       copy:
-        dest: /home/virl/ps-crn/.virl/default/id
-        content: "{{ virl_simulation }}"
+        content: "{{ item.deviceCSR }}"
+        dest: "{{ sdwan_cert_dir }}/{{ item.item }}.csr"
+      loop: "{{ control_devices.results }}"
+      delegate_to: localhost
 
-    - name: Create license directory
-      file:
-        path: /home/virl/ps-crn/licenses
-        state: directory
+    - name: Sign Controller Cert
+      openssl_certificate:
+        csr_path: "{{ sdwan_cert_dir }}/{{ item }}.csr"
+        path: "{{ sdwan_cert_dir }}/{{ item }}.crt"
+        provider: ownca
+        ownca_path: "{{ sdwan_cert_dir }}/myCA.pem"
+        ownca_privatekey_path: "{{ sdwan_cert_dir }}/myCA.key"
+        ownca_privatekey_passphrase: "{{ sdwan_CA_passphrase }}"
+      loop: "{{ groups.sdwan_control }}"
+      delegate_to: localhost
 
-    - name: Copy license
-      copy:
-        dest: /home/virl/ps-crn/licenses
-        src: licenses/serialFile.viptela
+    - name: Add Certificate to Control Hosts
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        name: "{{ item }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        cert: "{{lookup('file', '{{ sdwan_cert_dir }}/{{ item }}.crt')}}"
+      loop: "{{ groups.sdwan_control }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
 
-    - name: Copy viptela.yml
-      copy:
-        dest: /home/virl/ps-crn/inventory/group_vars/all/viptela.yml
-        src: inventory/group_vars/all/viptela.yml
+    - name: Push Certs to Controllers
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        state: push
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Install Serial File
+      vmanage_fileupload:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        file: "{{ sdwan_serial_file }}"
+      delegate_to: localhost
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed
 
     - debug:
-        msg: "Control node IP: {{ ansible_host }}"
+        msg: "vManage IP: {{ vmanage_ip }}"
+
+- name: Import vManage Policy Lists
+  hosts: localhost
+  connection: local
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+  gather_facts: no
+  tasks:
+    - name: Import feature templates
+      vmanage_feature_template:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+        state: present
+        aggregate: "{{ vmanage_feature_templates }}"
+      when: vmanage_feature_templates is defined
+
+    - name: Import device templates
+      vmanage_device_template:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+        state: present
+        aggregate: "{{ vmanage_device_templates }}"
+      when: vmanage_device_templates is defined

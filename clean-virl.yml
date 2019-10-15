@@ -1,0 +1,88 @@
+- hosts: sdwan
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+    - ansible-viptela
+  tags:
+    - vmanage
+  tasks:
+
+    - name: Delete Certificates
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.csr"
+        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.crt"
+
+    - block:
+      - set_fact:
+          vmanage_host: "{{ groups.vmanage_hosts | first | default('') }}"
+
+      - set_fact:
+          vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default('') }}"
+        when: vmanage_host is defined
+
+      - name: Remove device from vManage
+        vmanage_device:
+          host: "{{ vmanage_ip }}"
+          user: "{{ vmanage_user }}"
+          password: "{{ vmanage_pass }}"
+          uuid: "{{ viptela.uuid | default(omit) }}"
+          name: "{{ inventory_hostname }}"
+          personality: "{{ viptela.personality | default(omit) }}"
+          state: absent
+        delegate_to: localhost  
+        register: result
+        ignore_errors: yes
+        when: vmanage_ip is defined and vmanage_ip
+
+      when: viptela is defined
+
+
+- hosts: virl_hosts
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+  tasks:
+    - name: Stop the node
+      virl_node:
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        name: "{{ inventory_hostname }}"
+        lab: "{{ virl_lab }}"
+        state: stopped
+      tags:
+        - stop
+        - wipe
+
+    - name: Wipe the node
+      virl_node:
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        name: "{{ inventory_hostname }}"
+        lab: "{{ virl_lab }}"
+        state: wiped
+      tags:
+        - wipe
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+  tags:
+    - never
+    - destroy
+  tasks:
+    - name: Delete the lab
+      virl_lab:
+        host: "{{ virl_host }}"
+        user: "{{ virl_username }}"
+        password: "{{ virl_password }}"
+        lab: "{{ virl_lab }}"
+        state: absent

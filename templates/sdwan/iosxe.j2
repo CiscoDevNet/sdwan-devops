@@ -1,0 +1,69 @@
+Content-Type: multipart/mixed; boundary="===============6560338015520979320=="
+MIME-Version: 1.0
+
+{% if viptela is defined %}
+--===============6560338015520979320==
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="vedge.cloud-config"
+
+#cloud-config
+vinitparam:
+{%  if viptela.otp is defined %}
+ - otp: {{ viptela.otp }}
+{% endif %}{# viptela.otp is defined #}
+{%  if viptela.uuid is defined %}
+ - uuid: {{ viptela.uuid }}
+{% endif %}{# viptela.uuid is defined #}
+{%  if vmanage_org is defined %}
+ - org: {{ vmanage_org }}
+{% endif %}{# viptela.org is defined #}
+{%  if viptela.vbond is defined %}
+ - vbond: {{ viptela.vbond.remote }}
+{% endif %}
+{% endif %}
+
+--===============6560338015520979320==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="vedge.init-config"
+
+#cloud-boothook
+
+system
+ personality             vedge
+ device-model            vedge-CSR-1000v
+ host-name               {{ inventory_hostname.split('.')[0] }}
+{% if viptela is defined %}
+{% if viptela.system_ip is defined %}
+ system-ip               {{ viptela.system_ip }}
+{% endif %}{# viptela.system_ip is defined #}
+{% if viptela.domain_id is defined %}
+ domain-id                 {{ viptela.domain_id }}
+{% endif %}{# viptela.domain_id is defined #}
+{% if viptela.site_id is defined %}
+ site-id                 {{ viptela.site_id }}
+{% endif %}{# viptela.site_id is defined #}
+ no route-consistency-check
+{% if vmanage_org is defined %}
+ organization-name       "{{ vmanage_org }}"
+{% endif %}{# viptela.org is defined #}
+{% if viptela.vbond is defined %}
+ vbond                   {{ viptela.vbond.remote }} {{ 'local' if vbond.local is sameas true else '' }}
+{% endif %}{# viptela.vbond is defined #}
+{% endif %}
+!
+interface GigabitEthernet1
+  no shutdown
+  arp timeout 1200
+  vrf forwarding Mgmt-intf
+  ip address dhcp client-id GigabitEthernet1
+  ip redirects
+  ip dhcp client default-router distance 1
+  ip mtu    1500
+  mtu 1500
+  negotiation auto
+exit
+--===============6560338015520979320==

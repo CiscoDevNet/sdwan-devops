@@ -1,0 +1,3 @@
+virl:
+  mgmt_interface: eth0
+  config_template: sdwan/virl.j2

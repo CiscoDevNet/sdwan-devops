@@ -1,0 +1,24 @@
+interfaces:
+  GigabitEthernet1:
+    vrf: Mgmt-intf
+    enabled: true
+    ip:
+      primary: dhcp
+  GigabitEthernet2:
+    enabled: true
+    ip:
+      primary: 172.20.0.10/30
+  GigabitEthernet3:
+    enabled: true
+    ip:
+      primary: 10.22.3.1/24
+  GigabitEthernet4:
+    enabled: true
+    ip:
+      primary: 10.22.4.0/24
+
+static_routes:
+  global:
+    - network: 0.0.0.0/0
+      fwd_list:
+        - fwd: 172.20.0.9

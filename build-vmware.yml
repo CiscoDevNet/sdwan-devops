@@ -1,0 +1,66 @@
+- name: Build the topology
+  hosts: localhost
+  gather_facts: no
+  vars:
+    vmanage_device_list:
+      - name: 'cpn-rtp-vmanage1'
+        network: 'cpn-rtp-colab1'
+        ipv4_address: 192.133.179.11
+        ipv4_gateway: 192.133.179.1
+    vsmart_device_list:
+      - name: 'cpn-rtp-vbond1'
+        network: 'cpn-rtp-colab1'
+        ipv4_address: 192.133.179.12
+        ipv4_gateway: 192.133.179.1
+    vbond_device_list:
+      - name: 'cpn-rtp-vsmart1'
+        network: 'cpn-rtp-colab1'
+        ipv4_address: 192.133.179.13
+        ipv4_gateway: 192.133.179.1    
+  tasks:
+    - name: Create a virtual machine from a template
+      vmware_guest:
+        hostname: "cpn-rtp-vc1.ciscops.net"
+        username: "stevenca@ciscops.net"
+        password: "gxp96#FF2Dea4sYU"
+        validate_certs: no
+        folder: /colab
+        name: cpn-rtp-vmanage1
+        state: poweredon
+        template: viptela-vmanage-18.4.3-genericx86-64
+        disk:
+        - datastore: g73_datastore
+        networks:
+        - name: cpn-rtp-colab1
+          ip: 192.133.179.11
+          netmask: 255.255.255.0
+          gateway: 192.133.179.1
+        wait_for_ip_address: yes
+      register: deploy
+
+    - debug:
+        var: deploy
+
+
+
+  # - terraform:
+  #     project_path: 'terraform/vmware'
+  #     state: present
+  #     force_init: true
+  #     backend_config:
+  #       vsphere_password: "gxp96#FF2Dea4sYU"
+  #       vbond_device_list: "{{ vbond_device_list }}"
+  #       vmanage_device_list: '{{ vmanage_device_list|to_json }}'
+  #       vsmart_device_list: '{{ vsmart_device_list|to_json }}'
+  #     variables:
+  #       vsphere_user: "stevenca@ciscops.net"
+  #       vsphere_server: "cpn-rtp-vc1.ciscops.net"
+  #       datacenter: RTP
+  #       cluster: CPN
+  #       datastore: datastore1
+  #       iso_datastore: datastore1
+  #       iso_path: cloud-init
+  #       vmanage_template: viptela-vmanage-18.4.3-genericx86-64
+  #       vbond_template: viptela-edge-18.4.3-genericx86-64
+  #       vsmart_template: viptela-smart-18.4.3-genericx86-64
+  #   register: results
