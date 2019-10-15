@@ -2,6 +2,8 @@
 
 Both the control plane and the edge can be deployed in virl
 
+>Note: The repo is designed for VIRL2/CML2.  The previous VIRL1/CML1 version can be found [here](https://github.com/CiscoDevNet/sdwan-devops/tree/virl1)
+
 ## Dependencies
 
 Set the name of the lab, e.g.:

@@ -50,7 +50,12 @@ In order to make this easier, a bash script has also been provided:
 * The Organization name associated with the serial file
 * A Cisco Smart License token that point to an account with ASAv licensing (when licensing non-SD-WAN VNFs is required)
 
-The easiest way to provide this information to the playbooks is to create `inventory/group_vars/all/local.yml` and specify the following:
+Set the name of the organization, e.g.:
+```
+export VMANAGE_ORG=myorgname
+```
+
+**Note:** This value can be set permanently in `group_vars/all/local.yml`
 
 ```yaml
 organization_name: "<your org name>"
@@ -65,11 +70,20 @@ The repo contains a set of playbooks, roles, templates, and inventories.
 
 ### Inventories
 
-The local defaults are set in `group_vars/all/local/yml`
+This repo comes with several built-in topologies located in the inventory and more can be added.  In order to switch between topologies, either edit `ansible.cfg` and point `inventory` to the proper directory:
 
-### Topologies
+For example, change:
+```
+inventory = ./inventory/hq1
+```
+to
+```
+inventory = ./inventory/crn1
+```
 
-This repo comes with several built-in topologies located in the inventory and more can be added.  In order to switch between topologies, either edit `ansible.cfg` and point `inventory` to the proper directory (e.g. `inventory/hq1`) or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml)
+or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml`)
+
+The local defaults for all inventories are set in `sdwan-devops\group_vars/all/local/yml`
 
 ### Variables
 
@@ -115,6 +129,8 @@ sdwan_template:
 
 ### `build-ca.yml`
 * Creates a local CA
+
+Infrastructure specific playbooks for building the control plane and deploying vedges are described in the specific infrastructure instructions below
 
 ## Infrastructure
 
