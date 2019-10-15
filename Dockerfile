@@ -24,9 +24,9 @@ RUN echo "===> install GCC ****" && \
     echo "===> Installing PIP Requirements..."  && \
     pip install -r /tmp/requirements.txt
 
-COPY files/simple_client-0.1.9b14-py3-none-any.whl /tmp/simple_client-0.1.9b14-py3-none-any.whl
+COPY files/simple_client-0.1.12b5-py3-none-any.whl /tmp/simple_client-0.1.12b5-py3-none-any.whl
 RUN echo "===> Installing VIRL Client..."  && \
-    pip install /tmp/simple_client-0.1.9b14-py3-none-any.whl
+    pip install /tmp/simple_client-0.1.12b5-py3-none-any.whl
 
 # Define working directory.
 ENV ANSIBLE_HOST_KEY_CHECKING false

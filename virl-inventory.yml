@@ -1,0 +1,13 @@
+- hosts: virl_hosts
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+  tasks:
+    - debug:
+        msg: "Node: {{ inventory_hostname }}({{ virl_facts.node_definition }}), State: {{ virl_facts.state }}, Address: {{ ansible_host }}"
+    - debug:
+        var: virl_facts
+      tags:
+        - never
+        - detail

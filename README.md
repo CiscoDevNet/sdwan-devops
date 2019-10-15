@@ -32,7 +32,7 @@ The easiest way to address the python and sshpass dependencies is to use the Doc
 To build the docker container, run:
 
 ```bash
-docker build -t ansible-viptela .
+docker build -t ansible-sdwan .
 ```
 
 #### Running the the playbooks in the docker container
@@ -56,37 +56,7 @@ organization_name: "<your org name>"
 license_token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-**Note:** Edge devices in the topologies must be updated to reflect the one from the `serialFile.viptela` provided.  This is done by updated `sdwan_uuid` in the `sdwan.yml` inventory file in the `host_vars` directory corresponding to the edge device (e.g. `inventory/hq1/host_vars/hq-cedge1/sdwan.yml`):
-
-```yaml
-sdwan_system_ip: 192.168.255.13
-sdwan_site_id: 1
-sdwan_vbond: 10.0.0.11
-sdwan_model: 'vedge-CSR-1000v'
-sdwan_uuid: 'CSR-82DEC3C6-3A28-B866-6F4A-40BEA274CA00'
-sdwan_personality: vedge
-sdwan_template:
-  name: 'hq-csr1000v'
-  variables:
-    'vpn512_interface': GigabitEthernet1
-    'vpn0_internet_ipv4_address': 10.0.0.13/24
-    'vpn0_default_gateway': 10.0.0.1
-    'vpn0_interface': GigabitEthernet2
-    'vpn1_ipv4_address': 10.0.255.6/30
-    'vpn1_interface': GigabitEthernet3
-    'vpn1_ospf_interface': GigabitEthernet3
-    'system_latitude': 37.411343
-    'system_longitude': -121.938803
-    'system_site_id': 1
-    'system_host_name': hq-cedge1
-    'system_system_ip': 192.168.255.13
-    'banner_login': "{{ login_banner }}"
-    'banner_motd': Welcome to hq-cedge1!
-sdwan_gps_location:
-  latitude: 37.411343
-  longitude: -121.938803
-```
-
+**Note:** Edge devices in the topologies must be updated to reflect the one from the `serialFile.viptela` provided.  This is done by updated `sdwan_uuid` in the `sdwan.yml` inventory file in the `host_vars` directory corresponding to the edge device (e.g. `inventory/hq1/host_vars/hq-cedge1/sdwan.yml`).  See the `Variables` section for more information.
 
 ## Structure
 
@@ -104,7 +74,7 @@ This repo comes with several built-in topologies located in the inventory and mo
 
 The following variables are used by the playbooks and must be set somewhere in the inventory:
 
-```
+```yaml
 sdwan_system_ip: 192.168.255.13
 sdwan_site_id: 1
 sdwan_vbond: 10.0.0.11
