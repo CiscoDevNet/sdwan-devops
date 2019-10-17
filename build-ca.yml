@@ -9,27 +9,27 @@
   tasks:
     - name: Ensure directory exists for local self-signed TLS certs.
       file:
-        path: "{{ viptela_cert_dir }}"
+        path: "{{ sdwan_cert_dir }}"
         state: directory
 
     - name: Generate an OpenSSL private key.
       openssl_privatekey:
         cipher: des3
-        passphrase: "{{ viptela_CA_passphrase }}"
-        path: "{{ viptela_cert_dir }}/myCA.key"
+        passphrase: "{{ sdwan_CA_passphrase }}"
+        path: "{{ sdwan_cert_dir }}/myCA.key"
 
     - name: Generate an OpenSSL CSR.
       openssl_csr:
-        path: "{{ viptela_cert_dir }}/myCA.csr"
-        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
-        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
+        path: "{{ sdwan_cert_dir }}/myCA.csr"
+        privatekey_path: "{{ sdwan_cert_dir }}/myCA.key"
+        privatekey_passphrase: "{{ sdwan_CA_passphrase }}"
         common_name: viptelaCA.local
 
     - name: Generate a Self Signed OpenSSL certificate.
       openssl_certificate:
-        path: "{{ viptela_cert_dir }}/myCA.pem"
-        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
-        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
-        csr_path: "{{ viptela_cert_dir }}/myCA.csr"
+        path: "{{ sdwan_cert_dir }}/myCA.pem"
+        privatekey_path: "{{ sdwan_cert_dir }}/myCA.key"
+        privatekey_passphrase: "{{ sdwan_CA_passphrase }}"
+        csr_path: "{{ sdwan_cert_dir }}/myCA.csr"
         # select_crypto_backend: pyopenssl
         provider: selfsigned

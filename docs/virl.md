@@ -64,7 +64,7 @@ export VMANAGE_ORG=myorgname
 
 >Note: This value can be set permanently in `group_vars/all/local.yml`
 
-Make sure that you have a serial file in this location: `licenses/serialFile.viptela` 
+Make sure that you have a serial file that matches the org name in this location: `licenses/serialFile.viptela` 
 
 Run the playbook
 
