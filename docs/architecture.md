@@ -107,7 +107,7 @@ VPN-specific OSPF Area on the appropriate Inside Peering network.  ECMP is used 
 to vEdges.
 
 ## Hardware Stack
-<img src="image/colo_hardware_stack.png" width="50%">
+<img src="images/colo_hardware_stack.png" width="50%">
 
 All CoLo functions are provided in a single hardware stack.  The switching fabric is provided by a pair of Catalyst
 9500s.  A pair of Cloud Services Platforms are used to provide VNF capacity.  Physical Network functions are added
