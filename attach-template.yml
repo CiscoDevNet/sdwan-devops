@@ -1,5 +1,5 @@
 - name: Attach Templates
-  hosts: sdwan:&virl_hosts
+  hosts: sdwan_edge
   connection: local
   gather_facts: no
   roles:
@@ -16,12 +16,12 @@
           host: "{{ vmanage_ip }}"
           password: "{{ ansible_password }}"
           device: "{{ inventory_hostname }}"
-          template: "{{ viptela.template.name }}"
-          variables: "{{ viptela.template.variables | default(omit) }}"
+          template: "{{ sdwan_template.name }}"
+          variables: "{{ sdwan_template.variables | default(omit) }}"
           wait: yes
           state: "{{ state }}"
         delegate_to: localhost
-        when: viptela.template is defined
+        #when: sdwan_template is defined
         register: attachment_results
 
 #      - debug:
@@ -45,7 +45,7 @@
 #          when: attachment_results.changed
 #          failed_when: action_status.json.data[0].statusId == 'failure'
 
-      when: viptela is defined
+      #when: sdwan_edge is defined
 
       delegate_to: localhost
 

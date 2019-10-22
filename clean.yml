@@ -20,7 +20,7 @@
   tasks:
     - name: Delete cert dir
       file:
-        path: "{{ viptela_cert_dir }}"
+        path: "{{ sdwan_cert_dir }}"
         state: absent
 
     - name: Remove host from known_hosts
