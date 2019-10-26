@@ -1,0 +1,62 @@
+- name: Build Control Plane VMs with Terraform
+  hosts: localhost
+  connection: local
+  tags:
+    - terraform
+    - control
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Terraform Plan
+      terraform:
+        project_path: 'terraform-viptela/vmware'
+        state: planned
+        plan_file: sdwan.tfplan
+        force_init: yes
+#        variables_file: vedges.tfvars
+#        variables:
+#          vmanage_device_list:
+#            - name: cpn-rtp-vmanage1
+#              networks: [cpn-rtp-colab1, vpn512]
+#              ipv4_address: "192.133.179.11/24"
+#              ipv4_gateway: "192.133.179.1"
+      tags: plan
+
+    - name: Terraform Apply
+      terraform:
+        project_path: 'terraform-viptela/vmware'
+        state: present
+        plan_file: sdwan.tfplan
+      tags: apply
+
+#        variables_file: chris.yaml
+#        variables:
+#          vmanage_device_list: 
+#            - name: cpn-rtp-vmanage1
+#              networks:
+#                - cpn-rtp-colab1
+#                - vpn512
+#              ipv4_address: "192.133.179.11/24"
+#              ipv4_gateway: "192.133.179.1"
+#          vsmart_device_list:
+#            - name: cpn-rtp-vsmart1
+#              networks:
+#                - cpn-rtp-colab1
+#                - vpn512
+#              ipv4_address: "192.133.179.12/24"
+#              ipv4_gateway: "192.133.179.1"
+#          vbond_device_list:
+#            - name: cpn-rtp-bond1
+#              networks:
+#                - vpn512
+#                - cpn-rtp-colab1
+#              ipv4_address: "192.133.179.14/24"
+#              ipv4_gateway: "192.133.179.1"
+#          vedge_device_list:
+#            - name: cpn-rtp-vedge1
+#              networks:
+#                - vpn512
+#                - cpn-rtp-colab1
+#                - site10
+#              ipv4_address: "192.133.179.16/24"
+#              ipv4_gateway: "192.133.179.1"

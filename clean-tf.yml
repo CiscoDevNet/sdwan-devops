@@ -1,0 +1,14 @@
+- name: Delete Control Plane VMs with Terraform
+  hosts: localhost
+  connection: local
+  tags:
+    - terraform
+    - control
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Terraform Destroy
+      terraform:
+        project_path: 'terraform-viptela/vmware'
+        state: absent
+#        variables_file: vedges.tfvars

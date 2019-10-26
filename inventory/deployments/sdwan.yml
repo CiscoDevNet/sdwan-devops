@@ -50,10 +50,10 @@ all:
                 cpn-rtp-vedge1:
                   sdwan_system_ip: 1.1.10.1
                   sdwan_transport_ip: 192.133.179.16
-                  sdwan_site_id: 10
+                  ansible_host: "{{ sdwan_transport_ip }}"
+                  sdwan_site_id: "10"
                   sdwan_model: 'vedge-cloud'
-                  sdwan_uuid: 07d99ffa-2c0e-5782-6775-76431b9e8fa6
-                  sdwan_otp: 9c06b518e35f91870a8d0321765e0953
+                  sdwan_uuid: b1b0c97d-acd9-6df5-19d5-6d8a9923fbfb
                   sdwan_personality: vedge
                   sdwan_template:
                     name: 'branch-vedge-cloud'
@@ -75,10 +75,9 @@ all:
                   sdwan_system_ip: 1.1.11.1
                   sdwan_transport_ip: 192.133.179.17
                   ansible_host: "{{ sdwan_transport_ip }}"
-                  sdwan_site_id: 11
+                  sdwan_site_id: "11"
                   sdwan_model: 'vedge-cloud'
-                  sdwan_uuid: 64018244-f8a5-e83f-1ba6-6dce8abd65bc
-                  sdwan_otp: 0deddeb6d5544bc7b762f5fe06450708
+                  sdwan_uuid: 663858cb-b1c6-6cc9-0229-9db8e9b7c6c6
                   sdwan_personality: vedge
                   sdwan_template:
                     name: 'branch-vedge-cloud'
@@ -96,3 +95,40 @@ all:
                       'system_system_ip': "{{ sdwan_system_ip }}"
                       'banner_login': You are being monitored.
                       'banner_motd': Welcome!
+                cpn-rtp-isr1k1:
+                  sdwan_system_ip: 1.1.12.1
+#                  sdwan_transport_ip: 192.133.179.18
+                  ansible_host: "{{ sdwan_system_ip }}"
+                  sdwan_site_id: "12"
+#                  sdwan_model: 'C1111-8PLTEEAW'
+                  sdwan_uuid: C1111-8PLTEEAWB-FGL233512BN
+                  sdwan_personality: vedge
+                  sdwan_template:
+                    name: 'branch-c1111'
+                    variables:
+                      'vpn512_interface': eth0
+                      'vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface': GigabitEthernet0/0/0
+                      'vpn1_interface': GigabitEthernet0/0/1
+                      'vpn1_ipv4_address': 192.168.12.1/24
+                      'system_latitude': 37.411343
+                      'system_longitude': -121.938803
+                      'system_site_id': "{{ sdwan_site_id }}"
+                      'system_host_name': "{{ inventory_hostname}}"
+                      'system_system_ip': "{{ sdwan_system_ip }}"
+                      'banner_login': You are being monitored.
+                      'banner_motd': Welcome!
+    environment:
+      children:
+        vmware:
+          vars:
+            bootstrap_method: netconf
+          hosts:
+            cpn-rtp-vedge1:
+            cpn-rtp-vedge2:
+        physical:
+          vars:
+            bootstrap_method: pnp
+          hosts:
+            cpn-rtp-isr1k1:
+        virl:
+        aws:
