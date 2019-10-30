@@ -9,22 +9,22 @@
   tasks:
     - name: Terraform Plan
       terraform:
-        project_path: 'terraform-viptela/vmware'
+        project_path: 'terraform-sdwan/vmware'
         state: planned
-        plan_file: sdwan.tfplan
+        plan_file: vedges.tfplan
         force_init: yes
         variables_file: vedges.tfvars
       tags: plan
 
     - name: Terraform Apply
       terraform:
-        project_path: 'terraform-viptela/vmware'
+        project_path: 'terraform-sdwan/vmware'
         state: present
-        plan_file: sdwan.tfplan
+        plan_file: vedges.tfplan
       tags: apply
 
 - name: Attach template to device
-  hosts: sdwan_edge
+  hosts: sdwan_edge:&vmware
   connection: local
   gather_facts: no
   tags:
@@ -57,7 +57,7 @@
       register: attachment_results
 
 - name: Configuring SDWAN system information via Netconf
-  hosts: sdwan_edge
+  hosts: sdwan_edge:&vmware
   connection: netconf
   tags:
     - edge
@@ -72,7 +72,7 @@
       when: bootstrap_method == "netconf"
 
 - name: Bootstrap Edge Routers
-  hosts: sdwan_edge
+  hosts: sdwan_edge:&vmware
   gather_facts: no
   tags:
     - bootstrap
