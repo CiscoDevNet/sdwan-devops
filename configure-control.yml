@@ -45,7 +45,7 @@
         content: "{{ lookup('template', 'sdwan/netconf/vpn.j2') }}"
 
 - name: Copy CA to controllers
-  hosts: vbond_hosts:vsmart1
+  hosts: vbond_hosts:vsmart_hosts
   tags:
     - control
     - debug
@@ -233,7 +233,7 @@
     - debug:
         msg: "vManage IP: {{ vmanage_ip }}"
 
-- name: Import vManage Policy Lists
+- name: Import vManage Templates
   hosts: localhost
   connection: local
   roles:

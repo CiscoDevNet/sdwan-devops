@@ -1,0 +1,86 @@
+- name: Attach template to device
+  hosts: sdwan_edge:&physical
+  connection: local
+  gather_facts: no
+  tags:
+    - attach
+    - edge
+  roles:
+    - ansible-virl
+    - ansible-viptela
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Attach template to device
+      vmanage_device_attachment:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        uuid: "{{ sdwan_uuid }}"
+        device_name: "{{ inventory_hostname }}"
+        system_ip: "{{ sdwan_system_ip }}"
+        site_id: "{{ sdwan_site_id }}"
+        template: "{{ sdwan_template.name }}"
+        variables: "{{ sdwan_template.variables | default(omit) }}"
+        wait: yes
+        state: present
+      when: sdwan_template is defined
+      register: attachment_results
+
+- name: Configuring SDWAN system information via Netconf
+  hosts: sdwan_edge:&physical
+  connection: netconf
+  tags:
+    - edge
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Push NETCONF template
+      netconf_config:
+        content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
+      register: configure_result
+      when: bootstrap_method == "netconf"
+
+- name: Bootstrap Edge Routers
+  hosts: sdwan_edge:&physical
+  gather_facts: no
+  tags:
+    - bootstrap
+    - edge
+  roles:
+    - ansible-viptela
+  vars:
+    ansible_network_os: ios
+  serial: 1
+  # This is a workaround for a bug in vmanage.  When multiple requests
+  # for boostrap are made to vmanage at the same time, it gets corrupted
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Install Root CA on edges routers
+      block:
+        - name: Copy Root CA to edge router
+          copy:
+            src: "{{ sdwan_cert_dir }}/myCA.pem"
+            dest: /home/admin
+          register: copy_results
+
+        - name: Install Root CA
+          cli_command:
+            command: "request root-cert-chain install /home/admin/myCA.pem"
+          register: command_result
+          connection: network_cli
+          failed_when: "'Failed' in command_result.stdout"
+          changed_when: true
+          when: copy_results.changed
+
+      when: bootstrap_method == "netconf"

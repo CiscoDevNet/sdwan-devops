@@ -1,0 +1,45 @@
+- name: Configuring vEdges
+  hosts: sdwan_edge
+  connection: netconf
+  tags:
+    - edge
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Push NETCONF template
+      netconf_config:
+        content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
+      register: result
+
+- name: Bootstrap vEdges
+  hosts: sdwan_edge
+  tags:
+    - bootstrap
+    - edge
+  any_errors_fatal: true
+  gather_facts: no
+  serial: 1
+  vars:
+    ansible_network_os: ios
+  tasks:
+    - block:
+      - name: Copy Root CA
+        copy:
+          src: "{{ sdwan_cert_dir }}/myCA.pem"
+          dest: /home/admin
+        register: copy_results
+
+      - name: Install RootCA
+        cli_command:
+          command: "request root-cert-chain install /home/admin/myCA.pem"
+        register: command_result
+        connection: network_cli
+        failed_when: "'Failed' in command_result.stdout"
+        changed_when: true
+        when: copy_results.changed
+
+      - cli_command:
+          command: "request vedge-cloud activate chassis-number {{ sdwan_uuid }} token {{ sdwan_otp }}"
+        connection: network_cli
+        register: command_results

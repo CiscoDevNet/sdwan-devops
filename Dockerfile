@@ -28,6 +28,15 @@ COPY files/simple_client-0.1.12b5-py3-none-any.whl /tmp/simple_client-0.1.12b5-p
 RUN echo "===> Installing VIRL Client..."  && \
     pip install /tmp/simple_client-0.1.12b5-py3-none-any.whl
 
+#Install Terraform
+
+RUN apk --update add wget unzip cdrkit curl
+
+RUN wget --quiet https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_linux_amd64.zip \
+  && unzip terraform_0.12.12_linux_amd64.zip \
+  && mv terraform /usr/bin \
+  && rm terraform_0.12.12_linux_amd64.zip
+
 # Define working directory.
 ENV ANSIBLE_HOST_KEY_CHECKING false
 ENV ANSIBLE_RETRY_FILES_ENABLED false
