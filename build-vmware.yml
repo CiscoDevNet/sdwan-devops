@@ -9,7 +9,7 @@
   tasks:
     - name: Terraform Plan
       terraform:
-        project_path: 'terraform-viptela/vmware'
+        project_path: 'terraform-sdwan/vmware'
         state: planned
         plan_file: sdwan.tfplan
         force_init: yes
@@ -24,7 +24,7 @@
 
     - name: Terraform Apply
       terraform:
-        project_path: 'terraform-viptela/vmware'
+        project_path: 'terraform-sdwan/vmware'
         state: present
         plan_file: sdwan.tfplan
       tags: apply
