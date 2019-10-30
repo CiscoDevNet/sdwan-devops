@@ -9,12 +9,6 @@ vpn_instances:
             - netconf
         enabled: yes
     routes:
-      - prefix: 10.0.0.0/16
-        next_hop:
-          address: 10.0.0.1
-      - prefix: 10.100.0.0/16
-        next_hop:
-          address: 10.0.0.1
-      - prefix: 172.20.0.0/16
+      - prefix: 0.0.0.0/0
         next_hop:
           address: 10.0.0.1

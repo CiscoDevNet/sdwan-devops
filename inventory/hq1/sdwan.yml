@@ -49,5 +49,5 @@ all:
           hosts:
             hq-cedge1:
             site1-cedge1:
-            site2-cedge1:
+            site2-vedge1:
             

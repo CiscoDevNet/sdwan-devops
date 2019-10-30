@@ -1,68 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============6560338015520979320=="
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
-{% if viptela is defined %}
---===============6560338015520979320==
-Content-Type: text/cloud-config; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="vedge.cloud-config"
-
-#cloud-config
-vinitparam:
-{%  if sdwan_otp is defined %}
- - otp: {{ sdwan_otp }}
-{% endif %}{# sdwan_otp is defined #}
-{%  if sdwan_uuid is defined %}
- - uuid: {{ sdwan_uuid }}
-{% endif %}{# sdwan_uuid is defined #}
-{%  if vmanage_org is defined %}
- - org: {{ vmanage_org }}
-{% endif %}{# viptela.org is defined #}
-{%  if viptela.vbond is defined %}
- - vbond: {{ viptela.vbond.remote }}
-{% endif %}
-{% endif %}
-
---===============6560338015520979320==
+--==BOUNDARY==
 Content-Type: text/cloud-boothook; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="vedge.init-config"
 
 #cloud-boothook
-
 system
- personality             vedge
- device-model            vedge-cloud
- host-name               {{ inventory_hostname.split('.')[0] }}
-{% if viptela.system_ip is defined %}
- system-ip               {{ viptela.system_ip }}
-{% endif %}{# viptela.system_ip is defined #}
-{% if viptela.domain_id is defined %}
- domain-id                 {{ viptela.domain_id }}
-{% endif %}{# viptela.domain_id is defined #}
-{% if viptela.site_id is defined %}
- site-id                 {{ viptela.site_id }}
-{% endif %}{# viptela.site_id is defined #}
- no route-consistency-check
-{% if vmanage_org is defined %}
- organization-name       "{{ vmanage_org }}"
-{% endif %}{# viptela.org is defined #}
-{% if viptela.vbond is defined %}
- vbond                   {{ viptela.vbond.remote }} {{ 'local' if vbond.local is sameas true else '' }}
-{% endif %}{# viptela.vbond is defined #}
+ host-name vbond
+ vbond ztp.viptela.com local
+
+ aaa
+  auth-order local radius tacacs
+  usergroup basic
+   task system read write
+   task interface read write
+  !
+
+  usergroup netadmin
+  !
+
+  usergroup operator
+   task system read
+   task interface read
+   task policy read
+   task routing read
+   task security read
+  !
+
+  user admin
+   password $6$Ju0z0n7YKtLgYWlJ$38aW.MBat6e8xL2vuLdbfGVH.DAYh7lq2nA/dBdvL.rWdJyGGB2gxLeVh8jQBKTCxti8vX5RKpbtzEadiZc6J.
+  !
+ !
+
+ logging
+  disk
+   enable
+  !
+ !
 !
-{% for vpn in vpn_instances|default([]) %}
-vpn {{ vpn.vpn_id }}
-{%  for interface in vpn.interfaces %}
- interface {{ interface.if_name }}
-{%   if interface.ip.address == 'dhcp' %}
+
+omp
+ no shutdown
+ graceful-restart
+ advertise connected
+ advertise static
+!
+
+security
+ ipsec
+  authentication-type ah-sha1-hmac sha1-hmac
+ !
+!
+
+vpn 0
+ interface ge0/0
   ip dhcp-client
-{%   else %}
-  ip address {{ interface.ip.address }}
-{%   endif %}{# interface.ip.address == 'dhcp' #}
-{%   if interface.tunnel_interface is defined %}
   tunnel-interface
    allow-service dhcp
    allow-service dns
@@ -72,19 +64,15 @@ vpn {{ vpn.vpn_id }}
    no allow-service ntp
    no allow-service stun
    allow-service https
-{%   endif %}{# interface.tunnel_interface is defiend #}
-{%   if interface.enabled is sameas true %}
+  !
   no shutdown
-{%   else %}
-  shutdown
-{%   endif %}{# interface.enabled is sameas true  #}
-{%  endfor %}{# for interface #}
-{% endfor %}{# for vpn #}
+ !
 !
+
 vpn 512
  interface eth0
   ip dhcp-client
   no shutdown
  !
 !
---===============6560338015520979320==
+--==BOUNDARY==

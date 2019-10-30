@@ -69,7 +69,7 @@ Make sure that you have a serial file that matches the org name in this location
 Run the playbook
 
 ```bash
-./play.sh configure-control.yml
+./play.sh config-virl.yml
 ```
 
 This playbook will:

@@ -1,25 +1,15 @@
 - name: Import vManage Policy Lists
   hosts: localhost
+  gather_facts: no
   connection: local
   roles:
     - ansible-viptela
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-    # file: vmanage_templates.yml
-  gather_facts: no
+  tags:
+    - templates  
   tasks:
-    # - name: Reading file {{ file }}
-    #   include_vars:
-    #     file: "{{ file }}"
-    #     name: vmanage_templates
-
-#    - set_fact:
-#        vmanage_templates: "{{ lookup('file', 'vmanage_templates.json') | from_json }}"
-#
-#    - debug:
-#        var: vmanage_templates
-
     - name: Import feature templates
       vmanage_feature_template:
         user: "{{ ansible_user }}"
@@ -27,6 +17,7 @@
         password: "{{ ansible_password }}"
         state: present
         aggregate: "{{ vmanage_feature_templates }}"
+      when: vmanage_feature_templates is defined
 
     - name: Import device templates
       vmanage_device_template:
@@ -35,6 +26,4 @@
         password: "{{ ansible_password }}"
         state: present
         aggregate: "{{ vmanage_device_templates }}"
-#
-#    - debug:
-#        var: policy_facts
+      when: vmanage_device_templates is defined

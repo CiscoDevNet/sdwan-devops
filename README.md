@@ -24,6 +24,7 @@ cd sdwan-devops
 * sshpass
 
 
+
 ### Running with Docker
 
 The easiest way to address the python and sshpass dependencies is to use the Dockerfile packaged in the repo.  All development and testing uses this Dockerfile, so it is the best way to guarantee that the tooling will run as designed
@@ -64,13 +65,63 @@ license_token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 **Note:** Edge devices in the topologies must be updated to reflect the one from the `serialFile.viptela` provided.  This is done by updated `sdwan_uuid` in the `sdwan.yml` inventory file in the `host_vars` directory corresponding to the edge device (e.g. `inventory/hq1/host_vars/hq-cedge1/sdwan.yml`).  See the `Variables` section for more information.
 
-## Structure
+## Capabilities
 
-The repo contains a set of playbooks, roles, templates, and inventories.
+### Simulation
+
+Simulation can be used for developing new deployments as well as testing changes to current deployments.  Simulation capabilities are provided by VIRL^2.  The [Ansible VIRL^2 Modules](https://github.com/ciscodevnet/ansible-virl) are used to automate deployments in VIRL^2.
+
+### Automation
+
+A set of playbooks is providing for automating deployments on several different infrastructures.  Currently, the following infrastructure is supported:
+
+* [VIRL](docs/virl.md)
+* [Vmware](docs/tf-vmware.md)
+* AWS: Deployment on AWS can be done with the either:
+  * [Ansible](docs/aws.md)
+  * Terraform
+* Azure
+* NFVIS
+
+#### Automation Playbooks
+
+* `build-ca.yml`: Creates a local CA
+* `import-templates.yml`
+* `attach-templates.yml`
+* `import-policy.yml`
+* `activate-policy.yml`
+* `waitfor-sync.yml`
+
+* `build-XXXX.yml`
+
+* `config-XXXX.yml`
+  * Configure setting on vmanage
+  * Install Enterprise CA when required
+  * Add vbonds and vsmarts to vmanage
+  * Create CSRs for vbonds and vsmarts
+  * Install certificates into vmanage
+  * Push certificates to controllers
+  * Import templates if present
+  * Import policy if present
+
+### Validation
+
+#### Validation Playbooks
+* `check-sdwan.yml`
+* `check-network.yml`
+
+### Testing
+
+Jenkins is used for automatic and manual testing.  
+
+## Structure
 
 ### Inventories
 
-This repo comes with several built-in topologies located in the inventory and more can be added.  In order to switch between topologies, either edit `ansible.cfg` and point `inventory` to the proper directory:
+The repo contains a set of playbooks, roles, and templates that are fed from the included inventories. Several built-in topologies located in the inventory and more can be added.  There are 
+
+
+To switch between topologies, either edit `ansible.cfg` and point `inventory` to the proper directory:
 
 For example, change:
 ```
@@ -115,28 +166,9 @@ sdwan_template:
     'banner_motd': Welcome to hq-cedge1!
 ```
 
-## Playbooks
 
-### `configure-control.yml`
-* Configure setting on vmanage
-* Install Enterprise CA when required
-* Add vbonds and vsmarts to vmanage
-* Create CSRs for vbonds and vsmarts
-* Install certificates into vmanage
-* Push certificates to controllers
-* Import templates if present
-* Import policy if present
-
-### `build-ca.yml`
-* Creates a local CA
 
 Infrastructure specific playbooks for building the control plane and deploying vedges are described in the specific infrastructure instructions below
 
-## Infrastructure
 
-This tooling is capable of deploying on different infrastructure:
-* [VIRL](docs/virl.md)
-* [Vmware](docs/tf-vmware.md)
-* AWS
-* Azure
 

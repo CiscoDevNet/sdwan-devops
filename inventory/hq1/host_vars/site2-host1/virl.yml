@@ -1,2 +1,2 @@
 virl:
-  config_template: virl/lxc.j2
+  config_template: virl/host.j2

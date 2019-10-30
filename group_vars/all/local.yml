@@ -8,3 +8,4 @@ sdwan_serial_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
 sdwan_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
 # Encrypt/Vault this in real life
 sdwan_CA_passphrase: Cisc0123
+sdwan_CA_cert: "{{ sdwan_cert_dir }}/myCA.pem"

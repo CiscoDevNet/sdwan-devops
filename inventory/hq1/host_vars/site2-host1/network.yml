@@ -1,5 +1,5 @@
 interfaces:
-  eth0:
+  enp0s2:
     enabled: true
     ip:
       primary: 192.168.2.10/24
