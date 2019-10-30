@@ -4,3 +4,6 @@
 [submodule "roles/ansible-viptela"]
 	path = roles/ansible-viptela
 	url = https://github.com/CiscoDevNet/ansible-viptela.git
+[submodule "terraform-sdwan"]
+	path = terraform-sdwan
+	url = https://github.com/CiscoDevNet/terraform-sdwan.git
