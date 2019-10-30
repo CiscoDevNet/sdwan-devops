@@ -263,4 +263,4 @@
       when: sdwan_template is defined
       register: attachment_results
 
-- import_playbook: activate-policy.yml
+# - import_playbook: activate-policy.yml
