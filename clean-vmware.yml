@@ -9,6 +9,6 @@
   tasks:
     - name: Terraform Destroy
       terraform:
-        project_path: 'terraform-viptela/vmware'
+        project_path: 'terraform-sdwan/vmware'
         state: absent
-#        variables_file: vedges.tfvars
+        variables_file: vedges.tfvars
