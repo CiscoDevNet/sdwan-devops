@@ -1,0 +1,82 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            args  '-v /etc/passwd:/etc/passwd'
+        }
+    }
+    options {
+      disableConcurrentBuilds()
+      lock resource: 'jenkins_sdwan'
+    }
+    environment {
+        VIRL_USERNAME = credentials('cpn-virl2-username')
+        VIRL_PASSWORD = credentials('cpn-virl2-password')
+        VIRL_HOST = credentials('cpn-virl2-host')
+        VIRL_LAB = "jenkins_sdwan"
+        VMANAGE_ORG = credentials('viptela-org')
+        LICENSE_TOKEN = credentials('license-token')
+        HOME = "${WORKSPACE}"
+        DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
+    }
+    stages {
+        stage('Clean Previous Deployment') {
+           steps {
+                echo 'Running build.yml...'
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'clean-virl.yml'
+                cleanWs()
+           }
+        }
+        stage('Prep New Environment') {
+            steps {
+                 // GIT submodule recursive checkout
+                checkout scm: [
+                        $class: 'GitSCM',
+                        branches: scm.branches,
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'SubmoduleOption',
+                                      disableSubmodules: false,
+                                      parentCredentials: false,
+                                      recursiveSubmodules: true,
+                                      reference: '',
+                                      trackingSubmodules: false]],
+                        submoduleCfg: [],
+                        userRemoteConfigs: scm.userRemoteConfigs
+                ]
+            }
+        }
+        stage('Build VIRL Topology') {
+           steps {
+                echo 'Running build.yml...'
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'build-virl.yml'
+           }
+        }
+        stage('Configure SD-WAN Fabric') {
+           steps {
+                echo 'Create local CA...'
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'import-templates.yml'               
+                echo 'Configure Viptela Control Plane...'
+                withCredentials([file(credentialsId: 'viptela-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
+                    ansiblePlaybook disableHostKeyChecking: true, extras: '-e virl_tag=jenkins -e \'organization_name="${VIPTELA_ORG}"\' -e serial_number_file=${VIPTELA_SERIAL_FILE} -e viptela_cert_dir=${WORKSPACE}/myCA', playbook: 'config-virl.yml'
+                }
+                echo 'Deploying edges...'
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'import-templates.yml'
+           }
+        }
+        stage('Running Tests') {
+           steps {
+                echo 'Check SD-WAN...'
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'check-sdwan.yml'
+           }
+        }
+    }
+/*
+    post {
+        always {
+            ansiblePlaybook disableHostKeyChecking: true, playbook: 'clean.yml'
+            cleanWs()
+        }
+    }
+*/
+}
+

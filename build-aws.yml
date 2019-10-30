@@ -1,0 +1,297 @@
+- name: Provision prototype instances
+  hosts: localhost
+  gather_facts: no
+  vars:
+#    region: us-east-1
+#    vpc_id: vpc-7e27f104
+#    security_group: 'default'
+#    subnet_id: subnet-36299351
+#    version: 18.4.1
+    personality_list:
+      - vedge
+      - vsmart
+      - vmanage
+    instances:
+      vmanage:
+        size: c5.xlarge
+        ami_type: vmanage
+        personality: vmanage
+        user_data: vmanage.user_data
+      vbond:
+        size: c5.large
+        ami_type: vedge
+        personality: vbond
+        user_data: vbond.user_data
+      vsmart:
+        size: c5.large
+        ami_type: vsmart
+        personality: vsmart
+        user_data: vsmart.user_data
+    env: default
+  tags:
+    - provision
+  tasks:
+    - name: Check for the license file
+      stat:
+        path: "{{ serial_number_file }}"
+      register: stat_result
+      delegate_to: localhost
+      run_once: yes
+
+    - assert:
+        that:
+          - key_name is defined
+          - stat_result.stat.exists
+          - organization_name != ""
+        msg: "'organization_name' and key_name must be defined and {{ serial_number_file }} must exist.  Verify the requirements in README are met."
+      delegate_to: localhost
+      run_once: yes
+
+    - name: Getting AMI IDs for {{ region }}
+      ec2_ami_facts:
+        region: "{{ region }}"
+        owners: self
+        filters:
+          name: "viptela*-{{ version }}"
+      register: ami_facts
+
+#    - debug: var=ami_facts
+
+    - set_fact:
+        ami_lookup: "{{ ami_lookup|default({})|combine( {(item.name.split('-'))[1]: item.image_id} ) }}"
+      loop: "{{ ami_facts.images }}"
+
+    - debug: var=ami_lookup
+
+    - copy:
+        content: "{{ lookup('template', 'aws-cft.yml.j2') }}"
+        dest: aws-cft.yml
+
+    - name: Create Stack "{{ env }}ViptelaControl"
+      cloudformation:
+        stack_name: "{{ env }}ViptelaControl"
+        state: "present"
+        region: "{{ region }}"
+        disable_rollback: false
+        template_body: "{{ lookup('template', 'aws-cft.yml.j2') }}"
+        tags:
+          Name: "viptela_{{ env }}"
+      register: cft_outputs
+
+    - debug: var=cft_outputs.stack_outputs
+
+    - name: Add instances to inventory
+      add_host:
+        name: "{{ item.key }}"
+        ansible_host: "{{ cft_outputs.stack_outputs[item.key + 'Eth0EIP'] | default(cft_outputs.stack_outputs[item.key + 'Eth0Ip']) }}"
+        private_ip: "{{ cft_outputs.stack_outputs[item.key + 'Eth0Ip'] }}"
+        transport_ip: "{{ cft_outputs.stack_outputs[item.key + 'Eth1Ip'] }}"
+        transport_eip: "{{ cft_outputs.stack_outputs[item.key + 'Eth1EIP'] }}"
+        ansible_user: admin
+        # instance_id: "{{ item.instance_id }}"
+        personality: "{{ item.value.personality }}"
+        region: "{{ region }}"
+#        groups:
+#          - viptela
+#          - "{{ item.value.personality }}"
+      with_dict: "{{ instances }}"
+
+    - name: Wait for the instances to be reachable
+      wait_for:
+        port: 22
+        host: "{{ hostvars[item].ansible_host }}"
+        timeout: 600
+      loop: "{{ groups.viptela_control }}"
+
+- name: Configuring Viptela components
+  hosts: viptela_control
+  tags:
+    - control
+    - vedge
+  any_errors_fatal: true
+  connection: netconf
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vbond_host: "{{ groups.vbond_hosts | first }}"
+
+    - set_fact:
+        vbond:
+          remote: "{{ hostvars[vbond_host].transport_ip }}"
+
+    - set_fact:
+        vbond_g1_eip: "{{ hostvars[vbond_host].transport_eip }}"
+
+    - name: Push NETCONF template
+      netconf_rpc:
+        rpc: edit-config
+        content: "{{ lookup('template', 'viptela-netconf.j2') }}"
+
+    - name: Commit changes
+      netconf_rpc:
+        rpc: commit
+
+- name: Verify that vManage is fully operational
+  hosts: localhost
+  tags:
+    - check
+    - control
+    - vedge
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+#    - debug: var=hostvars[vmanage_host]
+
+    - name: Waiting for vManage API to start on {{ vmanage_host }}
+      uri:
+        url: "https://{{ hostvars[vmanage_host].ansible_host }}/dataservice/system/device/controllers"
+        method: POST
+        body:
+          j_username: "{{ viptela_api_username }}"
+          j_password: "{{ viptela_api_password }}"
+        body_format: form-urlencoded
+        return_content: yes
+        validate_certs: no
+      no_log: false
+      register: uri_results
+      delegate_to: localhost
+      failed_when: false
+      until: uri_results.msg.find("OK") != -1
+      retries: 60
+      delay: 10
+
+- name: Create local CA
+  hosts: localhost
+  tags:
+    - control
+    - vedge
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Ensure directory exists for local self-signed TLS certs.
+      file:
+        path: "{{ viptela_cert_dir }}"
+        state: directory
+
+    - name: Generate an OpenSSL private key.
+      openssl_privatekey:
+        cipher: des3
+        passphrase: "{{ viptela_CA_passphrase }}"
+        path: "{{ viptela_cert_dir }}/myCA.key"
+
+    - name: Generate an OpenSSL CSR.
+      openssl_csr:
+        path: "{{ viptela_cert_dir }}/myCA.csr"
+        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
+        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
+        common_name: viptelaCA.local
+
+    - name: Generate a Self Signed OpenSSL certificate.
+      openssl_certificate:
+        path: "{{ viptela_cert_dir }}/myCA.pem"
+        privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
+        privatekey_passphrase: "{{ viptela_CA_passphrase }}"
+        csr_path: "{{ viptela_cert_dir }}/myCA.csr"
+        provider: selfsigned
+
+
+- name: Configure vmanage
+  hosts: vmanage
+  tags:
+    - control
+    - vedge
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+
+    - name: Add vBond Hosts
+      include_role:
+        name: viptela-api
+        tasks_from: add-controller
+      vars:
+        device_hostname: "{{ item }}"
+        device_ip: "{{ hostvars[item].transport_ip }}"
+        device_personality: vbond
+      loop: "{{ groups.vbond_hosts }}"
+
+    - name: Add vSmart Hosts
+      include_role:
+        name: viptela-api
+        tasks_from: add-controller
+      vars:
+        device_hostname: "{{ item }}"
+        device_ip: "{{ hostvars[item].transport_ip }}"
+        device_personality: vsmart
+      loop: "{{ groups.vsmart_hosts }}"
+
+    - name: Set organization
+      include_role:
+        name: viptela-api
+        tasks_from: set-org
+      vars:
+        org_name: "{{ organization_name }}"
+
+    - set_fact:
+        vbond_controller: "{{ groups.vbond_hosts[0] }}"
+
+    - name: Set vBond
+      include_role:
+        name: viptela-api
+        tasks_from: set-vbond
+      vars:
+        vbond_ip: "{{ hostvars[vbond_controller].transport_ip }}"
+
+    - name: Set Enterprise Root CA
+      include_role:
+        name: viptela-api
+        tasks_from: set-rootca
+      vars:
+        root_cert: "{{lookup('file', '{{ viptela_cert_dir }}/myCA.pem')}}"
+
+    - name: Get Controler CSR
+      include_role:
+        name: viptela-api
+        tasks_from: get-csr
+      vars:
+        device_ip: "{{ hostvars[item].transport_ip }}"
+        device_hostname: "{{ item }}"
+        csr_filename: "{{ viptela_cert_dir }}/{{ item }}.{{ env }}.csr"
+      loop: "{{ groups.viptela_control }}"
+
+    - name: Sign Controller Cert
+      openssl_certificate:
+        csr_path: "{{ viptela_cert_dir }}/{{ item }}.{{ env }}.csr"
+        path: "{{ viptela_cert_dir }}/{{ item }}.{{ env }}.crt"
+        provider: ownca
+        ownca_path: "{{ viptela_cert_dir }}/myCA.pem"
+        ownca_privatekey_path: "{{ viptela_cert_dir }}/myCA.key"
+        ownca_privatekey_passphrase: "{{ viptela_CA_passphrase }}"
+      loop: "{{ groups.viptela_control }}"
+      delegate_to: localhost
+
+    - name: Install Controller Certificate
+      include_role:
+        name: viptela-api
+        tasks_from: install-cert
+      vars:
+        device_cert: "{{lookup('file', '{{ viptela_cert_dir }}/{{ item }}.{{ env }}.crt')}}"
+      loop: "{{ groups.viptela_control }}"
+
+    - name: Install Serial File
+      include_role:
+       name: viptela-api
+       tasks_from: install-serials
+      vars:
+       viptela_serial_file: 'licenses/viptela_serial_file.viptela'
+
+    - debug: msg="You can reach the vManage UI at https://{{ vmanage_ip }}/"

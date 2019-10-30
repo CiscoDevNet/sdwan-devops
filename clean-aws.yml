@@ -1,0 +1,56 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    region: us-east-1
+  vars_prompt:
+    - name: "confirm_env"
+      private: no
+      prompt: "Confirm the name of the environment that you want to clean"
+  tasks:
+    - assert:
+        that:
+          - env == confirm_env
+        msg: "You need to confirm your intention to delete the environment by passing the environment name in and confirming it."
+      delegate_to: localhost
+      run_once: yes
+
+    - set_fact:
+        stack_name: "{{ env }}ViptelaControl"
+
+    - name: Get Stack {{ stack_name }}
+      cloudformation_facts:
+        stack_name: "{{ stack_name }}"
+        stack_resources: true
+        region: "{{ region }}"
+      register: cft_outputs
+      # failed_when: cloudformation['nonexistent-stack'] is undefined
+
+    - set_fact:
+        stack_outputs: "{{ cft_outputs.ansible_facts.cloudformation[stack_name].stack_outputs }}"
+
+    - debug: var=stack_outputs
+
+    - name: Remove host from known_hosts
+      known_hosts:
+        name: "{{ item.value }}"
+        state: absent
+      with_dict: "{{ stack_outputs }}"
+
+    - name: Find previsouly created certs
+      find:
+        paths: "{{ viptela_cert_dir }}"
+        patterns: '*.{{ env }}.crt,*.{{ env }}.csr'
+      register: find_results
+
+    - name: Delete previsouly created certs
+      file:
+        path: "{{ item['path'] }}"
+        state: absent
+      with_items: "{{ find_results['files'] }}"
+
+    - name: Delete Stack {{ env }}ViptelaControl
+      cloudformation:
+        stack_name: "{{ env }}ViptelaControl"
+        state: absent
+        region: "{{ region }}"
+      register: cft_outputs

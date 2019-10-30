@@ -233,7 +233,7 @@
     - debug:
         msg: "vManage IP: {{ vmanage_ip }}"
 
-- name: Import vManage Policy Lists
+- name: Import vManage Templates
   hosts: localhost
   connection: local
   roles:

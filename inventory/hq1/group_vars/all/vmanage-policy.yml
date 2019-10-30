@@ -1,0 +1,166 @@
+vmanage_central_policies:
+- '@rid': 58
+  createdBy: admin
+  createdOn: 1572447868767
+  isPolicyActivated: true
+  lastUpdatedBy: admin
+  lastUpdatedOn: 1572447868767
+  policyDefinition:
+    assembly:
+    - definitionName: hubandspoke
+      type: hubAndSpoke
+  policyDescription: Central Policy
+  policyId: 0193b13b-3459-4a98-b568-efb755be6439
+  policyName: central_policy
+  policyType: feature
+  policyVersion: 10302019T150428767
+vmanage_local_policies: []
+vmanage_policy_definitions:
+- activatedId:
+  - 0193b13b-3459-4a98-b568-efb755be6439
+  definition:
+    subDefinitions:
+    - advertiseTloc: false
+      equalPreference: true
+      name: My Hub-and-Spoke
+      spokes:
+      - hubs:
+        - prefixLists: []
+          siteList: hq_sites
+        siteList: spoke_sites
+    vpnList: vpn1
+  definitionId: bf96250b-e3d9-4007-8592-66b72efcde1b
+  description: Hub and Spoke Policy
+  isActivatedByVsmart: true
+  lastUpdated: 1572447867568
+  name: hubandspoke
+  owner: admin
+  referenceCount: 1
+  type: hubAndSpoke
+vmanage_policy_lists:
+- description: Google Applications List
+  entries:
+  - app: blogger
+  - app: chrome_update
+  - app: gcs
+  - app: gmail
+  - app: gmail_basic
+  - app: gmail_chat
+  - app: gmail_drive
+  - app: gmail_mobile
+  - app: google-services
+  - app: google_accounts
+  - app: google_ads
+  - app: google_analytics
+  - app: google_appengine
+  - app: google_cache
+  - app: google_calendar
+  - app: google_code
+  - app: google_desktop
+  - app: google_docs
+  - app: google_earth
+  - app: google_groups
+  - app: google_maps
+  - app: google_photos
+  - app: google_picasa
+  - app: google-play
+  - app: google_plus
+  - app: google_safebrowsing
+  - app: google_skymap
+  - app: google_spaces
+  - app: google_tags
+  - app: google_toolbar
+  - app: google_translate
+  - app: google_trusted_store
+  - app: google_weblight
+  - app: googlebot
+  - app: gstatic
+  - app: gtalk
+  - app: youtube
+  - app: youtube_hd
+  isActivatedByVsmart: false
+  lastUpdated: 1572447681611
+  listId: d7b8f5f3-3c5f-4dac-b62d-c39b6b68c9a1
+  name: Google_Apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  type: app
+  version: '3.0'
+- description: Microsoft Applications List
+  entries:
+  - app: bing
+  - app: hockeyapp
+  - app: live_hotmail
+  - app: lync
+  - app: lync_online
+  - app: ms-services
+  - app: ms_translator
+  - app: ms-office-365
+  - app: share-point
+  - app: skydrive
+  - app: skype
+  - app: windows_azure
+  - app: windows_update
+  - app: windows_marketplace
+  - app: windowslive
+  - app: windowslivespace
+  - app: windowsmedia
+  - app: xbox
+  - app: xbox_music
+  - app: xbox_video
+  - app: xboxlive
+  - app: xboxlive_marketplace
+  - app: word_online
+  - app: powerpoint_online
+  isActivatedByVsmart: false
+  lastUpdated: 1572447681466
+  listId: d4b35e83-5af8-4daa-87ad-dc9c7bcd1872
+  name: Microsoft_Apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  type: app
+  version: '4.0'
+- activatedId:
+  - 0193b13b-3459-4a98-b568-efb755be6439
+  description: Desc Not Required
+  entries:
+  - siteId: '1'
+  isActivatedByVsmart: true
+  lastUpdated: 1572447865976
+  listId: d14577de-f5a7-4ae4-ad15-2a286d058165
+  name: hq_sites
+  owner: admin
+  readOnly: false
+  referenceCount: 1
+  type: site
+  version: '0'
+- activatedId:
+  - 0193b13b-3459-4a98-b568-efb755be6439
+  description: Desc Not Required
+  entries:
+  - siteId: 2-3
+  isActivatedByVsmart: true
+  lastUpdated: 1572447866293
+  listId: 58720e5a-dff9-4411-9e8d-de3821baed41
+  name: spoke_sites
+  owner: admin
+  readOnly: false
+  referenceCount: 1
+  type: site
+  version: '0'
+- activatedId:
+  - 0193b13b-3459-4a98-b568-efb755be6439
+  description: Desc Not Required
+  entries:
+  - vpn: '1'
+  isActivatedByVsmart: true
+  lastUpdated: 1572447866616
+  listId: 8f6f14ba-dd74-4a42-9509-b11ee3fb4b4e
+  name: vpn1
+  owner: admin
+  readOnly: false
+  referenceCount: 1
+  type: vpn
+  version: '0'

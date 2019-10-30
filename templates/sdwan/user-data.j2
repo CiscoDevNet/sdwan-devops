@@ -1,0 +1,135 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+Content-Type: multipart/mixed; boundary="===============7621452758582633985=="
+MIME-Version: 1.0
+
+{% if sdwan_personality == 'vmanage' or sdwan_CA_cert is defined %}
+--===============7621452758582633985==
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="vedge.cloud-config"
+
+{% if sdwan_CA_cert is defined %}
+#cloud-config
+
+ca-certs:
+ remove-defaults: false
+ trusted:
+     - |
+{{ lookup('file', sdwan_CA_cert) | indent(7, True) }}
+{% endif %}{# sdwan_CA_cert is defined #}
+vinitparam:
+{% if sdwan_personality == 'vmanage' %}
+ - format-partition : 1
+{% endif %}{# sdwan_personality == 'vmanage' #}
+{% if sdwan_personality == "vbond" %}
+ - vbond : {{ sdwan_transport_ip }}
+{% elif sdwan_vbond is defined %}
+ - vbond : {{ sdwan_vbond }}
+{% endif %}{# sdwan_vbond is defined #}   
+{% if vmanage_org is defined %}
+ - org : "{{ vmanage_org }}"
+{% endif %}{# sdwan_org is defined #}
+{% if sdwan_CA_cert is defined %}
+ - rcc : |
+{{ lookup('file', sdwan_CA_cert) | indent(7, True) }}
+{% endif %}{# sdwan_CA_cert is defined #}
+{% endif %}{# sdwan_personality == 'vmanage' or sdwan_CA_cert is defined #}
+
+--===============7621452758582633985==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="vedge.init-config"
+
+#cloud-boothook
+system
+ host-name               {{ inventory_hostname.split('.')[0] }}
+{% if sdwan_system_ip is defined %}
+ system-ip               {{ sdwan_system_ip }}
+{% endif %}{# sdwan_system_ip is defined #}
+{% if sdwan_domain_id is defined %}
+ domain-id                 {{ sdwan_domain_id }}
+{% endif %}{# sdwan_domain_id is defined #}
+{% if sdwan_site_id is defined %}
+ site-id                 {{ sdwan_site_id }}
+{% endif %}{# sdwan_site_id is defined #}
+ no route-consistency-check
+{% if vmanage_org is defined %}
+ organization-name       "{{ vmanage_org }}"
+{% endif %}{# sdwan_org is defined #}
+{% if sdwan_personality == "vbond" %}
+   vbond                   {{ sdwan_transport_ip }} local
+{% elif sdwan_vbond is defined %}
+   vbond                   {{ sdwan_vbond }}
+{% endif %}{# sdwan_vbond is defined #}   
+
+!
+ aaa
+  auth-order local radius tacacs
+  usergroup basic
+   task system read write
+   task interface read write
+  !
+
+  usergroup netadmin
+  !
+
+  usergroup operator
+   task system read
+   task interface read
+   task policy read
+   task routing read
+   task security read
+  !
+
+  user admin
+   password $6$u3jhmUlHRY16I1lI$OpkApAwXhGNo2xdKR.j2x7LF7OkRa9P02aSgACGMvmhidKHvxQ2poG6HTulDYp6BXfsm3clE6dz/wvOKLxA8e1
+  !
+ !
+
+ logging
+  disk
+   enable
+  !
+ !
+!
+
+{% for vpn in vpn_instances|default([]) %}
+vpn {{ vpn.vpn_id }}
+{%  for interface in vpn.interfaces %}
+ interface {{ interface.if_name }}
+{%   if interface.ip.address == 'dhcp' %}
+  ip dhcp-client
+{%   else %}
+  ip address {{ interface.ip.address }}
+{%   endif %}{# interface.ip.address == 'dhcp' #}
+{%   if interface.tunnel_interface is defined %}
+  tunnel-interface
+   allow-service dhcp
+   allow-service dns
+   allow-service icmp
+   allow-service sshd
+   allow-service netconf
+   allow-service ntp
+   allow-service stun
+   allow-service https
+{%   endif %}{# interface.tunnel_interface is defiend #}
+{%   if interface.enabled is sameas true %}
+  no shutdown
+{%   else %}
+  shutdown
+{%   endif %}{# interface.enabled is sameas true  #}
+{%  endfor %}{# for interface #}
+{%  for route in vpn.routes|default([]) %}
+  ip route {{ route.prefix }} {{ route.next_hop.address }}
+{%  endfor %}{# for routes #}
+{% endfor %}{# for vpn #}
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  no shutdown
+ !
+!
+--===============7621452758582633985==

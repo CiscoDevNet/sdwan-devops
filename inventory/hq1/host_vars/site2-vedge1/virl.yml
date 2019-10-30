@@ -1,0 +1,2 @@
+virl:
+  config_template:  sdwan/vedge.j2
