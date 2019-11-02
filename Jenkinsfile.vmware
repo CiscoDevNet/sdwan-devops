@@ -1,0 +1,79 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            args  '-v /etc/passwd:/etc/passwd'
+        }
+    }
+    options {
+        disableConcurrentBuilds()
+        lock resource: 'jenkins_sdwan'
+    }
+    environment {
+        TF_VAR_vsphere_user = credentials('cpn-rtp-vc1-username')
+        TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
+        TF_VAR_vsphere_server = credentials('cpn-rt-vc1-host')
+        VMANAGE_ORG = credentials('vmware-vmanage-org')
+        VIPTELA_ORG = credentials('vmware-vmanage-org')
+        HOME = "${WORKSPACE}"
+        DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
+    }
+    stages {
+        stage('Clean Previous Deployment') {
+            steps {
+                echo 'Running clean-vmware.yml...'
+                ansiblePlaybook disableHostKeyChecking: true, tags: 'control,edges', playbook: 'clean-vmware.yml'
+                cleanWs()
+            }
+        }
+        stage('Prep New Environment') {
+            steps {
+                 // GIT submodule recursive checkout
+                checkout scm: [
+                        $class: 'GitSCM',
+                        branches: scm.branches,
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'SubmoduleOption',
+                                      disableSubmodules: false,
+                                      parentCredentials: false,
+                                      recursiveSubmodules: true,
+                                      reference: '',
+                                      trackingSubmodules: false]],
+                        submoduleCfg: [],
+                        userRemoteConfigs: scm.userRemoteConfigs
+                ]
+            }
+        }
+        stage('Build Control Plane on VMWare') {
+            steps {
+                echo 'Running build-vmware.yml...'
+                ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/deployments', playbook: 'build-vmware.yml'
+           }
+        }
+        stage('Configure Control Plane') {
+            steps {
+                echo 'Configure Control Plane...'
+                withCredentials([file(credentialsId: 'vmware-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
+                    ansiblePlaybook disableHostKeyChecking: true, extras:  '-e serial_number_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/deployments', playbook: 'configure-control.yml'
+                }
+            }
+        }
+        stage('Configure VMWare Edges') {
+            steps {
+                echo 'Configure Edges...'
+                withCredentials([file(credentialsId: 'viptela-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
+                    ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/deployments', playbook: 'deploy-vmware-edges.yml'
+                }
+            }
+        }
+    }
+/*
+    post {
+        always {
+            ansiblePlaybook disableHostKeyChecking: true, tags: 'control,edges', playbook: 'clean-vmware.yml'
+            cleanWs()
+        }
+    }
+*/
+}
+
