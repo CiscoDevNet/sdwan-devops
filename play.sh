@@ -28,6 +28,15 @@ fi
 if [[ ! -z "$VMANAGE_PASSWORD" ]]; then
    OPTIONS="$OPTIONS --env VIRL_SESSION=$VMANAGE_PASSWORD"
 fi
+if [[ ! -z "$TF_VAR_vsphere_user" ]]; then
+   OPTIONS="$OPTIONS --env TF_VAR_vsphere_user=$TF_VAR_vsphere_user"
+fi
+if [[ ! -z "$TF_VAR_vsphere_password" ]]; then
+   OPTIONS="$OPTIONS --env TF_VAR_vsphere_password=$TF_VAR_vsphere_password"
+fi
+if [[ ! -z "$TF_VAR_vsphere_server" ]]; then
+   OPTIONS="$OPTIONS --env TF_VAR_vsphere_server=$TF_VAR_vsphere_server"
+fi
 
 OPTIONS="$OPTIONS --env ANSIBLE_ROLES_PATH=/ansible/roles"
 
