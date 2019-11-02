@@ -3,7 +3,7 @@
   connection: local
   tags:
     - terraform
-    - edge
+    - edges
   any_errors_fatal: true
   gather_facts: no
   tasks:
@@ -11,16 +11,19 @@
       terraform:
         project_path: 'terraform-sdwan/vmware'
         state: planned
-        plan_file: vedges.tfplan
+        plan_file: edges.tfplan
+        workspace: edges
+        variables_file: edges.tfvars
         force_init: yes
-        variables_file: vedges.tfvars
       tags: plan
 
     - name: Terraform Apply
       terraform:
         project_path: 'terraform-sdwan/vmware'
         state: present
-        plan_file: vedges.tfplan
+        plan_file: edges.tfplan
+        workspace: edges
+        variables_file: edges.tfvars
       tags: apply
 
 - name: Attach template to device
@@ -29,7 +32,7 @@
   gather_facts: no
   tags:
     - attach
-    - edge
+    - edges
   roles:
     - ansible-virl
     - ansible-viptela
@@ -60,7 +63,7 @@
   hosts: sdwan_edge:&vmware
   connection: netconf
   tags:
-    - edge
+    - edges
     - netconf
   any_errors_fatal: true
   gather_facts: no
@@ -76,7 +79,7 @@
   gather_facts: no
   tags:
     - bootstrap
-    - edge
+    - edges
   roles:
     - ansible-viptela
   vars:

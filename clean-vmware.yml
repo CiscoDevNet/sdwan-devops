@@ -1,14 +1,30 @@
-- name: Delete Control Plane VMs with Terraform
+- import_playbook: clean-control.yml
+  tags: [control, never]
+
+- name: Delete VMWare VMs with Terraform
   hosts: localhost
   connection: local
   tags:
     - terraform
-    - control
   any_errors_fatal: true
   gather_facts: no
   tasks:
-    - name: Terraform Destroy
+    - name: Terraform Destroy Control Plane
       terraform:
         project_path: 'terraform-sdwan/vmware'
         state: absent
-        variables_file: vedges.tfvars
+        workspace: control
+        variables_file: control.tfvars
+      tags:
+        - control
+        - never
+      
+    - name: Terraform Destroy Edges
+      terraform:
+        project_path: 'terraform-sdwan/vmware'
+        state: absent
+        workspace: edges
+        variables_file: edges.tfvars
+      tags:
+        - edges
+        - never

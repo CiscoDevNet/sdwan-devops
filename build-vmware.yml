@@ -11,9 +11,10 @@
       terraform:
         project_path: 'terraform-sdwan/vmware'
         state: planned
-        plan_file: sdwan.tfplan
+        plan_file: control.tfplan
+        workspace: control
+        variables_file: control.tfvars
         force_init: yes
-#        variables_file: vedges.tfvars
 #        variables:
 #          vmanage_device_list:
 #            - name: cpn-rtp-vmanage1
@@ -26,7 +27,9 @@
       terraform:
         project_path: 'terraform-sdwan/vmware'
         state: present
-        plan_file: sdwan.tfplan
+        plan_file: control.tfplan
+        workspace: control
+        variables_file: control.tfvars
       tags: apply
 
 #        variables_file: chris.yaml
