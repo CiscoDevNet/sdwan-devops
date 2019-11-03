@@ -7,6 +7,12 @@
   any_errors_fatal: true
   gather_facts: no
   tasks:
+    - name: Generate Terraform variables file for edges
+      template:
+        src: templates/edges_tfvars.j2
+        dest: terraform-sdwan/vmware/edges.tfvars
+      tags: always
+
     - name: Terraform Plan
       terraform:
         project_path: 'terraform-sdwan/vmware'

@@ -7,6 +7,12 @@
   any_errors_fatal: true
   gather_facts: no
   tasks:
+    - name: Generate Terraform variables file for control plane
+      template:
+        src: templates/control_tfvars.j2
+        dest: terraform-sdwan/vmware/control.tfvars
+      tags: always
+
     - name: Terraform Plan
       terraform:
         project_path: 'terraform-sdwan/vmware'

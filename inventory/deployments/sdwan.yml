@@ -5,6 +5,11 @@ all:
     sdwan:
       children:
         sdwan_control:
+          vars:            
+            vpn0_portgroup: cpn-rtp-colab1
+            vpn0_netmask: 24
+            vpn0_gateway: 192.133.179.1
+            vpn512_portgroup: vpn512
           children:
             vmanage_hosts:
               vars:
@@ -54,6 +59,7 @@ all:
                   sdwan_site_id: "10"
                   sdwan_model: 'vedge-cloud'
                   sdwan_uuid: b1b0c97d-acd9-6df5-19d5-6d8a9923fbfb
+                  servicevpn_portgroup: site10
                   sdwan_personality: vedge
                   sdwan_template:
                     name: 'branch-vedge-cloud'
@@ -78,6 +84,7 @@ all:
                   sdwan_site_id: "11"
                   sdwan_model: 'vedge-cloud'
                   sdwan_uuid: 663858cb-b1c6-6cc9-0229-9db8e9b7c6c6
+                  servicevpn_portgroup: site11
                   sdwan_personality: vedge
                   sdwan_template:
                     name: 'branch-vedge-cloud'
@@ -122,6 +129,10 @@ all:
         vmware:
           vars:
             bootstrap_method: netconf
+            vpn0_portgroup: cpn-rtp-colab1
+            vpn0_netmask: 24
+            vpn0_gateway: 192.133.179.1
+            vpn512_portgroup: vpn512
           hosts:
             cpn-rtp-vedge1:
             cpn-rtp-vedge2:
