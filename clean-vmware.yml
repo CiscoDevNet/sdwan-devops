@@ -9,6 +9,12 @@
   any_errors_fatal: true
   gather_facts: no
   tasks:
+    - name: Generate Terraform variables file for control plane
+      template:
+        src: templates/control_tfvars.j2
+        dest: terraform-sdwan/vmware/control.tfvars
+      tags: always
+
     - name: Terraform Destroy Control Plane
       terraform:
         project_path: 'terraform-sdwan/vmware'
@@ -18,7 +24,13 @@
       tags:
         - control
         - never
-      
+
+    - name: Generate Terraform variables file for edges
+      template:
+        src: templates/edges_tfvars.j2
+        dest: terraform-sdwan/vmware/edges.tfvars
+      tags: always
+            
     - name: Terraform Destroy Edges
       terraform:
         project_path: 'terraform-sdwan/vmware'
