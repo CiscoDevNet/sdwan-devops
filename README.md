@@ -39,10 +39,14 @@ docker build -t ansible-sdwan .
 
 #### Running the the playbooks in the docker container
 
-In order to make this easier, a bash script has also been provided.  To run a playbook specified in the directions, you can run:
+In order to make this easier, bash and powershell scripts have been provided.  To run a playbook specified in the directions, you can run:
 
 ```bash
-./play.sh <playbook> <options>
+$ ./play.sh <playbook> <options>
+```
+Or
+```powershell
+> powershell.exe ./play.ps1 <playbook> <options>
 ```
 
 ### Licensing Requirements
