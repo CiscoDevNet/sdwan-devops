@@ -11,7 +11,8 @@
       template:
         src: templates/control_tfvars.j2
         dest: terraform-sdwan/vmware/control.tfvars
-      tags: always
+      tags: 
+        - plan
 
     - name: Terraform Plan
       terraform:
@@ -21,12 +22,12 @@
         workspace: control
         variables_file: control.tfvars
         force_init: yes
-#        variables:
-#          vmanage_device_list:
-#            - name: cpn-rtp-vmanage1
-#              networks: [cpn-rtp-colab1, vpn512]
-#              ipv4_address: "192.133.179.11/24"
-#              ipv4_gateway: "192.133.179.1"
+#        backend_config:
+#          region: "us-east-1"
+#          bucket: "terraform-state-sdwan-jenkins"
+#          key: "global/s3/terraform.tfstate"
+#          dynamodb_table: "terraform-locks-sdwan-jenkins"
+#          encrypt: 1
       tags: plan
 
     - name: Terraform Apply
