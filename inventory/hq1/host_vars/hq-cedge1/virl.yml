@@ -1,2 +1,2 @@
-virl:
-  config_template:  sdwan/iosxe.j2
+virl_config_template:  sdwan/iosxe.j2
+virl_image_definition: "iosxe-sdwan--{{ iosxe_sdwan_version }}"

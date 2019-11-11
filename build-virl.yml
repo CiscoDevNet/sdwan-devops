@@ -71,8 +71,8 @@
   tasks:
     - name: Generating day0 config
       set_fact:
-        day0_config: "{{ lookup('template', virl.config_template) }}"
-      when: virl.config_template is defined
+        day0_config: "{{ lookup('template', virl_config_template) }}"
+      when: virl_config_template is defined
 
     - name: Start Node
       virl_node:
@@ -82,7 +82,7 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
-        image_definition: "{{ virl.image_definition | default(omit) }}"
+        image_definition: "{{ virl_image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Check initial topology connectivity
@@ -103,8 +103,8 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
       register: result
-      until: result.virl_facts.nodes[inventory_hostname].interfaces[virl.mgmt_interface].ipv4_addresses | count > 0
-      when: virl is defined and virl.mgmt_interface is defined
+      until: result.virl_facts.nodes[inventory_hostname].ansible_host
+      # when: virl_mgmt_interface is defined
       retries: 12
       delay: 10
 
@@ -143,8 +143,8 @@
   tasks:
     - name: Generating day0 config
       set_fact:
-        day0_config: "{{ lookup('template', virl.config_template) }}"
-      when: virl.config_template is defined
+        day0_config: "{{ lookup('template', virl_config_template) }}"
+      when: virl_config_template is defined
 
     - name: Start Node
       virl_node:
@@ -154,7 +154,7 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
-        image_definition: "{{ virl.image_definition | default(omit) }}"
+        image_definition: "{{ virl_image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Start the SD-WAN control nodes
@@ -169,8 +169,8 @@
   tasks:
     - name: Generating day0 config
       set_fact:
-        day0_config: "{{ lookup('template', virl.config_template) }}"
-      when: virl.config_template is defined
+        day0_config: "{{ lookup('template', virl_config_template) }}"
+      when: virl_config_template is defined
 
     - name: Start Node
       virl_node:
@@ -180,28 +180,28 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
-        image_definition: "{{ virl.image_definition | default(omit) }}"
+        image_definition: "{{ virl_image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
-- hosts: network:sdwan_control:&virl_hosts
-  connection: local
-  any_errors_fatal: true
-  gather_facts: no
-  tasks:
-    - name: Wait until the mgmt interface comes up
-      virl_lab_facts:
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
-        lab: "{{ virl_lab }}"
-      register: result
-      until: result.virl_facts.nodes[inventory_hostname].interfaces[virl.mgmt_interface].ipv4_addresses | default(0) | count > 0
-      when: virl is defined and virl.mgmt_interface is defined
-      retries: 12
-      delay: 10
+# - hosts: network:sdwan_control:&virl_hosts
+#   connection: local
+#   any_errors_fatal: true
+#   gather_facts: no
+#   tasks:
+#     - name: Wait until the mgmt interface comes up
+#       virl_lab_facts:
+#         host: "{{ virl_host }}"
+#         user: "{{ virl_username }}"
+#         password: "{{ virl_password }}"
+#         lab: "{{ virl_lab }}"
+#       register: result
+#       until: result.virl_facts.nodes[inventory_hostname].interfaces[virl_mgmt_interface].ipv4_addresses | default(0) | count > 0
+#       when: virl_mgmt_interface is defined
+#       retries: 12
+#       delay: 10
 
-    - name: Refresh Inventory
-      meta: refresh_inventory
+#     - name: Refresh Inventory
+#       meta: refresh_inventory
 
 # - name: Push NETCONF template
 #   hosts: vbond_hosts:&virl_hosts

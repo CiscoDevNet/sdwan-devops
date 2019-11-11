@@ -1,2 +1,1 @@
-virl:
-  config_template:  sdwan/vedge.j2
+virl_config_template:  sdwan/vedge.j2

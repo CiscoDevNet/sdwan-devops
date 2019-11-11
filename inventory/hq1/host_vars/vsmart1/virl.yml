@@ -1,4 +1,3 @@
-virl:
-  mgmt_interface: eth0
-  config_template: sdwan/user-data.j2
-  # image_definition: viptela-smart-19-2-0
+virl_mgmt_interface: eth0
+virl_config_template: sdwan/user-data.j2
+virl_image_definition: "viptela-smart-{{ viptela_version }}"

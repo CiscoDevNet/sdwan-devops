@@ -4,11 +4,10 @@ ping_tests:
 #
   - dst_ip: 10.0.1.10
     src_ip: 192.168.1.1
-    router: site1-cedge1
-    vrf: 1
-    state: present
+    vedge: site1-cedge1
+    vpn: 1
+    pass: yes
   - dst_ip: 10.0.1.10
-    src_ip: 192.168.2.1
-    router: site2-cedge1
-    vrf: 1
-    state: present
+    vedge: site2-vedge1
+    vpn: 1
+    pass: yes

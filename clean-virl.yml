@@ -5,9 +5,8 @@
     - ansible-virl
     - ansible-viptela
   tags:
-    - vmanage
+    - always
   tasks:
-
     - name: Delete Certificates
       file:
         path: "{{ item }}"
@@ -16,6 +15,15 @@
         - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.csr"
         - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.crt"
 
+- hosts: sdwan
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+    - ansible-viptela
+  tags:
+    - vmanage
+  tasks:
     - block:
       - set_fact:
           vmanage_host: "{{ groups.vmanage_hosts | first | default('') }}"
@@ -77,7 +85,7 @@
     - ansible-virl
   tags:
     - never
-    - destroy
+    - delete
   tasks:
     - name: Delete the lab
       virl_lab:

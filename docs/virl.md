@@ -89,6 +89,18 @@ This playbook will:
 ./play.sh deploy-virl.yml
 ```
 
+## Get inventory information
+
+```bash
+./play.sh virl-inventory.yml
+```
+
+### Get detailed inventory information for a single host
+
+```bash
+./play.sh virl-inventory.yml --tags=detail --limit=vmanage1
+```
+
 ## Clean the topology
 
 Stops and wipes all of the nodes in the lab.
@@ -106,5 +118,5 @@ Stops and wipes all of the nodes in the lab.
 To remove the lab completely from the VIRL server:
 
 ```bash
-./play.sh clean-virl.yml --tags=destroy
+./play.sh clean-virl.yml --tags=delete
 ```

@@ -1,16 +1,16 @@
 FROM alpine:3.10
 
 COPY requirements.txt /tmp/requirements.txt
-RUN echo "===> install GCC ****" && \
+RUN echo "===> Installing GCC ****" && \
     apk add --no-cache gcc musl-dev make && \
     \
     \
-    echo "===> install Python ****" && \
+    echo "===> Installing Python ****" && \
     apk add --no-cache python3 && \
     if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi && \
     \
     \
-    echo "**** install pip ****" && \
+    echo "**** Installing pip ****" && \
     python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
     pip3 install --no-cache --upgrade pip setuptools wheel && \
@@ -24,18 +24,18 @@ RUN echo "===> install GCC ****" && \
     echo "===> Installing PIP Requirements..."  && \
     pip install -r /tmp/requirements.txt
 
-COPY files/simple_client-0.1.12b5-py3-none-any.whl /tmp/simple_client-0.1.12b5-py3-none-any.whl
+COPY files/virl2_client-0.8.2+b4d055d25-py3-none-any.whl /tmp/virl2_client-0.8.2+b4d055d25-py3-none-any.whl
 RUN echo "===> Installing VIRL Client..."  && \
-    pip install /tmp/simple_client-0.1.12b5-py3-none-any.whl
+    pip install /tmp/virl2_client-0.8.2+b4d055d25-py3-none-any.whl
 
-#Install Terraform
-
-RUN apk --update add wget unzip cdrkit curl
-
-RUN wget --quiet https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_linux_amd64.zip \
-  && unzip terraform_0.12.12_linux_amd64.zip \
-  && mv terraform /usr/bin \
-  && rm terraform_0.12.12_linux_amd64.zip
+RUN echo "===> Installing Terraform ****" && \
+    apk --update add wget unzip cdrkit curl && \
+    \
+    \
+    wget --quiet https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_linux_amd64.zip && \
+    unzip terraform_0.12.12_linux_amd64.zip && \
+    mv terraform /usr/bin && \
+    rm terraform_0.12.12_linux_amd64.zip
 
 # Define working directory.
 ENV ANSIBLE_HOST_KEY_CHECKING false
