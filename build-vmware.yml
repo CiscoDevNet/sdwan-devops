@@ -21,6 +21,17 @@
         plan_file: control.tfplan
         workspace: control
         variables_file: control.tfvars
+        variables:
+          datacenter: "{{ datacenter }}"
+          cluster: "{{ cluster }}"
+          resource_pool: "{{ resource_pool }}"
+          datastore: "{{ datastore }}"
+          iso_datastore: "{{ iso_datastore }}"
+          iso_path: "{{ iso_path }}"
+          vmanage_template: "{{ vmanage_template }}"
+          vbond_template: "{{ vbond_template }}"
+          vsmart_template: "{{ vsmart_template }}"
+          vedge_template: "{{ vedge_template }}"
         force_init: yes
 #        backend_config:
 #          region: "us-east-1"

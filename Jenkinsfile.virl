@@ -54,17 +54,19 @@ pipeline {
         stage('Configure SD-WAN Fabric') {
            steps {
                 echo 'Create local CA...'
-                ansiblePlaybook disableHostKeyChecking: true, playbook: 'import-templates.yml'               
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'build-ca.yml'               
                 echo 'Configure Viptela Control Plane...'
                 withCredentials([file(credentialsId: 'viptela-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
-                    ansiblePlaybook disableHostKeyChecking: true, extras: '-e virl_tag=jenkins -e \'organization_name="${VIPTELA_ORG}"\' -e serial_number_file=${VIPTELA_SERIAL_FILE} -e viptela_cert_dir=${WORKSPACE}/myCA', playbook: 'config-virl.yml'
+                    ansiblePlaybook disableHostKeyChecking: true, extras: '-e \'organization_name="${VIPTELA_ORG}"\' -e serial_number_file=${VIPTELA_SERIAL_FILE} -e viptela_cert_dir=${WORKSPACE}/myCA', playbook: 'config-virl.yml'
                 }
                 echo 'Deploying edges...'
-                ansiblePlaybook disableHostKeyChecking: true, playbook: 'import-templates.yml'
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'deploy-virl.yml'
            }
         }
         stage('Running Tests') {
            steps {
+                echo 'Check SD-WAN...'
+                ansiblePlaybook disableHostKeyChecking: true, playbook: 'waitfor-sync.yml'
                 echo 'Check SD-WAN...'
                 ansiblePlaybook disableHostKeyChecking: true, playbook: 'check-sdwan.yml'
            }
