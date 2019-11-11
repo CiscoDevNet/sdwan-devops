@@ -1,14 +1,48 @@
-- name: Delete Control Plane VMs with Terraform
+- import_playbook: clean-control.yml
+  tags: [control, never]
+
+- name: Delete Control Planw VMs
   hosts: localhost
   connection: local
   tags:
     - terraform
     - control
+    - never
   any_errors_fatal: true
   gather_facts: no
   tasks:
-    - name: Terraform Destroy
+    - name: Check for controls.tfvars file
+      stat:
+        path: 'terraform-sdwan/vmware/control.tfvars'
+      register: control_stat_result
+
+    - name: Terraform Destroy Control Plane
       terraform:
         project_path: 'terraform-sdwan/vmware'
         state: absent
-        variables_file: vedges.tfvars
+        workspace: control
+        variables_file: control.tfvars
+      when: control_stat_result.stat.exists == true
+
+- name: Delete Edge VMs
+  hosts: localhost
+  connection: local
+  tags:
+    - terraform
+    - edges
+    - never
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Check for edges.tfvars file
+      stat:
+        path: terraform-sdwan/vmware/edges.tfvars
+      register: edges_stat_result
+
+    - name: Terraform Destroy Edges
+      terraform:
+        project_path: 'terraform-sdwan/vmware'
+        state: absent
+        workspace: edges
+        variables_file: edges.tfvars
+      when: edges_stat_result.stat.exists == true

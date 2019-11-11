@@ -7,13 +7,20 @@ Both the control plane and the edge can be deployed in virl
 ## Dependencies
 
 Set the name of the lab, e.g.:
+Using bash:
 ```
 export VIRL_HOST=myvirlhost
 export VIRL_USERNAME=myusername
 export VIRL_PASSWORD=mypasword
 export VIRL_LAB=myusername_sdwan
 ```
-
+Using windows cli:
+```
+set VIRL_HOST=myvirlhost
+set VIRL_USERNAME=myusername
+set VIRL_PASSWORD=mypasword
+set VIRL_LAB=myusername_sdwan
+```
 These values can be set permanently in the `virl.yml` file in the inventory by adding:
 ```
 host: myvirlhost
@@ -32,16 +39,26 @@ To save changes that you make in the VIRL GUI, download the lab and override the
 
 ### Create a local CA
 
+Using bash:
 ```bash
-./play.sh build-ca.yml
+$ ./play.sh build-ca.yml
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 build-ca.yml
 ```
 
 ### Build the topology
 
 Run the `build-virl.yml` playbook to the build the out the control plane:
 
+Using bash:
 ```bash
-./play.sh build-virl.yml
+$ ./play.sh build-virl.yml
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 build-virl.yml
 ```
 
 This playbook will:
@@ -51,15 +68,25 @@ This playbook will:
 
 `--limit` can be used to build individual nodes:
 
+Using bash:
 ```bash
-./play.sh build-virl.yml --limit=site1-cedge1
+$ ./play.sh build-virl.yml --limit=site1-cedge1
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 build-virl.yml --limit=site1-cedge1
 ```
 
 ### Configure the SD-WAN fabric
 
 Set the name of the organization, e.g.:
+Using bash:
 ```
 export VMANAGE_ORG=myorgname
+```
+Using windows cli:
+```
+set VMANAGE_ORG=myorgname
 ```
 
 >Note: This value can be set permanently in `group_vars/all/local.yml`
@@ -68,8 +95,13 @@ Make sure that you have a serial file that matches the org name in this location
 
 Run the playbook
 
+Using bash:
 ```bash
-./play.sh config-virl.yml
+$ ./play.sh config-virl.yml
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 config-virl.yml
 ```
 
 This playbook will:
@@ -85,8 +117,13 @@ This playbook will:
 
 ### Deploy the SD-WAN edges
 
+Using bash:
 ```bash
-./play.sh deploy-virl.yml
+$ ./play.sh deploy-virl.yml
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 deploy-virl.yml
 ```
 
 ## Get inventory information
@@ -105,18 +142,32 @@ This playbook will:
 
 Stops and wipes all of the nodes in the lab.
 
+Using bash:
 ```bash
-./play.sh clean-virl.yml
+$ ./play.sh clean-virl.yml
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 clean-virl.yml
 ```
 
 `--limit` can be used to clean individual nodes:
 
 ```bash
-./play.sh clean-virl.yml --limit=site1-cedge1
+$ ./play.sh clean-virl.yml --limit=site1-cedge1
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 clean-virl.yml --limit=site1-cedge1
 ```
 
 To remove the lab completely from the VIRL server:
 
+Using bash:
 ```bash
-./play.sh clean-virl.yml --tags=delete
+$ ./play.sh clean-virl.yml --tags=delete
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 clean-virl.yml --tags=delete
 ```

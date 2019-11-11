@@ -1,0 +1,35 @@
+vmanage_device_list = [
+    {% for host in groups['vmanage_hosts'] -%}
+    {
+        name = "{{ hostvars[host]['inventory_hostname'] }}"
+        networks = ["{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['vpn512_portgroup'] }}"]
+        ipv4_address = "{{ hostvars[host]['sdwan_transport_ip'] }}/{{ hostvars[host]['vpn0_netmask'] }}"
+        ipv4_gateway = "{{ hostvars[host]['vpn0_gateway'] }}"
+    }{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+]
+
+vsmart_device_list = [
+    {% for host in groups['vsmart_hosts'] -%}
+    {
+        name = "{{ hostvars[host]['inventory_hostname'] }}"
+        networks = ["{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['vpn512_portgroup'] }}"]
+        ipv4_address = "{{ hostvars[host]['sdwan_transport_ip'] }}/{{ hostvars[host]['vpn0_netmask'] }}"
+        ipv4_gateway = "{{ hostvars[host]['vpn0_gateway'] }}"
+    }{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+]
+
+vbond_device_list = [
+    {% for host in groups['vbond_hosts'] -%}
+    {
+        name = "{{ hostvars[host]['inventory_hostname'] }}"
+        networks = ["{{ hostvars[host]['vpn512_portgroup'] }}", "{{ hostvars[host]['vpn0_portgroup'] }}"]
+        ipv4_address = "{{ hostvars[host]['sdwan_transport_ip'] }}/{{ hostvars[host]['vpn0_netmask'] }}"
+        ipv4_gateway = "{{ hostvars[host]['vpn0_gateway'] }}"
+    }{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+]

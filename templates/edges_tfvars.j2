@@ -1,0 +1,11 @@
+vedge_device_list = [
+    {% for host in groups['vmware'] -%}
+    {
+        name = "{{ hostvars[host]['inventory_hostname'] }}"
+        networks = ["{{ hostvars[host]['vpn512_portgroup'] }}", "{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['servicevpn_portgroup'] }}"]
+        ipv4_address = "{{ hostvars[host]['sdwan_transport_ip'] }}/{{ hostvars[host]['vpn0_netmask'] }}"
+        ipv4_gateway = "{{ hostvars[host]['vpn0_gateway'] }}"
+    }{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+]

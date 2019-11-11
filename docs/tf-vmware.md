@@ -13,16 +13,26 @@ Clone the [Terraform SDWAN repo](https://github.com/ciscops/terraform-viptela) a
 
 If you are using a local CA, create it:
 
+Using bash:
 ```bash
-./play.sh build-ca.yml
+$ ./play.sh build-ca.yml
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 build-ca.yml
 ```
 
 ## Configure the SD-WAN fabric
 
 Set the name of the organization, e.g.:
 
+Using bash:
 ```bash
 export VMANAGE_ORG=myorgname
+```
+Using winddows cli:
+```cli
+set VMANAGE_ORG=myorgname
 ```
 
 Make sure that you have a serial file in this location: `licenses/serialFile.viptela` 
@@ -83,8 +93,13 @@ The following items need to be set to reflect the specifics of your environment:
 
 Run the playbook
 
+Using bash:
 ```bash
-./play.sh configure-control.yml -i inventory/deployments/sdwan1.yml
+$ ./play.sh configure-control.yml -i inventory/deployments/sdwan1.yml
+```
+Using powershell:
+```powershell
+> powershell.exe ./play.ps1 configure-control.yml -i inventory/deployments/sdwan1.yml
 ```
 
 This playbook will:
