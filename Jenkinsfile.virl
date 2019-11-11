@@ -48,7 +48,7 @@ pipeline {
         stage('Build VIRL Topology') {
            steps {
                 echo 'Running build.yml...'
-                ansiblePlaybook disableHostKeyChecking: true, playbook: 'build-virl.yml'
+                ansiblePlaybook disableHostKeyChecking: true, extras: '-vvv', playbook: 'build-virl.yml'
            }
         }
         stage('Configure SD-WAN Fabric') {
