@@ -77,6 +77,8 @@
     - CA
   any_errors_fatal: true
   gather_facts: no
+  roles:
+    - ansible-virl
   tasks:
     - set_fact:
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
