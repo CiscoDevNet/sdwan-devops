@@ -57,7 +57,7 @@ pipeline {
            steps {
                 echo 'Configure Viptela Control Plane...'
                 withCredentials([file(credentialsId: 'viptela-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
-                    ansiblePlaybook disableHostKeyChecking: true, extras: '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', playbook: 'config-virl.yml'
+                    ansiblePlaybook disableHostKeyChecking: true, extras: '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE} -vvv', playbook: 'config-virl.yml'
                 }
                 echo 'Deploying edges...'
                 ansiblePlaybook disableHostKeyChecking: true, playbook: 'deploy-virl.yml'
