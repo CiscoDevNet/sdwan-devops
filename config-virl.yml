@@ -98,6 +98,9 @@
       retries: 12
       delay: 10
 
+    - name: Refresh Inventory
+      meta: refresh_inventory   
+
     - name: Waiting for vManage API to start
       uri:
         url: "https://{{ vmanage_ip }}/dataservice/system/device/controllers"
@@ -146,9 +149,6 @@
       retries: 10
       delay: 10
       until: result is not failed 
-
-    - name: Refresh Inventory
-      meta: refresh_inventory   
 
     - name: Add Control Hosts
       vmanage_device:
