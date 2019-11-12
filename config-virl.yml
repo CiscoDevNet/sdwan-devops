@@ -83,9 +83,6 @@
     - set_fact:
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-
     - name: Wait until the mgmt interface comes up
       virl_lab_facts:
         host: "{{ virl_host }}"
@@ -100,6 +97,9 @@
 
     - name: Refresh Inventory
       meta: refresh_inventory   
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
 
     - name: Waiting for vManage API to start
       uri:
