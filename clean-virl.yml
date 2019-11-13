@@ -46,7 +46,7 @@
         ignore_errors: yes
         when: vmanage_ip is defined and vmanage_ip
 
-      when: viptela is defined
+      when: inventory_hostname in groups.sdwan
 
 
 - hosts: virl_hosts
