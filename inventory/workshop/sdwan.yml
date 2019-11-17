@@ -16,7 +16,7 @@ all:
                 sdwan_personality: vmanage
                 sdwan_device_model: vmanage
               hosts:
-                chocker-vmanage1:
+                username-vmanage1:
                   sdwan_system_ip: 1.1.1.1
                   sdwan_transport_ip: 192.133.179.20
                   ansible_host: "{{ sdwan_transport_ip }}"
@@ -26,7 +26,7 @@ all:
                 sdwan_personality: vbond
                 sdwan_device_model: vbond
               hosts:
-                chocker-vbond1:
+                username-vbond1:
                   sdwan_system_ip: 1.1.2.1
                   sdwan_transport_ip: 192.133.179.21
                   ansible_host: "{{ sdwan_transport_ip }}"
@@ -36,7 +36,7 @@ all:
                 sdwan_personality: vsmart
                 sdwan_device_model: vsmart
               hosts:
-                chocker-vsmart1:
+                username-vsmart1:
                   sdwan_system_ip: 1.1.3.1
                   sdwan_transport_ip: 192.133.179.22
                   ansible_host: "{{ sdwan_transport_ip }}"
@@ -51,7 +51,7 @@ all:
                 vpn0_gateway: 192.133.179.1
                 vpn512_portgroup: cpn-rtp-colab1
               hosts:
-                chocker-vedge1:
+                username-vedge1:
                   sdwan_system_ip: 1.1.10.1
                   sdwan_transport_ip: 192.133.179.23
                   ansible_host: "{{ sdwan_transport_ip }}"
@@ -76,7 +76,7 @@ all:
                       'system_system_ip': "{{ sdwan_system_ip }}"
                       'banner_login': You are being monitored.
                       'banner_motd': Welcome!
-                chocker-vedge2:
+                username-vedge2:
                   sdwan_system_ip: 1.1.11.1
                   sdwan_transport_ip: 192.133.179.24
                   ansible_host: "{{ sdwan_transport_ip }}"
@@ -105,7 +105,7 @@ all:
               vars:
                 bootstrap_method: pnp
               hosts:
-                chocker-isr1k1:
+                username-isr1k1:
                   sdwan_system_ip: 1.1.12.1
                   ansible_host: "{{ sdwan_system_ip }}"
                   sdwan_site_id: "12"
