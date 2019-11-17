@@ -4,7 +4,7 @@ sdwan_site_id: "12"
 sdwan_uuid: C1111-8PLTEEAWB-FGL233512BN
 sdwan_personality: vedge
 sdwan_template:
-  name: 'branch-c1111'
+  name: 'branch-1111'
   variables:
     'vpn512_interface': eth0
     'vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface': GigabitEthernet0/0/0
