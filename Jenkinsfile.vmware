@@ -63,7 +63,7 @@ pipeline {
             steps {
                 echo 'Configure Control Plane...'
                 withCredentials([file(credentialsId: 'vmware-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
-                    ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/deployments', playbook: 'config-vmware.yml'
+                    ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/jenkins', playbook: 'config-vmware.yml'
                 }
             }
         }

@@ -127,7 +127,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         organization: "{{ vmanage_org }}"
-        vbond: "{{ hostvars[vbond_controller].sdwan_transport_ip }}"
+        vbond: "{{ sdwan_vbond }}"
       register: result
       retries: 10
       delay: 10
