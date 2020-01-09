@@ -5,7 +5,7 @@ vpn0_gateway: 192.133.179.1
 ansible_host: "{{ sdwan_transport_ip }}"
 sdwan_site_id: 11
 sdwan_model: 'vedge-cloud'
-sdwan_uuid: 663858cb-b1c6-6cc9-0229-9db8e9b7c6c6
+sdwan_uuid: e58dbd3f-cbf1-767c-c9b6-116c308733e8
 sdwan_personality: vedge
 sdwan_template:
   name: 'branch-vedge-cloud'

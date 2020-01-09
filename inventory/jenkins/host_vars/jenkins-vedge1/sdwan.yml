@@ -3,7 +3,7 @@ sdwan_transport_ip: 192.133.179.16
 ansible_host: "{{ sdwan_transport_ip }}"
 sdwan_site_id: 10
 sdwan_model: 'vedge-cloud'
-sdwan_uuid: b1b0c97d-acd9-6df5-19d5-6d8a9923fbfb
+sdwan_uuid: 36b8fb11-0aa4-8f2e-5174-a7793ae246f4
 sdwan_personality: vedge
 sdwan_template:
   name: 'branch-vedge-cloud'
