@@ -1,5 +1,5 @@
 - name: Ping hosts
-  hosts: vmanage1
+  hosts: localhost
   connection: local
   gather_facts: no
   roles:
