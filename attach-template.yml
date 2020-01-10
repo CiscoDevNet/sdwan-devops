@@ -1,0 +1,22 @@
+- name: Attach Templates
+  hosts: all
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-viptela
+  tasks:
+    - name: Attach template to device
+      vmanage_device_attachment:
+        user: "{{vmanage_user}}"
+        host: "{{vmanage_host}}"
+        password: "{{vmanage_password}}"
+        device: "{{ inventory_hostname }}"
+        template: "{{ templateName }}"
+        variables: "{{ variables }}"
+        wait: yes
+        state: "present"
+      async: 90
+      poll: 10
+      register: attachment_results
+      tags:
+        - attach

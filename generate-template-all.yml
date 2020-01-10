@@ -1,0 +1,110 @@
+- name: Generate all the feature templates
+  hosts: all
+  connection: local
+  roles:
+    - ansible-viptela
+  gather_facts: no
+  tasks:
+    - assert:
+        that:
+          - vmanage_host is defined and vmanage_host
+          - vmanage_user is defined and vmanage_host
+          - vmanage_password is defined and vmanage_host
+        fail_msg: "vmanage_host, vmanage_user, and vmanage_password must be defined"
+      tags: always
+
+    - name: Banner Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-banner
+      tags:
+        - feature-banner
+        - feature-banner:render
+        - feature-banner:json
+        - feature-banner:create
+        - feature-banner:delete
+        - feature-banner:debug
+
+    - name: Logging Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-logging
+      tags:
+        - feature-logging
+        - feature-logging:render
+        - feature-logging:json
+        - feature-logging:create
+        - feature-logging:delete
+        - feature-logging:debug
+
+    - name: System Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-system
+      tags:
+        - feature-system
+        - feature-system:render
+        - feature-system:json
+        - feature-system:create
+        - feature-system:delete
+        - feature-system:debug
+
+    - name: Interface Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-interface
+      tags:
+        - feature-interface
+        - feature-interface:render
+        - feature-interface:json
+        - feature-interface:create
+        - feature-interface:delete
+        - feature-interface:debug
+
+    - name: AAA Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-aaa
+      tags:
+        - feature-aaa
+        - feature-aaa:render
+        - feature-aaa:json
+        - feature-aaa:create
+        - feature-aaa:delete
+        - feature-aaa:debug
+
+    - name: BFD Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-bfd
+      tags:
+        - feature-bfd
+        - feature-bfd:render
+        - feature-bfd:json
+        - feature-bfd:create
+        - feature-bfd:delete
+        - feature-bfd:debug
+
+    - name: VPN Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-vpn
+      tags:
+        - feature-vpn
+        - feature-vpn:render
+        - feature-vpn:json
+        - feature-vpn:create
+        - feature-vpn:delete
+        - feature-vpn:debug
+
+    - name: Device Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: device-template
+      tags:
+        - device-template
+        - device-template:render
+        - device-template:json
+        - device-template:create
+        - device-template:delete
+        - device-template:debug
