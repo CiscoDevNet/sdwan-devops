@@ -50,7 +50,7 @@ spec:
       steps {
         echo 'Running build-virl.yml...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'build-virl.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'build-virl.yml'
         }
       }
     }
@@ -59,7 +59,7 @@ spec:
         echo 'Configure Control Plane...'
         container('ansible') {
           withCredentials([file(credentialsId: 'viptela-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
-            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/jenkins', playbook: 'config-virl.yml'
+            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/hq1', playbook: 'config-virl.yml'
           }
         }
       }
@@ -68,7 +68,7 @@ spec:
       steps {
         echo 'Configure Edges...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'deploy-virl.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'deploy-virl.yml'
         }
       }
     }
@@ -76,8 +76,8 @@ spec:
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'check-sdwan.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'waitfor-sync.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'check-sdwan.yml'
         }
       }
     }
@@ -86,7 +86,7 @@ spec:
     always {
       echo 'Cleaning up...'
       container('ansible') {
-        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'clean-virl.yml'
+        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'clean-virl.yml'
       }
       cleanWs()
     }
