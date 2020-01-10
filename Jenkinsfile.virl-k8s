@@ -86,7 +86,7 @@ spec:
     always {
       echo 'Cleaning up...'
       container('ansible') {
-        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'clean-virl.yml'
+        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', tags: 'delete', playbook: 'clean-virl.yml'
       }
       cleanWs()
     }
