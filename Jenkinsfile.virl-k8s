@@ -72,11 +72,18 @@ spec:
         }
       }
     }
+    stage('Waiting for Edges') {
+      steps {
+        echo 'Wait for Edges to sync...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'waitfor-sync.yml'
+        }
+      }
+    }
     stage('Running Tests') {
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'waitfor-sync.yml'
           ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'check-sdwan.yml'
         }
       }
