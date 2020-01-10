@@ -1,0 +1,119 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: ansible
+    image: jasonking/ansible-sdwan
+    command:
+    - sleep
+    args:
+    - 99d
+    tty: true
+"""
+    }
+  }
+  options {
+    disableConcurrentBuilds()
+    lock resource: 'jenkins_sdwan_vmware'
+  }
+  environment {
+    TF_VAR_vsphere_user = credentials('cpn-rtp-vc1-username')
+    TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
+    TF_VAR_vsphere_server = credentials('cpn-rtp-vc1-server')
+    VMANAGE_ORG = credentials('vmware-vmanage-org')
+    HOME = "${WORKSPACE}"
+    DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
+  }
+  stages {      
+    stage('Clean Previous Deployment') {
+      steps {
+        echo 'Running clean-vmware.yml...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
+        }      
+      }          
+    }
+/*
+    stage('Clean Jenkins Workspace') {
+      steps {
+        cleanWs()
+      }
+    }
+*/
+/*
+    stage('Prep New Environment') {
+      steps {
+        // GIT submodule recursive checkout
+        checkout scm: [
+                $class: 'GitSCM',
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [[$class: 'SubmoduleOption',
+                              disableSubmodules: false,
+                              parentCredentials: false,
+                              recursiveSubmodules: true,
+                              reference: '',
+                              trackingSubmodules: false]],
+                submoduleCfg: [],
+                userRemoteConfigs: scm.userRemoteConfigs
+        ]
+      }
+    }
+*/
+    stage('Build Certificate Authority') {
+      steps {
+        echo 'Running build-ca.yml...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, playbook: 'build-ca.yml'
+        }
+      }
+    }        
+    stage('Build Control Plane on VMWare') {
+      steps {
+        echo 'Running build-vmware.yml...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'build-vmware.yml'
+        }
+      }
+    }
+    stage('Configure Control Plane') {
+      steps {
+        echo 'Configure Control Plane...'
+        container('ansible') {
+          withCredentials([file(credentialsId: 'vmware-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
+            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/jenkins', playbook: 'config-vmware.yml'
+          }
+        }
+      }
+    }
+    stage('Configure VMWare Edges') {
+      steps {
+        echo 'Configure Edges...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'deploy-vmware-edges.yml'
+        }
+      }
+    }
+    stage('Running Tests') {
+      steps {
+        echo 'Check SD-WAN...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'check-sdwan.yml'
+        }
+      }
+    }
+  }
+  post {
+    always {
+      echo 'Cleaning up...'
+      container('ansible') {
+        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
+      }
+      cleanWs()
+    }
+  }
+}

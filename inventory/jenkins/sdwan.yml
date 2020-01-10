@@ -26,9 +26,9 @@ all:
                 jenkins-vsmart2:        
         sdwan_edge:
           children:
-            physical:
-              hosts:              
-                jenkins-isr1k1:
+            # physical:
+            #   hosts:              
+            #     jenkins-isr1k1:
             vmware:
               hosts:
                 jenkins-vedge1:
