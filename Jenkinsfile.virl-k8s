@@ -83,7 +83,6 @@ spec:
     stage('Running Tests') {
       steps {
         echo 'Check SD-WAN...'
-        sleep(60)
         container('ansible') {
           ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'check-sdwan.yml'
         }
