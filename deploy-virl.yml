@@ -116,7 +116,7 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
         state: started
-        image_definition: "{{ virl.image_definition | default(omit) }}"
+        image_definition: "{{ virl_image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Push Certs to Controllers
