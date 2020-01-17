@@ -1,0 +1,12 @@
+templateName: T1
+variables:
+  lo0_int_ip_addr|maskbits: 1.1.1.1/32
+  site_id: 101
+  system_ip: 10.0.1.101
+  host_name: SDWAN-AUTO-vedge-001
+  transport1_int_description: transport INT 1
+  transport1_int_name|x|x: ge0/0
+  transport1_int_shutdown: false
+  transport1_tunnel_color_value: biz-internet
+  vpn512_mgt_int_ip_addr|maskbits: 192.168.52.2/24
+  vpn512_mgt_int_x|x: eth0
