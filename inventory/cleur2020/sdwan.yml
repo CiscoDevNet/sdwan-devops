@@ -1,5 +1,13 @@
 all:
   children:
+    network:
+      children:
+        internet_routers:
+          hosts:
+            colab-rtr:
+        router:
+          hosts:
+            colab-rtr:
     sdwan:
       children:
         sdwan_control:

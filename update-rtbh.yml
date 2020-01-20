@@ -1,5 +1,5 @@
 - name: Update RTBH
-  hosts: vmanage1
+  hosts: cleur-vmanage1
   connection: local
   roles:
     - ansible-viptela
@@ -31,8 +31,8 @@
         name: "{{ policy_list_name }}"
         entries: "{{ policy_list_entries }}"
         type: dataprefix
-        push: yes
-        force: yes
+        push: no
+        force: no
       register: policy_list_facts
       delegate_to: localhost
       when: policy_list_entries | length > 0

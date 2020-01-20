@@ -252,7 +252,7 @@
 
 - import_playbook: import-templates.yml
 
-# - import_playbook: import-policy.yml
+- import_playbook: import-policy.yml
 
 - name: Attach Templates to vSmarts
   hosts: vsmart_hosts:&virl_hosts

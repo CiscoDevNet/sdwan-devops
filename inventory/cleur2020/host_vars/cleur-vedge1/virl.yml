@@ -1,0 +1,2 @@
+virl_config_template:  sdwan/vedge.j2
+virl_image_definition: "viptela-edge-{{ viptela_version }}"
