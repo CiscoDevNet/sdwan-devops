@@ -105,7 +105,7 @@
       register: result
       until: result.virl_facts.nodes[inventory_hostname].ansible_host
       # when: virl_mgmt_interface is defined
-      retries: 12
+      retries: 60
       delay: 10
 
     - name: Refresh Inventory

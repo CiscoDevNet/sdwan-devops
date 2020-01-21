@@ -54,6 +54,8 @@
   gather_facts: no
   roles:
     - ansible-virl
+  tags:
+    - always
   tasks:
     - name: Stop the node
       virl_node:

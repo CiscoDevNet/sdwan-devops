@@ -7,8 +7,8 @@ runcmd:
 {% if interfaces is defined %}
 {%   for key, value in interfaces.items() %}
 {%     if value.enabled is defined and value.enabled is sameas true and value.ip is defined and value.ip.primary is defined %}
- - ip address add {{ value.ip.primary }} dev {{ key }}
- - ip link set dev {{ key }} up
+ - sudo ip address add {{ value.ip.primary }} dev {{ key }}
+ - sudo ip link set dev {{ key }} up
 {%     endif %}
 {%   endfor %}
 {% endif %}
@@ -16,7 +16,7 @@ runcmd:
 {%  for vrf, value in static_routes.items() %}
 {%   for route in value|default([]) %}
 {%    for dest in route.fwd_list|default([]) %}
- - ip route add {{ route.network }} via {{ dest.fwd }}
+ - sudo ip route add {{ route.network }} via {{ dest.fwd }}
 {%    endfor %}
 {%   endfor %}
 {%  endfor %}
