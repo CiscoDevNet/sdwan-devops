@@ -33,16 +33,16 @@
     - netconf_config:
         content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
 
-- name: Push NETCONF template
-  hosts: vbond_hosts
-  connection: netconf
-  tags:
-    - netconf
-  any_errors_fatal: true
-  gather_facts: no
-  tasks:
-    - netconf_config:
-        content: "{{ lookup('template', 'sdwan/netconf/vpn.j2') }}"
+#- name: Push NETCONF template
+#  hosts: vbond_hosts
+#  connection: netconf
+#  tags:
+#    - netconf
+#  any_errors_fatal: true
+#  gather_facts: no
+#  tasks:
+#    - netconf_config:
+#        content: "{{ lookup('template', 'sdwan/netconf/vpn.j2') }}"
 
 - name: Copy CA to controllers
   hosts: vbond_hosts:vsmart_hosts
