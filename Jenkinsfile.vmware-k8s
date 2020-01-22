@@ -63,7 +63,7 @@ spec:
         }
       }
     }
-    stage('Deploys VMWare Edges') {
+    stage('Deploy VMWare Edges') {
       steps {
         echo 'Configure Edges...'
         container('ansible') {
@@ -71,7 +71,7 @@ spec:
         }
       }
     }
-    stage('Waiting for Edges') {
+    stage('Wait for Edges to Sync') {
       steps {
         echo 'Wait for Edges to sync...'
         container('ansible') {
@@ -79,7 +79,7 @@ spec:
         }
       }
     }
-    stage('Running Tests') {
+    stage('Run Tests') {
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
@@ -90,7 +90,7 @@ spec:
   }
   post {
     always {
-      echo 'Clean up...'
+      echo 'Clean Up'
       container('ansible') {
         ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
       }
