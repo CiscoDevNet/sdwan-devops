@@ -82,7 +82,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
 
     - name: Waiting for vManage API to start
       uri:
@@ -116,7 +116,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
 
     - set_fact:
         vbond_controller: "{{ groups.vbond_hosts[0] }}"
@@ -238,11 +238,14 @@
   connection: local
   roles:
     - ansible-viptela
-  vars:
-    vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
   gather_facts: no
   tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+
     - name: Import feature templates
       vmanage_feature_template:
         user: "{{ ansible_user }}"
