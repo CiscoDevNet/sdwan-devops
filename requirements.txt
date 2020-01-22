@@ -27,3 +27,4 @@ SecretStorage==2.3.1
 selectors2==2.0.1
 six==1.11.0
 urllib3==1.25.3
+scp
