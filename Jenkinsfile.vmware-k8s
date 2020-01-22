@@ -37,32 +37,6 @@ spec:
         }      
       }          
     }
-/*
-    stage('Clean Jenkins Workspace') {
-      steps {
-        cleanWs()
-      }
-    }
-*/
-/*
-    stage('Prep New Environment') {
-      steps {
-        // GIT submodule recursive checkout
-        checkout scm: [
-                $class: 'GitSCM',
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[$class: 'SubmoduleOption',
-                              disableSubmodules: false,
-                              parentCredentials: false,
-                              recursiveSubmodules: true,
-                              reference: '',
-                              trackingSubmodules: false]],
-                submoduleCfg: [],
-                userRemoteConfigs: scm.userRemoteConfigs
-        ]
-      }
-    }
-*/
     stage('Build Certificate Authority') {
       steps {
         echo 'Running build-ca.yml...'
@@ -79,7 +53,7 @@ spec:
         }
       }
     }
-    stage('Configure Control Plane') {
+    stage('Configuring Control Plane') {
       steps {
         echo 'Configure Control Plane...'
         container('ansible') {
@@ -89,7 +63,7 @@ spec:
         }
       }
     }
-    stage('Configure VMWare Edges') {
+    stage('Configuring VMWare Edges') {
       steps {
         echo 'Configure Edges...'
         container('ansible') {
@@ -97,12 +71,19 @@ spec:
         }
       }
     }
+    stage('Waiting for Edges') {
+      steps {
+        echo 'Wait for Edges to sync...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'waitfor-sync.yml'
+        }
+      }
+    }
     stage('Running Tests') {
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'check-sdwan.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'check-sdwan.yml'
         }
       }
     }
