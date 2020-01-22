@@ -75,7 +75,7 @@ spec:
       steps {
         echo 'Wait for Edges to sync...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'waitfor-sync.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
         }
       }
     }
@@ -83,7 +83,7 @@ spec:
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', playbook: 'check-sdwan.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'check-sdwan.yml'
         }
       }
     }
