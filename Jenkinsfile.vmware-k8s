@@ -53,7 +53,7 @@ spec:
         }
       }
     }
-    stage('Configuring Control Plane') {
+    stage('Configure Control Plane') {
       steps {
         echo 'Configure Control Plane...'
         container('ansible') {
@@ -63,7 +63,7 @@ spec:
         }
       }
     }
-    stage('Configuring VMWare Edges') {
+    stage('Deploys VMWare Edges') {
       steps {
         echo 'Configure Edges...'
         container('ansible') {
@@ -90,7 +90,7 @@ spec:
   }
   post {
     always {
-      echo 'Cleaning up...'
+      echo 'Clean up...'
       container('ansible') {
         ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
       }
