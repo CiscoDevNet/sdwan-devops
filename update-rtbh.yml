@@ -21,8 +21,11 @@
           - ipPrefix: "1.1.1.1/32"
           - ipPrefix: "2.2.2.2/32"
 #          - ipPrefix: "3.3.3.3/32"
+          - ipPrefix: "13.13.13.13/32"
         type: dataprefix
-        push: no
+        push: yes
         force: no
       register: policy_list_facts
-      delegate_to: localhost
+      until: policy_list_facts is not failed
+      retries: 60
+      delay: 10
