@@ -1172,6 +1172,10 @@ nodes:
         slot: 1
         label: ge0/0
         type: physical
+      - id: i2
+        slot: 2
+        label: ge0/1
+        type: physical
   - id: n3
     label: cleur-vbond2
     node_definition: viptela-bond

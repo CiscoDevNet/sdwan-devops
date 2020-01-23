@@ -20,6 +20,7 @@
         entries:
           - ipPrefix: "1.1.1.1/32"
           - ipPrefix: "2.2.2.2/32"
+#          - ipPrefix: "3.3.3.3/32"
         type: dataprefix
         push: no
         force: no

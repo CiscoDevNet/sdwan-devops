@@ -20,7 +20,7 @@ sdwan_template:
     'system_latitude': 37.411343
     'system_longitude': -121.938803
     'system_site_id': "{{ sdwan_site_id }}"
-    'system_host_name': "{{ inventory_hostname}}"
+    'system_host_name': "{{ inventory_hostname }}"
     'system_system_ip': "{{ sdwan_system_ip }}"
     'banner_login': You are being monitored.
     'banner_motd': Welcome!
