@@ -1,9 +1,5 @@
 - name: Attach Templates
-<<<<<<< HEAD
-  hosts: sdwan
-=======
   hosts: "{{ passed | default('all') }}"  
->>>>>>> 711e53cecf8de7c9bf97d8e749a98f7b36b35937
   connection: local
   gather_facts: no
   roles:
@@ -20,15 +16,9 @@
 
     - name: Attach template to device
       vmanage_device_attachment:
-<<<<<<< HEAD
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-=======
         user: "{{ vmanage_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ vmanage_pass }}"
->>>>>>> 711e53cecf8de7c9bf97d8e749a98f7b36b35937
         device: "{{ inventory_hostname }}"
         template: "{{ sdwan_template.name }}"
         variables: "{{ sdwan_template.variables }}"
