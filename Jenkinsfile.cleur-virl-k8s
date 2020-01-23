@@ -72,7 +72,7 @@ spec:
         }
       }
     }
-    stage('Waiting for Edges') {
+    stage('Wait for Edges to Sync') {
       steps {
         echo 'Wait for Edges to sync...'
         container('ansible') {
@@ -80,7 +80,7 @@ spec:
         }
       }
     }
-    stage('Running Tests') {
+    stage('Run Tests') {
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
@@ -89,14 +89,16 @@ spec:
       }
     }
   }
+/*
   post {
     always {
-      echo 'Cleaning up...'
+      echo 'Clean Up'
       container('ansible') {
-        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', tags: 'delete', playbook: 'clean-virl.yml'
+        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq1', tags: 'delete', playbook: 'clean-virl.yml'
       }
       cleanWs()
     }
   }
+*/
 }
 

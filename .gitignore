@@ -3,6 +3,7 @@
 /myCA
 viptela_api_cookie
 topo.virl
-/licenses/serialFile.viptela
+/licenses
 .virlrc
 /.virl
+set*.sh
