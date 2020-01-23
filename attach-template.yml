@@ -8,12 +8,6 @@
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-
     - name: Attach template to device
       vmanage_device_attachment:
         user: "{{ vmanage_user }}"
