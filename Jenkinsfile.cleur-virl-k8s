@@ -89,7 +89,6 @@ spec:
       }
     }
   }
-/*
   post {
     always {
       echo 'Cleaning up...'
@@ -99,6 +98,5 @@ spec:
       cleanWs()
     }
   }
-*/
 }
 
