@@ -1,13 +1,9 @@
-- name: Activate central policy
+- name: Update RTBH
   hosts: localhost
-  gather_facts: no
   connection: local
   roles:
     - ansible-viptela
-  vars:
-    sdwan_central_policy_name: central_policy
-  tags:
-    - policy
+  gather_facts: no
   tasks:
     - set_fact:
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
@@ -15,11 +11,17 @@
     - set_fact:
         vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
 
-    - name: Activate central policy
-      vmanage_central_policy:
+    - name: Update RTBH
+      vmanage_policy_list:
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        state: activated
-        name: "{{ sdwan_central_policy_name }}"
-        wait: no
+        name: "blocked_apps"
+        entries:
+          - app: "twitter"
+          - app: "cbs"
+        type: app
+        push: no
+        force: no
+      register: policy_list_facts
+      delegate_to: localhost
