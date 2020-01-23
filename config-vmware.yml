@@ -234,33 +234,6 @@
     - debug:
         msg: "vManage IP: {{ vmanage_ip }}"
 
-- name: Import vManage Templates
-  hosts: localhost
-  connection: local
-  roles:
-    - ansible-viptela
-  gather_facts: no
-  tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+- import_playbook: import-templates.yml
 
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-
-    - name: Import feature templates
-      vmanage_feature_template:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        state: present
-        aggregate: "{{ vmanage_feature_templates }}"
-      when: vmanage_feature_templates is defined
-
-    - name: Import device templates
-      vmanage_device_template:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        state: present
-        aggregate: "{{ vmanage_device_templates }}"
-      when: vmanage_device_templates is defined
+- import_playbook: import-policy.yml

@@ -5,7 +5,7 @@
     - ansible-viptela
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
     # file: vmanage_policy.yml
   gather_facts: no
   tasks:

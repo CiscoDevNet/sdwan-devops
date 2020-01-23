@@ -1,38 +1,27 @@
 - name: Update RTBH
-  hosts: cleur-vmanage1
+  hosts: localhost
   connection: local
   roles:
     - ansible-viptela
-  vars:
-    policy_list_name: blocked_prefixes
-    file: vmanage_policy.yml
   gather_facts: no
   tasks:
-    - name: Reading file {{ file }}
-      tags:
-        - policy_lists
-        - policy_definitions
-        - central_policy
-      include_vars:
-        file: "{{ file }}"
-        name: vmanage_policy
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        policy_list_entries: "{{ (vmanage_policy.vmanage_policy_lists.dataprefix | selectattr('name', 'equalto', policy_list_name) | map(attribute='entries') | list)[0] }}"
-
-    - debug:
-        var: policy_list_entries
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
 
     - name: Update RTBH
       vmanage_policy_list:
         user: "{{ ansible_user }}"
-        host: "{{ ansible_host }}"
+        host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        name: "{{ policy_list_name }}"
-        entries: "{{ policy_list_entries }}"
+        name: "blocked_prefixes"
+        entries:
+          - ipPrefix: "1.1.1.1/32"
+          - ipPrefix: "2.2.2.2/32"
         type: dataprefix
         push: no
         force: no
       register: policy_list_facts
       delegate_to: localhost
-      when: policy_list_entries | length > 0
