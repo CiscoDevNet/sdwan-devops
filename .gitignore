@@ -6,3 +6,4 @@ topo.virl
 /licenses
 .virlrc
 /.virl
+set*.sh
