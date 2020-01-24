@@ -1,27 +1,830 @@
+vmanage_device_templates:
+-   attached_devices: []
+    configType: template
+    deviceType: vedge-ISR-4331
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_BFD_Template
+        templateType: bfd-vedge
+    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
+        templateType: omp-vedge
+    -   templateName: Factory_Default_vEdge_Security_Template
+        templateType: security-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: system
+        templateType: system-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_vEdge_DHCP_Tunnel_Interface
+            templateType: vpn-vedge-interface
+        templateName: Factory_Default_vEdge_VPN_0_Template
+        templateType: vpn-vedge
+    -   templateName: Factory_Default_vEdge_VPN_512_Template
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn1_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn1
+        templateType: vpn-vedge
+    -   templateName: banner
+        templateType: banner
+    input:
+        columns:
+        -   property: //banner/login
+            title: Login Banner(banner_login)
+            variable: banner_login
+        -   property: //banner/motd
+            title: MOTD Banner(banner_motd)
+            variable: banner_motd
+        -   property: /1/vpn1_interface/interface/if-name
+            title: Interface Name(vpn1_interface)
+            variable: vpn1_interface
+        -   property: /1/vpn1_interface/interface/ip/address
+            title: IPv4 Address(vpn1_ipv4_address)
+            variable: vpn1_ipv4_address
+        -   property: /0/vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface/interface/if-name
+            title: Interface Name(vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface)
+            variable: vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface
+        -   property: //system/host-name
+            title: Hostname(system_host_name)
+            variable: system_host_name
+        -   property: //system/gps-location/latitude
+            title: Latitude(system_latitude)
+            variable: system_latitude
+        -   property: //system/gps-location/longitude
+            title: Longitude(system_longitude)
+            variable: system_longitude
+        -   property: //system/system-ip
+            title: System IP(system_system_ip)
+            variable: system_system_ip
+        -   property: //system/site-id
+            title: Site ID(system_site_id)
+            variable: system_site_id
+    policyId: ''
+    templateDescription: Branch Template for ISR4331
+    templateId: 065732d0-80f0-47b4-b4b0-04aa7f54e900
+    templateName: branch-4331
+-   attached_devices:
+    - cleur-vedge1
+    configType: template
+    deviceType: vedge-cloud
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_BFD_Template
+        templateType: bfd-vedge
+    -   templateName: Factory_Default_vEdge_OMP_Template
+        templateType: omp-vedge
+    -   templateName: Factory_Default_vEdge_Security_Template
+        templateType: security-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: system
+        templateType: system-vedge
+    -   subTemplates:
+        -   templateName: vpn0_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn0
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn512_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn512
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn1_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn1
+        templateType: vpn-vedge
+    -   templateName: banner
+        templateType: banner
+    input:
+        columns:
+        -   property: //banner/login
+            title: Login Banner(banner_login)
+            variable: banner_login
+        -   property: //banner/motd
+            title: MOTD Banner(banner_motd)
+            variable: banner_motd
+        -   property: /1/vpn1_interface/interface/if-name
+            title: Interface Name(vpn1_interface)
+            variable: vpn1_interface
+        -   property: /1/vpn1_interface/interface/ip/address
+            title: IPv4 Address(vpn1_ipv4_address)
+            variable: vpn1_ipv4_address
+        -   property: /512/vpn512_interface/interface/if-name
+            title: Interface Name(vpn512_interface)
+            variable: vpn512_interface
+        -   property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
+            title: Address(vpn0_default_gateway)
+            variable: vpn0_default_gateway
+        -   property: /0/vpn0_interface/interface/if-name
+            title: Interface Name(vpn0_interface)
+            variable: vpn0_interface
+        -   property: /0/vpn0_interface/interface/ip/address
+            title: IPv4 Address(vpn0_internet_ipv4_address)
+            variable: vpn0_internet_ipv4_address
+        -   property: //system/host-name
+            title: Hostname(system_host_name)
+            variable: system_host_name
+        -   property: //system/gps-location/latitude
+            title: Latitude(system_latitude)
+            variable: system_latitude
+        -   property: //system/gps-location/longitude
+            title: Longitude(system_longitude)
+            variable: system_longitude
+        -   property: //system/system-ip
+            title: System IP(system_system_ip)
+            variable: system_system_ip
+        -   property: //system/site-id
+            title: Site ID(system_site_id)
+            variable: system_site_id
+    policyId: ''
+    templateDescription: Branch vEdge Cloud Template
+    templateId: 65ca9c98-f3d7-48cd-86f3-53ac11959633
+    templateName: branch-vedge-cloud-v2
+-   attached_devices: []
+    configType: template
+    deviceType: vedge-CSR-1000v
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_BFD_Template
+        templateType: bfd-vedge
+    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
+        templateType: omp-vedge
+    -   templateName: Factory_Default_vEdge_Security_Template
+        templateType: security-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: system
+        templateType: system-vedge
+    -   subTemplates:
+        -   templateName: vpn0_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn0
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn512_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn512
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn1_ospf
+            templateType: ospf
+        -   templateName: vpn1_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn1
+        templateType: vpn-vedge
+    -   templateName: banner
+        templateType: banner
+    input:
+        columns:
+        -   property: //banner/login
+            title: Login Banner(banner_login)
+            variable: banner_login
+        -   property: //banner/motd
+            title: MOTD Banner(banner_motd)
+            variable: banner_motd
+        -   property: /1/vpn1_interface/interface/if-name
+            title: Interface Name(vpn1_interface)
+            variable: vpn1_interface
+        -   property: /1/vpn1_interface/interface/ip/address
+            title: IPv4 Address(vpn1_ipv4_address)
+            variable: vpn1_ipv4_address
+        -   property: /1//router/ospf/area/0/interface/vpn1_ospf_interface/name
+            title: Interface Name(vpn1_ospf_interface)
+            variable: vpn1_ospf_interface
+        -   property: /512/vpn512_interface/interface/if-name
+            title: Interface Name(vpn512_interface)
+            variable: vpn512_interface
+        -   property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
+            title: Address(vpn0_default_gateway)
+            variable: vpn0_default_gateway
+        -   property: /0/vpn0_interface/interface/if-name
+            title: Interface Name(vpn0_interface)
+            variable: vpn0_interface
+        -   property: /0/vpn0_interface/interface/ip/address
+            title: IPv4 Address(vpn0_internet_ipv4_address)
+            variable: vpn0_internet_ipv4_address
+        -   property: //system/host-name
+            title: Hostname(system_host_name)
+            variable: system_host_name
+        -   property: //system/gps-location/latitude
+            title: Latitude(system_latitude)
+            variable: system_latitude
+        -   property: //system/gps-location/longitude
+            title: Longitude(system_longitude)
+            variable: system_longitude
+        -   property: //system/system-ip
+            title: System IP(system_system_ip)
+            variable: system_system_ip
+        -   property: //system/site-id
+            title: Site ID(system_site_id)
+            variable: system_site_id
+    policyId: ''
+    templateDescription: HQ Template for CSR1000v
+    templateId: fbf080f3-84cb-4f3a-9caa-6fe17070ad3c
+    templateName: hq-csr1000v
+-   attached_devices:
+    - cleur-vedge2
+    configType: template
+    deviceType: vedge-cloud
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_BFD_Template
+        templateType: bfd-vedge
+    -   templateName: Factory_Default_vEdge_OMP_Template
+        templateType: omp-vedge
+    -   templateName: Factory_Default_vEdge_Security_Template
+        templateType: security-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: system
+        templateType: system-vedge
+    -   subTemplates:
+        -   templateName: vpn0_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn0
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn512_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn512
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn1_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn1
+        templateType: vpn-vedge
+    -   templateName: banner
+        templateType: banner
+    input:
+        columns:
+        -   property: //banner/login
+            title: Login Banner(banner_login)
+            variable: banner_login
+        -   property: //banner/motd
+            title: MOTD Banner(banner_motd)
+            variable: banner_motd
+        -   property: /1/vpn1_interface/interface/if-name
+            title: Interface Name(vpn1_interface)
+            variable: vpn1_interface
+        -   property: /1/vpn1_interface/interface/ip/address
+            title: IPv4 Address(vpn1_ipv4_address)
+            variable: vpn1_ipv4_address
+        -   property: /512/vpn512_interface/interface/if-name
+            title: Interface Name(vpn512_interface)
+            variable: vpn512_interface
+        -   property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
+            title: Address(vpn0_default_gateway)
+            variable: vpn0_default_gateway
+        -   property: /0/vpn0_interface/interface/if-name
+            title: Interface Name(vpn0_interface)
+            variable: vpn0_interface
+        -   property: /0/vpn0_interface/interface/ip/address
+            title: IPv4 Address(vpn0_internet_ipv4_address)
+            variable: vpn0_internet_ipv4_address
+        -   property: //system/host-name
+            title: Hostname(system_host_name)
+            variable: system_host_name
+        -   property: //system/gps-location/latitude
+            title: Latitude(system_latitude)
+            variable: system_latitude
+        -   property: //system/gps-location/longitude
+            title: Longitude(system_longitude)
+            variable: system_longitude
+        -   property: //system/system-ip
+            title: System IP(system_system_ip)
+            variable: system_system_ip
+        -   property: //system/site-id
+            title: Site ID(system_site_id)
+            variable: system_site_id
+    policyId: ''
+    templateDescription: Branch vEdge Cloud Template
+    templateId: 063ea89c-7a01-4ca0-9279-9ba57b37014c
+    templateName: branch-vedge-cloud
+-   attached_devices: []
+    configType: template
+    deviceType: vedge-CSR-1000v
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_BFD_Template
+        templateType: bfd-vedge
+    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
+        templateType: omp-vedge
+    -   templateName: Factory_Default_vEdge_Security_Template
+        templateType: security-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: system
+        templateType: system-vedge
+    -   subTemplates:
+        -   templateName: vpn0_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn0
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn512_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn512
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn1_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn1
+        templateType: vpn-vedge
+    -   templateName: banner
+        templateType: banner
+    input:
+        columns:
+        -   property: //banner/login
+            title: Login Banner(banner_login)
+            variable: banner_login
+        -   property: //banner/motd
+            title: MOTD Banner(banner_motd)
+            variable: banner_motd
+        -   property: /1/vpn1_interface/interface/if-name
+            title: Interface Name(vpn1_interface)
+            variable: vpn1_interface
+        -   property: /1/vpn1_interface/interface/ip/address
+            title: IPv4 Address(vpn1_ipv4_address)
+            variable: vpn1_ipv4_address
+        -   property: /512/vpn512_interface/interface/if-name
+            title: Interface Name(vpn512_interface)
+            variable: vpn512_interface
+        -   property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
+            title: Address(vpn0_default_gateway)
+            variable: vpn0_default_gateway
+        -   property: /0/vpn0_interface/interface/if-name
+            title: Interface Name(vpn0_interface)
+            variable: vpn0_interface
+        -   property: /0/vpn0_interface/interface/ip/address
+            title: IPv4 Address(vpn0_internet_ipv4_address)
+            variable: vpn0_internet_ipv4_address
+        -   property: //system/host-name
+            title: Hostname(system_host_name)
+            variable: system_host_name
+        -   property: //system/gps-location/latitude
+            title: Latitude(system_latitude)
+            variable: system_latitude
+        -   property: //system/gps-location/longitude
+            title: Longitude(system_longitude)
+            variable: system_longitude
+        -   property: //system/system-ip
+            title: System IP(system_system_ip)
+            variable: system_system_ip
+        -   property: //system/site-id
+            title: Site ID(system_site_id)
+            variable: system_site_id
+    policyId: ''
+    templateDescription: Branch Template for CSR1000v
+    templateId: 9c53fb19-e9db-4ae0-ab3b-f4ba65e2b3dd
+    templateName: branch-csr1000v
+-   attached_devices: []
+    configType: template
+    deviceType: vedge-C1111-8PLTEEAW
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_BFD_Template
+        templateType: bfd-vedge
+    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
+        templateType: omp-vedge
+    -   templateName: Factory_Default_vEdge_Security_Template
+        templateType: security-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: system
+        templateType: system-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_vEdge_DHCP_Tunnel_Interface
+            templateType: vpn-vedge-interface
+        templateName: Factory_Default_vEdge_VPN_0_Template
+        templateType: vpn-vedge
+    -   templateName: Factory_Default_vEdge_VPN_512_Template
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn1_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn1
+        templateType: vpn-vedge
+    -   templateName: banner
+        templateType: banner
+    -   templateName: cellular_controller
+        templateType: cellular-cedge-controller
+    input:
+        columns:
+        -   property: //banner/login
+            title: Login Banner(banner_login)
+            variable: banner_login
+        -   property: //banner/motd
+            title: MOTD Banner(banner_motd)
+            variable: banner_motd
+        -   property: /1/vpn1_interface/interface/if-name
+            title: Interface Name(vpn1_interface)
+            variable: vpn1_interface
+        -   property: /1/vpn1_interface/interface/ip/address
+            title: IPv4 Address(vpn1_ipv4_address)
+            variable: vpn1_ipv4_address
+        -   property: /0/vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface/interface/if-name
+            title: Interface Name(vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface)
+            variable: vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface
+        -   property: //system/host-name
+            title: Hostname(system_host_name)
+            variable: system_host_name
+        -   property: //system/gps-location/latitude
+            title: Latitude(system_latitude)
+            variable: system_latitude
+        -   property: //system/gps-location/longitude
+            title: Longitude(system_longitude)
+            variable: system_longitude
+        -   property: //system/system-ip
+            title: System IP(system_system_ip)
+            variable: system_system_ip
+        -   property: //system/site-id
+            title: Site ID(system_site_id)
+            variable: system_site_id
+    policyId: ''
+    templateDescription: Branch Template for C1111
+    templateId: 0252a9cc-d3d5-4b09-aa1e-979c0228a6b0
+    templateName: branch-1111
+-   attached_devices: []
+    configType: template
+    deviceType: vedge-cloud
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_BFD_Template
+        templateType: bfd-vedge
+    -   templateName: Factory_Default_vEdge_OMP_Template
+        templateType: omp-vedge
+    -   templateName: Factory_Default_vEdge_Security_Template
+        templateType: security-vedge
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: system
+        templateType: system-vedge
+    -   subTemplates:
+        -   templateName: vpn0_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn0
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn512_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn512
+        templateType: vpn-vedge
+    -   subTemplates:
+        -   templateName: vpn1_ospf
+            templateType: ospf
+        -   templateName: vpn1_interface
+            templateType: vpn-vedge-interface
+        templateName: vpn1
+        templateType: vpn-vedge
+    -   templateName: banner
+        templateType: banner
+    input:
+        columns:
+        -   property: //banner/login
+            title: Login Banner(banner_login)
+            variable: banner_login
+        -   property: //banner/motd
+            title: MOTD Banner(banner_motd)
+            variable: banner_motd
+        -   property: /1/vpn1_interface/interface/if-name
+            title: Interface Name(vpn1_interface)
+            variable: vpn1_interface
+        -   property: /1/vpn1_interface/interface/ip/address
+            title: IPv4 Address(vpn1_ipv4_address)
+            variable: vpn1_ipv4_address
+        -   property: /1//router/ospf/area/0/interface/vpn1_ospf_interface/name
+            title: Interface Name(vpn1_ospf_interface)
+            variable: vpn1_ospf_interface
+        -   property: /512/vpn512_interface/interface/if-name
+            title: Interface Name(vpn512_interface)
+            variable: vpn512_interface
+        -   property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
+            title: Address(vpn0_default_gateway)
+            variable: vpn0_default_gateway
+        -   property: /0/vpn0_interface/interface/if-name
+            title: Interface Name(vpn0_interface)
+            variable: vpn0_interface
+        -   property: /0/vpn0_interface/interface/ip/address
+            title: IPv4 Address(vpn0_internet_ipv4_address)
+            variable: vpn0_internet_ipv4_address
+        -   property: //system/host-name
+            title: Hostname(system_host_name)
+            variable: system_host_name
+        -   property: //system/gps-location/latitude
+            title: Latitude(system_latitude)
+            variable: system_latitude
+        -   property: //system/gps-location/longitude
+            title: Longitude(system_longitude)
+            variable: system_longitude
+        -   property: //system/system-ip
+            title: System IP(system_system_ip)
+            variable: system_system_ip
+        -   property: //system/site-id
+            title: Site ID(system_site_id)
+            variable: system_site_id
+    policyId: ''
+    templateDescription: HQ vEdge Cloud Template
+    templateId: a38b39a2-1910-40e5-8210-bf82d8f19dd3
+    templateName: hq-vedge-cloud
+-   attached_devices:
+    - cleur-vsmart1
+    - cleur-vsmart2
+    configType: template
+    deviceType: vsmart
+    factoryDefault: false
+    featureTemplateUidRange: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_Template
+        templateType: aaa
+    -   templateName: Factory_Default_vSmart_OMP_Template
+        templateType: omp-vsmart
+    -   templateName: Factory_Default_vSmart_vManage_Security_Template
+        templateType: security-vsmart
+    -   subTemplates:
+        -   templateName: Factory_Default_Logging_Template
+            templateType: logging
+        templateName: Factory_Default_vSmart_vManage_System_Template
+        templateType: system-vsmart
+    -   subTemplates:
+        -   templateName: vsmart_vpn0_internet_interface
+            templateType: vpn-vsmart-interface
+        templateName: vsmart_vpn0
+        templateType: vpn-vsmart
+    -   subTemplates:
+        -   templateName: vsmart_vpn512_mgmt_interface
+            templateType: vpn-vsmart-interface
+        templateName: vsmart_vpn512
+        templateType: vpn-vsmart
+    input:
+        columns:
+        -   property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
+            title: Address(vpn0_default_gateway)
+            variable: vpn0_default_gateway
+        -   property: /0/eth1/interface/ip/address
+            title: IPv4 Address(vpn0_internet_ipv4_address)
+            variable: vpn0_internet_ipv4_address
+        -   property: //system/host-name
+            title: Hostname
+            variable: null
+        -   property: //system/system-ip
+            title: System IP
+            variable: null
+        -   property: //system/site-id
+            title: Site ID
+            variable: null
+    policyId: ''
+    templateDescription: vsmart
+    templateId: 6c720774-0599-4c87-b472-52e9e22454f2
+    templateName: vsmart
 vmanage_feature_templates:
--   templateId: d0d91e21-69b2-4568-81c4-334864fa02ed
-    templateName: vpn1
-    templateDescription: vpn1
-    templateType: vpn-vedge
+-   attachedMastersCount: 1
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056679
+    deviceType:
+    - vedge-C1111-8PLTEEAW
+    devicesAttached: 0
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056679
+    templateDefinition:
+        id:
+            vipObjectType: object
+            vipType: constant
+            vipValue: 0/2/0
+            vipVariableName: cellular_id
+        lte:
+            failovertimer:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: cellular_failover_timeout
+            firmware:
+                auto-sim: {}
+            sim:
+                max-retry:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipVariableName: cellular_failover_retries
+                primary:
+                    slot:
+                        vipObjectType: object
+                        vipType: ignore
+                        vipVariableName: cellular_primary_slot
+    templateDescription: Cellular Controller Template
+    templateId: 9dc0fee5-28af-44f9-a29c-81b9a9b37333
+    templateMinVersion: 15.0.0
+    templateName: cellular_controller
+    templateType: cellular-cedge-controller
+-   attachedMastersCount: 1
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818057032
+    deviceType:
+    - vsmart
+    devicesAttached: 2
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818057032
+    templateDefinition:
+        arp:
+            ip:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - addr
+                vipType: ignore
+                vipValue: []
+        arp-timeout: {}
+        autonegotiate:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'true'
+            vipVariableName: vpn_if_autonegotiate
+        clear-dont-fragment:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_clear_dont_fragment
+        description:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_description
+        dhcp-helper: {}
+        duplex:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: _empty
+            vipVariableName: vpn_if_duplex
+        flow-control:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: autoneg
+            vipVariableName: vpn_if_flow_control
+        if-name:
+            vipObjectType: object
+            vipType: constant
+            vipValue: eth1
+            vipVariableName: vpn_if_name
+        ip:
+            address:
+                vipObjectType: object
+                vipType: variableName
+                vipValue: ''
+                vipVariableName: vpn0_internet_ipv4_address
+        ipv6:
+            address:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: vpn_if_ipv6_address
+            dhcp-rapid-commit: {}
+        mac-address:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_mac_address
+        mtu:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 1500
+            vipVariableName: vpn_if_mtu
+        pmtu:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_pmtu
+        shutdown:
+            vipObjectType: object
+            vipType: constant
+            vipValue: 'false'
+            vipVariableName: vpn_if_shutdown
+        speed:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: _empty
+            vipVariableName: vpn_if_speed
+        static-ingress-qos: {}
+        tcp-mss-adjust:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_tcp_mss_adjust
+        tunnel-interface:
+            allow-service:
+                all:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'false'
+                    vipVariableName: all
+                bgp: {}
+                dhcp:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'true'
+                    vipVariableName: vpn_if_tunnel_dhcp
+                dns:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'true'
+                    vipVariableName: vpn_if_tunnel_dns
+                icmp:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'true'
+                    vipVariableName: vpn_if_tunnel_icmp
+                netconf:
+                    vipObjectType: object
+                    vipType: constant
+                    vipValue: 'true'
+                    vipVariableName: vpn_if_tunnel_netconf
+                ntp:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'false'
+                    vipVariableName: vpn_if_tunnel_ntp
+                sshd:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'false'
+                    vipVariableName: vpn_if_tunnel_sshd
+                stun:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'false'
+                    vipVariableName: vpn_if_tunnel_stun
+            carrier:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: default
+                vipVariableName: vpn_if_tunnel_carrier
+            color:
+                restrict: {}
+                value:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: default
+                    vipVariableName: vpn_if_tunnel_color_value
+            group:
+                vipObjectType: list
+                vipType: ignore
+            hello-interval:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 1000
+                vipVariableName: vpn_if_tunnel_hello-interval
+            hello-tolerance:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 12
+                vipVariableName: vpn_if_tunnel_hello-tolerance
+            nat-refresh-interval:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 5
+                vipVariableName: vpn_if_tunnel_nat_refresh_interval
+    templateDescription: vsmart_vpn0_internet_interface
+    templateId: cf8c3630-dcb6-4ffb-900d-3f38ff0d596d
+    templateMinVersion: 15.0.0
+    templateName: vsmart_vpn0_internet_interface
+    templateType: vpn-vsmart-interface
+-   attachedMastersCount: 5
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818057174
     deviceType:
     - vedge-cloud
     - vedge-CSR-1000v
-    - vedge-C1111-8PLTEEAW
-    - vedge-ISR-4331
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748580629
-    factoryDefault: false
     devicesAttached: 2
-    attachedMastersCount: 6
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748580629
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818057174
     templateDefinition:
-        vpn-id:
-            vipObjectType: object
-            vipType: constant
-            vipValue: 1
         ecmp-hash-key:
             layer4:
                 vipObjectType: object
@@ -66,237 +869,154 @@ vmanage_feature_templates:
             vipType: ignore
             vipValue: 'false'
             vipVariableName: vpn_tcp_optimization
--   templateId: f6d71892-531c-4c64-ae0f-a306e4e44e6c
-    templateName: system
-    templateDescription: system
-    templateType: system-vedge
+        vpn-id:
+            vipObjectType: object
+            vipType: constant
+            vipValue: 512
+    templateDescription: vpn512
+    templateId: 1cb99705-9a0d-424a-8ee5-5b1e958ba31e
+    templateMinVersion: 15.0.0
+    templateName: vpn512
+    templateType: vpn-vedge
+-   attachedMastersCount: 5
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818057125
     deviceType:
     - vedge-cloud
     - vedge-CSR-1000v
-    - vedge-ISR-4331
-    - vedge-C1111-8PLTEEAW
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748580834
-    factoryDefault: false
     devicesAttached: 2
-    attachedMastersCount: 6
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748580834
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818057125
     templateDefinition:
-        admin-tech-on-failure:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'true'
-            vipVariableName: system_admin_tech_on_failure
-        allow-same-site-tunnels:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: system_allow_same_site_tunnels
-        clock:
-            timezone:
+        ecmp-hash-key:
+            layer4:
                 vipObjectType: object
                 vipType: ignore
-                vipValue: UTC
-                vipVariableName: system_timezone
-        console-baud-rate:
-            vipObjectType: object
-            vipType: constant
-            vipValue: '9600'
-            vipVariableName: system_console_baud_rate
-        control-session-pps:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 300
-            vipVariableName: system_control_session_pps
-        controller-group-list:
-            vipObjectType: list
-            vipType: ignore
-            vipVariableName: system_controller_group_list
-        description:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: system_description
-        device-groups:
-            vipObjectType: list
-            vipType: ignore
-            vipVariableName: system_device_groups
-        eco-friendly-mode:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: system_eco_friendly_mode
-        gps-location:
-            latitude:
-                vipObjectType: object
-                vipType: variableName
-                vipValue: ''
-                vipVariableName: system_latitude
-            longitude:
-                vipObjectType: object
-                vipType: variableName
-                vipValue: ''
-                vipVariableName: system_longitude
-        host-name:
-            vipObjectType: object
-            vipType: variableName
-            vipValue: ''
-            vipVariableName: system_host_name
-        host-policer-pps:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 20000
-            vipVariableName: system_host_policer_pps
-        icmp-error-pps:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 100
-            vipVariableName: system_icmp_error_pps
-        idle-timeout:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: system_idle-timeout
-        location:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: system_location
-        max-omp-sessions:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: system_max_omp_sessions
-        multicast-buffer-percent:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 20
-            vipVariableName: system_multicast_buffer_percent
-        overlay-id:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 1
-            vipVariableName: system_overlay_id
-        port-hop:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'true'
-            vipVariableName: system_port_hop
-        port-offset:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 0
-            vipVariableName: system_port_offset
-        route-consistency-check:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: system_route_consistency_check
-        site-id:
-            vipObjectType: object
-            vipType: variableName
-            vipValue: ''
-            vipVariableName: system_site_id
-        system-ip:
-            vipObjectType: object
-            vipType: variableName
-            vipValue: ''
-            vipVariableName: system_system_ip
-        system-tunnel-mtu:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 1024
-            vipVariableName: system_system_tunnel_mtu
-        timer:
-            dns-cache-timeout:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: 2
-                vipVariableName: system_dns_cache_timeout
-        track-default-gateway:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'true'
-            vipVariableName: system_track_default_gateway
-        track-interface-tag:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: system_track_interface_tag
-        track-transport:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'true'
-            vipVariableName: system_track_transport
-        usb-controller:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: system_usb_controller
-        tracker:
-            vipType: ignore
-            vipValue: []
+                vipValue: 'false'
+                vipVariableName: vpn_layer4
+        host:
             vipObjectType: tree
             vipPrimaryKey:
-            - name
--   templateId: 33df138a-8e58-45a2-a27f-815c52262557
-    templateName: cellular_controller
-    templateDescription: Cellular Controller Template
-    templateType: cellular-cedge-controller
-    deviceType:
-    - vedge-C1111-8PLTEEAW
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748580738
-    factoryDefault: false
-    devicesAttached: 0
-    attachedMastersCount: 1
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748580738
-    templateDefinition:
-        id:
+            - hostname
+            vipType: ignore
+            vipValue: []
+        ip:
+            gre-route: {}
+            ipsec-route: {}
+            route:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - prefix
+                vipType: constant
+                vipValue:
+                -   next-hop:
+                        vipObjectType: tree
+                        vipPrimaryKey:
+                        - address
+                        vipType: constant
+                        vipValue:
+                        -   address:
+                                vipObjectType: object
+                                vipType: variableName
+                                vipValue: ''
+                                vipVariableName: vpn0_default_gateway
+                            distance:
+                                vipObjectType: object
+                                vipType: ignore
+                                vipValue: 1
+                                vipVariableName: vpn_next_hop_ip_distance_0
+                            priority-order:
+                            - address
+                            - distance
+                    prefix:
+                        vipObjectType: object
+                        vipType: constant
+                        vipValue: 0.0.0.0/0
+                        vipVariableName: vpn_ipv4_ip_prefix
+                    priority-order:
+                    - prefix
+                    - next-hop
+        ipv6: {}
+        name:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_name
+        omp:
+            advertise:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - protocol
+                vipType: ignore
+                vipValue: []
+            ipv6-advertise:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - protocol
+                vipType: ignore
+                vipValue: []
+        service:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - svc-type
+            vipType: ignore
+            vipValue: []
+        tcp-optimization:
+            vipObjectType: node-only
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_tcp_optimization
+        vpn-id:
             vipObjectType: object
             vipType: constant
-            vipValue: 0/2/0
-            vipVariableName: cellular_id
-        lte:
-            failovertimer:
-                vipObjectType: object
-                vipType: ignore
-                vipVariableName: cellular_failover_timeout
-            firmware:
-                auto-sim: {}
-            sim:
-                max-retry:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipVariableName: cellular_failover_retries
-                primary:
-                    slot:
-                        vipObjectType: object
-                        vipType: ignore
-                        vipVariableName: cellular_primary_slot
--   templateId: 93eba9d3-fd8f-4716-8089-3a1cc36a3029
-    templateName: vpn512_interface
-    templateDescription: vpn512_interface
-    templateType: vpn-vedge-interface
+            vipValue: 0
+    templateDescription: vpn0
+    templateId: 9c30d2fb-3464-42da-8030-f9df53b2ba0b
+    templateMinVersion: 15.0.0
+    templateName: vpn0
+    templateType: vpn-vedge
+-   attachedMastersCount: 7
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056858
     deviceType:
     - vedge-cloud
     - vedge-CSR-1000v
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748581494
-    factoryDefault: false
+    - vedge-C1111-8PLTEEAW
+    - vedge-ISR-4331
     devicesAttached: 2
-    attachedMastersCount: 4
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748581494
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056858
     templateDefinition:
-        if-name:
+        login:
             vipObjectType: object
             vipType: variableName
             vipValue: ''
-            vipVariableName: vpn512_interface
+            vipVariableName: banner_login
+        motd:
+            vipObjectType: object
+            vipType: variableName
+            vipValue: ''
+            vipVariableName: banner_motd
+    templateDescription: banner
+    templateId: e50834a3-ebc6-4dfb-bf6f-4ffe7e02b137
+    templateMinVersion: 15.0.0
+    templateName: banner
+    templateType: banner
+-   attachedMastersCount: 5
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056727
+    deviceType:
+    - vedge-cloud
+    - vedge-CSR-1000v
+    devicesAttached: 2
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056727
+    templateDefinition:
         access-list:
             vipObjectType: tree
             vipPrimaryKey:
@@ -364,6 +1084,11 @@ vmanage_feature_templates:
             vipType: ignore
             vipValue: 'false'
             vipVariableName: vpn_if_icmp_redirect_disable
+        if-name:
+            vipObjectType: object
+            vipType: variableName
+            vipValue: ''
+            vipVariableName: vpn512_interface
         ip:
             dhcp-client:
                 vipObjectType: object
@@ -485,63 +1210,23 @@ vmanage_feature_templates:
             - grp-id
             vipType: ignore
             vipValue: []
--   templateId: 7b611a8b-671f-4a0a-a57c-bb891d8e316a
-    templateName: vsmart_vpn512
-    templateDescription: vsmart_vpn512
-    templateType: vpn-vsmart
-    deviceType:
-    - vsmart
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579787851116
-    factoryDefault: false
-    devicesAttached: 0
-    attachedMastersCount: 1
+    templateDescription: vpn512_interface
+    templateId: fffba9b3-2a17-4fdb-95ed-021947d97772
     templateMinVersion: 15.0.0
+    templateName: vpn512_interface
+    templateType: vpn-vedge-interface
+-   attachedMastersCount: 5
     configType: xml
     createdBy: admin
-    createdOn: 1579787851116
-    templateDefinition:
-        vpn-id:
-            vipObjectType: object
-            vipType: constant
-            vipValue: '512'
-        host:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - hostname
-            vipType: ignore
-            vipValue: []
-        ip: {}
-        ipv6:
-            ipv6: {}
-        name:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_name
--   templateId: b108af95-ba51-496e-9850-918d221725e6
-    templateName: vpn1_interface
-    templateDescription: vpn1_interface
-    templateType: vpn-vedge-interface
+    createdOn: 1579818057076
     deviceType:
     - vedge-cloud
     - vedge-CSR-1000v
-    - vedge-C1111-8PLTEEAW
-    - vedge-ISR-4331
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748581376
-    factoryDefault: false
     devicesAttached: 2
-    attachedMastersCount: 6
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748581376
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818057076
     templateDefinition:
-        if-name:
-            vipObjectType: object
-            vipType: variableName
-            vipValue: ''
-            vipVariableName: vpn1_interface
         access-list:
             vipObjectType: tree
             vipPrimaryKey:
@@ -609,786 +1294,11 @@ vmanage_feature_templates:
             vipType: ignore
             vipValue: 'false'
             vipVariableName: vpn_if_icmp_redirect_disable
-        ip:
-            address:
-                vipObjectType: object
-                vipType: variableName
-                vipValue: ''
-                vipVariableName: vpn1_ipv4_address
-            secondary-address:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - address
-                vipType: ignore
-                vipValue: []
-        ipv6:
-            access-list:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - direction
-                vipType: ignore
-                vipValue: []
-            address:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: ''
-                vipVariableName: vpn_if_ipv6_ipv6_address
-            dhcp-helper-v6:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - address
-                vipType: ignore
-                vipValue: []
-            secondary-address:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - address
-                vipType: ignore
-                vipValue: []
-        ipv6-vrrp:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - grp-id
-            vipType: ignore
-            vipValue: []
-        mac-address:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_mac_address
-        mtu:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 1500
-            vipVariableName: vpn_if_ip_mtu
-        pmtu:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_pmtu
-        policer:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - policer-name
-            - direction
-            vipType: ignore
-            vipValue: []
-        qos-map:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: qos_map
-        rewrite-rule:
-            rule-name:
-                vipObjectType: object
-                vipType: ignore
-                vipVariableName: rewrite_rule_name
-        shaping-rate:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: qos_shaping_rate
-        shutdown:
-            vipObjectType: object
-            vipType: constant
-            vipValue: 'false'
-            vipVariableName: vpn_if_shutdown
-        speed:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: _empty
-            vipVariableName: vpn_if_speed
-        static-ingress-qos:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_static_ingress_qos
-        tcp-mss-adjust:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_tcp_mss_adjust
-        tloc-extension:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_tloc_extension
-        tloc-extension-gre-from:
-            src-ip:
-                vipObjectType: object
-                vipType: ignore
-                vipVariableName: vpn_if_tloc-ext_gre_from_src_ip
-            xconnect:
-                vipObjectType: object
-                vipType: ignore
-                vipVariableName: vpn_if_tloc-ext_gre_from_xconnect
-        tracker:
-            vipObjectType: list
-            vipType: ignore
-            vipVariableName: vpn_if_tracker
-        vrrp:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - grp-id
-            vipType: ignore
-            vipValue: []
--   templateId: 8ec9cb6f-3846-4dc7-a3ce-4f16c04e3a11
-    templateName: banner
-    templateDescription: banner
-    templateType: banner
-    deviceType:
-    - vedge-cloud
-    - vedge-CSR-1000v
-    - vedge-C1111-8PLTEEAW
-    - vedge-ISR-4331
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748581011
-    factoryDefault: false
-    devicesAttached: 2
-    attachedMastersCount: 6
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748581011
-    templateDefinition:
-        login:
-            vipObjectType: object
-            vipType: variableName
-            vipValue: ''
-            vipVariableName: banner_login
-        motd:
-            vipObjectType: object
-            vipType: variableName
-            vipValue: ''
-            vipVariableName: banner_motd
--   templateId: 7ce72482-b0da-4de2-9e40-14f0e0541c71
-    templateName: vpn1_ospf
-    templateDescription: vpn1_ospf
-    templateType: ospf
-    deviceType:
-    - vedge-cloud
-    - vedge-CSR-1000v
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748580932
-    factoryDefault: false
-    devicesAttached: 0
-    attachedMastersCount: 2
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748580932
-    templateDefinition:
-        ospf:
-            area:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - a-num
-                vipType: constant
-                vipValue:
-                -   a-num:
-                        dataPath: []
-                        originalDefaultOption: constant
-                        vipObjectType: object
-                        vipType: constant
-                        vipValue: 0
-                        vipVariableName: ospf_area_a_num
-                    interface:
-                        vipObjectType: tree
-                        vipPrimaryKey:
-                        - name
-                        vipType: constant
-                        vipValue:
-                        -   authentication:
-                                authentication-key:
-                                    vipObjectType: object
-                                    vipType: ignore
-                                    vipValue: ''
-                                    vipVariableName: ospf_authentication_key
-                                message-digest:
-                                    md5:
-                                        vipObjectType: object
-                                        vipType: ignore
-                                        vipValue: ''
-                                        vipVariableName: ospf_md5
-                                    message-digest-key:
-                                        vipObjectType: object
-                                        vipType: ignore
-                                        vipValue: ''
-                                        vipVariableName: ospf_message_digest_key
-                                type:
-                                    vipObjectType: object
-                                    vipType: ignore
-                                    vipValue: _empty
-                                    vipVariableName: ospf_authentication_type
-                            cost:
-                                dataPath: []
-                                originalDefaultOption: ignore
-                                vipObjectType: object
-                                vipType: ignore
-                                vipVariableName: ospf_cost
-                            dead-interval:
-                                dataPath: []
-                                originalDefaultOption: ignore
-                                vipObjectType: object
-                                vipType: ignore
-                                vipValue: 40
-                                vipVariableName: ospf_dead_interval
-                            hello-interval:
-                                dataPath: []
-                                originalDefaultOption: ignore
-                                vipObjectType: object
-                                vipType: ignore
-                                vipValue: 10
-                                vipVariableName: ospf_hello_interval
-                            name:
-                                dataPath: []
-                                originalDefaultOption: constant
-                                vipObjectType: object
-                                vipType: variableName
-                                vipValue: ''
-                                vipVariableName: vpn1_ospf_interface
-                            network:
-                                dataPath: []
-                                originalDefaultOption: ignore
-                                vipObjectType: object
-                                vipType: ignore
-                                vipValue: broadcast
-                                vipVariableName: ospf_network
-                            passive-interface:
-                                dataPath: []
-                                originalDefaultOption: ignore
-                                vipObjectType: node-only
-                                vipType: ignore
-                                vipValue: 'false'
-                                vipVariableName: ospf_passive_interface
-                            priority:
-                                dataPath: []
-                                originalDefaultOption: ignore
-                                vipObjectType: object
-                                vipType: ignore
-                                vipValue: 1
-                                vipVariableName: ospf_priority
-                            priority-order:
-                            - name
-                            - hello-interval
-                            - dead-interval
-                            - retransmit-interval
-                            - cost
-                            - priority
-                            - network
-                            - passive-interface
-                            - authentication
-                            retransmit-interval:
-                                dataPath: []
-                                originalDefaultOption: ignore
-                                vipObjectType: object
-                                vipType: ignore
-                                vipValue: 5
-                                vipVariableName: ospf_retransmit_interval
-                    nssa:
-                        no-summary:
-                            vipObjectType: node-only
-                            vipType: ignore
-                        translate:
-                            vipObjectType: object
-                            vipType: ignore
-                    priority-order:
-                    - a-num
-                    - interface
-                    stub:
-                        no-summary:
-                            vipObjectType: node-only
-                            vipType: ignore
-            auto-cost:
-                reference-bandwidth:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 100
-                    vipVariableName: ospf_reference_bandwidth
-            compatible:
-                rfc1583:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'true'
-                    vipVariableName: ospf_rfc1583
-            distance:
-                external:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 110
-                    vipVariableName: ospf_distance_external
-                inter-area:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 110
-                    vipVariableName: ospf_distance_inter_area
-                intra-area:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 110
-                    vipVariableName: ospf_distance_intra_area
-            max-metric:
-                router-lsa:
-                    vipObjectType: tree
-                    vipPrimaryKey:
-                    - ad-type
-                    vipType: ignore
-                    vipValue: []
-            redistribute:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - protocol
-                vipType: constant
-                vipValue:
-                -   priority-order:
-                    - protocol
-                    - route-policy
-                    protocol:
-                        vipObjectType: object
-                        vipType: constant
-                        vipValue: omp
-                        vipVariableName: ospf_redistribute_protocol
-                    route-policy:
-                        vipObjectType: object
-                        vipType: ignore
-                        vipVariableName: ospf_redistribute_route_policy
-            router-id:
-                vipObjectType: object
-                vipType: ignore
-                vipVariableName: ospf_router_id
-            timers:
-                spf:
-                    delay:
-                        vipObjectType: object
-                        vipType: ignore
-                        vipValue: 200
-                        vipVariableName: ospf_delay
-                    initial-hold:
-                        vipObjectType: object
-                        vipType: ignore
-                        vipValue: 1000
-                        vipVariableName: ospf_initial_hold
-                    max-hold:
-                        vipObjectType: object
-                        vipType: ignore
-                        vipValue: 10000
-                        vipVariableName: ospf_max_hold
--   templateId: 48ef8cdd-e116-4abc-b63c-513da9427b46
-    templateName: vsmart_vpn0
-    templateDescription: vsmart_vpn0
-    templateType: vpn-vsmart
-    deviceType:
-    - vsmart
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579787850260
-    factoryDefault: false
-    devicesAttached: 0
-    attachedMastersCount: 1
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579787850260
-    templateDefinition:
-        vpn-id:
-            vipObjectType: object
-            vipType: constant
-            vipValue: '0'
-        host:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - hostname
-            vipType: ignore
-            vipValue: []
-        ip:
-            route:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - prefix
-                vipType: constant
-                vipValue:
-                -   next-hop:
-                        vipObjectType: tree
-                        vipPrimaryKey:
-                        - address
-                        vipType: constant
-                        vipValue:
-                        -   address:
-                                vipObjectType: object
-                                vipType: variableName
-                                vipValue: ''
-                                vipVariableName: vpn0_default_gateway
-                            distance:
-                                vipObjectType: object
-                                vipType: ignore
-                                vipValue: 1
-                                vipVariableName: vpn_next_hop_ip_distance_0
-                            priority-order:
-                            - address
-                            - distance
-                    prefix:
-                        vipObjectType: object
-                        vipType: constant
-                        vipValue: 0.0.0.0/0
-                        vipVariableName: vpn_ipv4_ip_prefix
-                    priority-order:
-                    - prefix
-                    - next-hop
-        ipv6:
-            ipv6: {}
-        name:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_name
--   templateId: 1fde58d9-733c-455d-b15d-1ba0284345ff
-    templateName: vsmart_vpn512_mgmt_interface
-    templateDescription: vsmart_vpn512_mgmt_interface
-    templateType: vpn-vsmart-interface
-    deviceType:
-    - vsmart
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579787851512
-    factoryDefault: false
-    devicesAttached: 0
-    attachedMastersCount: 1
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579787851512
-    templateDefinition:
-        if-name:
-            vipObjectType: object
-            vipType: constant
-            vipValue: eth0
-            vipVariableName: vpn_if_name
-        arp:
-            ip:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - addr
-                vipType: ignore
-                vipValue: []
-        arp-timeout: {}
-        autonegotiate:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'true'
-            vipVariableName: vpn_if_autonegotiate
-        clear-dont-fragment:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_clear_dont_fragment
-        description:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_description
-        dhcp-helper: {}
-        duplex:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: _empty
-            vipVariableName: vpn_if_duplex
-        flow-control:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: autoneg
-            vipVariableName: vpn_if_flow_control
-        ip:
-            dhcp-client:
-                vipObjectType: object
-                vipType: constant
-                vipValue: 'true'
-            dhcp-distance:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: 1
-                vipVariableName: vpn_if_ip_dhcp-distance
-        ipv6:
-            address:
-                vipObjectType: object
-                vipType: ignore
-                vipVariableName: vpn_if_ipv6_address
-            dhcp-rapid-commit: {}
-        mac-address:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_mac_address
-        mtu:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 1500
-            vipVariableName: vpn_if_mtu
-        pmtu:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_pmtu
-        shutdown:
-            vipObjectType: object
-            vipType: constant
-            vipValue: 'false'
-            vipVariableName: vpn_if_shutdown
-        speed:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: _empty
-            vipVariableName: vpn_if_speed
-        static-ingress-qos: {}
-        tcp-mss-adjust:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_tcp_mss_adjust
--   templateId: 7be1ca13-b249-412e-9671-e574a6e11990
-    templateName: vsmart_vpn0_internet_interface
-    templateDescription: vsmart_vpn0_internet_interface
-    templateType: vpn-vsmart-interface
-    deviceType:
-    - vsmart
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579787851205
-    factoryDefault: false
-    devicesAttached: 0
-    attachedMastersCount: 1
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579787851205
-    templateDefinition:
-        if-name:
-            vipObjectType: object
-            vipType: constant
-            vipValue: eth1
-            vipVariableName: vpn_if_name
-        arp:
-            ip:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - addr
-                vipType: ignore
-                vipValue: []
-        arp-timeout: {}
-        autonegotiate:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'true'
-            vipVariableName: vpn_if_autonegotiate
-        clear-dont-fragment:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_clear_dont_fragment
-        description:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_description
-        dhcp-helper: {}
-        duplex:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: _empty
-            vipVariableName: vpn_if_duplex
-        flow-control:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: autoneg
-            vipVariableName: vpn_if_flow_control
-        ip:
-            address:
-                vipObjectType: object
-                vipType: variableName
-                vipValue: ''
-                vipVariableName: vpn0_internet_ipv4_address
-        ipv6:
-            address:
-                vipObjectType: object
-                vipType: ignore
-                vipVariableName: vpn_if_ipv6_address
-            dhcp-rapid-commit: {}
-        mac-address:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_mac_address
-        mtu:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 1500
-            vipVariableName: vpn_if_mtu
-        pmtu:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_pmtu
-        shutdown:
-            vipObjectType: object
-            vipType: constant
-            vipValue: 'false'
-            vipVariableName: vpn_if_shutdown
-        speed:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: _empty
-            vipVariableName: vpn_if_speed
-        static-ingress-qos: {}
-        tcp-mss-adjust:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_tcp_mss_adjust
-        tunnel-interface:
-            allow-service:
-                all:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'false'
-                    vipVariableName: all
-                bgp: {}
-                dhcp:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'true'
-                    vipVariableName: vpn_if_tunnel_dhcp
-                dns:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'true'
-                    vipVariableName: vpn_if_tunnel_dns
-                icmp:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'true'
-                    vipVariableName: vpn_if_tunnel_icmp
-                netconf:
-                    vipObjectType: object
-                    vipType: constant
-                    vipValue: 'true'
-                    vipVariableName: vpn_if_tunnel_netconf
-                ntp:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'false'
-                    vipVariableName: vpn_if_tunnel_ntp
-                sshd:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'false'
-                    vipVariableName: vpn_if_tunnel_sshd
-                stun:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: 'false'
-                    vipVariableName: vpn_if_tunnel_stun
-            carrier:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: default
-                vipVariableName: vpn_if_tunnel_carrier
-            color:
-                restrict: {}
-                value:
-                    vipObjectType: object
-                    vipType: ignore
-                    vipValue: default
-                    vipVariableName: vpn_if_tunnel_color_value
-            group:
-                vipObjectType: list
-                vipType: ignore
-            hello-interval:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: 1000
-                vipVariableName: vpn_if_tunnel_hello-interval
-            hello-tolerance:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: 12
-                vipVariableName: vpn_if_tunnel_hello-tolerance
-            nat-refresh-interval:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: 5
-                vipVariableName: vpn_if_tunnel_nat_refresh_interval
--   templateId: a9087839-9957-47b5-a61a-d7c22e650f4d
-    templateName: vpn0_interface
-    templateDescription: vpn0_interface
-    templateType: vpn-vedge-interface
-    deviceType:
-    - vedge-cloud
-    - vedge-CSR-1000v
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748581198
-    factoryDefault: false
-    devicesAttached: 2
-    attachedMastersCount: 4
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748581198
-    templateDefinition:
         if-name:
             vipObjectType: object
             vipType: variableName
             vipValue: ''
             vipVariableName: vpn0_interface
-        access-list:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - direction
-            vipType: ignore
-            vipValue: []
-        arp:
-            ip:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - addr
-                vipType: ignore
-                vipValue: []
-        arp-timeout:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 1200
-            vipVariableName: vpn_if_arp_timeout
-        autonegotiate:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'true'
-            vipVariableName: vpn_if_autonegotiate
-        bandwidth-downstream:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_bandwidth_downstream
-        bandwidth-upstream:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_bandwidth_upstream
-        block-non-source-ip:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_block_non_source_ip
-        clear-dont-fragment:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_clear_dont_fragment
-        description:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_if_description
-        dhcp-helper:
-            vipObjectType: list
-            vipType: ignore
-            vipVariableName: vpn_if_dhcp_helper
-        dot1x:
-            vipObjectType: node-only
-            vipType: ignore
-        duplex:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: _empty
-            vipVariableName: vpn_if_duplex
-        flow-control:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: autoneg
-            vipVariableName: vpn_if_flow_control
-        icmp-redirect-disable:
-            vipObjectType: object
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_if_icmp_redirect_disable
         ip:
             address:
                 vipObjectType: object
@@ -1678,27 +1588,233 @@ vmanage_feature_templates:
             - grp-id
             vipType: ignore
             vipValue: []
--   templateId: b98b14b0-5be8-4bcb-8417-f491386ea88b
-    templateName: vpn0
-    templateDescription: vpn0
-    templateType: vpn-vedge
+    templateDescription: vpn0_interface
+    templateId: d451e3a0-9b28-4282-bde8-80a6a823ed1a
+    templateMinVersion: 15.0.0
+    templateName: vpn0_interface
+    templateType: vpn-vedge-interface
+-   attachedMastersCount: 7
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056812
     deviceType:
     - vedge-cloud
     - vedge-CSR-1000v
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748581288
-    factoryDefault: false
+    - vedge-C1111-8PLTEEAW
+    - vedge-ISR-4331
     devicesAttached: 2
-    attachedMastersCount: 4
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748581288
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056812
     templateDefinition:
-        vpn-id:
+        access-list:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - direction
+            vipType: ignore
+            vipValue: []
+        arp:
+            ip:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - addr
+                vipType: ignore
+                vipValue: []
+        arp-timeout:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 1200
+            vipVariableName: vpn_if_arp_timeout
+        autonegotiate:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'true'
+            vipVariableName: vpn_if_autonegotiate
+        bandwidth-downstream:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_bandwidth_downstream
+        bandwidth-upstream:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_bandwidth_upstream
+        block-non-source-ip:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_block_non_source_ip
+        clear-dont-fragment:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_clear_dont_fragment
+        description:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_description
+        dhcp-helper:
+            vipObjectType: list
+            vipType: ignore
+            vipVariableName: vpn_if_dhcp_helper
+        dot1x:
+            vipObjectType: node-only
+            vipType: ignore
+        duplex:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: _empty
+            vipVariableName: vpn_if_duplex
+        flow-control:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: autoneg
+            vipVariableName: vpn_if_flow_control
+        icmp-redirect-disable:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_icmp_redirect_disable
+        if-name:
+            vipObjectType: object
+            vipType: variableName
+            vipValue: ''
+            vipVariableName: vpn1_interface
+        ip:
+            address:
+                vipObjectType: object
+                vipType: variableName
+                vipValue: ''
+                vipVariableName: vpn1_ipv4_address
+            secondary-address:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - address
+                vipType: ignore
+                vipValue: []
+        ipv6:
+            access-list:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - direction
+                vipType: ignore
+                vipValue: []
+            address:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: ''
+                vipVariableName: vpn_if_ipv6_ipv6_address
+            dhcp-helper-v6:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - address
+                vipType: ignore
+                vipValue: []
+            secondary-address:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - address
+                vipType: ignore
+                vipValue: []
+        ipv6-vrrp:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - grp-id
+            vipType: ignore
+            vipValue: []
+        mac-address:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_mac_address
+        mtu:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 1500
+            vipVariableName: vpn_if_ip_mtu
+        pmtu:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_pmtu
+        policer:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - policer-name
+            - direction
+            vipType: ignore
+            vipValue: []
+        qos-map:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: qos_map
+        rewrite-rule:
+            rule-name:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: rewrite_rule_name
+        shaping-rate:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: qos_shaping_rate
+        shutdown:
             vipObjectType: object
             vipType: constant
-            vipValue: 0
+            vipValue: 'false'
+            vipVariableName: vpn_if_shutdown
+        speed:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: _empty
+            vipVariableName: vpn_if_speed
+        static-ingress-qos:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_static_ingress_qos
+        tcp-mss-adjust:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_tcp_mss_adjust
+        tloc-extension:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_tloc_extension
+        tloc-extension-gre-from:
+            src-ip:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: vpn_if_tloc-ext_gre_from_src_ip
+            xconnect:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: vpn_if_tloc-ext_gre_from_xconnect
+        tracker:
+            vipObjectType: list
+            vipType: ignore
+            vipVariableName: vpn_if_tracker
+        vrrp:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - grp-id
+            vipType: ignore
+            vipValue: []
+    templateDescription: vpn1_interface
+    templateId: acf7aa7e-616c-41b8-8628-65de6957efd8
+    templateMinVersion: 15.0.0
+    templateName: vpn1_interface
+    templateType: vpn-vedge-interface
+-   attachedMastersCount: 7
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056566
+    deviceType:
+    - vedge-cloud
+    - vedge-CSR-1000v
+    - vedge-C1111-8PLTEEAW
+    - vedge-ISR-4331
+    devicesAttached: 2
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056566
+    templateDefinition:
         ecmp-hash-key:
             layer4:
                 vipObjectType: object
@@ -1714,6 +1830,577 @@ vmanage_feature_templates:
         ip:
             gre-route: {}
             ipsec-route: {}
+        ipv6: {}
+        name:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_name
+        omp:
+            advertise:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - protocol
+                vipType: ignore
+                vipValue: []
+            ipv6-advertise:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - protocol
+                vipType: ignore
+                vipValue: []
+        service:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - svc-type
+            vipType: ignore
+            vipValue: []
+        tcp-optimization:
+            vipObjectType: node-only
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_tcp_optimization
+        vpn-id:
+            vipObjectType: object
+            vipType: constant
+            vipValue: 1
+    templateDescription: vpn1
+    templateId: bbcb6fe4-4835-4a92-b554-75f5427fb62a
+    templateMinVersion: 15.0.0
+    templateName: vpn1
+    templateType: vpn-vedge
+-   attachedMastersCount: 1
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056770
+    deviceType:
+    - vsmart
+    devicesAttached: 2
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056770
+    templateDefinition:
+        host:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - hostname
+            vipType: ignore
+            vipValue: []
+        ip: {}
+        ipv6:
+            ipv6: {}
+        name:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_name
+        vpn-id:
+            vipObjectType: object
+            vipType: constant
+            vipValue: '512'
+    templateDescription: vsmart_vpn512
+    templateId: c664151a-f6c8-4548-93fd-c3048eef8000
+    templateMinVersion: 15.0.0
+    templateName: vsmart_vpn512
+    templateType: vpn-vsmart
+-   attachedMastersCount: 1
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056985
+    deviceType:
+    - vsmart
+    devicesAttached: 2
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056985
+    templateDefinition:
+        arp:
+            ip:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - addr
+                vipType: ignore
+                vipValue: []
+        arp-timeout: {}
+        autonegotiate:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'true'
+            vipVariableName: vpn_if_autonegotiate
+        clear-dont-fragment:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_clear_dont_fragment
+        description:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_description
+        dhcp-helper: {}
+        duplex:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: _empty
+            vipVariableName: vpn_if_duplex
+        flow-control:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: autoneg
+            vipVariableName: vpn_if_flow_control
+        if-name:
+            vipObjectType: object
+            vipType: constant
+            vipValue: eth0
+            vipVariableName: vpn_if_name
+        ip:
+            dhcp-client:
+                vipObjectType: object
+                vipType: constant
+                vipValue: 'true'
+            dhcp-distance:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 1
+                vipVariableName: vpn_if_ip_dhcp-distance
+        ipv6:
+            address:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: vpn_if_ipv6_address
+            dhcp-rapid-commit: {}
+        mac-address:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_mac_address
+        mtu:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 1500
+            vipVariableName: vpn_if_mtu
+        pmtu:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: vpn_if_pmtu
+        shutdown:
+            vipObjectType: object
+            vipType: constant
+            vipValue: 'false'
+            vipVariableName: vpn_if_shutdown
+        speed:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: _empty
+            vipVariableName: vpn_if_speed
+        static-ingress-qos: {}
+        tcp-mss-adjust:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: vpn_if_tcp_mss_adjust
+    templateDescription: vsmart_vpn512_mgmt_interface
+    templateId: e3a856c8-9810-48d7-88d8-04a6f4fb9beb
+    templateMinVersion: 15.0.0
+    templateName: vsmart_vpn512_mgmt_interface
+    templateType: vpn-vsmart-interface
+-   attachedMastersCount: 2
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056899
+    deviceType:
+    - vedge-cloud
+    - vedge-CSR-1000v
+    devicesAttached: 0
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056899
+    templateDefinition:
+        ospf:
+            area:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - a-num
+                vipType: constant
+                vipValue:
+                -   a-num:
+                        dataPath: []
+                        originalDefaultOption: constant
+                        vipObjectType: object
+                        vipType: constant
+                        vipValue: 0
+                        vipVariableName: ospf_area_a_num
+                    interface:
+                        vipObjectType: tree
+                        vipPrimaryKey:
+                        - name
+                        vipType: constant
+                        vipValue:
+                        -   authentication:
+                                authentication-key:
+                                    vipObjectType: object
+                                    vipType: ignore
+                                    vipValue: ''
+                                    vipVariableName: ospf_authentication_key
+                                message-digest:
+                                    md5:
+                                        vipObjectType: object
+                                        vipType: ignore
+                                        vipValue: ''
+                                        vipVariableName: ospf_md5
+                                    message-digest-key:
+                                        vipObjectType: object
+                                        vipType: ignore
+                                        vipValue: ''
+                                        vipVariableName: ospf_message_digest_key
+                                type:
+                                    vipObjectType: object
+                                    vipType: ignore
+                                    vipValue: _empty
+                                    vipVariableName: ospf_authentication_type
+                            cost:
+                                dataPath: []
+                                originalDefaultOption: ignore
+                                vipObjectType: object
+                                vipType: ignore
+                                vipVariableName: ospf_cost
+                            dead-interval:
+                                dataPath: []
+                                originalDefaultOption: ignore
+                                vipObjectType: object
+                                vipType: ignore
+                                vipValue: 40
+                                vipVariableName: ospf_dead_interval
+                            hello-interval:
+                                dataPath: []
+                                originalDefaultOption: ignore
+                                vipObjectType: object
+                                vipType: ignore
+                                vipValue: 10
+                                vipVariableName: ospf_hello_interval
+                            name:
+                                dataPath: []
+                                originalDefaultOption: constant
+                                vipObjectType: object
+                                vipType: variableName
+                                vipValue: ''
+                                vipVariableName: vpn1_ospf_interface
+                            network:
+                                dataPath: []
+                                originalDefaultOption: ignore
+                                vipObjectType: object
+                                vipType: ignore
+                                vipValue: broadcast
+                                vipVariableName: ospf_network
+                            passive-interface:
+                                dataPath: []
+                                originalDefaultOption: ignore
+                                vipObjectType: node-only
+                                vipType: ignore
+                                vipValue: 'false'
+                                vipVariableName: ospf_passive_interface
+                            priority:
+                                dataPath: []
+                                originalDefaultOption: ignore
+                                vipObjectType: object
+                                vipType: ignore
+                                vipValue: 1
+                                vipVariableName: ospf_priority
+                            priority-order:
+                            - name
+                            - hello-interval
+                            - dead-interval
+                            - retransmit-interval
+                            - cost
+                            - priority
+                            - network
+                            - passive-interface
+                            - authentication
+                            retransmit-interval:
+                                dataPath: []
+                                originalDefaultOption: ignore
+                                vipObjectType: object
+                                vipType: ignore
+                                vipValue: 5
+                                vipVariableName: ospf_retransmit_interval
+                    nssa:
+                        no-summary:
+                            vipObjectType: node-only
+                            vipType: ignore
+                        translate:
+                            vipObjectType: object
+                            vipType: ignore
+                    priority-order:
+                    - a-num
+                    - interface
+                    stub:
+                        no-summary:
+                            vipObjectType: node-only
+                            vipType: ignore
+            auto-cost:
+                reference-bandwidth:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 100
+                    vipVariableName: ospf_reference_bandwidth
+            compatible:
+                rfc1583:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 'true'
+                    vipVariableName: ospf_rfc1583
+            distance:
+                external:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 110
+                    vipVariableName: ospf_distance_external
+                inter-area:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 110
+                    vipVariableName: ospf_distance_inter_area
+                intra-area:
+                    vipObjectType: object
+                    vipType: ignore
+                    vipValue: 110
+                    vipVariableName: ospf_distance_intra_area
+            max-metric:
+                router-lsa:
+                    vipObjectType: tree
+                    vipPrimaryKey:
+                    - ad-type
+                    vipType: ignore
+                    vipValue: []
+            redistribute:
+                vipObjectType: tree
+                vipPrimaryKey:
+                - protocol
+                vipType: constant
+                vipValue:
+                -   priority-order:
+                    - protocol
+                    - route-policy
+                    protocol:
+                        vipObjectType: object
+                        vipType: constant
+                        vipValue: omp
+                        vipVariableName: ospf_redistribute_protocol
+                    route-policy:
+                        vipObjectType: object
+                        vipType: ignore
+                        vipVariableName: ospf_redistribute_route_policy
+            router-id:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: ospf_router_id
+            timers:
+                spf:
+                    delay:
+                        vipObjectType: object
+                        vipType: ignore
+                        vipValue: 200
+                        vipVariableName: ospf_delay
+                    initial-hold:
+                        vipObjectType: object
+                        vipType: ignore
+                        vipValue: 1000
+                        vipVariableName: ospf_initial_hold
+                    max-hold:
+                        vipObjectType: object
+                        vipType: ignore
+                        vipValue: 10000
+                        vipVariableName: ospf_max_hold
+    templateDescription: vpn1_ospf
+    templateId: 8cd8d5bf-46cc-4597-b445-3cc8ec1f105b
+    templateMinVersion: 15.0.0
+    templateName: vpn1_ospf
+    templateType: ospf
+-   attachedMastersCount: 7
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056631
+    deviceType:
+    - vedge-cloud
+    - vedge-CSR-1000v
+    - vedge-ISR-4331
+    - vedge-C1111-8PLTEEAW
+    devicesAttached: 2
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056631
+    templateDefinition:
+        admin-tech-on-failure:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'true'
+            vipVariableName: system_admin_tech_on_failure
+        allow-same-site-tunnels:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: system_allow_same_site_tunnels
+        clock:
+            timezone:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: UTC
+                vipVariableName: system_timezone
+        console-baud-rate:
+            vipObjectType: object
+            vipType: constant
+            vipValue: '9600'
+            vipVariableName: system_console_baud_rate
+        control-session-pps:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 300
+            vipVariableName: system_control_session_pps
+        controller-group-list:
+            vipObjectType: list
+            vipType: ignore
+            vipVariableName: system_controller_group_list
+        description:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: system_description
+        device-groups:
+            vipObjectType: list
+            vipType: ignore
+            vipVariableName: system_device_groups
+        eco-friendly-mode:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: system_eco_friendly_mode
+        gps-location:
+            latitude:
+                vipObjectType: object
+                vipType: variableName
+                vipValue: ''
+                vipVariableName: system_latitude
+            longitude:
+                vipObjectType: object
+                vipType: variableName
+                vipValue: ''
+                vipVariableName: system_longitude
+        host-name:
+            vipObjectType: object
+            vipType: variableName
+            vipValue: ''
+            vipVariableName: system_host_name
+        host-policer-pps:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 20000
+            vipVariableName: system_host_policer_pps
+        icmp-error-pps:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 100
+            vipVariableName: system_icmp_error_pps
+        idle-timeout:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: system_idle-timeout
+        location:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: system_location
+        max-omp-sessions:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: system_max_omp_sessions
+        multicast-buffer-percent:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 20
+            vipVariableName: system_multicast_buffer_percent
+        overlay-id:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 1
+            vipVariableName: system_overlay_id
+        port-hop:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'true'
+            vipVariableName: system_port_hop
+        port-offset:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 0
+            vipVariableName: system_port_offset
+        route-consistency-check:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: system_route_consistency_check
+        site-id:
+            vipObjectType: object
+            vipType: variableName
+            vipValue: ''
+            vipVariableName: system_site_id
+        system-ip:
+            vipObjectType: object
+            vipType: variableName
+            vipValue: ''
+            vipVariableName: system_system_ip
+        system-tunnel-mtu:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 1024
+            vipVariableName: system_system_tunnel_mtu
+        timer:
+            dns-cache-timeout:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 2
+                vipVariableName: system_dns_cache_timeout
+        track-default-gateway:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'true'
+            vipVariableName: system_track_default_gateway
+        track-interface-tag:
+            vipObjectType: object
+            vipType: ignore
+            vipVariableName: system_track_interface_tag
+        track-transport:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'true'
+            vipVariableName: system_track_transport
+        tracker:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - name
+            vipType: ignore
+            vipValue: []
+        usb-controller:
+            vipObjectType: object
+            vipType: ignore
+            vipValue: 'false'
+            vipVariableName: system_usb_controller
+    templateDescription: system
+    templateId: c0b0d207-8364-4d2d-8369-82b41e0aa8fc
+    templateMinVersion: 15.0.0
+    templateName: system
+    templateType: system-vedge
+-   attachedMastersCount: 1
+    configType: xml
+    createdBy: admin
+    createdOn: 1579818056944
+    deviceType:
+    - vsmart
+    devicesAttached: 2
+    factoryDefault: false
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1579818056944
+    templateDefinition:
+        host:
+            vipObjectType: tree
+            vipPrimaryKey:
+            - hostname
+            vipType: ignore
+            vipValue: []
+        ip:
             route:
                 vipObjectType: tree
                 vipPrimaryKey:
@@ -1747,622 +2434,18 @@ vmanage_feature_templates:
                     priority-order:
                     - prefix
                     - next-hop
-        ipv6: {}
+        ipv6:
+            ipv6: {}
         name:
             vipObjectType: object
             vipType: ignore
             vipVariableName: vpn_name
-        omp:
-            advertise:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - protocol
-                vipType: ignore
-                vipValue: []
-            ipv6-advertise:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - protocol
-                vipType: ignore
-                vipValue: []
-        service:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - svc-type
-            vipType: ignore
-            vipValue: []
-        tcp-optimization:
-            vipObjectType: node-only
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_tcp_optimization
--   templateId: 010cc8ae-5409-4063-be8f-80db797a2890
-    templateName: vpn512
-    templateDescription: vpn512
-    templateType: vpn-vedge
-    deviceType:
-    - vedge-cloud
-    - vedge-CSR-1000v
-    lastUpdatedBy: admin
-    lastUpdatedOn: 1579748581082
-    factoryDefault: false
-    devicesAttached: 2
-    attachedMastersCount: 4
-    templateMinVersion: 15.0.0
-    configType: xml
-    createdBy: admin
-    createdOn: 1579748581082
-    templateDefinition:
         vpn-id:
             vipObjectType: object
             vipType: constant
-            vipValue: 512
-        ecmp-hash-key:
-            layer4:
-                vipObjectType: object
-                vipType: ignore
-                vipValue: 'false'
-                vipVariableName: vpn_layer4
-        host:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - hostname
-            vipType: ignore
-            vipValue: []
-        ip:
-            gre-route: {}
-            ipsec-route: {}
-        ipv6: {}
-        name:
-            vipObjectType: object
-            vipType: ignore
-            vipVariableName: vpn_name
-        omp:
-            advertise:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - protocol
-                vipType: ignore
-                vipValue: []
-            ipv6-advertise:
-                vipObjectType: tree
-                vipPrimaryKey:
-                - protocol
-                vipType: ignore
-                vipValue: []
-        service:
-            vipObjectType: tree
-            vipPrimaryKey:
-            - svc-type
-            vipType: ignore
-            vipValue: []
-        tcp-optimization:
-            vipObjectType: node-only
-            vipType: ignore
-            vipValue: 'false'
-            vipVariableName: vpn_tcp_optimization
-vmanage_device_templates:
--   templateName: hq-vedge-cloud
-    templateDescription: HQ vEdge Cloud Template
-    deviceType: vedge-cloud
-    factoryDefault: false
-    configType: template
-    policyId: ''
-    featureTemplateUidRange: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_Template
-        templateType: aaa
-    -   templateName: Factory_Default_BFD_Template
-        templateType: bfd-vedge
-    -   templateName: Factory_Default_vEdge_OMP_Template
-        templateType: omp-vedge
-    -   templateName: Factory_Default_vEdge_Security_Template
-        templateType: security-vedge
-    -   templateName: system
-        templateType: system-vedge
-        subTemplates:
-        -   templateName: Factory_Default_Logging_Template
-            templateType: logging
-    -   templateName: vpn0
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn0_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn512
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn512_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn1
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn1_ospf
-            templateType: ospf
-        -   templateName: vpn1_interface
-            templateType: vpn-vedge-interface
-    -   templateName: banner
-        templateType: banner
-    templateId: c915749f-bfb3-48dd-adf8-8a65c14c437c
-    attached_devices: []
-    input:
-        columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-        -   title: IPv4 Address(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-        -   title: Interface Name(vpn1_ospf_interface)
-            property: /1//router/ospf/area/0/interface/vpn1_ospf_interface/name
-            variable: vpn1_ospf_interface
-        -   title: Interface Name(vpn512_interface)
-            property: /512/vpn512_interface/interface/if-name
-            variable: vpn512_interface
-        -   title: Address(vpn0_default_gateway)
-            property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
-            variable: vpn0_default_gateway
-        -   title: Interface Name(vpn0_interface)
-            property: /0/vpn0_interface/interface/if-name
-            variable: vpn0_interface
-        -   title: IPv4 Address(vpn0_internet_ipv4_address)
-            property: /0/vpn0_interface/interface/ip/address
-            variable: vpn0_internet_ipv4_address
-        -   title: Hostname(system_host_name)
-            property: //system/host-name
-            variable: system_host_name
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-        -   title: System IP(system_system_ip)
-            property: //system/system-ip
-            variable: system_system_ip
-        -   title: Site ID(system_site_id)
-            property: //system/site-id
-            variable: system_site_id
--   templateName: branch-csr1000v
-    templateDescription: Branch Template for CSR1000v
-    deviceType: vedge-CSR-1000v
-    factoryDefault: false
-    configType: template
-    policyId: ''
-    featureTemplateUidRange: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_Template
-        templateType: aaa
-    -   templateName: Factory_Default_BFD_Template
-        templateType: bfd-vedge
-    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
-        templateType: omp-vedge
-    -   templateName: Factory_Default_vEdge_Security_Template
-        templateType: security-vedge
-    -   templateName: system
-        templateType: system-vedge
-        subTemplates:
-        -   templateName: Factory_Default_Logging_Template
-            templateType: logging
-    -   templateName: vpn0
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn0_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn512
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn512_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn1
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn1_interface
-            templateType: vpn-vedge-interface
-    -   templateName: banner
-        templateType: banner
-    templateId: d381f6c2-2a93-4c97-bdb3-673f4d7ce6f9
-    attached_devices: []
-    input:
-        columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-        -   title: IPv4 Address(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-        -   title: Interface Name(vpn512_interface)
-            property: /512/vpn512_interface/interface/if-name
-            variable: vpn512_interface
-        -   title: Address(vpn0_default_gateway)
-            property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
-            variable: vpn0_default_gateway
-        -   title: Interface Name(vpn0_interface)
-            property: /0/vpn0_interface/interface/if-name
-            variable: vpn0_interface
-        -   title: IPv4 Address(vpn0_internet_ipv4_address)
-            property: /0/vpn0_interface/interface/ip/address
-            variable: vpn0_internet_ipv4_address
-        -   title: Hostname(system_host_name)
-            property: //system/host-name
-            variable: system_host_name
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-        -   title: System IP(system_system_ip)
-            property: //system/system-ip
-            variable: system_system_ip
-        -   title: Site ID(system_site_id)
-            property: //system/site-id
-            variable: system_site_id
--   templateName: vsmart
-    templateDescription: vsmart
-    deviceType: vsmart
-    factoryDefault: false
-    configType: template
-    policyId: ''
-    featureTemplateUidRange: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_Template
-        templateType: aaa
-    -   templateName: Factory_Default_vSmart_OMP_Template
-        templateType: omp-vsmart
-    -   templateName: Factory_Default_vSmart_vManage_Security_Template
-        templateType: security-vsmart
-    -   templateName: Factory_Default_vSmart_vManage_System_Template
-        templateType: system-vsmart
-        subTemplates:
-        -   templateName: Factory_Default_Logging_Template
-            templateType: logging
-    -   templateName: vsmart_vpn0
-        templateType: vpn-vsmart
-        subTemplates:
-        -   templateName: vsmart_vpn0_internet_interface
-            templateType: vpn-vsmart-interface
-    -   templateName: vsmart_vpn512
-        templateType: vpn-vsmart
-        subTemplates:
-        -   templateName: vsmart_vpn512_mgmt_interface
-            templateType: vpn-vsmart-interface
-    templateId: 2613c332-02b8-490e-ad36-db41fb8ad742
-    attached_devices: []
-    input:
-        columns:
-        -   title: Address(vpn0_default_gateway)
-            property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
-            variable: vpn0_default_gateway
-        -   title: IPv4 Address(vpn0_internet_ipv4_address)
-            property: /0/eth1/interface/ip/address
-            variable: vpn0_internet_ipv4_address
-        -   title: Hostname
-            property: //system/host-name
-            variable: null
-        -   title: System IP
-            property: //system/system-ip
-            variable: null
-        -   title: Site ID
-            property: //system/site-id
-            variable: null
--   templateName: branch-4331
-    templateDescription: Branch Template for ISR4331
-    deviceType: vedge-ISR-4331
-    factoryDefault: false
-    configType: template
-    policyId: ''
-    featureTemplateUidRange: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_Template
-        templateType: aaa
-    -   templateName: Factory_Default_BFD_Template
-        templateType: bfd-vedge
-    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
-        templateType: omp-vedge
-    -   templateName: Factory_Default_vEdge_Security_Template
-        templateType: security-vedge
-    -   templateName: system
-        templateType: system-vedge
-        subTemplates:
-        -   templateName: Factory_Default_Logging_Template
-            templateType: logging
-    -   templateName: Factory_Default_vEdge_VPN_0_Template
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: Factory_Default_vEdge_DHCP_Tunnel_Interface
-            templateType: vpn-vedge-interface
-    -   templateName: Factory_Default_vEdge_VPN_512_Template
-        templateType: vpn-vedge
-    -   templateName: vpn1
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn1_interface
-            templateType: vpn-vedge-interface
-    -   templateName: banner
-        templateType: banner
-    templateId: 12479cf6-e491-4a65-87dc-62e7e6616dca
-    attached_devices: []
-    input:
-        columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-        -   title: IPv4 Address(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-        -   title: Interface Name(vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface)
-            property: /0/vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface/interface/if-name
-            variable: vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface
-        -   title: Hostname(system_host_name)
-            property: //system/host-name
-            variable: system_host_name
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-        -   title: System IP(system_system_ip)
-            property: //system/system-ip
-            variable: system_system_ip
-        -   title: Site ID(system_site_id)
-            property: //system/site-id
-            variable: system_site_id
--   templateName: branch-1111
-    templateDescription: Branch Template for C1111
-    deviceType: vedge-C1111-8PLTEEAW
-    factoryDefault: false
-    configType: template
-    policyId: ''
-    featureTemplateUidRange: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_Template
-        templateType: aaa
-    -   templateName: Factory_Default_BFD_Template
-        templateType: bfd-vedge
-    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
-        templateType: omp-vedge
-    -   templateName: Factory_Default_vEdge_Security_Template
-        templateType: security-vedge
-    -   templateName: system
-        templateType: system-vedge
-        subTemplates:
-        -   templateName: Factory_Default_Logging_Template
-            templateType: logging
-    -   templateName: Factory_Default_vEdge_VPN_0_Template
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: Factory_Default_vEdge_DHCP_Tunnel_Interface
-            templateType: vpn-vedge-interface
-    -   templateName: Factory_Default_vEdge_VPN_512_Template
-        templateType: vpn-vedge
-    -   templateName: vpn1
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn1_interface
-            templateType: vpn-vedge-interface
-    -   templateName: banner
-        templateType: banner
-    -   templateName: cellular_controller
-        templateType: cellular-cedge-controller
-    templateId: 4604cb11-9860-49b7-86ad-6eea9a0ad133
-    attached_devices: []
-    input:
-        columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-        -   title: IPv4 Address(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-        -   title: Interface Name(vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface)
-            property: /0/vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface/interface/if-name
-            variable: vpn_if_name_Default_vEdge_DHCP_Tunnel_Interface
-        -   title: Hostname(system_host_name)
-            property: //system/host-name
-            variable: system_host_name
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-        -   title: System IP(system_system_ip)
-            property: //system/system-ip
-            variable: system_system_ip
-        -   title: Site ID(system_site_id)
-            property: //system/site-id
-            variable: system_site_id
--   templateName: branch-vedge-cloud
-    templateDescription: Branch vEdge Cloud Template
-    deviceType: vedge-cloud
-    factoryDefault: false
-    configType: template
-    policyId: ''
-    featureTemplateUidRange: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_Template
-        templateType: aaa
-    -   templateName: Factory_Default_BFD_Template
-        templateType: bfd-vedge
-    -   templateName: Factory_Default_vEdge_OMP_Template
-        templateType: omp-vedge
-    -   templateName: Factory_Default_vEdge_Security_Template
-        templateType: security-vedge
-    -   templateName: system
-        templateType: system-vedge
-        subTemplates:
-        -   templateName: Factory_Default_Logging_Template
-            templateType: logging
-    -   templateName: vpn0
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn0_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn512
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn512_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn1
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn1_interface
-            templateType: vpn-vedge-interface
-    -   templateName: banner
-        templateType: banner
-    templateId: 8c4cc8af-74d4-4fdb-96b7-b7168dcb3cd3
-    attached_devices:
-    - cleur-vedge1
-    - cleur-vedge2
-    input:
-        columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-        -   title: IPv4 Address(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-        -   title: Interface Name(vpn512_interface)
-            property: /512/vpn512_interface/interface/if-name
-            variable: vpn512_interface
-        -   title: Address(vpn0_default_gateway)
-            property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
-            variable: vpn0_default_gateway
-        -   title: Interface Name(vpn0_interface)
-            property: /0/vpn0_interface/interface/if-name
-            variable: vpn0_interface
-        -   title: IPv4 Address(vpn0_internet_ipv4_address)
-            property: /0/vpn0_interface/interface/ip/address
-            variable: vpn0_internet_ipv4_address
-        -   title: Hostname(system_host_name)
-            property: //system/host-name
-            variable: system_host_name
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-        -   title: System IP(system_system_ip)
-            property: //system/system-ip
-            variable: system_system_ip
-        -   title: Site ID(system_site_id)
-            property: //system/site-id
-            variable: system_site_id
--   templateName: hq-csr1000v
-    templateDescription: HQ Template for CSR1000v
-    deviceType: vedge-CSR-1000v
-    factoryDefault: false
-    configType: template
-    policyId: ''
-    featureTemplateUidRange: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_Template
-        templateType: aaa
-    -   templateName: Factory_Default_BFD_Template
-        templateType: bfd-vedge
-    -   templateName: Factory_Default_vEdge_OMP_ipv46_Template
-        templateType: omp-vedge
-    -   templateName: Factory_Default_vEdge_Security_Template
-        templateType: security-vedge
-    -   templateName: system
-        templateType: system-vedge
-        subTemplates:
-        -   templateName: Factory_Default_Logging_Template
-            templateType: logging
-    -   templateName: vpn0
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn0_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn512
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn512_interface
-            templateType: vpn-vedge-interface
-    -   templateName: vpn1
-        templateType: vpn-vedge
-        subTemplates:
-        -   templateName: vpn1_ospf
-            templateType: ospf
-        -   templateName: vpn1_interface
-            templateType: vpn-vedge-interface
-    -   templateName: banner
-        templateType: banner
-    templateId: 5609a959-d12f-4833-8156-9c301034feac
-    attached_devices: []
-    input:
-        columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-        -   title: IPv4 Address(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-        -   title: Interface Name(vpn1_ospf_interface)
-            property: /1//router/ospf/area/0/interface/vpn1_ospf_interface/name
-            variable: vpn1_ospf_interface
-        -   title: Interface Name(vpn512_interface)
-            property: /512/vpn512_interface/interface/if-name
-            variable: vpn512_interface
-        -   title: Address(vpn0_default_gateway)
-            property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
-            variable: vpn0_default_gateway
-        -   title: Interface Name(vpn0_interface)
-            property: /0/vpn0_interface/interface/if-name
-            variable: vpn0_interface
-        -   title: IPv4 Address(vpn0_internet_ipv4_address)
-            property: /0/vpn0_interface/interface/ip/address
-            variable: vpn0_internet_ipv4_address
-        -   title: Hostname(system_host_name)
-            property: //system/host-name
-            variable: system_host_name
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-        -   title: System IP(system_system_ip)
-            property: //system/system-ip
-            variable: system_system_ip
-        -   title: Site ID(system_site_id)
-            property: //system/site-id
-            variable: system_site_id
+            vipValue: '0'
+    templateDescription: vsmart_vpn0
+    templateId: 1593fcaf-02b4-4896-87c3-30b6d36cc71f
+    templateMinVersion: 15.0.0
+    templateName: vsmart_vpn0
+    templateType: vpn-vsmart
