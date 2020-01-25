@@ -21,7 +21,9 @@
           - app: "twitter"
           - app: "cbs"
         type: app
-        push: no
+        push: yes
         force: no
       register: policy_list_facts
-      delegate_to: localhost
+      until: policy_list_facts is not failed
+      retries: 60
+      delay: 10
