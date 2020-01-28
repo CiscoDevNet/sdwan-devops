@@ -1,2 +1,0 @@
----
-virl_lab_file: "{{ playbook_dir }}/files/crn1.yaml"

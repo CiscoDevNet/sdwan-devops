@@ -1,7 +1,0 @@
-viptela:
-  system_ip: 1.1.1.1
-  transport_ip: 172.20.1.10
-  site_id: 1
-  vbond:
-    remote: 172.20.1.11
-  personality: vmanage

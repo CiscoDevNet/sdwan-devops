@@ -1,2 +1,0 @@
-virl_config_template:  sdwan/iosxe.j2
-virl_image_definition: "viptela-edge-{{ viptela_version }}"
