@@ -18,13 +18,13 @@ spec:
   }
   options {
     disableConcurrentBuilds()
-    lock resource: 'jenkins_cleur'
+    lock resource: 'brkdev3326'
   }
   environment {
     VIRL_USERNAME = credentials('cpn-virl-username')
     VIRL_PASSWORD = credentials('cpn-virl-password')
     VIRL_HOST = credentials('cpn-virl-host')
-    VIRL_LAB = "jenkins_cleur2020"
+    VIRL_LAB = "BRKDEV-3326_chocker"
     VMANAGE_ORG = credentials('viptela-org')
     HOME = "${WORKSPACE}"
     DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
