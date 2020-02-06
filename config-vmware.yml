@@ -51,11 +51,12 @@
     - debug
   any_errors_fatal: true
   gather_facts: no
+  connection: network_cli
   vars:
     ansible_network_os: ios
   tasks:
     - name: Copy Root CA to controllers
-      copy:
+      net_put:
         src: "{{ sdwan_cert_dir }}/myCA.pem"
         dest: /home/admin
       register: copy_results
