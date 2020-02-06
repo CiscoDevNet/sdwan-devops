@@ -1,0 +1,4 @@
+vpn0_portgroup: cpn-rtp-colab1
+vpn0_netmask: 24
+vpn0_gateway: 192.133.179.1
+vpn512_portgroup: cpn-rtp-colab1
