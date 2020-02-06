@@ -99,6 +99,7 @@
     - edges
   roles:
     - ansible-viptela
+  connection: network_cli
   vars:
     ansible_network_os: ios
   serial: 1
@@ -114,7 +115,7 @@
     - name: Install Root CA on edges routers
       block:
         - name: Copy Root CA to edge router
-          copy:
+          net_put:
             src: "{{ sdwan_cert_dir }}/myCA.pem"
             dest: /home/admin
           register: copy_results
