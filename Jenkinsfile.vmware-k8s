@@ -37,32 +37,6 @@ spec:
         }      
       }          
     }
-/*
-    stage('Clean Jenkins Workspace') {
-      steps {
-        cleanWs()
-      }
-    }
-*/
-/*
-    stage('Prep New Environment') {
-      steps {
-        // GIT submodule recursive checkout
-        checkout scm: [
-                $class: 'GitSCM',
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[$class: 'SubmoduleOption',
-                              disableSubmodules: false,
-                              parentCredentials: false,
-                              recursiveSubmodules: true,
-                              reference: '',
-                              trackingSubmodules: false]],
-                submoduleCfg: [],
-                userRemoteConfigs: scm.userRemoteConfigs
-        ]
-      }
-    }
-*/
     stage('Build Certificate Authority') {
       steps {
         echo 'Running build-ca.yml...'
@@ -89,7 +63,7 @@ spec:
         }
       }
     }
-    stage('Configure VMWare Edges') {
+    stage('Deploy VMWare Edges') {
       steps {
         echo 'Configure Edges...'
         container('ansible') {
@@ -97,11 +71,18 @@ spec:
         }
       }
     }
-    stage('Running Tests') {
+    stage('Wait for Edges to Sync') {
+      steps {
+        echo 'Wait for Edges to sync...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
+        }
+      }
+    }
+    stage('Run Tests') {
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
           ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'check-sdwan.yml'
         }
       }
@@ -109,7 +90,7 @@ spec:
   }
   post {
     always {
-      echo 'Cleaning up...'
+      echo 'Clean Up'
       container('ansible') {
         ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
       }
