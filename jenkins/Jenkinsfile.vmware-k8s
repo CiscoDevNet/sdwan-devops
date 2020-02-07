@@ -15,7 +15,11 @@ spec:
     tty: true
     volumeMounts:
     - mountPath: '/home/jenkins/agent/workspace'
-      name: jenkins-workspace
+      name: workspace
+  volumes:
+  - name: workspace
+    persistentVolumeClaim:
+      claimName: jenkins-workspace
 """
     }
   }
