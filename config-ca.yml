@@ -1,0 +1,23 @@
+- name: Copy CA to controllers
+  hosts: vbond_hosts:vsmart_hosts
+  tags:
+    - control
+    - debug
+  any_errors_fatal: true
+  gather_facts: no
+  connection: network_cli
+  vars:
+    ansible_network_os: ios
+  tasks:
+    - name: Copy Root CA to controllers
+      net_put:
+        src: "{{ sdwan_cert_dir }}/myCA.pem"
+        dest: /home/admin
+      register: copy_results
+
+    - name: Install RootCA
+      cli_command:
+        command: "request root-cert-chain install /home/admin/myCA.pem"
+      register: command_result
+      connection: network_cli
+      failed_when: "'Failed' in command_result.stdout"

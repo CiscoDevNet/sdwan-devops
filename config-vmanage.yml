@@ -1,0 +1,130 @@
+- name: Configure vmanage
+  hosts: localhost
+  roles:
+    - ansible-viptela
+  tags:
+    - control
+    - vmanage
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+
+    - set_fact:
+        vbond_controller: "{{ groups.vbond_hosts[0] }}"
+
+    - name: vManage Settings
+      vmanage_settings:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        organization: "{{ vmanage_org }}"
+        vbond: "{{ sdwan_vbond }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Add Control Hosts
+      vmanage_device:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        device_username: admin
+        device_password: admin
+        name: "{{ item }}"
+        personality: "{{ hostvars[item].sdwan_personality }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+      loop: "{{ groups.vbond_hosts + groups.vsmart_hosts }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Add the Enterprise CA
+      vmanage_settings:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        ca_type: enterprise
+        root_cert: "{{lookup('file', '{{ sdwan_cert_dir }}/myCA.pem')}}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Generate CSRs
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        name: "{{ item }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        state: csr
+      loop: "{{ groups.sdwan_control }}"
+      register: control_devices
+      retries: 10
+      delay: 10
+      until: control_devices is not failed 
+
+    - name: Write out CSR
+      copy:
+        content: "{{ item.deviceCSR }}"
+        dest: "{{ sdwan_cert_dir }}/{{ item.item }}.csr"
+      loop: "{{ control_devices.results }}"
+      delegate_to: localhost
+
+    - name: Sign Controller Cert
+      openssl_certificate:
+        csr_path: "{{ sdwan_cert_dir }}/{{ item }}.csr"
+        path: "{{ sdwan_cert_dir }}/{{ item }}.crt"
+        provider: ownca
+        ownca_path: "{{ sdwan_cert_dir }}/myCA.pem"
+        ownca_privatekey_path: "{{ sdwan_cert_dir }}/myCA.key"
+        ownca_privatekey_passphrase: "{{ sdwan_CA_passphrase }}"
+      loop: "{{ groups.sdwan_control }}"
+      delegate_to: localhost
+
+    - name: Add Certificate to Control Hosts
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        name: "{{ item }}"
+        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        cert: "{{lookup('file', '{{ sdwan_cert_dir }}/{{ item }}.crt')}}"
+      loop: "{{ groups.sdwan_control }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Push Certs to Controllers
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        state: push
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Install Serial File
+      vmanage_fileupload:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        file: "{{ sdwan_serial_file }}"
+      delegate_to: localhost
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed
+
+    - debug:
+        msg: "vManage IP: {{ vmanage_ip }}"

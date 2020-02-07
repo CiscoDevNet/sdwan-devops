@@ -1,0 +1,10 @@
+- name: Push NETCONF template
+  hosts: sdwan_control
+  connection: netconf
+  tags:
+    - netconf
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - netconf_config:
+        content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
