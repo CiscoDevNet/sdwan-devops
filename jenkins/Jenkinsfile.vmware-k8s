@@ -13,6 +13,9 @@ spec:
     args:
     - 99d
     tty: true
+    volumeMounts:
+    - mountPath: '/home/jenkins/agent/workspace'
+      name: jenkins-workspace
 """
     }
   }
