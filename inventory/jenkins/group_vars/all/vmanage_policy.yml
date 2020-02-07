@@ -215,7 +215,7 @@ vmanage_policy_lists:
     - ipPrefix: 10.0.3.0/24
     - ipPrefix: 10.0.4.0/24
     - ipPrefix: 10.0.5.0/24
-    # - ipPrefix: 172.18.0.0/16
+    - ipPrefix: 172.18.0.0/16
     isActivatedByVsmart: true
     lastUpdated: 1559759136916
     listId: 33fcba1a-b21e-4608-958d-a8bd3b160e9b

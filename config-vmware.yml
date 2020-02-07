@@ -33,17 +33,6 @@
     - netconf_config:
         content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
 
-- name: Push NETCONF template
-  hosts: vbond_hosts
-  connection: netconf
-  tags:
-    - netconf
-  any_errors_fatal: true
-  gather_facts: no
-  tasks:
-    - netconf_config:
-        content: "{{ lookup('template', 'sdwan/netconf/vpn.j2') }}"
-
 - name: Copy CA to controllers
   hosts: vbond_hosts:vsmart_hosts
   tags:
@@ -83,7 +72,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
 
     - name: Waiting for vManage API to start
       uri:
@@ -117,7 +106,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
 
     - set_fact:
         vbond_controller: "{{ groups.vbond_hosts[0] }}"
@@ -234,30 +223,8 @@
     - debug:
         msg: "vManage IP: {{ vmanage_ip }}"
 
-- name: Import vManage Templates
-  hosts: localhost
-  connection: local
-  roles:
-    - ansible-viptela
-  vars:
-    vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-  gather_facts: no
-  tasks:
-    - name: Import feature templates
-      vmanage_feature_template:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        state: present
-        aggregate: "{{ vmanage_feature_templates }}"
-      when: vmanage_feature_templates is defined
+- import_playbook: import-templates.yml
 
-    - name: Import device templates
-      vmanage_device_template:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        state: present
-        aggregate: "{{ vmanage_device_templates }}"
-      when: vmanage_device_templates is defined
+- import_playbook: import-policy.yml
+
+- import_playbook: attach-template.yml passed=vsmart_hosts

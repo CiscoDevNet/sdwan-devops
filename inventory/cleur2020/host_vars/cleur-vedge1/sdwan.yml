@@ -5,7 +5,8 @@ vpn0_gateway: 192.133.179.1
 ansible_host: "{{ sdwan_transport_ip }}"
 sdwan_site_id: 10
 sdwan_model: 'vedge-cloud'
-sdwan_uuid: 663858cb-b1c6-6cc9-0229-9db8e9b7c6c6
+# sdwan_uuid: 663858cb-b1c6-6cc9-0229-9db8e9b7c6c6
+sdwan_uuid: 36b8fb11-0aa4-8f2e-5174-a7793ae246f4
 sdwan_personality: vedge
 sdwan_template:
   name: 'branch-vedge-cloud'
@@ -19,7 +20,7 @@ sdwan_template:
     'system_latitude': 37.411343
     'system_longitude': -121.938803
     'system_site_id': "{{ sdwan_site_id }}"
-    'system_host_name': "{{ inventory_hostname}}"
+    'system_host_name': "{{ inventory_hostname }}"
     'system_system_ip': "{{ sdwan_system_ip }}"
     'banner_login': You are being monitored.
     'banner_motd': Welcome!

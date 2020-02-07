@@ -1,15 +1,23 @@
 - name: Import vManage Policy Lists
   hosts: localhost
   connection: local
-  gather_facts: no
   roles:
     - ansible-viptela
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-  tags:
-    - policy
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+    # file: vmanage_policy.yml
+  gather_facts: no
   tasks:
+    # - name: Reading file {{ file }}
+    #   tags:
+    #     - policy_lists
+    #     - policy_definitions
+    #     - central_policy
+    #   include_vars:
+    #     file: "{{ file }}"
+    #     name: vmanage_policy
+
     - name: Import policy lists
       tags:
         - policy_lists
@@ -17,9 +25,12 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
+        type: "{{ item.key }}"
         state: present
-        aggregate: "{{ vmanage_policy_lists }}"
-      when: vmanage_policy_lists is defined
+        aggregate: "{{ item.value }}"
+      loop: "{{ lookup('dict', vmanage_policy_lists) }}"
+      when: item.value
+      register: policy_list_facts
 
     - name: Import policy definitions
       tags:
@@ -28,9 +39,12 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
+        type: "{{ item.key }}"
         state: present
-        aggregate: "{{ vmanage_policy_definitions }}"
-      when: vmanage_policy_definitions is defined
+        aggregate: "{{ item.value }}"
+      loop: "{{ lookup('dict', vmanage_policy_definitions) }}"
+      when: item.value
+      register: policy_list_facts
 
     - name: Import central policies
       tags:
@@ -40,5 +54,4 @@
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
         state: present
-        aggregate: "{{ vmanage_central_policies }"
-      when: vmanage_central_policies is defined
+        aggregate: "{{ vmanage_central_policies }}"

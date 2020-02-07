@@ -33,36 +33,10 @@ spec:
       steps {
         echo 'Running clean-vmware.yml...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', tags: 'control,edges', playbook: 'clean-vmware.yml'
         }      
       }          
     }
-/*
-    stage('Clean Jenkins Workspace') {
-      steps {
-        cleanWs()
-      }
-    }
-*/
-/*
-    stage('Prep New Environment') {
-      steps {
-        // GIT submodule recursive checkout
-        checkout scm: [
-                $class: 'GitSCM',
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[$class: 'SubmoduleOption',
-                              disableSubmodules: false,
-                              parentCredentials: false,
-                              recursiveSubmodules: true,
-                              reference: '',
-                              trackingSubmodules: false]],
-                submoduleCfg: [],
-                userRemoteConfigs: scm.userRemoteConfigs
-        ]
-      }
-    }
-*/
     stage('Build Certificate Authority') {
       steps {
         echo 'Running build-ca.yml...'
@@ -75,7 +49,7 @@ spec:
       steps {
         echo 'Running build-vmware.yml...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'build-vmware.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'build-vmware.yml'
         }
       }
     }
@@ -84,36 +58,45 @@ spec:
         echo 'Configure Control Plane...'
         container('ansible') {
           withCredentials([file(credentialsId: 'vmware-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
-            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/jenkins', playbook: 'config-vmware.yml'
+            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/cleur2020', playbook: 'config-vmware.yml'
           }
         }
       }
     }
-    stage('Configure VMWare Edges') {
+    stage('Deploy VMWare Edges') {
       steps {
         echo 'Configure Edges...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'deploy-vmware-edges.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'deploy-vmware-edges.yml'
         }
       }
     }
-    stage('Running Tests') {
+    stage('Wait for Edges to Sync') {
+      steps {
+        echo 'Wait for Edges to sync...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'waitfor-sync.yml'
+        }
+      }
+    }
+    stage('Run Tests') {
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'check-sdwan.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'check-sdwan.yml'
         }
       }
     }
   }
+/*
   post {
     always {
-      echo 'Cleaning up...'
+      echo 'Clean Up'
       container('ansible') {
-        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
+        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', tags: 'control,edges', playbook: 'clean-vmware.yml'
       }
       cleanWs()
     }
   }
+*/
 }
