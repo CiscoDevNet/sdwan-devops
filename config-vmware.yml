@@ -4,7 +4,7 @@
 
 - import_playbook: config-ca.yml
 
-- import_playbook: check-vmanasge.yml
+- import_playbook: check-vmanage.yml
 
 - import_playbook: config-vmanage.yml
 
