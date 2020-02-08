@@ -1,5 +1,5 @@
 - name: Activate Vedge Cloud
-  hosts: sdwan_edge:&vmware
+  hosts: "{{ passed | default('sdwan_edges') }}"  
   gather_facts: no
   tags:
     - bootstrap

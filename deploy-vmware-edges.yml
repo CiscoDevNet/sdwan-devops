@@ -43,11 +43,11 @@
         variables_file: edges.tfvars
       tags: apply
 
-- import_playbook: attach-template.yml passed=sdwan_edge:&vmware
+- import_playbook: attach-template.yml passed=vmware_edges
 
-- import_playbook: config-system.yml passed=sdwan_edge:&vmware
+- import_playbook: config-system.yml passed=vmware_edges
 
-- import_playbook: config-ca.yml passed=sdwan_edge:&vmware
+- import_playbook: config-ca.yml passed=vmware_edges
 
-- import_playbook: config-uuid-otp.yml
+- import_playbook: config-uuid-otp.yml passed=vmware_edges
 
