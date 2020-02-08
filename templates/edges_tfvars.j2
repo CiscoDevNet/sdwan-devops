@@ -1,5 +1,5 @@
 vedge_device_list = [
-    {% for host in groups['vmware'] -%}
+    {% for host in groups['vmware_edges'] -%}
     {
         name = "{{ hostvars[host]['inventory_hostname'] }}"
         networks = ["{{ hostvars[host]['vpn512_portgroup'] }}", "{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['servicevpn_portgroup'] }}"]
