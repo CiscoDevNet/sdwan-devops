@@ -1,6 +1,6 @@
 - import_playbook: attach-template.yml passed=sdwan_edge:&virl_hosts
 
-- name: Bootstrap the SD-WAN edge nodes
+- name: Get the bootstrap for edge nodes
   hosts: sdwan_edge:&virl_hosts
   connection: local
   gather_facts: no
@@ -35,7 +35,7 @@
         day0_config: "{{ result.bootstrap.bootstrapConfig }}"
       when: result.bootstrap.bootstrapConfig is defined
 
-- name: Start the SD-WAN edge nodes
+- name: Start the edge nodes
   hosts: sdwan_edge:&virl_hosts
   connection: local
   gather_facts: no
