@@ -1,5 +1,5 @@
 - name: Push NETCONF template
-  hosts: sdwan_control
+  hosts: "{{ passed | default('sdwan') }}"  
   connection: netconf
   tags:
     - netconf

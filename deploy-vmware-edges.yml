@@ -43,112 +43,11 @@
         variables_file: edges.tfvars
       tags: apply
 
-- name: Attach template to device
-  hosts: sdwan_edge:&vmware
-  connection: local
-  gather_facts: no
-  tags:
-    - attach
-    - edges
-  roles:
-    - ansible-virl
-    - ansible-viptela
-  tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+- import_playbook: attach-template.yml passed=sdwan_edge:&vmware
 
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+- import_playbook: config-system.yml passed=sdwan_edge:&vmware
 
-    - name: Attach template to device
-      vmanage_device_attachment:
-        host: "{{ vmanage_ip }}"
-        user: "{{ vmanage_user }}"
-        password: "{{ vmanage_pass }}"
-        uuid: "{{ sdwan_uuid }}"
-        device_name: "{{ inventory_hostname }}"
-        system_ip: "{{ sdwan_system_ip }}"
-        site_id: "{{ sdwan_site_id }}"
-        template: "{{ sdwan_template.name }}"
-        variables: "{{ sdwan_template.variables | default(omit) }}"
-        wait: yes
-        state: present
-      when: sdwan_template is defined
-      register: attachment_results
+- import_playbook: config-ca.yml passed=sdwan_edge:&vmware
 
-- name: Configuring SDWAN system information via Netconf
-  hosts: sdwan_edge:&vmware
-  connection: netconf
-  tags:
-    - edges
-    - netconf
-  any_errors_fatal: true
-  gather_facts: no
-  tasks:
-    - name: Push NETCONF template
-      netconf_config:
-        content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
-      register: configure_result
-      when: bootstrap_method == "netconf"
+- import_playbook: config-uuid-otp.yml
 
-- name: Bootstrap Edge Routers
-  hosts: sdwan_edge:&vmware
-  gather_facts: no
-  tags:
-    - bootstrap
-    - edges
-  roles:
-    - ansible-viptela
-  connection: network_cli
-  vars:
-    ansible_network_os: ios
-  serial: 1
-  # This is a workaround for a bug in vmanage.  When multiple requests
-  # for boostrap are made to vmanage at the same time, it gets corrupted
-  tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-
-    - name: Install Root CA on edges routers
-      block:
-        - name: Copy Root CA to edge router
-          net_put:
-            src: "{{ sdwan_cert_dir }}/myCA.pem"
-            dest: /home/admin
-          register: copy_results
-
-        - name: Install Root CA
-          cli_command:
-            command: "request root-cert-chain install /home/admin/myCA.pem"
-          register: command_result
-          connection: network_cli
-          failed_when: "'Failed' in command_result.stdout"
-          changed_when: true
-          when: copy_results.changed
-
-      when: bootstrap_method == "netconf"
-
-    - name: Configure UUID and OTP for vedge cloud
-      block:
-        - name: Get bootstrap info
-          vmanage_device_bootstrap:
-            host: "{{ vmanage_ip }}"
-            user: "{{ vmanage_user }}"
-            password: "{{ vmanage_pass }}"
-            uuid: "{{ sdwan_uuid }}"
-          register: result
-          retries: 10
-          delay: 10
-          until: result is not failed 
-          delegate_to: localhost
-
-        - name: Activate vedge cloud with UUID and OTP
-          cli_command:
-            command: "request vedge-cloud activate chassis-number {{ sdwan_uuid }} token {{ result.bootstrap.otp }}"
-          connection: network_cli
-          register: command_results
-        
-      when: bootstrap_method == "netconf" and sdwan_model == "vedge-cloud"

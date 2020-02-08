@@ -1,5 +1,5 @@
 - name: Copy CA to controllers
-  hosts: vbond_hosts:vsmart_hosts
+  hosts: "{{ passed | default('sdwan') }}"  
   tags:
     - control
     - debug
