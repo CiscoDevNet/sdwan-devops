@@ -37,7 +37,7 @@ all:
             # physical:
             #   hosts:              
             #     cleur-isr1k1:
-            vmware:
+            vmware_edges:
               hosts:
                 cleur-vedge1:
                 cleur-vedge2:

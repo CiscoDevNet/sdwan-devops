@@ -9,16 +9,12 @@
   connection: network_cli
   vars:
     ansible_network_os: ios
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
   serial: 1
   # This is a workaround for a bug in vmanage.  When multiple requests
   # for boostrap are made to vmanage at the same time, it gets corrupted
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-
     - name: Get OTP for UUID
       vmanage_device_bootstrap:
         host: "{{ vmanage_ip }}"
