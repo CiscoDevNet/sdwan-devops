@@ -7,20 +7,13 @@ Both the control plane and the edge can be deployed in virl
 ## Dependencies
 
 Set the name of the lab, e.g.:
-Using bash:
 ```
 export VIRL_HOST=myvirlhost
 export VIRL_USERNAME=myusername
 export VIRL_PASSWORD=mypasword
 export VIRL_LAB=myusername_sdwan
 ```
-Using windows cli:
-```
-set VIRL_HOST=myvirlhost
-set VIRL_USERNAME=myusername
-set VIRL_PASSWORD=mypasword
-set VIRL_LAB=myusername_sdwan
-```
+
 These values can be set permanently in the `virl.yml` file in the inventory by adding:
 ```
 host: myvirlhost

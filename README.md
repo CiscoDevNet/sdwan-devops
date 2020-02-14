@@ -56,10 +56,6 @@ Using bash:
 ```
 export VMANAGE_ORG=myorgname
 ```
-Using windows cli:
-```cli
-> set VMANAGE_ORG=myorgname
-```
 
 **Note:** This value can be set permanently in `group_vars/all/local.yml`
 
