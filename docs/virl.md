@@ -38,27 +38,15 @@ To save changes that you make in the VIRL GUI, download the lab and override the
 ## Bringing up the Simulation
 
 ### Create a local CA
-
-Using bash:
 ```bash
 $ ./play.sh build-ca.yml
-```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 build-ca.yml
 ```
 
 ### Build the topology
 
 Run the `build-virl.yml` playbook to the build the out the control plane:
-
-Using bash:
 ```bash
 $ ./play.sh build-virl.yml
-```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 build-virl.yml
 ```
 
 This playbook will:
@@ -67,26 +55,15 @@ This playbook will:
 * Wait until the VNFs are reachable
 
 `--limit` can be used to build individual nodes:
-
-Using bash:
 ```bash
 $ ./play.sh build-virl.yml --limit=site1-cedge1
-```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 build-virl.yml --limit=site1-cedge1
 ```
 
 ### Configure the SD-WAN fabric
 
 Set the name of the organization, e.g.:
-Using bash:
 ```
 export VMANAGE_ORG=myorgname
-```
-Using windows cli:
-```
-set VMANAGE_ORG=myorgname
 ```
 
 >Note: This value can be set permanently in `group_vars/all/local.yml`
@@ -94,14 +71,8 @@ set VMANAGE_ORG=myorgname
 Make sure that you have a serial file that matches the org name in this location: `licenses/serialFile.viptela` 
 
 Run the playbook
-
-Using bash:
 ```bash
 $ ./play.sh config-virl.yml
-```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 config-virl.yml
 ```
 
 This playbook will:
@@ -117,16 +88,11 @@ This playbook will:
 
 ### Deploy the SD-WAN edges
 
-Using bash:
 ```bash
 $ ./play.sh deploy-virl.yml
 ```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 deploy-virl.yml
-```
 
-## Get inventory information
+### Get inventory information
 
 ```bash
 ./play.sh virl-inventory.yml
@@ -141,33 +107,16 @@ Using powershell:
 ## Clean the topology
 
 Stops and wipes all of the nodes in the lab.
-
-Using bash:
 ```bash
 $ ./play.sh clean-virl.yml
 ```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 clean-virl.yml
-```
 
 `--limit` can be used to clean individual nodes:
-
 ```bash
 $ ./play.sh clean-virl.yml --limit=site1-cedge1
 ```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 clean-virl.yml --limit=site1-cedge1
-```
 
 To remove the lab completely from the VIRL server:
-
-Using bash:
 ```bash
 $ ./play.sh clean-virl.yml --tags=delete
-```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 clean-virl.yml --tags=delete
 ```

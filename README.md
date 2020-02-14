@@ -39,14 +39,10 @@ docker build -t ansible-sdwan .
 
 #### Running the the playbooks in the docker container
 
-In order to make this easier, bash and powershell scripts have been provided.  To run a playbook specified in the directions, you can run using bash:
+In order to make this easier, a bash script has been provided.  To run a playbook specified in the directions, you can run using bash:
 
 ```bash
 $ ./play.sh <playbook> <options>
-```
-Or using powershell:
-```powershell
-> powershell.exe ./play.ps1 <playbook> <options>
 ```
 
 ### Licensing Requirements
@@ -141,7 +137,7 @@ to
 inventory = ./inventory/crn1
 ```
 
-or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml` or `powershell.exe ./play.ps1 -i inventory/hq1 build-cml.yml`)
+or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml`)
 
 The local defaults for all inventories are set in `sdwan-devops/group_vars/all/local/yml`
 
