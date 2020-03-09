@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.11
 
 COPY requirements.txt /tmp/requirements.txt
 RUN echo "===> Installing GCC ****" && \
@@ -32,10 +32,10 @@ RUN echo "===> Installing Terraform ****" && \
     apk --update add wget unzip cdrkit curl && \
     \
     \
-    wget --quiet https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_linux_amd64.zip && \
-    unzip terraform_0.12.12_linux_amd64.zip && \
+    wget --quiet https://releases.hashicorp.com/terraform/0.12.23/terraform_0.12.23_linux_amd64.zip && \
+    unzip terraform_0.12.23_linux_amd64.zip && \
     mv terraform /usr/bin && \
-    rm terraform_0.12.12_linux_amd64.zip
+    rm terraform_0.12.23_linux_amd64.zip
 
 # Define working directory.
 ENV ANSIBLE_HOST_KEY_CHECKING false
