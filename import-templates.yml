@@ -1,4 +1,4 @@
-- name: Import vManage Policy Lists
+- name: Import vManage Feature/Device Templates
   hosts: localhost
   gather_facts: no
   connection: local
