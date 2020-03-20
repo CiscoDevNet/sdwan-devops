@@ -1,4 +1,4 @@
-- import_playbook: clean-control.yml
+- import_playbook: clean-certs.yml
   tags: [control, never]
 
 - name: Delete Control Planw VMs

@@ -13,11 +13,14 @@
         user: "{{ vmanage_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ vmanage_pass }}"
+        uuid: "{{ sdwan_uuid | default(omit) }}"
         device: "{{ inventory_hostname }}"
+        system_ip: "{{ sdwan_system_ip | default(omit) }}"
+        site_id: "{{ sdwan_site_id | default(omit) }}"
         template: "{{ sdwan_template.name }}"
-        variables: "{{ sdwan_template.variables }}"
+        variables: "{{ sdwan_template.variables | default(omit) }}"
         wait: yes
-        state: "present"
+        state: present
       when: sdwan_template is defined
       async: 90
       poll: 10
