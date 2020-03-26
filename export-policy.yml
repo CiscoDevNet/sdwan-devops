@@ -6,7 +6,7 @@
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-    file: vmanage-policy.yml
+    file: vmanage_policy.yml
   gather_facts: no
   tasks:
     - name: Get policy lists
