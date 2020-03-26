@@ -1,4 +1,4 @@
-- name: Activate central policy
+- name: Deactivate central policy
   hosts: localhost
   gather_facts: no
   connection: local
@@ -10,11 +10,11 @@
   tags:
     - policy
   tasks:
-    - name: Activate central policy
+    - name: Deactivate central policy
       vmanage_central_policy:
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        state: activated
+        state: deactivated
         name: "{{ sdwan_central_policy_name }}"
         wait: no
