@@ -7,7 +7,6 @@
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-    sdwan_central_policy_name: central_policy
   tags:
     - policy
   tasks:
