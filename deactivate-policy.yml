@@ -1,0 +1,20 @@
+- name: Deactivate central policy
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+  tags:
+    - policy
+  tasks:
+    - name: Deactivate central policy
+      vmanage_central_policy:
+        user: "{{ ansible_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
+        state: deactivated
+        name: "{{ sdwan_central_policy_name }}"
+        wait: no
