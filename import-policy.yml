@@ -25,11 +25,11 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        type: "{{ item.key }}"
+        type: all
         state: present
-        aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy_lists) }}"
-      when: item.value
+        aggregate: "{{ vmanage_policy_lists }}"
+      # loop: "{{ lookup('dict', vmanage_policy_lists) }}"
+      # when: item.value
       register: policy_list_facts
 
     - name: Import policy definitions
@@ -39,12 +39,12 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        type: "{{ item.key }}"
+        type: data
         state: present
-        aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy_definitions) }}"
-      when: item.value
-      register: policy_list_facts
+        aggregate: "{{ vmanage_policy_definitions }}"
+      # loop: "{{ lookup('dict', vmanage_policy_definitions) }}"
+      # when: item.value
+      register: policy_definition_facts
 
     - name: Import central policies
       tags:
