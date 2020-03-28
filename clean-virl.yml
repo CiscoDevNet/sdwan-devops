@@ -12,8 +12,8 @@
         path: "{{ item }}"
         state: absent
       loop:
-        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.csr"
-        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.crt"
+        - "{{ sdwan_cert_dir }}/{{ inventory_hostname }}.csr"
+        - "{{ sdwan_cert_dir }}/{{ inventory_hostname }}.crt"
 
 - hosts: sdwan
   connection: local

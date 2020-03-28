@@ -9,7 +9,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
 
     - name: Get device facts
       vmanage_device_facts:

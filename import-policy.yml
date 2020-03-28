@@ -5,7 +5,7 @@
     - ansible-viptela
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
     # file: vmanage_policy.yml
   gather_facts: no
   tasks:
@@ -25,12 +25,8 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        type: "{{ item.key }}"
         state: present
-        aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy_lists) }}"
-      when: item.value
-      register: policy_list_facts
+        aggregate: "{{ vmanage_policy_lists }}"
 
     - name: Import policy definitions
       tags:
@@ -39,12 +35,8 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        type: "{{ item.key }}"
         state: present
-        aggregate: "{{ item.value }}"
-      loop: "{{ lookup('dict', vmanage_policy_definitions) }}"
-      when: item.value
-      register: policy_list_facts
+        aggregate: "{{ vmanage_policy_definitions }}"
 
     - name: Import central policies
       tags:

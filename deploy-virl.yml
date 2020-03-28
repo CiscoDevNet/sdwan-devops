@@ -12,7 +12,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
 
     - name: Import feature templates
       vmanage_feature_template:
@@ -45,7 +45,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
 
     - name: Attach template to device
       vmanage_device_attachment:
@@ -80,7 +80,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
 
     - name: Get bootstrap info
       vmanage_device_bootstrap:
@@ -134,7 +134,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
 
     - name: Push Certs to Controllers
       vmanage_device_certificate:
