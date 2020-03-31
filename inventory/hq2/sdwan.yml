@@ -1,5 +1,6 @@
 all:
   vars:
+    ansible_python_interpreter: /Users/stevenca/Workspaces/python-viptela/python-viptela/bin/python3
     virl_lab_file: "{{ playbook_dir }}/files/hq2.yaml"
     viptela_version: 19.2.1
     sdwan_vbond: 192.133.184.51
@@ -48,6 +49,11 @@ all:
                   vpn0_ip: 192.133.184.52/22
                   # ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
                   sdwan_site_id: 1
+                  sdwan_template:
+                    name: 'vsmart'
+                    variables:
+                      'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
+                      'vpn0_default_gateway': "{{ vpn0_gateway }}"
         sdwan_edge:
           vars:
             sdwan_personality: vedge

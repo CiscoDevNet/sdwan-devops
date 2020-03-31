@@ -22,4 +22,4 @@
         password: "{{ ansible_password }}"
         state: activated
         name: "{{ sdwan_central_policy_name }}"
-        wait: no
+        wait: yes
