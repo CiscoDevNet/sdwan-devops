@@ -18,16 +18,15 @@ RUN echo "===> Installing GCC ****" && \
     \
     \
     echo "===> Installing dependancies..."  && \
-    apk --update add sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen && \
+    apk --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen && \
     \
     \
     echo "===> Installing PIP Requirements..."  && \
-    pip install -r /tmp/requirements.txt
-
-COPY files/virl2_client-0.8.2+b4d055d25-py3-none-any.whl /tmp/virl2_client-0.8.2+b4d055d25-py3-none-any.whl
-RUN echo "===> Installing VIRL Client..."  && \
-    pip install /tmp/virl2_client-0.8.2+b4d055d25-py3-none-any.whl
-
+    pip install -r /tmp/requirements.txt && \
+    \
+    \
+    echo "===> Installing python-viptela..."  && \
+    pip install git+https://github.com/CiscoDevNet/python-viptela.git
 RUN echo "===> Installing Terraform ****" && \
     apk --update add wget unzip cdrkit curl && \
     \

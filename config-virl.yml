@@ -142,7 +142,7 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].vpn0_ip | ipaddr('address') | default(hostvars[vmanage_host].ansible_host) }}"
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
 
     - set_fact:
         vbond_controller: "{{ groups.vbond_hosts[0] }}"
@@ -245,6 +245,8 @@
       until: result is not failed 
 
     - name: Install Serial File
+      tags:
+        - serial_file
       vmanage_fileupload:
         host: "{{ vmanage_ip }}"
         user: "{{ vmanage_user }}"
@@ -260,8 +262,17 @@
         msg: "vManage IP: {{ vmanage_ip }}"
 
 - import_playbook: import-templates.yml
+  tags:
+    - templates
 
 - import_playbook: import-policy.yml
+  tags:
+    - policy
+
+# - import_playbook: attach-template.yml
+#   tags:
+#     - templates
+#     - attach
 
 - name: Attach Templates to vSmarts
   hosts: vsmart_hosts:&virl_hosts
@@ -271,9 +282,10 @@
     - ansible-viptela
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].vpn0_ip | ipaddr('address') | default(hostvars[vmanage_host].ansible_host) }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
   tags:
-    - policy
+    - templates
+    - attach
   tasks:
     - name: Attach template to vSmart
       vmanage_device_attachment:
@@ -290,3 +302,6 @@
       register: attachment_results
 
 - import_playbook: activate-policy.yml
+  tags:
+    - policy
+    - activate

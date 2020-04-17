@@ -1,7 +1,7 @@
 all:
   vars:
-    ansible_python_interpreter: /Users/stevenca/Workspaces/python-viptela/python-viptela/bin/python3
     virl_lab_file: "{{ playbook_dir }}/files/hq2.yaml"
+    iosxe_sdwan_version: 16.12.2r
     viptela_version: 19.2.1
     sdwan_vbond: 192.133.184.51
   children:
@@ -60,6 +60,7 @@ all:
             login_banner: "Hello!"
           hosts:
             hq-cedge1:
+              virl_image_definition: "iosxe-sdwan-{{ iosxe_sdwan_version }}"
               sdwan_system_ip: 1.1.1.4
               sdwan_site_id: 1
               sdwan_model: 'vedge-CSR-1000v'
@@ -80,6 +81,7 @@ all:
                   'banner_login': "{{ login_banner }}"
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
             site1-cedge1:
+              virl_image_definition: "iosxe-sdwan-{{ iosxe_sdwan_version }}"
               sdwan_system_ip: 1.1.2.1
               sdwan_site_id: 2
               sdwan_model: 'vedge-CSR-1000v'
@@ -99,6 +101,7 @@ all:
                   'banner_login': "{{ login_banner }}"
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
             site2-vedge1:
+              virl_image_definition: "viptela-edge-{{ viptela_version }}"
               sdwan_system_ip: 1.1.3.1
               sdwan_site_id: 3
               sdwan_model: 'vedge-cloud'
