@@ -4,8 +4,7 @@ all:
     iosxe_sdwan_version: 16.12.2r
     viptela_version: 19.2.1
     sdwan_vbond: 192.133.184.51
-    sdwan_central_policy_name: centralized_policy
-    vmanage_org: 'DevNet Sandbox'
+    sdwan_central_policy_name: central_policy
   children:
     sdwan:
       children:
