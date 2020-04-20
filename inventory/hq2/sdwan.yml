@@ -4,6 +4,8 @@ all:
     iosxe_sdwan_version: 16.12.2r
     viptela_version: 19.2.1
     sdwan_vbond: 192.133.184.51
+    sdwan_central_policy_name: centralized_policy
+    vmanage_org: 'DevNet Sandbox'
   children:
     sdwan:
       children:
@@ -17,6 +19,7 @@ all:
               vars:
                 sdwan_personality: vmanage
                 sdwan_device_model: vmanage
+                mgmt_interface: 'vpn0_ip'
                 virl_image_definition: "viptela-manage-{{ viptela_version }}"
                 virl_config_template: "sdwan/user-data.j2"
               hosts:

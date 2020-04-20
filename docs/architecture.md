@@ -96,9 +96,9 @@ session fails, the default route from that BGP session is no longer injects and 
 traffic then fails over to the remaining router.
 
 ### Firewalls
-High availabilty at the firewall is provided by a pair of active/passive ASA firewalls.  In an active/passive configuration,
+High availability at the firewall is provided by a pair of active/passive ASA firewalls.  In an active/passive configuration,
 only one firewall has the primary interfaces and forms OSPF sessions.  When the primary firewall fails, either from
-total system failuer or the failure of a monitors interfaces, it transitions to secondary and the previously secondary
+total system failure or the failure of a monitors interfaces, it transitions to secondary and the previously secondary
 transitions to primary.
 
 ### vEdges

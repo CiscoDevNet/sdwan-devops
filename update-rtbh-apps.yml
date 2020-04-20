@@ -9,7 +9,11 @@
         vmanage_host: "{{ groups.vmanage_hosts | first }}"
 
     - set_fact:
+<<<<<<< HEAD
         vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
+=======
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+>>>>>>> master
 
     - name: Update RTBH
       vmanage_policy_list:

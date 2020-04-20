@@ -1,0 +1,35 @@
+- name: Activate Vedge Cloud
+  hosts: "{{ passed | default('sdwan_edges') }}"  
+  gather_facts: no
+  tags:
+    - bootstrap
+    - edges
+  roles:
+    - ansible-viptela
+  connection: network_cli
+  vars:
+    ansible_network_os: ios
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
+  serial: 1
+  # This is a workaround for a bug in vmanage.  When multiple requests
+  # for boostrap are made to vmanage at the same time, it gets corrupted
+  tasks:
+    - name: Get OTP for UUID
+      vmanage_device_bootstrap:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        uuid: "{{ sdwan_uuid }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+      delegate_to: localhost
+
+    - name: Activate vedge cloud with UUID and OTP
+      cli_command:
+        command: "request vedge-cloud activate chassis-number {{ sdwan_uuid }} token {{ result.bootstrap.otp }}"
+      connection: network_cli
+      register: command_results
+        

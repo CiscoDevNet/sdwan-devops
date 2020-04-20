@@ -1,88 +1,15 @@
-- import_playbook: check-reqs.yml
-
-- import_playbook: config-system.yml passed=sdwan_control
-
-- import_playbook: config-ca.yml passed=vbond_hosts
-
-<<<<<<< HEAD
-#- name: Push NETCONF template
-#  hosts: vbond_hosts
-#  connection: netconf
-#  tags:
-#    - netconf
-#  any_errors_fatal: true
-#  gather_facts: no
-#  tasks:
-#    - netconf_config:
-#        content: "{{ lookup('template', 'sdwan/netconf/vpn.j2') }}"
-
-- name: Copy CA to controllers
-  hosts: vbond_hosts:vsmart_hosts
-  tags:
-    - control
-    - debug
-  any_errors_fatal: true
-  gather_facts: no
-  connection: network_cli
-  vars:
-    ansible_network_os: ios
-  tasks:
-    - name: Copy Root CA to controllers
-      net_put:
-        src: "{{ sdwan_cert_dir }}/myCA.pem"
-        dest: /home/admin
-      register: copy_results
-=======
-- import_playbook: config-ca.yml passed=vsmart_hosts
-
-- import_playbook: check-vmanage.yml
->>>>>>> master
-
-- import_playbook: config-vmanage.yml
-
-- import_playbook: import-templates.yml
-
-<<<<<<< HEAD
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-
-    - name: Waiting for vManage API to start
-      uri:
-        url: "https://{{ vmanage_ip }}/dataservice/system/device/controllers"
-        method: POST
-        body:
-          j_username: "{{ vmanage_user }}"
-          j_password: "{{ vmanage_pass }}"
-        body_format: form-urlencoded
-        return_content: yes
-        validate_certs: no
-      no_log: true
-      register: uri_results
-      delegate_to: localhost
-      failed_when: false
-      until: uri_results.msg.find("OK") != -1
-      retries: 60
-      delay: 10
-
 - name: Configure vmanage
   hosts: localhost
-  roles:
-    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
+    vbond_controller: "{{ groups.vbond_hosts[0] }}"
   tags:
     - control
     - vmanage
   any_errors_fatal: true
   gather_facts: no
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-
-    - set_fact:
-        vbond_controller: "{{ groups.vbond_hosts[0] }}"
-
     - name: vManage Settings
       vmanage_settings:
         host: "{{ vmanage_ip }}"
@@ -104,7 +31,7 @@
         device_password: admin
         name: "{{ item }}"
         personality: "{{ hostvars[item].sdwan_personality }}"
-        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ipaddr('address')}}"
       loop: "{{ groups.vbond_hosts + groups.vsmart_hosts }}"
       register: result
       retries: 10
@@ -129,7 +56,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         name: "{{ item }}"
-        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ipaddr('address')}}"
         state: csr
       loop: "{{ groups.sdwan_control }}"
       register: control_devices
@@ -161,7 +88,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         name: "{{ item }}"
-        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ipaddr('address')}}"
         cert: "{{lookup('file', '{{ sdwan_cert_dir }}/{{ item }}.crt')}}"
       loop: "{{ groups.sdwan_control }}"
       register: result
@@ -194,13 +121,3 @@
 
     - debug:
         msg: "vManage IP: {{ vmanage_ip }}"
-
-- import_playbook: import-templates.yml
-
-- import_playbook: import-policy.yml
-
-=======
-- import_playbook: import-policy.yml
-
->>>>>>> master
-- import_playbook: attach-template.yml passed=vsmart_hosts

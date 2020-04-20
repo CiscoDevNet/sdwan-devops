@@ -86,7 +86,7 @@
         config: "{{ day0_config | default(omit) }}"
 
 - name: Check initial topology connectivity
-  hosts: internet
+  hosts: internet:&virl_hosts
   connection: local
   tags:
     - check_control

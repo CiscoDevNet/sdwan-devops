@@ -9,18 +9,8 @@
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
-    # file: vmanage_policy.yml
   gather_facts: no
   tasks:
-    # - name: Reading file {{ file }}
-    #   tags:
-    #     - policy_lists
-    #     - policy_definitions
-    #     - central_policy
-    #   include_vars:
-    #     file: "{{ file }}"
-    #     name: vmanage_policy
-
     - name: Import policy lists
       tags:
         - policy_lists
@@ -28,6 +18,7 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
+        type: all
         state: present
         aggregate: "{{ vmanage_policy_lists }}"
 
@@ -38,6 +29,7 @@
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
+        type: data
         state: present
         aggregate: "{{ vmanage_policy_definitions }}"
 

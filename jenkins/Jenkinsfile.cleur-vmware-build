@@ -33,7 +33,7 @@ spec:
       steps {
         echo 'Running clean-vmware.yml...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', tags: 'control,edges', playbook: 'clean-vmware.yml'
         }      
       }          
     }
@@ -49,7 +49,7 @@ spec:
       steps {
         echo 'Running build-vmware.yml...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'build-vmware.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'build-vmware.yml'
         }
       }
     }
@@ -58,7 +58,7 @@ spec:
         echo 'Configure Control Plane...'
         container('ansible') {
           withCredentials([file(credentialsId: 'vmware-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
-            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/jenkins', playbook: 'config-vmware.yml'
+            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/cleur2020', playbook: 'config-vmware.yml'
           }
         }
       }
@@ -67,7 +67,7 @@ spec:
       steps {
         echo 'Configure Edges...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'deploy-vmware-edges.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'deploy-vmware-edges.yml'
         }
       }
     }
@@ -75,7 +75,7 @@ spec:
       steps {
         echo 'Wait for Edges to sync...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'waitfor-sync.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'waitfor-sync.yml'
         }
       }
     }
@@ -83,18 +83,20 @@ spec:
       steps {
         echo 'Check SD-WAN...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', playbook: 'check-sdwan.yml'
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', playbook: 'check-sdwan.yml'
         }
       }
     }
   }
+/*
   post {
     always {
       echo 'Clean Up'
       container('ansible') {
-        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/jenkins', tags: 'control,edges', playbook: 'clean-vmware.yml'
+        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/cleur2020', tags: 'control,edges', playbook: 'clean-vmware.yml'
       }
       cleanWs()
     }
   }
+*/
 }

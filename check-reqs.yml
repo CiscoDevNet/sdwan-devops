@@ -1,0 +1,23 @@
+- name: Check playbook requirements
+  hosts: localhost
+  connection: network_cli
+  tags:
+    - network
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Check for the license file
+      stat:
+        path: "{{ sdwan_serial_file }}"
+      register: stat_result
+      delegate_to: localhost
+      run_once: yes
+
+    - assert:
+        that:
+          - stat_result.stat.exists
+          - vmanage_org != ""
+        msg: "'vmanage_org' must be defined and {{ sdwan_serial_file }} must exist.  Verify the requirements in README are met."
+      delegate_to: localhost
+      run_once: yes

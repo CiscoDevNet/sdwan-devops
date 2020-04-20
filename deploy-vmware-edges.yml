@@ -1,3 +1,5 @@
+- import_playbook: attach-template.yml passed=vmware_edges
+
 - name: Build vedge VMs with Terraform
   hosts: localhost
   connection: local
@@ -43,6 +45,7 @@
         variables_file: edges.tfvars
       tags: apply
 
+<<<<<<< HEAD
 - name: Attach template to device
   hosts: sdwan_edge:&vmware
   connection: local
@@ -128,27 +131,11 @@
           failed_when: "'Failed' in command_result.stdout"
           changed_when: true
           when: copy_results.changed
+=======
+- import_playbook: config-system.yml passed=vmware_edges
+>>>>>>> master
 
-      when: bootstrap_method == "netconf"
+- import_playbook: config-ca.yml passed=vmware_edges
 
-    - name: Configure UUID and OTP for vedge cloud
-      block:
-        - name: Get bootstrap info
-          vmanage_device_bootstrap:
-            host: "{{ vmanage_ip }}"
-            user: "{{ vmanage_user }}"
-            password: "{{ vmanage_pass }}"
-            uuid: "{{ sdwan_uuid }}"
-          register: result
-          retries: 10
-          delay: 10
-          until: result is not failed 
-          delegate_to: localhost
+- import_playbook: config-uuid-otp.yml passed=vmware_edges
 
-        - name: Activate vedge cloud with UUID and OTP
-          cli_command:
-            command: "request vedge-cloud activate chassis-number {{ sdwan_uuid }} token {{ result.bootstrap.otp }}"
-          connection: network_cli
-          register: command_results
-        
-      when: bootstrap_method == "netconf" and sdwan_model == "vedge-cloud"

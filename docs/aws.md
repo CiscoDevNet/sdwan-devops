@@ -1,23 +1,13 @@
 # Building the Cisco SDWAN control plane in AWS
 
 To build control plane:
-For bash:
 ```
 $ ./play.sh build-aws.yml -e key_name=STEVENCA-M-C6HA -e env=customer2
 ```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 build-aws.yml -e key_name=STEVENCA-M-C6HA -e env=customer2
-```
 
 To clean the control plane:
-Using bash:
 ```
 $ ./play.sh clean-aws.yml -e key_name=STEVENCA-M-C6HA -e env=customer2
-```
-Using powershell:
-```powershell
-> powershell.exe ./play.ps1 clean-aws.yml -e key_name=STEVENCA-M-C6HA -e env=customer2
 ```
 
 Options are specifed as extra vars (e.g. -e <var>=<value>).  The options are:

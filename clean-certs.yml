@@ -1,0 +1,16 @@
+- hosts: sdwan_control
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-viptela
+  tags:
+    - certs
+  tasks:
+
+    - name: Delete Certificates
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ sdwan_cert_dir }}/{{ inventory_hostname }}.csr"
+        - "{{ sdwan_cert_dir }}/{{ inventory_hostname }}.crt"

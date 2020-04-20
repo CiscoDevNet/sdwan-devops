@@ -49,35 +49,3 @@
         workspace: control
         variables_file: control.tfvars
       tags: apply
-
-#        variables_file: chris.yaml
-#        variables:
-#          vmanage_device_list: 
-#            - name: cpn-rtp-vmanage1
-#              networks:
-#                - cpn-rtp-colab1
-#                - vpn512
-#              ipv4_address: "192.133.179.11/24"
-#              ipv4_gateway: "192.133.179.1"
-#          vsmart_device_list:
-#            - name: cpn-rtp-vsmart1
-#              networks:
-#                - cpn-rtp-colab1
-#                - vpn512
-#              ipv4_address: "192.133.179.12/24"
-#              ipv4_gateway: "192.133.179.1"
-#          vbond_device_list:
-#            - name: cpn-rtp-bond1
-#              networks:
-#                - vpn512
-#                - cpn-rtp-colab1
-#              ipv4_address: "192.133.179.14/24"
-#              ipv4_gateway: "192.133.179.1"
-#          vedge_device_list:
-#            - name: cpn-rtp-vedge1
-#              networks:
-#                - vpn512
-#                - cpn-rtp-colab1
-#                - site10
-#              ipv4_address: "192.133.179.16/24"
-#              ipv4_gateway: "192.133.179.1"

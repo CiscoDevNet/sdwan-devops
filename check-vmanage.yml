@@ -1,0 +1,31 @@
+- name: Verify that vManage is fully operational
+  hosts: localhost
+  connection: local
+  tags:
+    - check_control
+    - check_all
+    - control
+    - CA
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Waiting for vManage API to start
+      uri:
+        url: "https://{{ vmanage_ip }}/dataservice/system/device/controllers"
+        method: POST
+        body:
+          j_username: "{{ vmanage_user }}"
+          j_password: "{{ vmanage_pass }}"
+        body_format: form-urlencoded
+        return_content: yes
+        validate_certs: no
+      no_log: true
+      register: uri_results
+      delegate_to: localhost
+      failed_when: false
+      until: uri_results.msg.find("OK") != -1
+      retries: 60
+      delay: 10

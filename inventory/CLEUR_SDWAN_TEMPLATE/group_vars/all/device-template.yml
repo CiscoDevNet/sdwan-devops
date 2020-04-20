@@ -1,7 +1,7 @@
 ---
 DeviceTemplate:
-  - templateName: 'T1'
-    templateDescription: 'T1'
+  - templateName: 'CLEUR_Device_T'
+    templateDescription: 'CLEUR_Device_T'
     deviceType: 'vedge-cloud'
     aaa: 'Factory_Default_AAA_Template'
     bfd-vedge: CLEUR_BFD

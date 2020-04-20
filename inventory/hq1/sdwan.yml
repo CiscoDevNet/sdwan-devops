@@ -17,6 +17,7 @@ all:
               vars:
                 sdwan_personality: vmanage
                 sdwan_device_model: vmanage
+                mgmt_interface: 'ansible_host'
                 virl_image_definition: "viptela-manage-{{ viptela_version }}"
                 virl_config_template: "sdwan/user-data.j2"
               hosts:
