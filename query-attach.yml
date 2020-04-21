@@ -3,8 +3,6 @@
   any_errors_fatal: false
   connection: local
   gather_facts: no
-  roles:
-    - ansible-viptela
   tasks:
     - name: Query Attach Template
       vmanage_device_attachment:

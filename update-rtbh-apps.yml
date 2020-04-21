@@ -1,8 +1,6 @@
 - name: Update RTBH
   hosts: localhost
   connection: local
-  roles:
-    - ansible-viptela
   gather_facts: no
   tasks:
     - set_fact:

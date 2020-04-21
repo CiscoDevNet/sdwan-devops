@@ -1,9 +1,6 @@
 - name: Import vManage Policy Lists
   hosts: localhost
   connection: local
-  roles:
-    - ansible-viptela
-
   tags:
     - policy
   vars:

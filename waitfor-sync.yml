@@ -1,8 +1,6 @@
 - name: Wait for vEdge Sync
   hosts: vmanage_hosts
   connection: local
-  roles:
-    - ansible-viptela
   gather_facts: no
   tasks:
     - set_fact:

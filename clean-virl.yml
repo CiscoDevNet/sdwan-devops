@@ -3,7 +3,6 @@
   gather_facts: no
   roles:
     - ansible-virl
-    - ansible-viptela
   tags:
     - always
   tasks:
@@ -20,7 +19,6 @@
   gather_facts: no
   roles:
     - ansible-virl
-    - ansible-viptela
   tags:
     - vmanage
   tasks:
