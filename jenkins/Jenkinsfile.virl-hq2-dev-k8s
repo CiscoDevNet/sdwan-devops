@@ -8,6 +8,7 @@ spec:
   containers:
   - name: ansible
     image: ciscops/ansible-sdwan:dev
+    imagePullPolicy: always
     command:
     - sleep
     args:
