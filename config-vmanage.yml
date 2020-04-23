@@ -2,7 +2,8 @@
   hosts: localhost
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansibe_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
     vbond_controller: "{{ groups.vbond_hosts[0] }}"
   tags:
     - control
