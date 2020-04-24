@@ -25,6 +25,6 @@ runcmd:
  - sudo ip address add {{ host_ip }} dev {{ host_interface | default('eth0') }}
  - sudo ip link set dev {{ host_interface | default('eth0') }} up
 {%   if host_gateway is defined %}
- - sudo ip route add 0.0.0.0/0 via {{ host_gateway }}
+ - sudo ip route add default via {{ host_gateway }}
 {%   endif %}
 {% endif %}
