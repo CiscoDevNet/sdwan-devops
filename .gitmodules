@@ -6,4 +6,4 @@
 	url = https://github.com/CiscoDevNet/terraform-sdwan.git
 [submodule "roles/ansible-viptela"]
 	path = roles/ansible-viptela
-	url = git@github.com:CiscoDevNet/ansible-viptela.git
+	url = https://github.com/CiscoDevNet/ansible-viptela.git
