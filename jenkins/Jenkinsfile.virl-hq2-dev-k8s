@@ -19,13 +19,13 @@ spec:
   }
   options {
     disableConcurrentBuilds()
-    lock resource: 'jenkins_dev_sdwan'
+    lock resource: 'jenkins_sdwan_dev'
   }
   environment {
     VIRL_USERNAME = credentials('cpn-virl-dev-username')
     VIRL_PASSWORD = credentials('cpn-virl-dev-password')
     VIRL_HOST = credentials('cpn-virl-dev-host')
-    VIRL_LAB = "jenkins_dev_sdwan"
+    VIRL_LAB = "jenkins_sdwan_hq2_dev"
     VMANAGE_ORG = credentials('viptela-org')
     HOME = "${WORKSPACE}"
     DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
