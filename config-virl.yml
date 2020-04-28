@@ -27,6 +27,9 @@
       retries: 12
       delay: 10
 
+    - name: Refresh Inventory
+      meta: refresh_inventory   
+
     - set_fact:
         vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"
 
