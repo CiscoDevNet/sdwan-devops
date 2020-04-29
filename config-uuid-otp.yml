@@ -7,7 +7,7 @@
   connection: network_cli
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansibe_host') }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
     ansible_network_os: ios
   serial: 1
