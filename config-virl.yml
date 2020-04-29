@@ -3,8 +3,6 @@
 - name: Wait for vmanage mgmt interface to be available
   hosts: localhost
   connection: local
-  roles:
-    - ansible-virl
   tags:
     - check_control
     - check_all

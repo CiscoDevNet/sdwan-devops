@@ -1,8 +1,6 @@
 - name: Build the topology
   hosts: localhost
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - virl
     - network
@@ -44,8 +42,6 @@
   hosts: external_connector:unmanaged_switch
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - start
     - network
@@ -66,8 +62,6 @@
   tags:
     - start
     - network
-  roles:
-    - ansible-virl
   tasks:
     - name: Generating day0 config
       set_fact:
@@ -135,8 +129,6 @@
   hosts: system:&virl_hosts
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - start
     - network
@@ -164,8 +156,6 @@
   tags:
     - start_control
     - control
-  roles:
-    - ansible-virl
   tasks:
     - name: Generating day0 config
       set_fact:

@@ -38,8 +38,6 @@
   tags:
     - start
     - edge
-  roles:
-    - ansible-virl
   tasks:
     - name: Start Node
       virl_node:
@@ -59,8 +57,6 @@
   tags:
     - start
     - edge
-  roles:
-    - ansible-virl
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"    

@@ -3,7 +3,7 @@
   connection: local
   gather_facts: no
   roles:
-    - ansible-viptela
+    - sdwan-tests
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
