@@ -11,7 +11,7 @@
     state: present
   tasks:
     - include_role:
-        name: ansible-viptela
+        name: sdwan-tests
         tasks_from: ping-test
       vars:
         ping_dst_ip: "{{ item.dst_ip }}"
