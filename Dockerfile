@@ -1,7 +1,7 @@
 FROM alpine:3.11
 
 ARG build_date=unspecified
-ARG terraform_version=0.12.23
+ARG terraform_version=0.12.24
 ARG virl2_client_pkg=virl2_client-0.8.2+b4d055d25-py3-none-any.whl
 
 LABEL org.opencontainers.image.title="Cisco-SDWAN" \
