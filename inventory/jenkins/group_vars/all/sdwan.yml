@@ -1,5 +1,0 @@
-#sdwan_vbond: jenkins-vbond.colab.ciscops.net
-sdwan_vbond: 192.133.179.12
-sdwan_central_policy_name: central_policy
-dns_primary: 199.66.190.66
-dns_secondary: 199.66.188.66
