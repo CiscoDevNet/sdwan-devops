@@ -3,14 +3,7 @@
 /myCA
 viptela_api_cookie
 topo.virl
-<<<<<<< HEAD
 /licenses
 .virlrc
 /.virl
 set*.sh
-=======
-/licenses/serialFile.*
-.virlrc
-/.virl
-setenv*
->>>>>>> master
