@@ -1,0 +1,56 @@
+- name: Run terraform
+  hosts: localhost
+  connection: local
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - assert:
+        that:
+          - sdwan_type == "control" or sdwan_type == "edges"
+        msg: "sdwan_type must be set to either 'control' or 'edges'"
+
+    - name: Generate Terraform variables file
+      template:
+        src: "templates/terraform/{{ sdwan_type }}_tfvars.j2"
+        dest: "terraform-sdwan/vmware/{{ sdwan_type }}.tfvars"
+      tags:
+        - always
+      when: sdwan_type is defined
+
+    - name: Terraform plan
+      terraform:
+        project_path: 'terraform-sdwan/vmware'
+        state: planned
+        plan_file: "{{ sdwan_type }}.tfplan"
+        workspace: "{{ sdwan_type }}"
+        variables_file: "{{ sdwan_type }}.tfvars"
+        variables:
+          datacenter: "{{ datacenter }}"
+          cluster: "{{ cluster }}"
+          folder: "{{ folder }}-{{ sdwan_type }}"
+          resource_pool: "{{ resource_pool }}"
+          datastore: "{{ datastore }}"
+          iso_datastore: "{{ iso_datastore }}"
+          iso_path: "{{ iso_path }}"
+          vmanage_template: "{{ vmanage_template }}"
+          vbond_template: "{{ vbond_template }}"
+          vsmart_template: "{{ vsmart_template }}"
+          vedge_template: "{{ vedge_template }}"
+          cedge_template: "{{ cedge_template }}"
+        force_init: yes
+      tags: plan
+      when: sdwan_type is defined
+
+    - name: Terraform apply
+      terraform:
+        project_path: 'terraform-sdwan/vmware'
+        state: present
+        plan_file: "{{ sdwan_type }}.tfplan"
+        workspace: "{{ sdwan_type }}"
+        variables_file: "{{ sdwan_type }}.tfvars"
+      tags: apply
+      when: sdwan_type is defined
+  
+    - meta: refresh_inventory
+      tags: always
+        
