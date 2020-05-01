@@ -1,8 +1,0 @@
-#sdwan_vbond: jenkins-vbond.colab.ciscops.net
-sdwan_vbond: 192.133.179.22
-dns_primary: 199.66.190.66
-dns_secondary: 199.66.188.66
-serial_number_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
-viptela_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
-# Encrypt/Vault this in real life
-viptela_CA_passphrase: Cisc0123

@@ -1,6 +1,0 @@
-sdwan_system_ip: 1.1.1.1
-sdwan_transport_ip: 192.133.179.21
-vpn0_netmask: 24
-vpn0_gateway: 192.133.179.1
-# ansible_host: "{{ sdwan_transport_ip }}"
-sdwan_site_id: 1

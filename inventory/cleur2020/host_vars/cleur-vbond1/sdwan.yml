@@ -1,4 +1,0 @@
-sdwan_system_ip: 1.1.2.1
-sdwan_transport_ip: 192.133.179.22
-ansible_host: "{{ sdwan_transport_ip }}"
-sdwan_site_id: 2
