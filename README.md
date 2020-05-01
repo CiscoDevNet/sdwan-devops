@@ -5,6 +5,8 @@ This repo contains a set of tools to automate workflows and build CI/CD pipeline
 
 > Note: The tools in this repo only work from a Unix environment with Docker (e.g. Linux, MacOS, etc.) due to issues with Ansible and file permissions mapping between Windows and the Linux container used in `play.sh`.  WSL2 may fix this issue and we will revisit when WSL2 is released.
 
+> Note: This repo is only tested against Cisco Modeling Labs (CML) and VIRL version 2.x.  For now, that is the only tested/validated version.
+
 ## Installation
 
 ## Cloning the repo
