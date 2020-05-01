@@ -10,9 +10,9 @@ all:
       children:
         sdwan_control:
           vars:            
-            vpn0_portgroup: cpn-rtp-colab1
+            vpn0_portgroup: cpn-rtp-colab4
             vpn0_gateway: 192.133.184.1
-            vpn512_portgroup: cpn-rtp-colab1
+            vpn512_portgroup: cpn-rtp-colab4
           children:
             vmanage_hosts:
               vars:
@@ -57,6 +57,10 @@ all:
           vars:
             sdwan_personality: vedge
             login_banner: "Hello!"
+            vpn0_portgroup: cpn-rtp-colab4
+            vpn0_gateway: 192.133.184.1
+            vpn512_portgroup: cpn-rtp-colab4
+            servicevpn_portgroup: cpn-rtp-colab4
           hosts:
             hq-cedge1:
               virl_image_definition: "iosxe-sdwan-{{ iosxe_sdwan_version }}"

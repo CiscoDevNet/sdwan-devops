@@ -1,13 +1,17 @@
 - import_playbook: clean-certs.yml
-  tags: [control, never]
+  tags: [control]
 
-- name: Delete Control Planw VMs
+- import_playbook: remove-device.yml 
+  vars: 
+    passed: sdwan_edge
+  tags: [edges]
+
+- name: Delete Control Plane VMs
   hosts: localhost
   connection: local
   tags:
     - terraform
     - control
-    - never
   any_errors_fatal: true
   gather_facts: no
   tasks:
@@ -41,7 +45,6 @@
   tags:
     - terraform
     - edges
-    - never
   any_errors_fatal: true
   gather_facts: no
   tasks:

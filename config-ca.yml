@@ -1,5 +1,5 @@
 - name: Copy CA to controllers
-  hosts: "{{ passed | default('sdwan') }}"  
+  hosts: "{{ passed }}"  
   tags:
     - control
     - debug
