@@ -1284,7 +1284,7 @@ vmanage_feature_templates:
         shutdown:
             vipObjectType: object
             vipType: constant
-            vipValue: 'false'
+            vipValue: 'true'
             vipVariableName: vpn_if_shutdown
         speed:
             vipObjectType: object
