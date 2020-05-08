@@ -2,22 +2,10 @@
   vars:
     passed: sdwan_edge
 
+- import_playbook: get-bootstrap.yml
+  vars:
+    passed: sdwan_edge
+
 - import_playbook: terraform-apply.yml
   vars:
     sdwan_type: edges
-
-- import_playbook: config-system.yml
-  vars:
-    passed: "{{ groups['sdwan_edge'] | map('extract', hostvars) | list | json_query('[?sdwan_model==`vedge-cloud`]') | map(attribute='inventory_hostname') | list }}"
-
-- import_playbook: config-ca.yml
-  vars: 
-    passed: "{{ groups['sdwan_edge'] | map('extract', hostvars) | list | json_query('[?sdwan_model==`vedge-cloud`]') | map(attribute='inventory_hostname') | list }}"
-
-- import_playbook: config-uuid-otp.yml
-  vars:
-    passed: "{{ groups['sdwan_edge'] | map('extract', hostvars) | list | json_query('[?sdwan_model==`vedge-cloud`]') | map(attribute='inventory_hostname') | list }}"
-
-- import_playbook: bootstrap-cedge.yml
-  vars:
-    passed: "{{ groups['sdwan_edge'] | map('extract', hostvars) | list | json_query('[?sdwan_model==`vedge-CSR-1000v`]') | map(attribute='inventory_hostname') | list }}"

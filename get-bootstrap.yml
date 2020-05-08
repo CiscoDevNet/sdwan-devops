@@ -1,0 +1,31 @@
+- name: Get bootstrap 
+  hosts: "{{ passed  }}"  
+  gather_facts: no
+  tags:
+    - bootstrap
+    - edges
+  connection: local
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+    ansible_network_os: ios
+  serial: 1
+  # This is a workaround for a bug in vmanage.  When multiple requests
+  # for boostrap are made to vmanage at the same time, it gets corrupted
+  tasks:
+    - name: Get day0 config
+      vmanage_device_bootstrap:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        uuid: "{{ sdwan_uuid }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+      delegate_to: localhost
+
+    - set_fact:
+        day0_config: "{{ result.bootstrap.bootstrapConfig }}"
+      when: result.bootstrap.bootstrapConfig is defined
