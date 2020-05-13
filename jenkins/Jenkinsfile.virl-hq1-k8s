@@ -7,7 +7,7 @@ kind: Pod
 spec:
   containers:
   - name: ansible
-    image: jasonking/ansible-sdwan
+    image: ciscops/ansible-sdwan
     command:
     - sleep
     args:
@@ -18,13 +18,13 @@ spec:
   }
   options {
     disableConcurrentBuilds()
-    lock resource: 'jenkins_sdwan'
+    lock resource: 'jenkins_sdwan_hq1'
   }
   environment {
     VIRL_USERNAME = credentials('cpn-virl-username')
     VIRL_PASSWORD = credentials('cpn-virl-password')
     VIRL_HOST = credentials('cpn-virl-host')
-    VIRL_LAB = "jenkins_sdwan"
+    VIRL_LAB = "jenkins_sdwan_hq1"
     VMANAGE_ORG = credentials('viptela-org')
     HOME = "${WORKSPACE}"
     DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
@@ -89,7 +89,6 @@ spec:
       }
     }
   }
-/*
   post {
     always {
       echo 'Cleaning up...'
@@ -99,6 +98,5 @@ spec:
       cleanWs()
     }
   }
-*/
 }
 
