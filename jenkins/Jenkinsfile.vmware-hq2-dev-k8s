@@ -106,14 +106,6 @@ spec:
         }
       }
     }
-    stage('Update Terraform state') {
-      steps {
-        echo 'Update terraform state...'
-        container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops-dev -e sdwan_type=edges', inventory: 'inventory/hq2', playbook: 'terraform-apply.yml'
-        }
-      }
-    }
     stage('Run Tests') {
       steps {
         echo 'Check SD-WAN...'
