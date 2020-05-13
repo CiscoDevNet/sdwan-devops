@@ -24,7 +24,7 @@ all:
               hosts:
                 vmanage1:
                   sdwan_system_ip: 1.1.1.1
-                  vpn0_ip: 192.133.178.17/22
+                  vpn0_ip: 192.133.178.17/24
                   sdwan_site_id: 1
             vbond_hosts:
               vars:
@@ -35,7 +35,7 @@ all:
               hosts:
                 vbond1:
                   sdwan_system_ip: 1.1.1.2
-                  vpn0_ip: 192.133.178.18/22
+                  vpn0_ip: 192.133.178.18/24
                   sdwan_site_id: 1
             vsmart_hosts:
               vars:
@@ -46,7 +46,7 @@ all:
               hosts:
                 vsmart1:
                   sdwan_system_ip: 1.1.1.3
-                  vpn0_ip: 192.133.178.19/22
+                  vpn0_ip: 192.133.178.19/24
                   sdwan_site_id: 1
                   sdwan_template:
                     name: 'vsmart'
