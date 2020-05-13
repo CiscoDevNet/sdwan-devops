@@ -94,7 +94,7 @@ spec:
       steps {
         echo 'Configure Edges...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops-dev', inventory: 'inventory/hq2', playbook: 'deploy-vmware-edges.yml'
+          ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops-dev', inventory: 'inventory/hq2', playbook: 'deploy-vmware.yml'
         }
       }
     }
