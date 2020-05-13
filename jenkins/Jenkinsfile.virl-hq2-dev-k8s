@@ -18,7 +18,7 @@ spec:
   }
   options {
     disableConcurrentBuilds()
-    lock resource: 'jenkins_sdwan_dev'
+    lock resource: 'jenkins_sdwan_hq2'
   }
   environment {
     VIRL_USERNAME = credentials('cpn-virl-dev-username')

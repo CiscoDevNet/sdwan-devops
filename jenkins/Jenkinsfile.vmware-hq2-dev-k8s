@@ -45,7 +45,7 @@ spec:
   }
   options {
     disableConcurrentBuilds()
-    lock resource: 'jenkins_sdwan_vmware'
+    lock resource: 'jenkins_sdwan_hq2'
   }
   environment {
     TF_VAR_vsphere_user = credentials('cpn-rtp-vc1-username')
