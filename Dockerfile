@@ -11,7 +11,6 @@ LABEL org.opencontainers.image.title="Cisco-SDWAN" \
       org.opencontainers.image.url="https://github.com/CiscoDevNet/sdwan-devops"
 
 COPY requirements.txt /tmp/requirements.txt
-COPY files/${virl2_client_pkg} /tmp/${virl2_client_pkg}
 
 RUN echo "===> Installing GCC <===" && \
     apk add --no-cache gcc musl-dev make && \
