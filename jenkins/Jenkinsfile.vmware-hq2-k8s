@@ -60,7 +60,7 @@ spec:
       steps {
         echo 'Running clean-vmware.yml...'
         container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops', inventory: 'inventory/hq2', tags: 'control,edges', playbook: 'clean-vmware.yml'
+          ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops', inventory: 'inventory/hq2', tags: 'terraform,control', playbook: 'clean-vmware.yml'
         }      
       }          
     }
@@ -119,7 +119,7 @@ spec:
     always {
       echo 'Clean Up'
       container('ansible') {
-        ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops', inventory: 'inventory/hq2', tags: 'control,edges', playbook: 'clean-vmware.yml'
+        ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops', inventory: 'inventory/hq2', tags: 'terraform,control', playbook: 'clean-vmware.yml'
       }
       cleanWs()
     }
