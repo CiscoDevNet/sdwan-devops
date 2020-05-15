@@ -4,13 +4,12 @@
   tags:
     - bootstrap
     - edges
-  roles:
-    - ansible-viptela
   connection: network_cli
   vars:
-    ansible_network_os: ios
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+    ansible_network_os: ios
   serial: 1
   # This is a workaround for a bug in vmanage.  When multiple requests
   # for boostrap are made to vmanage at the same time, it gets corrupted

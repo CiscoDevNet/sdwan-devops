@@ -1,22 +1,16 @@
 - name: Configure vmanage
   hosts: localhost
-  roles:
-    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+    vbond_controller: "{{ groups.vbond_hosts[0] }}"
   tags:
     - control
     - vmanage
   any_errors_fatal: true
   gather_facts: no
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-
-    - set_fact:
-        vbond_controller: "{{ groups.vbond_hosts[0] }}"
-
     - name: vManage Settings
       vmanage_settings:
         host: "{{ vmanage_ip }}"
@@ -38,7 +32,7 @@
         device_password: admin
         name: "{{ item }}"
         personality: "{{ hostvars[item].sdwan_personality }}"
-        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ipaddr('address')}}"
       loop: "{{ groups.vbond_hosts + groups.vsmart_hosts }}"
       register: result
       retries: 10
@@ -63,7 +57,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         name: "{{ item }}"
-        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ipaddr('address')}}"
         state: csr
       loop: "{{ groups.sdwan_control }}"
       register: control_devices
@@ -95,7 +89,7 @@
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
         name: "{{ item }}"
-        transport_ip: "{{ hostvars[item].sdwan_transport_ip }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ipaddr('address')}}"
         cert: "{{lookup('file', '{{ sdwan_cert_dir }}/{{ item }}.crt')}}"
       loop: "{{ groups.sdwan_control }}"
       register: result

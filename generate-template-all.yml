@@ -1,10 +1,27 @@
 - name: Generate all the feature templates
-  hosts: all
+  hosts: localhost
   connection: local
   roles:
     - ansible-viptela
   gather_facts: no
   tasks:
+#    - set_fact:
+#        vmanage_first: "{{ groups.vmanage_hosts | first }}"
+#      tags: always
+
+#    - set_fact:
+#        vmanage_host: "{{ hostvars[vmanage_first].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+#      tags: always
+
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+    
+    - set_fact:
+        vmanage_password: "{{ vmanage_pass }}"
+        
     - assert:
         that:
           - vmanage_host is defined and vmanage_host

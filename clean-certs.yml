@@ -1,8 +1,6 @@
 - hosts: sdwan_control
   connection: local
   gather_facts: no
-  roles:
-    - ansible-viptela
   tags:
     - certs
   tasks:

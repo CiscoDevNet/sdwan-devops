@@ -23,7 +23,7 @@ vinitparam:
  - format-partition : 1
 {% endif %}{# sdwan_personality == 'vmanage' #}
 {% if sdwan_personality == "vbond" %}
- - vbond : {{ sdwan_transport_ip }}
+ - vbond : {{ vpn0_ip | ipaddr('address') }}
 {% elif sdwan_vbond is defined %}
  - vbond : {{ sdwan_vbond }}
 {% endif %}{# sdwan_vbond is defined #}   
@@ -59,7 +59,7 @@ system
  organization-name       "{{ vmanage_org }}"
 {% endif %}{# sdwan_org is defined #}
 {% if sdwan_personality == "vbond" %}
-   vbond                   {{ sdwan_transport_ip }} local
+   vbond                   {{ vpn0_ip | ipaddr('address') }} local
 {% elif sdwan_vbond is defined %}
    vbond                   {{ sdwan_vbond }}
 {% endif %}{# sdwan_vbond is defined #}   
@@ -95,16 +95,17 @@ system
  !
 !
 
-{% for vpn in vpn_instances|default([]) %}
+{% if vpn_instances is defined %}{# if vpn_instances is defined, use that #}
+{%  for vpn in vpn_instances %}
 vpn {{ vpn.vpn_id }}
-{%  for interface in vpn.interfaces %}
+{%   for interface in vpn.interfaces %}
  interface {{ interface.if_name }}
-{%   if interface.ip.address == 'dhcp' %}
+{%    if interface.ip.address == 'dhcp' %}
   ip dhcp-client
-{%   else %}
+{%    else %}
   ip address {{ interface.ip.address }}
-{%   endif %}{# interface.ip.address == 'dhcp' #}
-{%   if interface.tunnel_interface is defined %}
+{%    endif %}{# interface.ip.address == 'dhcp' #}
+{%    if interface.tunnel_interface is defined %}
   tunnel-interface
    allow-service dhcp
    allow-service dns
@@ -114,17 +115,48 @@ vpn {{ vpn.vpn_id }}
    allow-service ntp
    allow-service stun
    allow-service https
-{%   endif %}{# interface.tunnel_interface is defiend #}
-{%   if interface.enabled is sameas true %}
+{%    endif %}{# interface.tunnel_interface is defiend #}
+{%    if interface.enabled is sameas true %}
   no shutdown
-{%   else %}
+{%    else %}
   shutdown
-{%   endif %}{# interface.enabled is sameas true  #}
-{%  endfor %}{# for interface #}
-{%  for route in vpn.routes|default([]) %}
+{%    endif %}{# interface.enabled is sameas true  #}
+{%   endfor %}{# for interface #}
+{%   for route in vpn.routes|default([]) %}
   ip route {{ route.prefix }} {{ route.next_hop.address }}
-{%  endfor %}{# for routes #}
-{% endfor %}{# for vpn #}
+{%   endfor %}{# for routes #}
+{%  endfor %}{# for vpn #}
+{%  elif vpn0_ip is defined %}
+vpn 0
+ interface eth1
+  ip address {{ vpn0_ip }}
+  tunnel-interface
+   allow-service dhcp
+   allow-service dns
+   allow-service icmp
+   allow-service sshd
+   allow-service netconf
+   allow-service ntp
+   allow-service stun
+   allow-service https
+  no shutdown
+{%  if vpn0_gateway is defined %}
+  ip route 0.0.0.0/0 {{ vpn0_gateway }}
+{%  endif %}{# if vpn0_gateway is defined #}
+{% else %}
+vpn 0
+ interface eth1
+  ip dhcp-client
+  tunnel-interface
+   allow-service dhcp
+   allow-service dns
+   allow-service icmp
+   allow-service sshd
+   allow-service netconf
+   allow-service ntp
+   allow-service stun
+   allow-service https
+{% endif %}{# vpn_instances is defined, etc #}
 !
 vpn 512
  interface eth0

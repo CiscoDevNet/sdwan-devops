@@ -1,16 +1,12 @@
 - name: Update RTBH
   hosts: localhost
   connection: local
-  roles:
-    - ansible-viptela
   gather_facts: no
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"  
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-
     - name: Update RTBH
       vmanage_policy_list:
         user: "{{ ansible_user }}"

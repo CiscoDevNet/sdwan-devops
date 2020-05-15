@@ -7,18 +7,14 @@
   tags:
     - start
     - edge
-  roles:
-    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   serial: 1
   # This is a workaround for a bug in vmanage.  When multiple requests
   # for boostrap are made to vmanage at the same time, it gets corrupted
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-
     - name: Get bootstrap info
       vmanage_device_bootstrap:
         host: "{{ vmanage_ip }}"
@@ -42,8 +38,6 @@
   tags:
     - start
     - edge
-  roles:
-    - ansible-virl
   tasks:
     - name: Start Node
       virl_node:
@@ -55,3 +49,26 @@
         state: started
         image_definition: "{{ virl_image_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
+
+- name: Push Certs to Controllers
+  hosts: sdwan_edge:&virl_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - edge
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].vpn0_ip | ipaddr('address')) }}"    
+  tasks:
+    - name: Push Certs to Controllers
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        state: push
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+      run_once: yes

@@ -1,23 +1,14 @@
 - name: Import vManage Policy Lists
   hosts: localhost
   connection: local
-  roles:
-    - ansible-viptela
+  tags:
+    - policy
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-    # file: vmanage_policy.yml
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   gather_facts: no
   tasks:
-    # - name: Reading file {{ file }}
-    #   tags:
-    #     - policy_lists
-    #     - policy_definitions
-    #     - central_policy
-    #   include_vars:
-    #     file: "{{ file }}"
-    #     name: vmanage_policy
-
     - name: Import policy lists
       tags:
         - policy_lists
@@ -28,9 +19,6 @@
         type: all
         state: present
         aggregate: "{{ vmanage_policy_lists }}"
-      # loop: "{{ lookup('dict', vmanage_policy_lists) }}"
-      # when: item.value
-      register: policy_list_facts
 
     - name: Import policy definitions
       tags:
@@ -42,9 +30,6 @@
         type: data
         state: present
         aggregate: "{{ vmanage_policy_definitions }}"
-      # loop: "{{ lookup('dict', vmanage_policy_definitions) }}"
-      # when: item.value
-      register: policy_definition_facts
 
     - name: Import central policies
       tags:

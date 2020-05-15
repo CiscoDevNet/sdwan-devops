@@ -1,9 +1,6 @@
 - hosts: sdwan
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
-    - ansible-viptela
   tags:
     - always
   tasks:
@@ -12,15 +9,12 @@
         path: "{{ item }}"
         state: absent
       loop:
-        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.csr"
-        - "{{ viptela_cert_dir }}/{{ inventory_hostname }}.crt"
+        - "{{ sdwan_cert_dir }}/{{ inventory_hostname }}.csr"
+        - "{{ sdwan_cert_dir }}/{{ inventory_hostname }}.crt"
 
 - hosts: sdwan
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
-    - ansible-viptela
   tags:
     - vmanage
   tasks:
@@ -52,8 +46,6 @@
 - hosts: virl_hosts
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - always
   tasks:
@@ -83,8 +75,6 @@
 - hosts: localhost
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - never
     - delete

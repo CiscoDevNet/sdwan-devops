@@ -9,10 +9,11 @@ sdwan_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
 # Encrypt/Vault this in real life
 sdwan_CA_passphrase: Cisc0123
 sdwan_CA_cert: "{{ sdwan_cert_dir }}/myCA.pem"
-# viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('18.4.3', true) }}"
+#viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('18.4.3', true) }}"
 viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('19.2.1', true) }}"
-# iosxe_sdwan_version: "{{ lookup('env','IOSXE_SDWAN_VERSION') | default('16.10.2y', true) }}"
+#iosxe_sdwan_version: "{{ lookup('env','IOSXE_SDWAN_VERSION') | default('16.10.2y', true) }}"
 iosxe_sdwan_version: "{{ lookup('env','IOSXE_SDWAN_VERSION') | default('16.12.2r', true) }}"
+
 
 #Terraform VMWare
 #vsphere_user: ""
@@ -20,11 +21,13 @@ iosxe_sdwan_version: "{{ lookup('env','IOSXE_SDWAN_VERSION') | default('16.12.2r
 #vsphere_server: ""
 datacenter: "RTP"
 cluster: "cpn-rtp-hx1"
+folder: "sdwan-devops"
 resource_pool: "colab"
-datastore: "colab1"
-iso_datastore: "colab1"
+datastore: "prod1"
+iso_datastore: "prod1"
 iso_path: "cloud-init"
 vmanage_template: "viptela-vmanage-19.2.1-genericx86-64"
 vbond_template: "viptela-edge-19.2.1-genericx86-64"
 vsmart_template: "viptela-smart-19.2.1-genericx86-64"
 vedge_template: "viptela-edge-19.2.1-genericx86-64"
+cedge_template: "csr1000v-ucmk9.16.12.02r"

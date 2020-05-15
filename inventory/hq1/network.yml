@@ -1,0 +1,24 @@
+all:
+  vars:
+    ansible_user: admin
+    ansible_password: admin
+    ansible_network_os: ios
+    netconf_template_os: ios
+  children:
+    network:
+      children:
+        internet_routers:
+          hosts:
+            internet:
+            sp1-rtr1:
+            hq-rtr1:
+        router:
+          hosts:
+            internet:
+            sp1-rtr1:
+            hq-rtr1:
+            hq-dc-rtr1:
+          children:
+            colo_routers:
+              hosts:
+                hq-rtr1:

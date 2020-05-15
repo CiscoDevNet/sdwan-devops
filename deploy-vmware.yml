@@ -1,0 +1,11 @@
+- import_playbook: attach-template.yml
+  vars:
+    passed: sdwan_edge
+
+- import_playbook: get-bootstrap.yml
+  vars:
+    passed: sdwan_edge
+
+- import_playbook: terraform-apply.yml
+  vars:
+    sdwan_type: edges

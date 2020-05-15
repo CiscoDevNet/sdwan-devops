@@ -3,10 +3,10 @@ password: {{ ansible_password }}
 chpasswd: { expire: False }
 ssh_pwauth: True
 hostname: {{ inventory_hostname }}
-runcmd:
 {% if interfaces is defined %}
 {%   for key, value in interfaces.items() %}
 {%     if value.enabled is defined and value.enabled is sameas true and value.ip is defined and value.ip.primary is defined %}
+runcmd:
  - sudo ip address add {{ value.ip.primary }} dev {{ key }}
  - sudo ip link set dev {{ key }} up
 {%     endif %}
@@ -20,4 +20,11 @@ runcmd:
 {%    endfor %}
 {%   endfor %}
 {%  endfor %}
+{% elif host_ip is defined %}
+runcmd:
+ - sudo ip address add {{ host_ip }} dev {{ host_interface | default('eth0') }}
+ - sudo ip link set dev {{ host_interface | default('eth0') }} up
+{%   if host_gateway is defined %}
+ - sudo ip route add default via {{ host_gateway }}
+{%   endif %}
 {% endif %}

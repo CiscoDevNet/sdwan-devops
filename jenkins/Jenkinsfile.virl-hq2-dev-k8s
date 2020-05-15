@@ -1,0 +1,102 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: ansible
+    image: ciscops/ansible-sdwan-dev
+    command:
+    - sleep
+    args:
+    - 99d
+    tty: true
+"""
+    }
+  }
+  options {
+    disableConcurrentBuilds()
+    lock resource: 'jenkins_sdwan_hq2'
+  }
+  environment {
+    VIRL_USERNAME = credentials('cpn-virl-dev-username')
+    VIRL_PASSWORD = credentials('cpn-virl-dev-password')
+    VIRL_HOST = credentials('cpn-virl-dev-host')
+    VIRL_LAB = "jenkins_sdwan_hq2_dev"
+    VMANAGE_ORG = credentials('viptela-org')
+    HOME = "${WORKSPACE}"
+    DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
+  }
+  stages {
+    stage('Clean Previous Deployment') {
+      steps {
+        echo 'Running clean-virl.yml...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq2', playbook: 'clean-virl.yml'
+        }      
+      }          
+    }
+    stage('Build Certificate Authority') {
+      steps {
+        echo 'Running build-ca.yml...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, playbook: 'build-ca.yml'
+        }
+      }
+    }        
+    stage('Build Control Plane on VIRL') {
+      steps {
+        echo 'Running build-virl.yml...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq2', playbook: 'build-virl.yml'
+        }
+      }
+    }
+    stage('Configure Control Plane') {
+      steps {
+        echo 'Configure Control Plane...'
+        container('ansible') {
+          withCredentials([file(credentialsId: 'viptela-serial-file', variable: 'VIPTELA_SERIAL_FILE')]) {
+            ansiblePlaybook disableHostKeyChecking: true, extras:  '-e sdwan_serial_file=${VIPTELA_SERIAL_FILE}', inventory: 'inventory/hq2', playbook: 'config-virl.yml'
+          }
+        }
+      }
+    }
+    stage('Configure Edges') {
+      steps {
+        echo 'Configure Edges...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq2', playbook: 'deploy-virl.yml'
+        }
+      }
+    }
+    stage('Waiting for Edges') {
+      steps {
+        echo 'Wait for Edges to sync...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq2', playbook: 'waitfor-sync.yml'
+        }
+      }
+    }
+    stage('Running Tests') {
+      steps {
+        echo 'Check SD-WAN...'
+        container('ansible') {
+          ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq2', playbook: 'check-sdwan.yml'
+        }
+      }
+    }
+  }
+  post {
+    always {
+      echo 'Cleaning up...'
+      container('ansible') {
+        ansiblePlaybook disableHostKeyChecking: true, inventory: 'inventory/hq2', tags: 'delete', playbook: 'clean-virl.yml'
+      }
+      cleanWs()
+    }
+  }
+}
+

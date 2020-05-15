@@ -1,9 +1,0 @@
-sdwan_system_ip: 192.168.255.11
-sdwan_transport_ip: 10.0.0.11
-sdwan_site_id: 1
-sdwan_vbond: 10.0.0.11
-sdwan_personality: vbond
-sdwan_device_model: vbond
-sdwan_gps_location:
-    latitude: 37.411343
-    longitude: -121.938803

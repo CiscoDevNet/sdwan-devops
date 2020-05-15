@@ -6,15 +6,13 @@
     - check_all
     - control
     - CA
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   any_errors_fatal: true
   gather_facts: no
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-
     - name: Waiting for vManage API to start
       uri:
         url: "https://{{ vmanage_ip }}/dataservice/system/device/controllers"

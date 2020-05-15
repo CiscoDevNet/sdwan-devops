@@ -1,0 +1,60 @@
+- name: Bootstrap cedge nodes
+  hosts: "{{ passed }}"  
+  connection: local
+  gather_facts: no
+  serial: 1
+  # This is a workaround for a bug in vmanage.  When multiple requests
+  # for boostrap are made to vmanage at the same time, it gets corrupted
+  vars:
+    ansible_network_os: ios
+  tasks:
+    - set_fact:
+        vmanage_host: "{{ groups.vmanage_hosts | first }}"
+
+    - set_fact:
+        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
+
+    - set_fact:
+        bootstrap_config: "/tmp/{{ inventory_hostname }}.cfg"
+
+    - name: Get bootstrap info
+      vmanage_device_bootstrap:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        uuid: "{{ sdwan_uuid }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed 
+
+    - name: Generate day0 config
+      copy:
+        content: "{{ result.bootstrap.bootstrapConfig }}"
+        dest: "{{ bootstrap_config }}"
+      delegate_to: localhost
+      when: result.bootstrap.bootstrapConfig is defined
+    
+    - stat: 
+        path: "{{ bootstrap_config }}"
+      register: bootstrap_file
+
+    - name: Copy day0 config to edge
+      net_put:
+        src: "{{ bootstrap_config }}"
+        dest: ciscosdwan_cloud_init.cfg
+      connection: network_cli
+      register: copy_result
+      when: bootstrap_file.stat.exists == true
+
+    - name: Reset edge
+      cli_command:
+        command: "request platform software sdwan software reset"
+      register: command_result
+      connection: network_cli
+      when: bootstrap_file.stat.exists == true
+
+    - name: Cleanup day0 config
+      file:
+        path: "{{ bootstrap_config }}"
+        state: absent

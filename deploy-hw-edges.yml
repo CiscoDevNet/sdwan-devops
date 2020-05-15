@@ -5,16 +5,11 @@
   tags:
     - attach
     - edge
-  roles:
-    - ansible-virl
-    - ansible-viptela
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}" 
   tasks:
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
-
     - name: Attach template to device
       vmanage_device_attachment:
         host: "{{ vmanage_ip }}"
@@ -52,8 +47,6 @@
   tags:
     - bootstrap
     - edge
-  roles:
-    - ansible-viptela
   vars:
     ansible_network_os: ios
   serial: 1

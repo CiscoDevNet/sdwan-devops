@@ -1,0 +1,22 @@
+- name: Remove device from vManage
+  hosts: "{{ passed }}"
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Remove device from vManage
+      vmanage_device:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        uuid: "{{ viptela.uuid | default(omit) }}"
+        name: "{{ inventory_hostname }}"
+        personality: "{{ viptela.personality | default(omit) }}"
+        state: absent
+      delegate_to: localhost  
+      register: result
+      ignore_errors: yes
+      when: vmanage_ip is defined and vmanage_ip

@@ -1,14 +1,16 @@
 - name: Wait for vEdge Sync
-  hosts: "{{ groups.vmanage_hosts | first }}"
+  hosts: vmanage_hosts
   connection: local
-  roles:
-    - ansible-viptela
   gather_facts: no
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"  
   tasks:
     - name: Get device facts
       vmanage_device_facts:
         user: "{{ ansible_user }}"
-        host: "{{ ansible_host }}"
+        host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
       register: device_facts
       delegate_to: localhost

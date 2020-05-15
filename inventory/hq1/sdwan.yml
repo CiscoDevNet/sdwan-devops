@@ -1,53 +1,145 @@
 all:
   vars:
-    ansible_user: admin
-    ansible_password: admin
-    ansible_network_os: ios
-    netconf_template_os: ios
+    virl_lab_file: "{{ playbook_dir }}/files/hq1.yaml"
+    iosxe_sdwan_version: 16.12.2r
+    viptela_version: 19.2.1
+    sdwan_vbond: 10.0.0.11
   children:
-    network:
+    sdwan:
       children:
-        internet_routers:
-          hosts:
-            internet:
-            sp1-rtr1:
-            hq-rtr1:
-        router:
-          hosts:
-            internet:
-            sp1-rtr1:
-            hq-rtr1:
-            hq-dc-rtr1:
+        sdwan_control:
+          vars:            
+            vpn0_portgroup: cpn-rtp-colab1
+            vpn0_gateway: 10.0.0.1
+            vpn512_portgroup: cpn-rtp-colab1
           children:
-            colo_routers:
+            vmanage_hosts:
+              vars:
+                sdwan_personality: vmanage
+                sdwan_device_model: vmanage
+                mgmt_interface: 'ansible_host'
+                virl_image_definition: "viptela-manage-{{ viptela_version }}"
+                virl_config_template: "sdwan/user-data.j2"
               hosts:
-                hq-rtr1:
+                vmanage1:
+                  sdwan_system_ip: 1.1.1.1
+                  vpn0_ip: 10.0.0.10/24
+                  sdwan_site_id: 1
+            vbond_hosts:
+              vars:
+                sdwan_personality: vbond
+                sdwan_device_model: vbond
+                virl_image_definition: "viptela-bond-{{ viptela_version }}"
+                virl_config_template: "sdwan/vbond_user-data.j2"
+              hosts:
+                vbond1:
+                  sdwan_system_ip: 1.1.1.2
+                  vpn0_ip: 10.0.0.11/24
+                  sdwan_site_id: 1
+            vsmart_hosts:
+              vars:
+                sdwan_personality: vsmart
+                sdwan_device_model: vsmart
+                virl_image_definition: "viptela-smart-{{ viptela_version }}"
+                virl_config_template: "sdwan/user-data.j2"
+              hosts:
+                vsmart1:
+                  sdwan_system_ip: 1.1.1.3
+                  vpn0_ip: 10.0.0.12/24
+                  sdwan_site_id: 1
+                  sdwan_template:
+                    name: 'vsmart'
+                    variables:
+                      'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
+                      'vpn0_default_gateway': "{{ vpn0_gateway }}"
+        sdwan_edge:
+          vars:
+            sdwan_personality: vedge
+            login_banner: "Hello!"
+          hosts:
+            hq-cedge1:
+              virl_image_definition: "iosxe-sdwan-{{ iosxe_sdwan_version }}"
+              sdwan_system_ip: 1.1.1.4
+              sdwan_site_id: 1
+              sdwan_model: 'vedge-CSR-1000v'
+              sdwan_uuid: 'CSR-82DEC3C6-3A28-B866-6F4A-40BEA274CA00'
+              sdwan_template:
+                name: 'hq-csr1000v'
+                variables:
+                  'vpn512_interface': GigabitEthernet1
+                  'vpn0_internet_ipv4_address': 10.0.0.13/24
+                  'vpn0_default_gateway': 10.0.0.1
+                  'vpn0_interface': GigabitEthernet2
+                  'vpn1_ipv4_address': 10.0.255.6/30
+                  'vpn1_interface': GigabitEthernet3
+                  'vpn1_ospf_interface': GigabitEthernet3
+                  'system_latitude': 37.411343
+                  'system_longitude': -121.938803
+                  'system_site_id': "{{ sdwan_site_id }}"
+                  'system_host_name': "{{ inventory_hostname }}"
+                  'system_system_ip': "{{ sdwan_system_ip }}"
+                  'banner_login': "{{ login_banner }}"
+                  'banner_motd': "Welcome to {{ inventory_hostname }}!"
+            site1-cedge1:
+              virl_image_definition: "iosxe-sdwan-{{ iosxe_sdwan_version }}"
+              sdwan_system_ip: 1.1.2.1
+              sdwan_site_id: 2
+              sdwan_model: 'vedge-CSR-1000v'
+              sdwan_uuid: 'CSR-DE49BFC4-10DF-8579-0F64-CD0F51603A38'
+              sdwan_template:
+                name: 'branch-csr1000v'
+                variables:
+                  'vpn512_interface': GigabitEthernet1
+                  'vpn0_interface': GigabitEthernet2
+                  'vpn0_internet_ipv4_address': 172.20.0.10/30
+                  'vpn0_default_gateway': 172.20.0.9
+                  'vpn1_interface': GigabitEthernet3      
+                  'vpn1_ipv4_address': 192.168.1.1/24
+                  'system_latitude': 35.856360
+                  'system_longitude': -78.879725
+                  'system_site_id': "{{ sdwan_site_id }}"
+                  'system_host_name': "{{ inventory_hostname }}"
+                  'system_system_ip': "{{ sdwan_system_ip }}"
+                  'banner_login': "{{ login_banner }}"
+                  'banner_motd': "Welcome to {{ inventory_hostname }}!"
+            site2-vedge1:
+              virl_image_definition: "viptela-edge-{{ viptela_version }}"
+              sdwan_system_ip: 1.1.3.1
+              sdwan_site_id: 3
+              sdwan_model: 'vedge-cloud'
+              sdwan_uuid: '36b8fb11-0aa4-8f2e-5174-a7793ae246f4'
+              sdwan_template:
+                name: 'branch-vedge-cloud'
+                variables:
+                  'vpn512_interface': eth0
+                  'vpn0_interface': ge0/0    
+                  'vpn0_internet_ipv4_address': 172.20.0.14/30
+                  'vpn0_default_gateway': 172.20.0.13
+                  'vpn1_interface': ge0/1
+                  'vpn1_ipv4_address': 192.168.2.1/24
+                  'system_latitude': 32.999892
+                  'system_longitude': -96.678886
+                  'system_site_id': "{{ sdwan_site_id }}"
+                  'system_host_name': "{{ inventory_hostname }}"
+                  'system_system_ip': "{{ sdwan_system_ip }}"
+                  'banner_login': "{{ login_banner }}"
+                  'banner_motd': "Welcome to {{ inventory_hostname }}!"
     system:
+      vars:
+        virl_config_template: virl/host.j2
+        host_interface: enp0s2
+        host_ip: 
       children:
         client:
           hosts:
             site1-host1:
+              host_ip: 192.168.1.10/24
+              host_gateway: 192.168.1.1
             site2-host1:
+              host_ip: 192.168.2.10/24
+              host_gateway: 192.168.2.1
         public_hosts:
           hosts:
-            hq-host1:
-            # sp1-host1:
-    sdwan:
-      children:
-        sdwan_control:
-          children:
-            vmanage_hosts:
-              hosts:
-                vmanage1:
-            vbond_hosts:
-              hosts:
-                vbond1:
-            vsmart_hosts:
-              hosts:
-                vsmart1:
-        sdwan_edge:
-          hosts:
-            hq-cedge1:
-            site1-cedge1:
-            site2-vedge1:
-            
+            hq-host1:    
+              host_ip: 10.0.1.10/24
+              host_gateway: 10.0.1.1

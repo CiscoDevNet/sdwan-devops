@@ -1,0 +1,37 @@
+ping_tests:
+  #
+  # Test colo-to-site
+  #
+    - dst_ip: 10.0.1.1
+      src_ip: 192.168.1.1
+      vedge: site1-cedge1
+      vpn: 1
+      pass: yes
+    - dst_ip: 10.0.1.1
+      vedge: site2-vedge1
+      vpn: 1
+      pass: yes
+  #
+  # Test site-to-site
+  #
+    - dst_ip: 192.168.2.1
+      src_ip: 192.168.1.1
+      vedge: site1-cedge1
+      vpn: 1
+      pass: yes
+    - dst_ip: 192.168.1.1
+      vedge: site2-vedge1
+      vpn: 1
+      pass: yes
+  #
+  # Test offsite
+  #
+    - dst_ip: 8.8.8.8
+      src_ip: 192.168.1.1
+      vedge: site1-cedge1
+      vpn: 1
+      pass: no
+    - dst_ip: 8.8.8.8
+      vedge: site2-vedge1
+      vpn: 1
+      pass: no

@@ -1,0 +1,45 @@
+vedge_device_list = {
+{% for host in groups['sdwan_edge'] -%}
+{% if hostvars[host]['sdwan_model'] == "vedge-cloud" %}
+    "{{ hostvars[host]['inventory_hostname'] }}" = {
+        networks = ["{{ hostvars[host]['vpn512_portgroup'] }}", "{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['servicevpn_portgroup'] }}"]
+{% if hostvars[host]['day0_config'] is defined %}
+        day0 = <<EOF
+{{ hostvars[host]['day0_config'] }}
+EOF
+{% else %}
+{% if hostvars[host]['vpn0_ip'] is defined %}
+        ipv4_address = "{{ hostvars[host]['vpn0_ip'] }}"
+        ipv4_gateway = "{{ hostvars[host]['vpn0_gateway'] }}"
+{% else %}
+        ipv4_address = "dhcp"
+{% endif %}
+{% endif %}
+    }{% if not loop.last %},
+{% endif %}
+{% endif %}
+{% endfor %}
+}
+
+cedge_device_list = {
+{% for host in groups['sdwan_edge'] -%}
+{% if hostvars[host]['sdwan_model'] == "vedge-CSR-1000v" %}
+    "{{ hostvars[host]['inventory_hostname'] }}" = {
+        networks = ["{{ hostvars[host]['vpn512_portgroup'] }}", "{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['servicevpn_portgroup'] }}"]
+{% if hostvars[host]['day0_config'] is defined %}
+        day0 = <<EOF
+{{ hostvars[host]['day0_config'] }}
+EOF
+{% else %}
+{% if hostvars[host]['vpn0_ip'] is defined %}
+        ipv4_address = "{{ hostvars[host]['vpn0_ip'] }}"
+        ipv4_gateway = "{{ hostvars[host]['vpn0_gateway'] }}"
+{% else %}
+        ipv4_address = "dhcp"
+{% endif %}
+{% endif %}
+    }{% if not loop.last %},
+{% endif %}
+{% endif %}
+{% endfor %}
+}

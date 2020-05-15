@@ -3,14 +3,15 @@
   connection: local
   gather_facts: no
   roles:
-    - ansible-viptela
+    - sdwan-tests
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
-    vmanage_ip: "{{ hostvars[vmanage_host].ansible_host }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
     state: present
   tasks:
     - include_role:
-        name: ansible-viptela
+        name: sdwan-tests
         tasks_from: ping-test
       vars:
         ping_dst_ip: "{{ item.dst_ip }}"
@@ -19,3 +20,4 @@
         ping_vpn: "{{ item.vpn }}"
         ping_pass: "{{ item.pass | default(yes) }}"
       loop: "{{ ping_tests | default([]) }}"
+      ignore_errors: yes

@@ -1,2 +1,0 @@
-virl_config_template: sdwan/vbond_user-data.j2
-virl_image_definition: "viptela-bond-{{ viptela_version }}"

@@ -1,8 +1,6 @@
 - name: Build the topology
   hosts: localhost
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - virl
     - network
@@ -44,8 +42,6 @@
   hosts: external_connector:unmanaged_switch
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - start
     - network
@@ -66,8 +62,6 @@
   tags:
     - start
     - network
-  roles:
-    - ansible-virl
   tasks:
     - name: Generating day0 config
       set_fact:
@@ -86,7 +80,7 @@
         config: "{{ day0_config | default(omit) }}"
 
 - name: Check initial topology connectivity
-  hosts: internet
+  hosts: internet:&virl_hosts
   connection: local
   tags:
     - check_control
@@ -103,7 +97,7 @@
         password: "{{ virl_password }}"
         lab: "{{ virl_lab }}"
       register: result
-      until: result.virl_facts.nodes[inventory_hostname].ansible_host
+      until: result.virl_facts.nodes[inventory_hostname].ansible_host is defined and result.virl_facts.nodes[inventory_hostname].ansible_host
       # when: virl_mgmt_interface is defined
       retries: 60
       delay: 10
@@ -135,8 +129,6 @@
   hosts: system:&virl_hosts
   connection: local
   gather_facts: no
-  roles:
-    - ansible-virl
   tags:
     - start
     - network
@@ -164,8 +156,6 @@
   tags:
     - start_control
     - control
-  roles:
-    - ansible-virl
   tasks:
     - name: Generating day0 config
       set_fact:
