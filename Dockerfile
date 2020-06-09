@@ -46,6 +46,11 @@ RUN echo "===> Installing GCC <===" && \
     mv terraform /usr/bin && \
     rm terraform_${terraform_version}_linux_amd64.zip
 
+RUN echo "===> Installing python-viptela from master branch <===" && \
+    apk --update add git && \
+    git clone https://github.com/CiscoDevNet/python-viptela.git && \
+    pip install -e python-viptela
+
 ENV ANSIBLE_HOST_KEY_CHECKING=false \
     ANSIBLE_RETRY_FILES_ENABLED=false \
     ANSIBLE_SSH_PIPELINING=true
