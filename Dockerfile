@@ -48,7 +48,7 @@ RUN echo "===> Installing GCC <===" && \
 
 RUN echo "===> Install python-viptela from master branch <===" && \
     apk --update add git && \
-    git clone -b cidr-455 https://github.com/CiscoDevNet/python-viptela.git && \
+    git clone   https://github.com/CiscoDevNet/python-viptela.git && \
     pip install /python-viptela
 
 ENV ANSIBLE_HOST_KEY_CHECKING=false \
