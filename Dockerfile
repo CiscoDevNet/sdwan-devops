@@ -46,7 +46,7 @@ RUN echo "===> Installing GCC <===" && \
     mv terraform /usr/bin && \
     rm terraform_${terraform_version}_linux_amd64.zip
 
-RUN echo "===> Installing python-viptela from master branch <===" && \
+RUN echo "===> Install python-viptela from master branch <===" && \
     apk --update add git && \
     git clone -b cidr-455 https://github.com/CiscoDevNet/python-viptela.git && \
     pip install /python-viptela
