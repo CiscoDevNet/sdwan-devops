@@ -1,0 +1,15 @@
+templateName: LL2_Device_T
+variables:
+  host_name: site3-vedge01
+  l0_ip_addr: 3.3.3.3/32
+  mgmt_int_name: eth0
+  mgmt_ip_addr: 10.10.20.178/24
+  site_id: 1003
+  system_ip: 10.10.1.17
+  transport1_color: mpls
+  transport1_int_description: Main Int
+  transport1_int_ip_addr: 10.10.23.18/30
+  transport1_int_name: ge0/0
+  transport1_int_shutdown: false
+  static_route: 0.0.0.0/0
+  next_hop_ip_address: 10.10.23.17

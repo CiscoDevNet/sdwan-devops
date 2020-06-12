@@ -1,0 +1,21 @@
+---
+DeviceTemplate:
+  - templateName: 'LL2_Device_T'
+    templateDescription: 'CLEUR_Device_T'
+    deviceType: 'vedge-cloud'
+    aaa: 'Factory_Default_AAA_Template'
+    bfd-vedge: LL2_BFD
+    banner: LL1_Banner
+    logging: LL2_Logging
+    omp-vedge: Factory_Default_vEdge_OMP_Template
+    security-vedge: Factory_Default_vEdge_Security_Template
+    system-vedge: LL2_System
+    vpn-vedge:
+      - LL2_VPN0:
+        #- CLEUR_Transport1_DHCP
+        - LL2_Transport1_STATIC
+      - LL2_VPN10:
+        - LL2_Loopback0
+      - Factory_Default_vEdge_VPN_512_Template:
+        - LL2_VPN512_ETH_INT
+    state: 'present'

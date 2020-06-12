@@ -1,0 +1,73 @@
+{
+    "configType": "template",
+    "connectionPreference": true,
+    "connectionPreferenceRequired": true,
+    "deviceType": "vedge-cloud",
+    "factoryDefault": false,
+    "featureTemplateUidRange": [],
+    "generalTemplates": [
+        {
+            "templateName": "Factory_Default_AAA_Template",
+            "templateType": "aaa"
+        },
+        {
+            "templateName": "LL2_BFD",
+            "templateType": "bfd-vedge"
+        },
+        {
+            "templateName": "Factory_Default_vEdge_OMP_Template",
+            "templateType": "omp-vedge"
+        },
+        {
+            "templateName": "Factory_Default_vEdge_Security_Template",
+            "templateType": "security-vedge"
+        },
+        {
+            "subTemplates": [
+                {
+                    "templateName": "LL2_Logging",
+                    "templateType": "logging"
+                }
+            ],
+            "templateName": "LL2_System",
+            "templateType": "system-vedge"
+        },
+        {
+            "subTemplates": [
+                {
+                    "templateName": "LL2_Transport1_STATIC",
+                    "templateType": "vpn-vedge-interface"
+                }
+            ],
+            "templateName": "LL2_VPN0",
+            "templateType": "vpn-vedge"
+        },
+        {
+            "subTemplates": [
+                {
+                    "templateName": "LL2_Loopback0",
+                    "templateType": "vpn-vedge-interface"
+                }
+            ],
+            "templateName": "LL2_VPN10",
+            "templateType": "vpn-vedge"
+        },
+        {
+            "subTemplates": [
+                {
+                    "templateName": "LL2_VPN512_ETH_INT",
+                    "templateType": "vpn-vedge-interface"
+                }
+            ],
+            "templateName": "Factory_Default_vEdge_VPN_512_Template",
+            "templateType": "vpn-vedge"
+        },
+        {
+            "templateName": "LL1_Banner",
+            "templateType": "banner"
+        }
+    ],
+    "policyId": "",
+    "templateDescription": "CLEUR_Device_T",
+    "templateName": "LL2_Device_T"
+}

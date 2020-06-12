@@ -1,27 +1,8 @@
 - name: Generate all the feature templates
-  hosts: localhost
+  hosts: all
   connection: local
-  roles:
-    - ansible-viptela
   gather_facts: no
   tasks:
-#    - set_fact:
-#        vmanage_first: "{{ groups.vmanage_hosts | first }}"
-#      tags: always
-
-#    - set_fact:
-#        vmanage_host: "{{ hostvars[vmanage_first].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-#      tags: always
-
-    - set_fact:
-        vmanage_host: "{{ groups.vmanage_hosts | first }}"
-
-    - set_fact:
-        vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default(hostvars[vmanage_host].sdwan_transport_ip) }}"
-    
-    - set_fact:
-        vmanage_password: "{{ vmanage_pass }}"
-        
     - assert:
         that:
           - vmanage_host is defined and vmanage_host
@@ -32,7 +13,7 @@
 
     - name: Banner Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: feature-banner
       tags:
         - feature-banner
@@ -44,7 +25,7 @@
 
     - name: Logging Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: feature-logging
       tags:
         - feature-logging
@@ -56,7 +37,7 @@
 
     - name: System Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: feature-system
       tags:
         - feature-system
@@ -68,7 +49,7 @@
 
     - name: Interface Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: feature-interface
       tags:
         - feature-interface
@@ -80,7 +61,7 @@
 
     - name: AAA Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: feature-aaa
       tags:
         - feature-aaa
@@ -92,7 +73,7 @@
 
     - name: BFD Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: feature-bfd
       tags:
         - feature-bfd
@@ -104,7 +85,7 @@
 
     - name: VPN Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: feature-vpn
       tags:
         - feature-vpn
@@ -116,7 +97,7 @@
 
     - name: Device Template
       include_role:
-        name: ansible-viptela
+        name: sdwan-templates
         tasks_from: device-template
       tags:
         - device-template

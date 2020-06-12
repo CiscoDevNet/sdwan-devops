@@ -1,0 +1,12 @@
+---
+FeatureTemplates:
+  feature-banner:
+    - templateName: 'LL1_Banner'
+      templateDescription: 'Banner Template'
+      login:
+        globalValue: 'I am having fun with SDWAN API'
+      motd:
+        globalValue: 'I am having fun with SDWAN API'
+      deviceType:
+        - vEdge
+      state: 'present'

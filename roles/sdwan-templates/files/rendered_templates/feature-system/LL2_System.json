@@ -1,0 +1,156 @@
+{
+    "deviceType": [
+        "vedge-5000",
+        "vedge-cloud",
+        "vedge-1000",
+        "vedge-2000",
+        "vedge-100",
+        "vedge-100-B",
+        "vedge-100-WM",
+        "vedge-100-M"
+    ],
+    "factoryDefault": false,
+    "templateDefinition": {
+        "admin-tech-on-failure": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "allow-same-site-tunnels": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "clock": {
+            "timezone": {
+                "vipObjectType": "object",
+                "vipType": "ignore"
+            }
+        },
+        "console-baud-rate": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "control-session-pps": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "controller-group-list": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "description": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "device-groups": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "eco-friendly-mode": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "gps-location": {
+            "latitude": {
+                "vipObjectType": "object",
+                "vipType": "ignore"
+            },
+            "longitude": {
+                "vipObjectType": "object",
+                "vipType": "ignore"
+            }
+        },
+        "host-name": {
+            "vipObjectType": "object",
+            "vipType": "variableName",
+            "vipVariableName": "host_name"
+        },
+        "host-policer-pps": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "icmp-error-pps": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "idle-timeout": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "location": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "max-omp-sessions": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "multicast-buffer-percent": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "overlay-id": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "port-hop": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "port-offset": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "route-consistency-check": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "site-id": {
+            "vipObjectType": "object",
+            "vipType": "variableName",
+            "vipVariableName": "site_id"
+        },
+        "system-ip": {
+            "vipObjectType": "object",
+            "vipType": "variableName",
+            "vipVariableName": "system_ip"
+        },
+        "system-tunnel-mtu": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "timer": {
+            "dns-cache-timeout": {
+                "vipObjectType": "object",
+                "vipType": "ignore"
+            }
+        },
+        "track-default-gateway": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "track-interface-tag": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "track-transport": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        },
+        "tracker": {
+            "vipObjectType": "tree",
+            "vipPrimaryKey": [
+                "name"
+            ],
+            "vipType": "ignore",
+            "vipValue": []
+        },
+        "usb-controller": {
+            "vipObjectType": "object",
+            "vipType": "ignore"
+        }
+    },
+    "templateDescription": "System Template",
+    "templateMinVersion": "15.0.0",
+    "templateName": "LL2_System",
+    "templateType": "system-vedge"
+}

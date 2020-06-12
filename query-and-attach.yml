@@ -4,6 +4,14 @@
   connection: local
   gather_facts: no
   tasks:
+    - assert:
+        that:
+          - vmanage_host is defined and vmanage_host
+          - vmanage_user is defined and vmanage_host
+          - vmanage_password is defined and vmanage_host
+        fail_msg: "vmanage_host, vmanage_user, and vmanage_password must be defined"
+      tags: always
+
     - name: Query Attach Template
       vmanage_device_attachment:
         user: "{{vmanage_user}}"
@@ -12,47 +20,90 @@
         template: "{{ templateName }}"
         state: "query"
       register: attachment_results_query
+      tags:
+        - query
 
     - name: Create list of parameter per query
       set_fact:
         parameterPropertyDict: "{{  attachment_results_query.mandatory_template_variables }}"
       #loop: "{{attachment_results_query}}"
+      tags:
+        - query
 
     - name: Create list of optional variables
       set_fact:
         optionalVariables: "{{ attachment_results_query.optional_template_variables }}"
+      tags:
+        - query
 
     - name: Init/Refresh dict of Variables
       set_fact:
         parameterDict: {}
+      tags:
+        - query
 
     - name: Populate the parameter dict and get rid of the yang variables
       set_fact:
         parameterDict: "{{ parameterDict | combine( { item.key :  '' }) }}"
       loop: "{{ parameterPropertyDict|dict2items }}"
+      tags:
+        - query
 
     - name: Init/Refresh new variables dict
       set_fact:
         mandatoryVariables: {}
+      tags:
+        - query
 
     - name: Getting rid of unnecessary variables from previous template queries
       set_fact:
         mandatoryVariables: "{{ mandatoryVariables | combine( { item.key: item.value } ) }}"
       when: "{{ item.key in parameterDict or item.key in optionalVariables }}"
       with_dict: "{{ variables|default({}) }}"
+      tags:
+        - query
 
     - name: Init/Refresh dict with current variables plus missing Variables
       set_fact:
         missingVariables: {}
+      tags:
+        - query
 
     - name: Mix Variables already available plus the new ones from the template
       set_fact:
         missingVariables: "{{ missingVariables \
            | combine({inventory_hostname : { 'templateName': templateName, \
            'variables': parameterDict | combine(mandatoryVariables) }}) }}"
+        tags:
+          - query
 
     - debug:
         var: missingVariables
+      tags:
+        - query
 
     - debug:
         var: optionalVariables
+      tags:
+        - query
+
+    - name: Attach template to device
+      vmanage_device_attachment:
+        user: "{{vmanage_user}}"
+        host: "{{vmanage_host}}"
+        password: "{{vmanage_password}}"
+        device: "{{ inventory_hostname }}"
+        #uuid: "{{ inventory_hostname | default(omit) }}"
+        system_ip: "{{ variables.system_system_ip | default(omit) }}"
+        site_id: "{{ sdwan_site_id | default(omit) }}"
+        device_name: "{{ variables.sytem_host_name | default(omit) }}"
+        device_ip: "{{ item.value.system_ip | default(omit) }}"
+        template: "{{ templateName }}"
+        variables: "{{ variables }}"
+        wait: yes
+        state: "present"
+      async: 90
+      poll: 10
+      register: attachment_results
+      tags:
+        - attach
