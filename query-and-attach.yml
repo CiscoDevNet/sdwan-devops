@@ -77,12 +77,14 @@
         tags:
           - query
 
-    - debug:
+    - name: These variables are the ones that are missing
+      debug:
         var: missingVariables
       tags:
         - query
 
-    - debug:
+    - name: These variables are optional for the template
+      debug:
         var: optionalVariables
       tags:
         - query
