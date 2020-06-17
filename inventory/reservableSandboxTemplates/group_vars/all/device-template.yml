@@ -1,7 +1,7 @@
 ---
 DeviceTemplate:
   - templateName: 'LL2_Device_T'
-    templateDescription: 'CLEUR_Device_T'
+    templateDescription: 'Device Template'
     deviceType: 'vedge-cloud'
     aaa: 'Factory_Default_AAA_Template'
     bfd-vedge: LL2_BFD
@@ -12,7 +12,6 @@ DeviceTemplate:
     system-vedge: LL2_System
     vpn-vedge:
       - LL2_VPN0:
-        #- CLEUR_Transport1_DHCP
         - LL2_Transport1_STATIC
       - LL2_VPN10:
         - LL2_Loopback0
