@@ -30,6 +30,7 @@ all:
               vars:
                 sdwan_personality: vbond
                 sdwan_device_model: vbond
+                mgmt_interface: 'vpn0_ip'
                 virl_image_definition: "viptela-bond-{{ viptela_version }}"
                 virl_config_template: "sdwan/vbond_user-data.j2"
               hosts:
@@ -41,6 +42,7 @@ all:
               vars:
                 sdwan_personality: vsmart
                 sdwan_device_model: vsmart
+                mgmt_interface: 'vpn0_ip'
                 virl_image_definition: "viptela-smart-{{ viptela_version }}"
                 virl_config_template: "sdwan/user-data.j2"
               hosts:
