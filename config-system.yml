@@ -2,16 +2,10 @@
   hosts: "{{ passed }}"
   vars:
     host_mgmt_interface: "{{ hostvars[inventory_hostname].mgmt_interface | default('ansible_host') }}"
-    transport_ip: "{{ hostvars[inventory_hostname][host_mgmt_interface] | ipaddr('address') }}"
+    ansible_host: "{{ hostvars[inventory_hostname][host_mgmt_interface] | ipaddr('address') }}"
   connection: netconf
-  tags:
-    - netconf
   any_errors_fatal: true
   gather_facts: no
   tasks:
-    - meta: refresh_inventory
-  
     - netconf_config:
-        host: "{{ transport_ip }}"
         content: "{{ lookup('template', 'sdwan/netconf/system.j2') }}"
-      # loop: "{{ passed }}"
