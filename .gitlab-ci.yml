@@ -4,8 +4,8 @@ stages:
   - build-control
   - config-control
   - deploy-edges
-  - waitfor-edges
   - attach-templates
+  - waitfor-edges
   - test
 
 image: ciscops/ansible-sdwan
@@ -69,21 +69,18 @@ deploy-edges:
     changes:
       - files/hq1.yaml
 
-waitfor-edges:
-  <<: *tags
-  stage: waitfor-edges
-  script:
-    - ansible-playbook waitfor-sync.yml
-  only:
-    changes:
-      - files/hq1.yaml
-          
 attach-templates:
   <<: *tags
   stage: attach-templates
   script:
     - ansible-playbook attach-template.yml
 
+waitfor-edges:
+  <<: *tags
+  stage: waitfor-edges
+  script:
+    - ansible-playbook waitfor-sync.yml
+              
 test:
   <<: *tags
   stage: test
