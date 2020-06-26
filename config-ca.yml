@@ -22,5 +22,4 @@
       cli_command:
         command: "request root-cert-chain install /home/admin/myCA.pem"
       register: command_result
-      connection: network_cli
       failed_when: "'Failed' in command_result.stdout"
