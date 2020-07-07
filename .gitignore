@@ -7,3 +7,4 @@ topo.virl
 .virlrc
 /.virl
 set*.sh
+roles/sdwan-templates/files/rendered_templates

@@ -1,0 +1,44 @@
+---
+FeatureTemplates:
+  feature-interface:
+    - templateName: 'LL2_Loopback0'
+      templateDescription: 'Interface Template'
+      name:
+        globalValue : 'loopback0'
+      shutdown:
+        globalValue: 'false'
+      address:
+        variableName: 'l0_ip_addr'
+      state: 'present'
+      deviceType:
+        - vEdge
+    - templateName: 'LL2_Transport1_STATIC'
+      templateDescription: 'Interface Template'
+      name:
+        variableName: 'transport1_int_name'
+      description:
+        variableName: 'transport1_int_description'
+      shutdown:
+        variableName: 'transport1_int_shutdown'
+      address:
+        variableName: 'transport1_int_ip_addr'
+      colorValue:
+        variableName: 'transport1_color'
+      tunnelEncap:
+        globalValue: 'ipsec'
+      state: 'present'
+      deviceType:
+        - vEdge
+    - templateName: 'LL2_VPN512_ETH_INT'
+      templateDescription: 'Interface Template'
+      name:
+        variableName: 'mgmt_int_name'
+      description:
+        globalValue: 'Management Interface'
+      address:
+        variableName: 'mgmt_ip_addr'
+      shutdown:
+        globalValue: 'false'
+      state: 'present'
+      deviceType:
+        - vEdge
