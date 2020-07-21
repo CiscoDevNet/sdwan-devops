@@ -80,14 +80,6 @@ spec:
         }
       }
     }
-    stage('Refresh terraform state') {
-      steps {
-        echo 'Running terraform-apply.yml...'
-        container('ansible') {
-          ansiblePlaybook disableHostKeyChecking: true, extras:  '-e folder=sdwan-devops-dev -e sdwan_type=control', inventory: 'inventory/hq2', playbook: 'terraform-apply.yml'
-        }
-      }
-    }
     stage('Configure Control Plane') {
       steps {
         echo 'Configure Control Plane...'

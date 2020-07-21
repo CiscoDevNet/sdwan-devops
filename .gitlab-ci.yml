@@ -1,0 +1,88 @@
+stages:
+  - clean
+  - build-ca
+  - build-control
+  - config-control
+  - deploy-edges
+  - attach-templates
+  - waitfor-edges
+  - test
+
+image: ciscops/ansible-sdwan
+
+variables:
+  ANSIBLE_GATHERING: "smart"
+  ANSIBLE_CONFIG: "./ansible.cfg"
+  ANSIBLE_ROLES_PATH: "./roles"
+  GIT_SUBMODULE_STRATEGY: "recursive"
+
+.tags: &tags
+  tags:
+    - runnerX
+
+cache:
+  paths:
+    - myCA/
+
+clean:
+  <<: *tags
+  stage: clean
+  script:
+    - ansible-playbook --tags "delete" clean-virl.yml
+  only:
+    changes:
+      - files/hq1.yaml
+
+build-ca:
+  <<: *tags
+  stage: build-ca
+  script:
+    - ansible-playbook build-ca.yml
+  only:
+    changes:
+      - files/hq1.yaml
+  
+build-control:
+  <<: *tags
+  stage: build-control
+  script:
+    - ansible-playbook build-virl.yml
+  only:
+    changes:
+      - files/hq1.yaml
+    
+config-control:
+  <<: *tags
+  stage: config-control
+  script:
+    - ansible-playbook config-virl.yml
+  only:
+    changes:
+      - files/hq1.yaml
+  
+deploy-edges:
+  <<: *tags
+  stage: deploy-edges
+  script:
+    - ansible-playbook deploy-virl.yml
+  only:
+    changes:
+      - files/hq1.yaml
+
+attach-templates:
+  <<: *tags
+  stage: attach-templates
+  script:
+    - ansible-playbook attach-template.yml
+
+waitfor-edges:
+  <<: *tags
+  stage: waitfor-edges
+  script:
+    - ansible-playbook waitfor-sync.yml
+              
+test:
+  <<: *tags
+  stage: test
+  script:
+    - ansible-playbook check-sdwan.yml

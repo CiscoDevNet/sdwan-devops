@@ -8,6 +8,9 @@
   connection: network_cli
   vars:
     ansible_network_os: ios
+    host_mgmt_interface: "{{ hostvars[inventory_hostname].mgmt_interface | default('ansible_host') }}"
+    ansible_host: "{{ hostvars[inventory_hostname][host_mgmt_interface] | ipaddr('address') }}"
+
   tasks:
     - name: Copy Root CA to controllers
       net_put:
@@ -19,5 +22,4 @@
       cli_command:
         command: "request root-cert-chain install /home/admin/myCA.pem"
       register: command_result
-      connection: network_cli
       failed_when: "'Failed' in command_result.stdout"
