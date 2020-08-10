@@ -5,13 +5,11 @@ This repo contains a set of tools to automate workflows and build CI/CD pipeline
 
 > Note: The tools in this repo only work from a Unix environment with Docker (e.g. Linux, MacOS, etc.) due to issues with Ansible and file permissions mapping between Windows and the Linux container used in `play.sh`.  WSL2 may fix this issue and we will revisit when WSL2 is released.
 
-> Note: This repo is only tested against Cisco Modeling Labs (CML) and VIRL version 2.x.  For now, that is the only tested/validated version.
-
-## Installation
+> Note: This repo is tested against CML^2 and VMware vCenter 6.7.
 
 ## Cloning the repo
 
-``` shell
+``` bash
 git clone --recursive https://github.com/ciscodevnet/sdwan-devops.git
 ```
 
@@ -21,85 +19,57 @@ All operations are run out of the `sdwan-devops` directory:
 cd sdwan-devops
 ```
 
-### Software Dependancies
+## Quick start instructions
 
-* [ansible-viptela](https://github.com/CiscoDevNet/ansible-viptela) (Delivered as part of the repo when `--recursive` is used when cloning)
-* Python 3 with the dependencies listed in requirements.txt
-* sshpass
+If you want to skip all the info and documentation below and just run the automation, use the following links, otherwise read on for more details.
 
+- [Build the hq1 topology in CML](docs/virl-hq1.md)
+- [Build the hq2 topology in CML](docs/virl-hq2.md)
+- [Build the hq2 topology in VMware](docs/vmware-hq2.md)
 
+## Software Dependancies
 
-### Running with Docker
+All software dependencies have been rolled into a Docker container.  Ansible playbooks are launched via the container using the `play.sh` shell script.  The `Dockerfile` included in this repo is used to automatically build the [ansible-sdwan](https://hub.docker.com/repository/docker/ciscops/ansible-sdwan) container image on Docker Hub.
 
-The easiest way to address the python and sshpass dependencies is to use the Dockerfile packaged in the repo.  All development and testing uses this Dockerfile, so it is the best way to guarantee that the tooling will run as designed
+For a detailed list of the dependencies required to run the playbooks, refer to the `Dockerfile`.
 
-#### Build the Docker container
+## Licensing Requirements
 
-To build the docker container, run:
+The following licensing-related tasks need to be completed prior to running the playbooks:
+1. Copy a valid Viptela license file into `licenses/serialFile.viptela`
+1. Set organization name as an environment variable using `export VMANAGE_ORG=myorgname`.
 
-```bash
-docker build -t ansible-sdwan .
-```
-
-#### Running the the playbooks in the docker container
-
-In order to make this easier, a bash script has been provided.  To run a playbook specified in the directions, you can run using bash:
-
-```bash
-$ ./play.sh <playbook> <options>
-```
-
-### Licensing Requirements
-
-* A Viptela license file and the Organization name associated with that license file in `licenses/serialFile.viptela`.
-* The Organization name associated with the serial file
-* A Cisco Smart License token that point to an account with ASAv licensing (when licensing non-SD-WAN VNFs is required)
-
-Set the name of the organization, e.g.:
-Using bash:
-```
-export VMANAGE_ORG=myorgname
-```
-
-**Note:** This value can be set permanently in `group_vars/all/local.yml`
+These values can also be set permanently in `group_vars/all/local.yml` if desired.
 
 ```yaml
 organization_name: "<your org name>"
 license_token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-**Note:** Edge devices in the topologies must be updated to reflect the one from the `serialFile.viptela` provided.  This is done by updated `sdwan_uuid` in the `sdwan.yml` inventory file in the `host_vars` directory corresponding to the edge device (e.g. `inventory/hq1/host_vars/hq-cedge1/sdwan.yml`).  See the `Variables` section for more information.
+> Note: Edge device UUIDs must be updated to reflect the ones from the `serialFile.viptela` provided.  This is done by updating `sdwan_uuid` value for each edge in the `sdwan.yml` inventory file (e.g. `inventory/hq1/sdwan.yml`).  See the `Variables` section for more information.
 
 ## Capabilities
 
+### Running playbooks via the Docker container
+
+To run playbooks in this repo, use the `play.sh` shell script as shown below:
+
+```bash
+./play.sh <playbook> <options>
+```
+
 ### Simulation
 
-Simulation can be used for developing new deployments as well as testing changes to current deployments.  Simulation capabilities are provided by VIRL^2.  The [Ansible VIRL^2 Modules](https://github.com/ciscodevnet/ansible-virl) are used to automate deployments in VIRL^2.
+Simulation can be used for developing new deployments as well as testing changes to current deployments.  Simulation capabilities are provided by CML^2 or VMware.  The [Ansible CML^2 Modules](https://github.com/ciscodevnet/ansible-virl) are used to automate deployments in CML^2.  The [Terraform Modules](https://github.com/CiscoDevNet/terraform-sdwan) are used to automate deployments in VMware.
 
-### Automation
+### Automation Playbooks
 
-A set of playbooks is providing for automating deployments on several different infrastructures.  Currently, the following infrastructure is supported:
-
-* [VIRL](docs/virl.md)
-* [Vmware](docs/tf-vmware.md)
-* AWS: Deployment on AWS can be done with the either:
-  * [Ansible](docs/aws.md)
-  * Terraform
-* Azure
-* NFVIS
-
-#### Automation Playbooks
-
-* `build-ca.yml`: Creates a local CA
-* `import-templates.yml`
-* `attach-templates.yml`
-* `import-policy.yml`
-* `activate-policy.yml`
-* `waitfor-sync.yml`
-
-* `build-XXXX.yml`
-
-* `config-XXXX.yml`
+* `build-ca.yml`
+  * Create a local CA in `./myCA`
+* `build-virl.yml` or `build-vmware.yml`
+  * Creates Day0 config for VNFs based on the data in the `sdwan.yml` file
+  * Provision and start VNFs on virtual infrastructure
+* `config-virl.yml` or `config-vmware.yml`
   * Configure setting on vmanage
   * Install Enterprise CA when required
   * Add vbonds and vsmarts to vmanage
@@ -108,23 +78,37 @@ A set of playbooks is providing for automating deployments on several different 
   * Push certificates to controllers
   * Import templates if present
   * Import policy if present
+* `deploy-virl.yml` or `deploy-vmware.yml`
+  * Create Day0 config for edge VNFs
+  * Provision and boot edge VNFs on virtual infrastructure
+* `import-templates.yml`
+  * Imports device and feature templates into vManage
+* `attach-templates.yml`
+  * Attaches templates to devices as specified in the `sdwan.yml` file
+* `import-policy.yml`
+  * Imports policy into vManage
+* `activate-policy.yml`
+  * Activates policy 
+* `waitfor-sync.yml`
+  * Waits until all edge devices are in sync on vManage
 
-### Validation
-
-#### Validation Playbooks
+### Validation Playbooks
 * `check-sdwan.yml`
-* `check-network.yml`
+  * Check overlay connectivity using ping
+  * Can check for things that should, or should not, work
 
 ### Testing
 
-Jenkins is used for automatic and manual testing.  
+Jenkins CI is used for automatic and manual testing.  The various Jenkinsfiles in use are in the `jenkins` directory.  A `gitlab-ci.yml` file is also included for running CI from GitLab.
 
 ## Structure
 
 ### Inventories
 
-The repo contains a set of playbooks, roles, and templates that are fed from the included inventories. Several built-in topologies located in the inventory and more can be added.  There are 
+The repo contains a set of playbooks, roles, and templates that are fed from the included inventories. Several built-in topologies located in the inventory and more can be added.  There are two topologies that are provided in the `inventory` directory:
 
+* `hq1` builds only on CML^2 and includes an underlay network, SD-WAN control plane and SD-WAN edges (see [hq1.png](docs/images/hq1.png))
+* `hq2` builds on CML^2 and VMware and includes the SD-WAN control plane and SD-WAN edges in a flat network (see [hq2.png](docs/images/hq2.png))
 
 To switch between topologies, either edit `ansible.cfg` and point `inventory` to the proper directory:
 
@@ -134,16 +118,16 @@ inventory = ./inventory/hq1
 ```
 to
 ```
-inventory = ./inventory/crn1
+inventory = ./inventory/hq2
 ```
 
-or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml`)
+or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-virl.yml`)
 
-The local defaults for all inventories are set in `sdwan-devops/group_vars/all/local/yml`
+The local defaults for all inventories are set in `sdwan-devops/group_vars/all/local.yml`
 
 ### Variables
 
-The following variables are used by the playbooks and must be set somewhere in the inventory:
+There are a set of required variables that must be set for each device in the topology.  An example for a typical edge device is shown below.  Note that in the case of the `hq1` inventory, you don't need to modify any of these values if you just want to test out the automation.  However, the `hq2
 
 ```yaml
 sdwan_system_ip: 192.168.255.13
@@ -170,10 +154,3 @@ sdwan_template:
     'banner_login': "{{ login_banner }}"
     'banner_motd': Welcome to hq-cedge1!
 ```
-
-
-
-Infrastructure specific playbooks for building the control plane and deploying vedges are described in the specific infrastructure instructions below
-
-
-
