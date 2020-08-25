@@ -26,6 +26,10 @@ spec:
     VIRL_HOST = credentials('cpn-virl-dev-host')
     VIRL_LAB = "jenkins_sdwan_hq2_dev"
     VMANAGE_ORG = credentials('viptela-org')
+    VMANAGE1_IP = credentials('vmanage1_ip')
+    VBOND1_IP = credentials('vbond1_ip')
+    VSMART1_IP = credentials('vsmart1_ip')
+    VPN0_GATEWAY = credentials(vpn0_gateway')
     HOME = "${WORKSPACE}"
     DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
   }
