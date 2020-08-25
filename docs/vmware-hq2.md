@@ -31,6 +31,21 @@ The VMware playbooks make use of terraform to provision the control plane and ed
     export TF_VAR_vsphere_server=vcenter.example.com
     ```
 
+1. Set the IP addressing for your control plane components.  Make sure these are valid and reachable IP addresses for your environment and that they are specified in CIDR notation (except for the `VPN0_GATEWAY`).
+    ```
+    export VMANAGE1_IP=1.1.1.1/24
+    export VBOND1_IP=1.1.1.2/24
+    export VSMART1_IP=1.1.1.3/24
+    export VPN0_GATEWAY=1.1.1.254
+    ```
+
+1. Set the VMware port group info for each VPN.  Use the name of the port group as seen in vCenter.
+    ```
+    export VPN0_PORTGROUP="Your VPN0 port group"
+    export VPN512_PORTGROUP="Your VPN512 port group"
+    export SERVICEVPN_PORTGROUP="Your service VPN port group"
+    ```
+
 ## Create/update the required inventory data
 
 1. In `groupvars/all/local.yml` set the following variables to reflect your environment:
@@ -46,14 +61,6 @@ The VMware playbooks make use of terraform to provision the control plane and ed
     * `vsmart_template`: the name of the vSmart template in vCenter
     * `vedge_template`: the name of the vEdge template in vCenter
     * `cedge_template`: the name of the cEdge template in vCenter
-
-1. In `inventory/hq2/sdwan.yml` set the following variables to reflect your environment:
-    * `sdwan_vbond`: DNS name/IP address of the vbond server
-    * `vpn0_portgroup`: the name of the vCenter port group to use for vpn0
-    * `vpn0_gateway`: the default gateway to use for the vpn0 network
-    * `vpn512_portgroup`: the name of the vCenter port group to use for vpn512
-    * `vpn0_ip`: for each control plane component, set this to it's assigned static IP address
-    * `servicevpn_portgroup`: the name of the vCenter port group to use for the service VPN (VPN 1)
 
 ## Run the playbooks
 

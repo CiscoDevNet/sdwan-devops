@@ -52,6 +52,13 @@ spec:
     TF_VAR_vsphere_password = credentials('cpn-rtp-vc1-password')
     TF_VAR_vsphere_server = credentials('cpn-rtp-vc1-server')
     VMANAGE_ORG = credentials('vmware-vmanage-org')
+    VMANAGE1_IP = credentials('vmanage1_ip')
+    VBOND1_IP = credentials('vbond1_ip')
+    VSMART1_IP = credentials('vsmart1_ip')
+    VPN0_GATEWAY = credentials('vpn0_gateway')
+    VPN0_PORTGROUP=credentials('vpn0_portgroup')
+    VPN512_PORTGROUP=credentials('vpn512_portgroup')
+    SERVICEVPN_PORTGROUP=credentials('servicevpn_portgroup')
     HOME = "${WORKSPACE}"
     DEFAULT_LOCAL_TMP = "${WORKSPACE}/ansible"
   }

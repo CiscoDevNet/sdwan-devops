@@ -3,16 +3,16 @@ all:
     virl_lab_file: "{{ playbook_dir }}/files/hq2.yaml"
     iosxe_sdwan_version: 16.12.2r
     viptela_version: 19.2.1
-    sdwan_vbond: 192.133.178.18
+    sdwan_vbond: "{{ lookup('env','VBOND1_IP') | ipaddr('address') }}"
     sdwan_central_policy_name: 'hq2-centralized-policy'
   children:
     sdwan:
       children:
         sdwan_control:
           vars:            
-            vpn0_portgroup: cpn-rtp-colab2
-            vpn0_gateway: 192.133.178.1
-            vpn512_portgroup: cpn-rtp-colab2
+            vpn0_portgroup: "{{ lookup('env','VPN0_PORTGROUP') }}"
+            vpn0_gateway: "{{ lookup('env','VPN0_GATEWAY') }}"
+            vpn512_portgroup: "{{ lookup('env','VPN512_PORTGROUP') }}"
           children:
             vmanage_hosts:
               vars:
@@ -24,7 +24,7 @@ all:
               hosts:
                 vmanage1:
                   sdwan_system_ip: 1.1.1.1
-                  vpn0_ip: 192.133.178.17/24
+                  vpn0_ip: "{{ lookup('env','VMANAGE1_IP') }}"
                   sdwan_site_id: 1
             vbond_hosts:
               vars:
@@ -36,7 +36,7 @@ all:
               hosts:
                 vbond1:
                   sdwan_system_ip: 1.1.1.2
-                  vpn0_ip: 192.133.178.18/24
+                  vpn0_ip: "{{ lookup('env','VBOND1_IP') }}"
                   sdwan_site_id: 1
             vsmart_hosts:
               vars:
@@ -48,7 +48,7 @@ all:
               hosts:
                 vsmart1:
                   sdwan_system_ip: 1.1.1.3
-                  vpn0_ip: 192.133.178.19/24
+                  vpn0_ip: "{{ lookup('env','VSMART1_IP') }}"
                   sdwan_site_id: 1
                   sdwan_template:
                     name: 'vsmart'
@@ -59,10 +59,9 @@ all:
           vars:
             sdwan_personality: vedge
             login_banner: "Hello!"
-            vpn0_portgroup: cpn-rtp-colab2
-            vpn0_gateway: 192.133.178.1
-            vpn512_portgroup: cpn-rtp-colab2
-            servicevpn_portgroup: cpn-rtp-colab2
+            vpn0_portgroup: "{{ lookup('env','VPN0_PORTGROUP') }}"
+            vpn512_portgroup: "{{ lookup('env','VPN512_PORTGROUP') }}"
+            servicevpn_portgroup: "{{ lookup('env','SERVICEVPN_PORTGROUP') }}"
           hosts:
             hq-cedge1:
               virl_image_definition: "iosxe-sdwan-{{ iosxe_sdwan_version }}"
