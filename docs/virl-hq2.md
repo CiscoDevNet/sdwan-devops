@@ -30,12 +30,13 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     export VIRL_LAB=myusername_sdwan
     ```
 
-## Create/update the required inventory data
-
-1. In `inventory/hq2/sdwan.yml` set the following variables to reflect your environment:
-    * `sdwan_vbond`: DNS name/IP address of the vbond
-    * `vpn0_gateway`: the default gateway to use for the vpn0 network
-    * `vpn0_ip`: for each control plane component, set this to it's assigned static IP address
+1. Set the IP addressing for your control plane components.  Make sure these are valid and reachable IP addresses for your environment and that they are specified in CIDR notation (except for the `VPN0_GATEWAY`).
+    ```
+    export VMANAGE1_IP=1.1.1.1/24
+    export VBOND1_IP=1.1.1.2/24
+    export VSMART1_IP=1.1.1.3/24
+    export VPN0_GATEWAY=1.1.1.254
+    ```
 
 ## Run the playbooks
 
