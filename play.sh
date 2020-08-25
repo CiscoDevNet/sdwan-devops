@@ -28,6 +28,18 @@ fi
 if [[ ! -z "$VMANAGE_PASSWORD" ]]; then
    OPTIONS="$OPTIONS --env VIRL_SESSION=$VMANAGE_PASSWORD"
 fi
+if [[ ! -z "$VMANAGE1_IP" ]]; then
+   OPTIONS="$OPTIONS --env VMANAGE1_IP=$VMANAGE1_IP"
+fi
+if [[ ! -z "$VBOND1_IP" ]]; then
+   OPTIONS="$OPTIONS --env VBOND1_IP=$VBOND1_IP"
+fi
+if [[ ! -z "$VSMART1_IP" ]]; then
+   OPTIONS="$OPTIONS --env VSMART1_IP=$VSMART1_IP"
+fi
+if [[ ! -z "$VPN0_GATEWAY" ]]; then
+   OPTIONS="$OPTIONS --env VPN0_GATEWAY=$VPN0_GATEWAY"
+fi
 if [[ ! -z "$TF_VAR_vsphere_user" ]]; then
    OPTIONS="$OPTIONS --env TF_VAR_vsphere_user=$TF_VAR_vsphere_user"
 fi
@@ -37,6 +49,16 @@ fi
 if [[ ! -z "$TF_VAR_vsphere_server" ]]; then
    OPTIONS="$OPTIONS --env TF_VAR_vsphere_server=$TF_VAR_vsphere_server"
 fi
+if [[ ! -z "$VPN0_PORTGROUP" ]]; then
+   OPTIONS="$OPTIONS --env VPN0_PORTGROUP=$VPN0_PORTGROUP"
+fi
+if [[ ! -z "$VPN512_PORTGROUP" ]]; then
+   OPTIONS="$OPTIONS --env VPN512_PORTGROUP=$VPN512_PORTGROUP"
+fi
+if [[ ! -z "$SERVICEVPN_PORTGROUP" ]]; then
+   OPTIONS="$OPTIONS --env SERVICEVPN_PORTGROUP=$SERVICEVPN_PORTGROUP"
+fi
+
 
 OPTIONS="$OPTIONS --env ANSIBLE_ROLES_PATH=/ansible/roles"
 
