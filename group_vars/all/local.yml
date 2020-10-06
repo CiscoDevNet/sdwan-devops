@@ -22,7 +22,7 @@ iosxe_sdwan_version: "{{ lookup('env','IOSXE_SDWAN_VERSION') | default('16.12.2r
 datacenter: "RTP"
 cluster: "cpn-rtp-hx1"
 folder: "sdwan-devops"
-resource_pool: "colab"
+resource_pool: "prod"
 datastore: "prod1"
 iso_datastore: "prod1"
 iso_path: "cloud-init"
