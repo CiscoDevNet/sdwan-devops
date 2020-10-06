@@ -2,7 +2,7 @@ FROM alpine:3.11
 
 ARG build_date=unspecified
 ARG terraform_version=0.12.24
-ARG virl2_client_pkg=virl2_client-0.8.2+b4d055d25-py3-none-any.whl
+ARG virl2_client_pkg=virl2_client-2.1.0b9-py3-none-any.whl
 
 LABEL org.opencontainers.image.title="Cisco-SDWAN" \
       org.opencontainers.image.description="Cisco SDWAN DevOps" \
@@ -35,6 +35,10 @@ RUN echo "===> Installing GCC <===" && \
     \
     echo "===> Installing PIP Requirements <==="  && \
     pip install -r /tmp/requirements.txt && \
+    \
+    \
+    echo "===> Installing local virl2 client <===" && \
+    pip install /tmp/${virl2_client_pkg} && \
     \
     \
     echo "===> Installing Terraform <===" && \
