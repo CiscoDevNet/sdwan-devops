@@ -127,7 +127,7 @@ all:
     system:
       vars:
         virl_config_template: virl/host.j2
-        host_interface: enp0s2
+        host_interface: ens2
         host_ip: 
       children:
         client:
