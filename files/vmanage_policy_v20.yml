@@ -1,13 +1,14 @@
 vmanage_central_policies:
-- '@rid': 397
+- '@rid': 276
   createdBy: admin
-  createdOn: 1587827809758
+  createdOn: 1585249045147
   isPolicyActivated: false
   lastUpdatedBy: admin
-  lastUpdatedOn: 1587827809758
+  lastUpdatedOn: 1585249045147
   policyDefinition:
     assembly:
-    - definitionName: hq1-data-policy
+    - definitionId: 1877de37-9f08-4f3f-9092-4ff556808450
+      definitionName: hq1-data-policy
       entries:
       - direction: tunnel
         siteLists:
@@ -16,26 +17,25 @@ vmanage_central_policies:
         vpnLists:
         - vpn1
       type: data
-  policyDescription: hq2-centralized-policy
-  policyId: f6075489-5212-49db-97b4-06b184e5deee
-  policyName: hq2-centralized-policy
+  policyDescription: hq1-centralized-policy
+  policyId: 58676b88-a1c9-4cf8-ab43-7433e0148291
+  policyName: hq1-centralized-policy
   policyType: feature
-  policyVersion: 04252020T151213130
-vmanage_local_policies: []
+  policyVersion: 03262020T185725147
 vmanage_policy_definitions:
 - defaultAction:
     type: accept
-  definitionId: f8a19885-d466-4228-b0c0-1bd988a10c94
+  definitionId: 1877de37-9f08-4f3f-9092-4ff556808450
   description: hq1-data-policy
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827531570
+  lastUpdated: 1585249042655
   name: hq1-data-policy
   owner: admin
   referenceCount: 1
   references:
-  - id: f6075489-5212-49db-97b4-06b184e5deee
-  - id: f6075489-5212-49db-97b4-06b184e5deee
+  - id: 58676b88-a1c9-4cf8-ab43-7433e0148291
+  - id: 58676b88-a1c9-4cf8-ab43-7433e0148291
   sequences:
   - actions: []
     baseAction: drop
@@ -44,12 +44,56 @@ vmanage_policy_definitions:
       - field: destinationDataPrefixList
         listName: blacklist
         listType: dataPrefix
+        ref: c8a4885d-a5c9-43a8-a316-b813c99845f0
     sequenceId: 1
     sequenceIpType: ipv4
     sequenceName: Custom
     sequenceType: data
   type: data
 vmanage_policy_lists:
+- description: SaaS App List for Concur
+  entries:
+  - app: concur
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248601852
+  listId: 1f126a81-bb30-407e-82a8-a38d5ffb24a5
+  name: concur_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: SaaS App List for Intuit
+  entries:
+  - app: intuit
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248601925
+  listId: 465eda13-5b44-44d3-bbd7-df4931d4a7de
+  name: intuit_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: SaaS App List for Gotomeeting
+  entries:
+  - app: citrix
+  - app: gotomeeting
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602007
+  listId: ddaeb137-f486-4c1d-9581-036c2317ee36
+  name: gotomeeting_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
 - description: SaaS App List for Office365
   entries:
   - app: ms-live-accounts
@@ -71,8 +115,8 @@ vmanage_policy_lists:
   - app: skype
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827414117
-  listId: 4acfc302-2bb2-4b6f-a315-59a62e68298a
+  lastUpdated: 1585248601637
+  listId: 6824de9b-32cb-4b65-8b12-4efb39fdae12
   name: office365_apps
   owner: system
   readOnly: true
@@ -80,20 +124,59 @@ vmanage_policy_lists:
   references: []
   type: app
   version: '3.0'
-- description: SaaS App List for Sugar CRM
+- description: ACI Default SLA
   entries:
-  - app: sugarcrm
+  - jitter: '100'
+    latency: '300'
+    loss: '25'
+  infoTag: aci
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602849
+  listId: 7963b9c9-7660-4134-b015-87ab2f0cf52c
+  name: Default
+  owner: system
+  readOnly: false
+  referenceCount: 0
+  references: []
+  type: sla
+  version: '1.0'
+- description: Microsoft Applications List
+  entries:
+  - app: bing
+  - app: hockeyapp
+  - app: live_hotmail
+  - app: lync
+  - app: lync_online
+  - app: ms-services
+  - app: ms_translator
+  - app: ms-office-365
+  - app: share-point
+  - app: skydrive
+  - app: skype
+  - app: windows_azure
+  - app: windows_update
+  - app: windows_marketplace
+  - app: windowslive
+  - app: windowslivespace
+  - app: windowsmedia
+  - app: xbox
+  - app: xbox_music
+  - app: xbox_video
+  - app: xboxlive
+  - app: xboxlive_marketplace
+  - app: word_online
+  - app: powerpoint_online
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827415077
-  listId: fba1ba78-2302-407a-a937-06120e339313
-  name: sugar_crm_apps
+  lastUpdated: 1585248602914
+  listId: c036c175-d998-4c7a-b074-80a16a3ffc2b
+  name: Microsoft_Apps
   owner: system
   readOnly: true
   referenceCount: 0
   references: []
   type: app
-  version: '3.0'
+  version: '4.0'
 - description: ACI Transactional Data SLA
   entries:
   - jitter: '100'
@@ -101,8 +184,8 @@ vmanage_policy_lists:
     loss: '5'
   infoTag: aci
   isActivatedByVsmart: false
-  lastUpdated: 1587827414247
-  listId: bd1c6f7e-d99b-45a6-8ce0-3ece99008528
+  lastUpdated: 1585248601750
+  listId: f412b190-cb0b-4f36-a433-b6e9072b33fc
   name: Transactional-Data
   owner: system
   readOnly: false
@@ -110,126 +193,6 @@ vmanage_policy_lists:
   references: []
   type: sla
   version: '1.0'
-- description: SaaS App List for Dropbox
-  entries:
-  - app: dropbox
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827415679
-  listId: 0d4c6ef7-7469-4922-80ad-4b338a75536c
-  name: dropbox_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '2.0'
-- description: SaaS App List for Oracle
-  entries:
-  - app: oracle
-  - app: oracle-bi
-  - app: oracle-ebsuite-unsecured
-  - app: oracle-sqlnet
-  - app: oraclenames
-  - app: oraclenet8cman
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827414599
-  listId: d1cf94c2-bcba-444b-9708-ecde10f81748
-  name: oracle_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '3.1'
-- description: SaaS App List for Concur
-  entries:
-  - app: concur
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827414368
-  listId: aa9dc901-94b7-4305-8761-7fb65016cbf8
-  name: concur_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '3.0'
-- description: SaaS App List for Intuit
-  entries:
-  - app: intuit
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827414442
-  listId: c88357f7-fc75-4b36-8ad2-440587ed914d
-  name: intuit_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '3.0'
-- description: SaaS App List for Gotomeeting
-  entries:
-  - app: citrix
-  - app: gotomeeting
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827414518
-  listId: 9b7be89d-c3df-4fd7-bb0b-4817e739bdc6
-  name: gotomeeting_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '3.0'
-- description: SaaS App List for Zoho CRM
-  entries:
-  - app: zoho-services
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827414698
-  listId: 50f359a4-1cca-4960-a2e1-dca395430df1
-  name: zoho_crm_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '3.0'
-- description: ACI Bulk Data SLA
-  entries:
-  - jitter: '100'
-    latency: '300'
-    loss: '10'
-  infoTag: aci
-  isActivatedByVsmart: false
-  lastUpdated: 1587827414777
-  listId: 2641a2cf-9ffe-43d6-8250-2e0470305c86
-  name: Bulk-Data
-  owner: system
-  readOnly: false
-  referenceCount: 0
-  references: []
-  type: sla
-  version: '1.0'
-- description: SaaS App List for Salesforce
-  entries:
-  - app: salesforce
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827414996
-  listId: 61d6ecda-a29f-4bd5-bcf8-0fed2056996c
-  name: salesforce_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '2.0'
 - description: Google Applications List
   entries:
   - app: android-updates
@@ -291,8 +254,8 @@ vmanage_policy_lists:
   - app: youtube_hd
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827415158
-  listId: 95b24c6b-5869-4a2f-b672-86ab3483587a
+  lastUpdated: 1585248602541
+  listId: 84f36cee-55a2-44fa-94a9-678b7103c91d
   name: Google_Apps
   owner: system
   readOnly: true
@@ -307,8 +270,8 @@ vmanage_policy_lists:
     loss: '2'
   infoTag: aci
   isActivatedByVsmart: false
-  lastUpdated: 1587827415247
-  listId: 1e34767b-cfae-4ae7-b58b-98545c9eece6
+  lastUpdated: 1585248602625
+  listId: 470e7813-8eae-4ef9-b1f8-72237df35fd8
   name: Voice-And-Video
   owner: system
   readOnly: false
@@ -321,9 +284,114 @@ vmanage_policy_lists:
   - app: zendesk
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827415330
-  listId: 40263eb5-4598-462f-af78-8c9d3119ed95
+  lastUpdated: 1585248602722
+  listId: a59d1649-d719-4268-a0f3-9bec15ac8d7c
   name: zendesk_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '2.0'
+- description: SaaS App List for Oracle
+  entries:
+  - app: oracle
+  - app: oracle-bi
+  - app: oracle-ebsuite-unsecured
+  - app: oracle-sqlnet
+  - app: oraclenames
+  - app: oraclenet8cman
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602076
+  listId: 6c85f9b8-69e5-413f-9be0-80a422640ca6
+  name: oracle_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.1'
+- description: SaaS App List for Zoho CRM
+  entries:
+  - app: zoho-services
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602149
+  listId: ae0350bb-2ebc-4558-82f7-64cadae4a8af
+  name: zoho_crm_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: ACI Bulk Data SLA
+  entries:
+  - jitter: '100'
+    latency: '300'
+    loss: '10'
+  infoTag: aci
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602219
+  listId: 11459fc7-a6fc-42e5-8e6f-ab97f2e3eefb
+  name: Bulk-Data
+  owner: system
+  readOnly: false
+  referenceCount: 0
+  references: []
+  type: sla
+  version: '1.0'
+- description: SaaS App List for Salesforce
+  entries:
+  - app: salesforce
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602285
+  listId: 38a0446a-6b71-4465-84fa-62447ca7f18c
+  name: salesforce_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '2.0'
+- description: SaaS App List for Sugar CRM
+  entries:
+  - app: sugarcrm
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602359
+  listId: fa76d3e3-d615-4357-ab9c-5c51c34d2ade
+  name: sugar_crm_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: SaaS App List for Dropbox
+  entries:
+  - app: dropbox
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248602980
+  listId: b92f952e-1d1c-45ab-8d85-91c71f11c3a3
+  name: dropbox_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '2.0'
+- description: SaaS App List for Box Net
+  entries:
+  - app: box
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1585248603040
+  listId: ede8f280-6ca0-45a9-8ed5-aa0f378bcd91
+  name: box_net_apps
   owner: system
   readOnly: true
   referenceCount: 0
@@ -340,8 +408,8 @@ vmanage_policy_lists:
   - app: amazon-s3
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827415409
-  listId: 14732585-8c59-4d20-bb14-cba8e5d8dc2a
+  lastUpdated: 1585248602786
+  listId: 10279198-49e8-42a6-9f8b-76ac86d435a7
   name: amazon_aws_apps
   owner: system
   readOnly: true
@@ -349,88 +417,21 @@ vmanage_policy_lists:
   references: []
   type: app
   version: '3.0'
-- description: ACI Default SLA
-  entries:
-  - jitter: '100'
-    latency: '300'
-    loss: '25'
-  infoTag: aci
-  isActivatedByVsmart: false
-  lastUpdated: 1587827415490
-  listId: c4c9cdce-bed5-4b1a-baa5-6d6606e7610e
-  name: Default
-  owner: system
-  readOnly: false
-  referenceCount: 0
-  references: []
-  type: sla
-  version: '1.0'
-- description: Microsoft Applications List
-  entries:
-  - app: bing
-  - app: hockeyapp
-  - app: live_hotmail
-  - app: lync
-  - app: lync_online
-  - app: ms-services
-  - app: ms_translator
-  - app: ms-office-365
-  - app: share-point
-  - app: skydrive
-  - app: skype
-  - app: windows_azure
-  - app: windows_update
-  - app: windows_marketplace
-  - app: windowslive
-  - app: windowslivespace
-  - app: windowsmedia
-  - app: xbox
-  - app: xbox_music
-  - app: xbox_video
-  - app: xboxlive
-  - app: xboxlive_marketplace
-  - app: word_online
-  - app: powerpoint_online
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827415594
-  listId: 312a622c-eaec-47f3-8c56-4825d82a740d
-  name: Microsoft_Apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '4.0'
-- description: SaaS App List for Box Net
-  entries:
-  - app: box
-  infoTag: ''
-  isActivatedByVsmart: false
-  lastUpdated: 1587827415763
-  listId: 8f195bf3-585e-4ef2-a1d4-c516f2b4eeaf
-  name: box_net_apps
-  owner: system
-  readOnly: true
-  referenceCount: 0
-  references: []
-  type: app
-  version: '2.0'
 - description: Desc Not Required
   entries:
   - vpn: '1'
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827529859
-  listId: 7e9a4487-5010-4bf6-90db-3e1292655d04
+  lastUpdated: 1585249039186
+  listId: 9ccf273e-ead5-46b0-8980-e385bc19090b
   name: vpn1
   owner: admin
   readOnly: false
   referenceCount: 2
   references:
-  - id: f6075489-5212-49db-97b4-06b184e5deee
+  - id: 58676b88-a1c9-4cf8-ab43-7433e0148291
     type: ''
-  - id: f6075489-5212-49db-97b4-06b184e5deee
+  - id: 58676b88-a1c9-4cf8-ab43-7433e0148291
     type: ''
   type: vpn
   version: '0'
@@ -439,14 +440,14 @@ vmanage_policy_lists:
   - siteId: '1'
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827530004
-  listId: 589e5794-b924-46d0-8094-8a74b812e216
+  lastUpdated: 1585249039364
+  listId: 8fa59210-3638-4f19-ba36-c37bb9cd4bc9
   name: hq_sites
   owner: admin
   readOnly: false
   referenceCount: 1
   references:
-  - id: f6075489-5212-49db-97b4-06b184e5deee
+  - id: 58676b88-a1c9-4cf8-ab43-7433e0148291
     type: ''
   type: site
   version: '0'
@@ -455,14 +456,14 @@ vmanage_policy_lists:
   - siteId: 2-3
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827530123
-  listId: 31e5490e-8eb7-414c-a73a-d568285e20d0
+  lastUpdated: 1585249039516
+  listId: d6fa0b53-0016-404c-83cd-e382368e7229
   name: branch_sites
   owner: admin
   readOnly: false
   referenceCount: 1
   references:
-  - id: f6075489-5212-49db-97b4-06b184e5deee
+  - id: 58676b88-a1c9-4cf8-ab43-7433e0148291
     type: ''
   type: site
   version: '0'
@@ -471,14 +472,14 @@ vmanage_policy_lists:
   - ipPrefix: 8.8.8.8/32
   infoTag: ''
   isActivatedByVsmart: false
-  lastUpdated: 1587827530250
-  listId: 5b8980b8-37dd-4f4e-aa72-ff651618506f
+  lastUpdated: 1585250441765
+  listId: c8a4885d-a5c9-43a8-a316-b813c99845f0
   name: blacklist
   owner: admin
   readOnly: false
   referenceCount: 1
   references:
-  - id: f8a19885-d466-4228-b0c0-1bd988a10c94
+  - id: 1877de37-9f08-4f3f-9092-4ff556808450
     type: data
   type: dataPrefix
   version: '0'

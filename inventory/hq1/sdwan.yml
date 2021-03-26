@@ -3,6 +3,8 @@ all:
     virl_lab_file: "{{ playbook_dir }}/files/hq1.yaml"
     iosxe_sdwan_version: 16.12.2r
     viptela_version: 19.2.1
+    vmanage_templates_file: "{{ playbook_dir }}/files/vmanage_templates_v19.yml"
+    vmanage_policy_file: "{{ playbook_dir }}/files/vmanage_policy_v19.yml"
     sdwan_vbond: 10.0.0.11
   children:
     sdwan:
