@@ -25,18 +25,12 @@
         workspace: "{{ sdwan_type }}"
         variables_file: "{{ sdwan_type }}.tfvars"
         variables:
-          datacenter: "{{ datacenter }}"
-          cluster: "{{ cluster }}"
           folder: "{{ folder }}-{{ sdwan_type }}"
-          resource_pool: "{{ resource_pool }}"
-          datastore: "{{ datastore }}"
-          iso_datastore: "{{ iso_datastore }}"
-          iso_path: "{{ iso_path }}"
-          vmanage_template: "{{ vmanage_template }}"
-          vbond_template: "{{ vbond_template }}"
-          vsmart_template: "{{ vsmart_template }}"
-          vedge_template: "{{ vedge_template }}"
-          cedge_template: "{{ cedge_template }}"
+          vmanage_template: "{{ vmware_vmanage_template }}"
+          vbond_template: "{{ vmware_vbond_template }}"
+          vsmart_template: "{{ vmware_vsmart_template }}"
+          vedge_template: "{{ vmware_vedge_template }}"
+          cedge_template: "{{ vmware_cedge_template }}"
         force_init: yes
       tags: plan
       when: sdwan_type is defined

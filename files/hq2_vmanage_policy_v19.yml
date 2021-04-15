@@ -1,0 +1,484 @@
+vmanage_central_policies:
+- '@rid': 397
+  createdBy: admin
+  createdOn: 1587827809758
+  isPolicyActivated: false
+  lastUpdatedBy: admin
+  lastUpdatedOn: 1587827809758
+  policyDefinition:
+    assembly:
+    - definitionName: hq1-data-policy
+      entries:
+      - direction: tunnel
+        siteLists:
+        - hq_sites
+        - branch_sites
+        vpnLists:
+        - vpn1
+      type: data
+  policyDescription: hq2-centralized-policy
+  policyId: f6075489-5212-49db-97b4-06b184e5deee
+  policyName: hq2-centralized-policy
+  policyType: feature
+  policyVersion: 04252020T151213130
+vmanage_local_policies: []
+vmanage_policy_definitions:
+- defaultAction:
+    type: accept
+  definitionId: f8a19885-d466-4228-b0c0-1bd988a10c94
+  description: hq1-data-policy
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827531570
+  name: hq1-data-policy
+  owner: admin
+  referenceCount: 1
+  references:
+  - id: f6075489-5212-49db-97b4-06b184e5deee
+  - id: f6075489-5212-49db-97b4-06b184e5deee
+  sequences:
+  - actions: []
+    baseAction: drop
+    match:
+      entries:
+      - field: destinationDataPrefixList
+        listName: blacklist
+        listType: dataPrefix
+    sequenceId: 1
+    sequenceIpType: ipv4
+    sequenceName: Custom
+    sequenceType: data
+  type: data
+vmanage_policy_lists:
+- description: SaaS App List for Office365
+  entries:
+  - app: ms-live-accounts
+  - app: ms-lync
+  - app: ms-lync-audio
+  - app: ms-lync-control
+  - app: ms-lync-video
+  - app: ms-office-365
+  - app: ms-office-web-apps
+  - app: ms-services
+  - app: ms-teams
+  - app: ms-teams-audio
+  - app: ms-teams-media
+  - app: ms-teams-video
+  - app: ms-update
+  - app: outlook-web-service
+  - app: share-point
+  - app: skydrive
+  - app: skype
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414117
+  listId: 4acfc302-2bb2-4b6f-a315-59a62e68298a
+  name: office365_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: SaaS App List for Sugar CRM
+  entries:
+  - app: sugarcrm
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415077
+  listId: fba1ba78-2302-407a-a937-06120e339313
+  name: sugar_crm_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: ACI Transactional Data SLA
+  entries:
+  - jitter: '100'
+    latency: '50'
+    loss: '5'
+  infoTag: aci
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414247
+  listId: bd1c6f7e-d99b-45a6-8ce0-3ece99008528
+  name: Transactional-Data
+  owner: system
+  readOnly: false
+  referenceCount: 0
+  references: []
+  type: sla
+  version: '1.0'
+- description: SaaS App List for Dropbox
+  entries:
+  - app: dropbox
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415679
+  listId: 0d4c6ef7-7469-4922-80ad-4b338a75536c
+  name: dropbox_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '2.0'
+- description: SaaS App List for Oracle
+  entries:
+  - app: oracle
+  - app: oracle-bi
+  - app: oracle-ebsuite-unsecured
+  - app: oracle-sqlnet
+  - app: oraclenames
+  - app: oraclenet8cman
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414599
+  listId: d1cf94c2-bcba-444b-9708-ecde10f81748
+  name: oracle_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.1'
+- description: SaaS App List for Concur
+  entries:
+  - app: concur
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414368
+  listId: aa9dc901-94b7-4305-8761-7fb65016cbf8
+  name: concur_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: SaaS App List for Intuit
+  entries:
+  - app: intuit
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414442
+  listId: c88357f7-fc75-4b36-8ad2-440587ed914d
+  name: intuit_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: SaaS App List for Gotomeeting
+  entries:
+  - app: citrix
+  - app: gotomeeting
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414518
+  listId: 9b7be89d-c3df-4fd7-bb0b-4817e739bdc6
+  name: gotomeeting_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: SaaS App List for Zoho CRM
+  entries:
+  - app: zoho-services
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414698
+  listId: 50f359a4-1cca-4960-a2e1-dca395430df1
+  name: zoho_crm_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: ACI Bulk Data SLA
+  entries:
+  - jitter: '100'
+    latency: '300'
+    loss: '10'
+  infoTag: aci
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414777
+  listId: 2641a2cf-9ffe-43d6-8250-2e0470305c86
+  name: Bulk-Data
+  owner: system
+  readOnly: false
+  referenceCount: 0
+  references: []
+  type: sla
+  version: '1.0'
+- description: SaaS App List for Salesforce
+  entries:
+  - app: salesforce
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827414996
+  listId: 61d6ecda-a29f-4bd5-bcf8-0fed2056996c
+  name: salesforce_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '2.0'
+- description: Google Applications List
+  entries:
+  - app: android-updates
+  - app: blogger
+  - app: chrome_update
+  - app: gcs
+  - app: gmail
+  - app: gmail_basic
+  - app: gmail_chat
+  - app: gmail_drive
+  - app: gmail_mobile
+  - app: google-services
+  - app: google-services-audio
+  - app: google-services-media
+  - app: google-services-video
+  - app: google_accounts
+  - app: google_ads
+  - app: google_analytics
+  - app: google_appengine
+  - app: google_cache
+  - app: google_calendar
+  - app: google_code
+  - app: google_desktop
+  - app: google_docs
+  - app: google-docs
+  - app: google-downloads
+  - app: google_earth
+  - app: google-earth
+  - app: google_groups
+  - app: google_maps
+  - app: google_photos
+  - app: google_picasa
+  - app: picasa
+  - app: google-play
+  - app: google_plus
+  - app: google-plus
+  - app: google_safebrowsing
+  - app: google_skymap
+  - app: google_spaces
+  - app: google_tags
+  - app: google_toolbar
+  - app: google_translate
+  - app: google_trusted_store
+  - app: google_weblight
+  - app: googlebot
+  - app: gstatic
+  - app: gtalk
+  - app: gtalk-chat
+  - app: gtalk-ft
+  - app: gtalk-video
+  - app: gtalk-voip
+  - app: hangouts
+  - app: hangouts-audio
+  - app: hangouts-chat
+  - app: hangouts-file-transfer
+  - app: hangouts-media
+  - app: hangouts-video
+  - app: youtube
+  - app: youtube_hd
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415158
+  listId: 95b24c6b-5869-4a2f-b672-86ab3483587a
+  name: Google_Apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '4.2'
+- description: ACI Voice And Video SLA
+  entries:
+  - jitter: '100'
+    latency: '45'
+    loss: '2'
+  infoTag: aci
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415247
+  listId: 1e34767b-cfae-4ae7-b58b-98545c9eece6
+  name: Voice-And-Video
+  owner: system
+  readOnly: false
+  referenceCount: 0
+  references: []
+  type: sla
+  version: '1.0'
+- description: SaaS App List for Zendesk
+  entries:
+  - app: zendesk
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415330
+  listId: 40263eb5-4598-462f-af78-8c9d3119ed95
+  name: zendesk_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '2.0'
+- description: SaaS App List for Amazon AWS
+  entries:
+  - app: amazon
+  - app: amazon-web-services
+  - app: amazon-instant-video
+  - app: amazon-cloudfront
+  - app: amazon-ec2
+  - app: amazon-s3
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415409
+  listId: 14732585-8c59-4d20-bb14-cba8e5d8dc2a
+  name: amazon_aws_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '3.0'
+- description: ACI Default SLA
+  entries:
+  - jitter: '100'
+    latency: '300'
+    loss: '25'
+  infoTag: aci
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415490
+  listId: c4c9cdce-bed5-4b1a-baa5-6d6606e7610e
+  name: Default
+  owner: system
+  readOnly: false
+  referenceCount: 0
+  references: []
+  type: sla
+  version: '1.0'
+- description: Microsoft Applications List
+  entries:
+  - app: bing
+  - app: hockeyapp
+  - app: live_hotmail
+  - app: lync
+  - app: lync_online
+  - app: ms-services
+  - app: ms_translator
+  - app: ms-office-365
+  - app: share-point
+  - app: skydrive
+  - app: skype
+  - app: windows_azure
+  - app: windows_update
+  - app: windows_marketplace
+  - app: windowslive
+  - app: windowslivespace
+  - app: windowsmedia
+  - app: xbox
+  - app: xbox_music
+  - app: xbox_video
+  - app: xboxlive
+  - app: xboxlive_marketplace
+  - app: word_online
+  - app: powerpoint_online
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415594
+  listId: 312a622c-eaec-47f3-8c56-4825d82a740d
+  name: Microsoft_Apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '4.0'
+- description: SaaS App List for Box Net
+  entries:
+  - app: box
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827415763
+  listId: 8f195bf3-585e-4ef2-a1d4-c516f2b4eeaf
+  name: box_net_apps
+  owner: system
+  readOnly: true
+  referenceCount: 0
+  references: []
+  type: app
+  version: '2.0'
+- description: Desc Not Required
+  entries:
+  - vpn: '1'
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827529859
+  listId: 7e9a4487-5010-4bf6-90db-3e1292655d04
+  name: vpn1
+  owner: admin
+  readOnly: false
+  referenceCount: 2
+  references:
+  - id: f6075489-5212-49db-97b4-06b184e5deee
+    type: ''
+  - id: f6075489-5212-49db-97b4-06b184e5deee
+    type: ''
+  type: vpn
+  version: '0'
+- description: Desc Not Required
+  entries:
+  - siteId: '1'
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827530004
+  listId: 589e5794-b924-46d0-8094-8a74b812e216
+  name: hq_sites
+  owner: admin
+  readOnly: false
+  referenceCount: 1
+  references:
+  - id: f6075489-5212-49db-97b4-06b184e5deee
+    type: ''
+  type: site
+  version: '0'
+- description: Desc Not Required
+  entries:
+  - siteId: 2-3
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827530123
+  listId: 31e5490e-8eb7-414c-a73a-d568285e20d0
+  name: branch_sites
+  owner: admin
+  readOnly: false
+  referenceCount: 1
+  references:
+  - id: f6075489-5212-49db-97b4-06b184e5deee
+    type: ''
+  type: site
+  version: '0'
+- description: Desc Not Required
+  entries:
+  - ipPrefix: 8.8.8.8/32
+  infoTag: ''
+  isActivatedByVsmart: false
+  lastUpdated: 1587827530250
+  listId: 5b8980b8-37dd-4f4e-aa72-ff651618506f
+  name: blacklist
+  owner: admin
+  readOnly: false
+  referenceCount: 1
+  references:
+  - id: f8a19885-d466-4228-b0c0-1bd988a10c94
+    type: data
+  type: dataPrefix
+  version: '0'

@@ -26,17 +26,6 @@
         state: absent
         workspace: control
         variables_file: control.tfvars
-        variables:
-          datacenter: "{{ datacenter }}"
-          cluster: "{{ cluster }}"
-          resource_pool: "{{ resource_pool }}"
-          datastore: "{{ datastore }}"
-          iso_datastore: "{{ iso_datastore }}"
-          iso_path: "{{ iso_path }}"
-          vmanage_template: "{{ vmanage_template }}"
-          vbond_template: "{{ vbond_template }}"
-          vsmart_template: "{{ vsmart_template }}"
-          vedge_template: "{{ vedge_template }}"     
       when: control_stat_result.stat.exists == true
 
 - name: Delete Edge VMs
@@ -60,14 +49,19 @@
         workspace: edges
         variables_file: edges.tfvars
         variables:
-          datacenter: "{{ datacenter }}"
-          cluster: "{{ cluster }}"
-          resource_pool: "{{ resource_pool }}"
-          datastore: "{{ datastore }}"
-          iso_datastore: "{{ iso_datastore }}"
-          iso_path: "{{ iso_path }}"
-          vmanage_template: "{{ vmanage_template }}"
-          vbond_template: "{{ vbond_template }}"
-          vsmart_template: "{{ vsmart_template }}"
-          vedge_template: "{{ vedge_template }}"     
+          # datacenter: "{{ datacenter }}"
+          # cluster: "{{ cluster }}"
+          # resource_pool: "{{ resource_pool }}"
+          # datastore: "{{ datastore }}"
+          # iso_datastore: "{{ iso_datastore }}"
+          # iso_path: "{{ iso_path }}"
+          # vmanage_template: "{{ vmware_vmanage_template }}"
+          # vbond_template: "{{ vmware_vbond_template }}"
+          # vsmart_template: "{{ vmware_vsmart_template }}"
+          # vedge_template: "{{ vmware_vedge_template }}"     
+          vmanage_template: "{{ vmware_vmanage_template }}"
+          vbond_template: "{{ vmware_vbond_template }}"
+          vsmart_template: "{{ vmware_vsmart_template }}"
+          vedge_template: "{{ vmware_vedge_template }}"
+          cedge_template: "{{ vmware_cedge_template }}"
       when: edges_stat_result.stat.exists == true
