@@ -67,7 +67,7 @@ all:
             servicevpn_portgroup: "{{ lookup('env','SERVICEVPN_PORTGROUP') }}"
             vpn0_gateway: "{{ lookup('env','VPN0_GATEWAY') }}"
           hosts:
-            hq-edge1:
+            hq-cedge1:
               virl_image_definition: "{{ iosxe_sdwan_image }}"
               vpn0_ip: "{{ lookup('env','HQ_EDGE1_IP') }}"
               sdwan_system_ip: '1.1.1.4'
@@ -114,7 +114,7 @@ all:
                   'system_system_ip': "{{ sdwan_system_ip }}"
                   'banner_login': "{{ login_banner }}"
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
-            site2-edge1:
+            site2-vedge1:
               virl_image_definition: "viptela-edge-{{ viptela_version }}"
               vpn0_ip: "{{ lookup('env','SITE2_EDGE1_IP') }}"
               sdwan_system_ip: '1.1.3.1'
