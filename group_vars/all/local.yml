@@ -6,6 +6,8 @@ ansible_user: "{{ vmanage_user }}"
 ansible_password: "{{ vmanage_pass }}"
 sdwan_serial_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
 sdwan_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
+csr1000v_image: "{{ lookup('env','CSR1000V_IMAGE') | default('csr1000v-170301a', true) }}"
+ubuntu_image: "{{ lookup('env','UBUNTU_IMAGE') | default('ubuntu-18-04', true) }}"
 # Encrypt/Vault this in real life
 sdwan_CA_passphrase: Cisc0123
 sdwan_CA_cert: "{{ sdwan_cert_dir }}/myCA.pem"
