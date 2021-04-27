@@ -19,7 +19,7 @@
         organization: "{{ vmanage_org }}"
         vbond: "{{ sdwan_vbond }}"
       register: result
-      retries: 10
+      retries: 30
       delay: 10
       until: result is not failed 
 

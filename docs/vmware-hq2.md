@@ -24,11 +24,18 @@ The VMware playbooks make use of terraform to provision the control plane and ed
     inventory = ./inventory/hq2
     ```
     
-1. Set the needed environment variables for access to your VMware infrastucture.  Replace the values below with your server and credentials.
+1. Set the needed environment variables for access to your VMware infrastucture.  Replace the values below with your server, credentials and environment info.
     ```
     export TF_VAR_vsphere_user=administrator@vsphere.local
     export TF_VAR_vsphere_password=foo
     export TF_VAR_vsphere_server=vcenter.example.com
+    export TF_VAR_datacenter=my_datacenter
+    export TF_VAR_cluster=my_cluster
+    export TF_VAR_folder=my_folder
+    export TF_VAR_resource_pool=
+    export TF_VAR_datastore=my_datastore
+    export TF_VAR_iso_datastore=my_datastore
+    export TF_VAR_iso_path=cloud-init
     ```
 
 1. Set the IP addressing for your control plane components.  Make sure these are valid and reachable IP addresses for your environment and that they are specified in CIDR notation (except for the `VPN0_GATEWAY`).
@@ -46,21 +53,25 @@ The VMware playbooks make use of terraform to provision the control plane and ed
     export SERVICEVPN_PORTGROUP="Your service VPN port group"
     ```
 
-## Create/update the required inventory data
+1. Set the IP addressing for your edges.
+    ```
+    export HQ_EDGE1_IP=1.1.1.4/24
+    export SITE1_EDGE1_IP=1.1.1.5/24
+    export SITE2_EDGE1_IP=1.1.1.6/24
+    ```
+>Note: You do not need to supply this info if you are not going to deploy edges.
 
-1. In `groupvars/all/local.yml` set the following variables to reflect your environment:
-    * `datacenter`: the vCenter datacenter to use
-    * `cluster`: the vCenter cluster to use
-    * `folder`: (Optional) the folder to create in vCenter.  Provisioned VMs will be placed in this folder.  Provisioning will fail if the user does not have permissions to create VM folders in vCenter.
-    * `resource_pool`: (Optional) the vCenter resource pool to use.
-    * `datastore`: the datastore to use for VMs
-    * `iso_datastore`: the datastore to use for cloud-init ISOs
-    * `iso_path`: the path on the datastore for cloud-init ISOs
-    * `vmanage_template`: the name of the vManage template in vCenter
-    * `vbond_template`: the name of the vBond template in vCenter
-    * `vsmart_template`: the name of the vSmart template in vCenter
-    * `vedge_template`: the name of the vEdge template in vCenter
-    * `cedge_template`: the name of the cEdge template in vCenter
+1. Set the version of IOS-XE to use for edge devices.  Set this to the name of the template you want to use in VMware
+    ```
+    export IOSXE_SDWAN_IMAGE=iosxe-sdwan-16.12.2r
+    ```
+
+1. And finally, set the version of control plane to use.
+    ```
+    export VIPTELA_VERSION=19.2.1
+    ```
+
+>Note: This value gets appended to the template name (e.g. viptela-manage, viptela-smart, etc.) so make sure these names line up with the template names you have in VMware.
 
 ## Run the playbooks
 

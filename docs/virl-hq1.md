@@ -30,6 +30,23 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     export VIRL_LAB=myusername_sdwan
     ```
 
+1. Set the version of IOS-XE image to use for edge devices.
+    ```
+    export IOSXE_SDWAN_IMAGE=iosxe-sdwan-16.12.2r
+    ```
+
+1. Set the version of CSR1000v image to use for underlay devices.
+    ```
+    export CSR1000V_IMAGE=csr1000v-170301
+    ```
+
+1. And finally, set the version of control plane to use.
+    ```
+    export VIPTELA_VERSION=19.2.1
+    ```
+
+>Note: This value gets appended to the image name (e.g. viptela-manage, viptela-smart, etc.) so make sure these names line up with the image definitions you have in CML.
+
 ## Run the playbooks
 
 1. Create the local CA used for certificate signing.

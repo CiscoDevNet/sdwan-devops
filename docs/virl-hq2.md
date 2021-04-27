@@ -38,6 +38,26 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     export VPN0_GATEWAY=1.1.1.254
     ```
 
+1. Set the IP addressing for your edges.
+    ```
+    export HQ_EDGE1_IP=1.1.1.4/24
+    export SITE1_EDGE1_IP=1.1.1.5/24
+    export SITE2_EDGE1_IP=1.1.1.6/24
+    ```
+>Note: You do not need to supply this info if you are not going to deploy edges.
+
+1. Set the version of IOS-XE to use for edge devices.  Set this to the ID of the image you want to use in CML.
+    ```
+    export IOSXE_SDWAN_IMAGE=iosxe-sdwan-16.12.2r
+    ```
+
+1. And finally, set the version of control plane to use.
+    ```
+    export VIPTELA_VERSION=19.2.1
+    ```
+
+>Note: This value gets appended to the image name (e.g. viptela-manage, viptela-smart, etc.) so make sure these names line up with the image definitions you have in CML.
+
 ## Run the playbooks
 
 1. Create the local CA used for certificate signing.

@@ -1,12 +1,12 @@
 - import_playbook: check-reqs.yml
 
+- import_playbook: check-vmanage.yml
+
 - import_playbook: config-system.yml passed=sdwan_control
 
 - import_playbook: config-ca.yml passed=vbond_hosts
 
 - import_playbook: config-ca.yml passed=vsmart_hosts
-
-- import_playbook: check-vmanage.yml
 
 - import_playbook: config-vmanage.yml
 

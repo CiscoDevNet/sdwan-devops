@@ -6,23 +6,10 @@
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
-  tags:
-    - templates  
   tasks:
-    - name: Import feature templates
-      vmanage_feature_template:
+    - vmanage_template_import:
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        state: present
-        aggregate: "{{ vmanage_feature_templates }}"
-      when: vmanage_feature_templates is defined
-
-    - name: Import device templates
-      vmanage_device_template:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        state: present
-        aggregate: "{{ vmanage_device_templates }}"
-      when: vmanage_device_templates is defined
+        file: "{{ vmanage_templates_file }}"
+      when: vmanage_templates_file is defined
