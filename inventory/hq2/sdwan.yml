@@ -1,7 +1,7 @@
 all:
   vars:
     virl_lab_file: "{{ playbook_dir }}/files/hq2.yaml"
-    iosxe_sdwan_image: "{{ lookup('env','IOSXE_SDWAN_IMAGE') | default('csr1000v-16.12.2r', true) }}"
+    iosxe_sdwan_image: "{{ lookup('env','IOSXE_SDWAN_IMAGE') | default('iosxe-sdwan-16.12.2r', true) }}"
     viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('19.2.1', true) }}"
     viptela_major_version: "{{ viptela_version | regex_replace('^(\\d*)\\..*$', '\\1') }}"
     vmanage_templates_file: "{{ playbook_dir }}/files/hq2_vmanage_templates_v{{ viptela_major_version }}.yml"
@@ -94,6 +94,7 @@ all:
             site1-cedge1:
               virl_image_definition: "{{ iosxe_sdwan_image }}"
               vpn0_ip: "{{ lookup('env','SITE1_EDGE1_IP') }}"
+              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
               sdwan_system_ip: '1.1.2.1'
               sdwan_site_id: '2'
               sdwan_model: 'vedge-CSR-1000v'
