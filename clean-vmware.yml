@@ -49,16 +49,6 @@
         workspace: edges
         variables_file: edges.tfvars
         variables:
-          # datacenter: "{{ datacenter }}"
-          # cluster: "{{ cluster }}"
-          # resource_pool: "{{ resource_pool }}"
-          # datastore: "{{ datastore }}"
-          # iso_datastore: "{{ iso_datastore }}"
-          # iso_path: "{{ iso_path }}"
-          # vmanage_template: "{{ vmware_vmanage_template }}"
-          # vbond_template: "{{ vmware_vbond_template }}"
-          # vsmart_template: "{{ vmware_vsmart_template }}"
-          # vedge_template: "{{ vmware_vedge_template }}"     
           vmanage_template: "{{ vmware_vmanage_template }}"
           vbond_template: "{{ vmware_vbond_template }}"
           vsmart_template: "{{ vmware_vsmart_template }}"
