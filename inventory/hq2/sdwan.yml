@@ -70,6 +70,7 @@ all:
             hq-cedge1:
               virl_image_definition: "{{ iosxe_sdwan_image }}"
               vpn0_ip: "{{ lookup('env','HQ_EDGE1_IP') }}"
+              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
               sdwan_system_ip: '1.1.1.4'
               sdwan_site_id: '1'
               sdwan_model: 'vedge-CSR-1000v'
@@ -107,7 +108,7 @@ all:
                   'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
                   'vpn0_default_gateway': "{{ vpn0_gateway }}"
                   'vpn1_interface': 'GigabitEthernet3'      
-                  'vpn1_ipv4_address': '10.0.1.2/24'
+                  'vpn1_ipv4_address': 192.168.1.1/24
                   'system_latitude': '35.856360'
                   'system_longitude': '-78.879725'
                   'system_site_id': "{{ sdwan_site_id }}"
@@ -118,6 +119,7 @@ all:
             site2-vedge1:
               virl_image_definition: "viptela-edge-{{ viptela_version }}"
               vpn0_ip: "{{ lookup('env','SITE2_EDGE1_IP') }}"
+              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
               sdwan_system_ip: '1.1.3.1'
               sdwan_site_id: '3'
               sdwan_model: 'vedge-cloud'
