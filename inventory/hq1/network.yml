@@ -6,6 +6,8 @@ all:
     netconf_template_os: ios
   children:
     network:
+      vars:
+        virl_image_definition: "{{ csr1000v_image }}"
       children:
         internet_routers:
           hosts:

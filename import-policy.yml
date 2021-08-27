@@ -9,34 +9,9 @@
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   gather_facts: no
   tasks:
-    - name: Import policy lists
-      tags:
-        - policy_lists
-      vmanage_policy_list:
+    - vmanage_policy_import:
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        type: all
-        state: present
-        aggregate: "{{ vmanage_policy_lists }}"
-
-    - name: Import policy definitions
-      tags:
-        - policy_definitions
-      vmanage_policy_definition:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        type: data
-        state: present
-        aggregate: "{{ vmanage_policy_definitions }}"
-
-    - name: Import central policies
-      tags:
-        - central_policy
-      vmanage_central_policy:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        state: present
-        aggregate: "{{ vmanage_central_policies }}"
+        file: "{{ vmanage_policy_file }}"
+      when: vmanage_templates_file is defined
