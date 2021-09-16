@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+IMAGE="ghcr.io/ciscodevnet/sdwan-devops"
 OPTIONS=""
 
 if [[ ! -z "$ANSIBLE_VAULT_PASSWORD_FILE" ]]; then
@@ -48,12 +49,16 @@ done
 
 OPTIONS="$OPTIONS --env ANSIBLE_ROLES_PATH=/ansible/roles"
 
-while getopts ":d" opt; do
+while getopts ":d:l:" opt; do
   case $opt in
     d)
-      docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" -v $PWD/../python-viptela:/python-viptela --env USER="$USER" $OPTIONS ciscops/ansible-sdwan /bin/ash
+      docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" -v $PWD/../python-viptela:/python-viptela --env USER="$USER" $OPTIONS $IMAGE /bin/ash
+      exit
+      ;;
+    l)
+      docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-lint ${OPTARG}
       exit
       ;;
   esac
 done
-docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS ciscops/ansible-sdwan ansible-playbook "$@"
+docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-playbook "$@"

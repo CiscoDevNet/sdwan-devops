@@ -29,7 +29,7 @@ If you want to skip all the info and documentation below and just run the automa
 
 ## Software Dependancies
 
-All software dependencies have been rolled into a Docker container.  Ansible playbooks are launched via the container using the `play.sh` shell script.  The `Dockerfile` included in this repo is used to automatically build the [ansible-sdwan](https://hub.docker.com/repository/docker/ciscops/ansible-sdwan) container image on Docker Hub.
+All software dependencies have been rolled into a Docker container.  Ansible playbooks are launched via the container using the `play.sh` shell script.  The `Dockerfile` included in this repo is used to automatically build the [sdwan-devops](https://github.com/ciscodevnet/sdwan-devops/pkgs/container/sdwan-devops) container image and publish it to the GitHub Container Registry.
 
 For a detailed list of the dependencies required to run the playbooks, refer to the `Dockerfile`.
 
