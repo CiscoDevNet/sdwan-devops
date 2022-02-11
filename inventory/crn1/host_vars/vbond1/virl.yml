@@ -1,6 +1,0 @@
-virl:
-  subtype: "{{ virl_vbond_subtype }}"
-  interfaces:
-    - network: east-colo
-      name: eth1
-  config_template: viptela/virl.j2

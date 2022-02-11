@@ -1,3 +1,0 @@
-virl:
-  subtype: server
-  config_template: host.j2
