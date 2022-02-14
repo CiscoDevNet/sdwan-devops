@@ -1,14 +1,13 @@
 name: Docker Publish
 
 on:
-  schedule:
-    - cron: '11 1 * * *'
   push:
     branches: [ master ]
     # Publish semver tags as releases.
     tags: [ '*.*.*' ]
   pull_request:
     branches: [ master ]
+ workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
