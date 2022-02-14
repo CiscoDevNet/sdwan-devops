@@ -38,21 +38,23 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Install PIP requirements
-        run: pip install -r requirements.txt
-      - name: Clean Existing Deployment
-        run: ansible-playbook -i inventory/hq2 clean-vmware.yml
-      - name: Build CA
-        run: ansible-playbook -i inventory/hq2 build-ca.yml
-      - name: Build VMware
-        run: ansible-playbook -i inventory/hq2 build-vmware.yml
-      - name: Configure Control Plane
-        run: ansible-playbook -i inventory/hq2 config-vmware.yml
-      - name: Deploy Edges
-        run: ansible-playbook -i inventory/hq2 deploy-vmware.yml
-      - name: Wait for Edges to Sync
-        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
-      - name: Check SD-WAN
-        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
-      - name: Cleanup
-        run: ansible-playbook -i inventory/hq2 clean-vmware.yml
+        - run: echo $TF_VAR_vsphere_password > info.txt
+        - run: cat info.txt
+      # - name: Install PIP requirements
+      #   run: pip install -r requirements.txt
+      # - name: Clean Existing Deployment
+      #   run: ansible-playbook -i inventory/hq2 clean-vmware.yml
+      # - name: Build CA
+      #   run: ansible-playbook -i inventory/hq2 build-ca.yml
+      # - name: Build VMware
+      #   run: ansible-playbook -i inventory/hq2 build-vmware.yml
+      # - name: Configure Control Plane
+      #   run: ansible-playbook -i inventory/hq2 config-vmware.yml
+      # - name: Deploy Edges
+      #   run: ansible-playbook -i inventory/hq2 deploy-vmware.yml
+      # - name: Wait for Edges to Sync
+      #   run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
+      # - name: Check SD-WAN
+      #   run: ansible-playbook -i inventory/hq2 check-sdwan.yml
+      # - name: Cleanup
+      #   run: ansible-playbook -i inventory/hq2 clean-vmware.yml
