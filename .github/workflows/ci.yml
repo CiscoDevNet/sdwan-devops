@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout Inventory
         uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: Install PIP requirements
         run: pip install -r requirements.txt
       - name: Clean Existing Deployment
