@@ -4,35 +4,36 @@ on:
   pull_request:
     branches:
       - master
+      
     workflow_dispatch:
 
 jobs:
   test:
     runs-on: self-hosted
     env:
-      TF_VAR_vsphere_user: administrator@ciscops.net
-      TF_VAR_vsphere_password: \&@xda5YFMexa5Eh4
-      TF_VAR_vsphere_server: cpn-rtp-vc1.ciscops.net
-      TF_VAR_folder: sdwan-devops-ci
-      TF_VAR_cluster: cpn-rtp-hx2
-      TF_VAR_datacenter: RTP
-      TF_VAR_datastore: cpn-rtp-hx2-colab1
-      TF_VAR_iso_datastore: cpn-rtp-hx2-colab1
-      TF_VAR_iso_path: cloud-init
-      VMANAGE_ORG: CIDR_SDWAN_WORKSHOPS
-      VIPTELA_VERSION: 20.7.1
-      CLOUDINIT_TYPE: v2
-      VMANAGE1_IP: 192.133.184.29/22
-      VSMART1_IP: 192.133.184.30/22
-      VBOND1_IP: 192.133.184.31/22
-      HQ_EDGE1_IP: 192.133.184.32/22
-      SITE1_EDGE1_IP: 192.133.184.33/22
-      SITE2_EDGE1_IP: 192.133.184.34/22
-      VPN0_GATEWAY: 192.133.184.1
-      VPN0_PORTGROUP: cpn-rtp-colab4
-      VPN512_PORTGROUP: cpn-rtp-colab4
-      SERVICEVPN_PORTGROUP: cpn-rtp-colab4
-      IOSXE_SDWAN_IMAGE: csr1000v-16.12.02r
+      TF_VAR_vsphere_user: ${{ secrets.TF_VAR_vsphere_user }}
+      TF_VAR_vsphere_password: ${{ secrets.TF_VAR_vsphere_password }}
+      TF_VAR_vsphere_server: ${{ secrets.TF_VAR_vsphere_server }}
+      TF_VAR_folder: ${{ secrets.TF_VAR_folder }}
+      TF_VAR_cluster: ${{ secrets.TF_VAR_cluster }}
+      TF_VAR_datacenter: ${{ secrets.TF_VAR_datacenter }}
+      TF_VAR_datastore: ${{ secrets.TF_VAR_datastore }}
+      TF_VAR_iso_datastore: ${{ secrets.TF_VAR_iso_datastore }}
+      TF_VAR_iso_path: ${{ secrets.TF_VAR_iso_path }}
+      VMANAGE_ORG: ${{ secrets.VMANAGE_ORG }}
+      VIPTELA_VERSION: ${{ secrets.VIPTELA_VERSION }}
+      CLOUDINIT_TYPE: ${{ secrets.CLOUDINIT_TYPE }}
+      VMANAGE1_IP: ${{ secrets.VMANAGE1_IP }}
+      VSMART1_IP: ${{ secrets.VSMART1_IP }}
+      VBOND1_IP: ${{ secrets.VBOND1_IP }}
+      HQ_EDGE1_IP: ${{ secrets.HQ_EDGE1_IP }}
+      SITE1_EDGE1_IP: ${{ secrets.SITE1_EDGE1_IP }}
+      SITE2_EDGE1_IP: ${{ secrets.SITE2_EDGE1_IP }}
+      VPN0_GATEWAY: 1${{ secrets.VPN0_GATEWAY }}
+      VPN0_PORTGROUP: ${{ secrets.VPN0_PORTGROUP }}
+      VPN512_PORTGROUP: ${{ secrets.VPN512_PORTGROUP }}
+      SERVICEVPN_PORTGROUP: ${{ secrets.SERVICEVPN_PORTGROUP }}
+      IOSXE_SDWAN_IMAGE: ${{ secrets.IOSXE_SDWAN_IMAGE }}
     steps:
       - name: Checkout Inventory
         uses: actions/checkout@v2
