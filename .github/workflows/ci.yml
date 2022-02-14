@@ -40,18 +40,18 @@ jobs:
       - name: Install PIP requirements
         run: pip install -r requirements.txt
       - name: Clean Existing Deployment
-        run: ansible-playbook clean-vmware.yml
+        run: ansible-playbook -i inventory/hq2 clean-vmware.yml
       - name: Build CA
-        run: ansible-playbook build-ca.yml
+        run: ansible-playbook -i inventory/hq2 build-ca.yml
       - name: Build VMware
-        run: ansible-playbook build-vmware.yml
+        run: ansible-playbook -i inventory/hq2 build-vmware.yml
       - name: Configure Control Plane
-        run: ansible-playbook config-vmware.yml
+        run: ansible-playbook -i inventory/hq2 config-vmware.yml
       - name: Deploy Edges
-        run: ansible-playbook deploy-vmware.yml
+        run: ansible-playbook -i inventory/hq2 deploy-vmware.yml
       - name: Wait for Edges to Sync
-        run: ansible-playbook waitfor-sync.yml
+        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
       - name: Check SD-WAN
-        run: ansible-playbook check-sdwan.yml
+        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
       - name: Cleanup
-        run: ansible-playbook clean-vmware.yml
+        run: ansible-playbook -i inventory/hq2 clean-vmware.yml
