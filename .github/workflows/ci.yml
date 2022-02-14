@@ -11,29 +11,29 @@ jobs:
   test:
     runs-on: self-hosted
     env:
-      TF_VAR_vsphere_user: ${{ secrets.TF_VAR_vsphere_user }}
+      TF_VAR_vsphere_user: '${{ secrets.TF_VAR_vsphere_user }}'
       TF_VAR_vsphere_password: '${{ secrets.TF_VAR_vsphere_password }}'
-      TF_VAR_vsphere_server: ${{ secrets.TF_VAR_vsphere_server }}
-      TF_VAR_folder: ${{ secrets.TF_VAR_folder }}
-      TF_VAR_cluster: ${{ secrets.TF_VAR_cluster }}
-      TF_VAR_datacenter: ${{ secrets.TF_VAR_datacenter }}
-      TF_VAR_datastore: ${{ secrets.TF_VAR_datastore }}
-      TF_VAR_iso_datastore: ${{ secrets.TF_VAR_iso_datastore }}
-      TF_VAR_iso_path: ${{ secrets.TF_VAR_iso_path }}
-      VMANAGE_ORG: ${{ secrets.VMANAGE_ORG }}
-      VIPTELA_VERSION: ${{ secrets.VIPTELA_VERSION }}
-      CLOUDINIT_TYPE: ${{ secrets.CLOUDINIT_TYPE }}
-      VMANAGE1_IP: ${{ secrets.VMANAGE1_IP }}
-      VSMART1_IP: ${{ secrets.VSMART1_IP }}
-      VBOND1_IP: ${{ secrets.VBOND1_IP }}
-      HQ_EDGE1_IP: ${{ secrets.HQ_EDGE1_IP }}
-      SITE1_EDGE1_IP: ${{ secrets.SITE1_EDGE1_IP }}
-      SITE2_EDGE1_IP: ${{ secrets.SITE2_EDGE1_IP }}
-      VPN0_GATEWAY: 1${{ secrets.VPN0_GATEWAY }}
-      VPN0_PORTGROUP: ${{ secrets.VPN0_PORTGROUP }}
-      VPN512_PORTGROUP: ${{ secrets.VPN512_PORTGROUP }}
-      SERVICEVPN_PORTGROUP: ${{ secrets.SERVICEVPN_PORTGROUP }}
-      IOSXE_SDWAN_IMAGE: ${{ secrets.IOSXE_SDWAN_IMAGE }}
+      TF_VAR_vsphere_server: '${{secrets.TF_VAR_vsphere_server }}'
+      TF_VAR_folder: '${{ secrets.TF_VAR_folder }}'
+      TF_VAR_cluster: '${{ secrets.TF_VAR_cluster }}'
+      TF_VAR_datacenter: '${{ secrets.TF_VAR_datacenter }}'
+      TF_VAR_datastore: '${{ secrets.TF_VAR_datastore }}'
+      TF_VAR_iso_datastore: '${{ secrets.TF_VAR_iso_datastore }}'
+      TF_VAR_iso_path: '${{ secrets.TF_VAR_iso_path }}'
+      VMANAGE_ORG: '${{ secrets.VMANAGE_ORG }}'
+      VIPTELA_VERSION: '${{ secrets.VIPTELA_VERSION }}'
+      CLOUDINIT_TYPE: '${{ secrets.CLOUDINIT_TYPE }}'
+      VMANAGE1_IP: '${{ secrets.VMANAGE1_IP }}'
+      VSMART1_IP: '${{ secrets.VSMART1_IP }}'
+      VBOND1_IP: '${{ secrets.VBOND1_IP }}'
+      HQ_EDGE1_IP: '${{ secrets.HQ_EDGE1_IP }}'
+      SITE1_EDGE1_IP: '${{ secrets.SITE1_EDGE1_IP }}'
+      SITE2_EDGE1_IP: '${{ secrets.SITE2_EDGE1_IP }}'
+      VPN0_GATEWAY: 1'${{ secrets.VPN0_GATEWAY }}'
+      VPN0_PORTGROUP: '${{ secrets.VPN0_PORTGROUP }}'
+      VPN512_PORTGROUP: '${{ secrets.VPN512_PORTGROUP }}'
+      SERVICEVPN_PORTGROUP: '${{ secrets.SERVICEVPN_PORTGROUP }}'
+      IOSXE_SDWAN_IMAGE: '${{ secrets.IOSXE_SDWAN_IMAGE }}'
     steps:
       - name: Checkout Inventory
         uses: actions/checkout@v2
