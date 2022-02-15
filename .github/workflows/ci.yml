@@ -43,6 +43,10 @@ jobs:
         run: pip install -r requirements.txt
       - name: Clean Existing Deployment
         run: ansible-playbook -i inventory/hq2 clean-vmware.yml
+      - name: Install Licenses
+        run: |
+          mkdir licenses
+          wget https://colabucket.s3.amazonaws.com/users/jasonkin/serialFile.viptela -O licenses/serialFile.viptela
       - name: Build CA
         run: ansible-playbook -i inventory/hq2 build-ca.yml
       - name: Build VMware
