@@ -34,6 +34,7 @@ jobs:
       VPN512_PORTGROUP: '${{ secrets.VPN512_PORTGROUP }}'
       SERVICEVPN_PORTGROUP: '${{ secrets.SERVICEVPN_PORTGROUP }}'
       IOSXE_SDWAN_IMAGE: '${{ secrets.IOSXE_SDWAN_IMAGE }}'
+      ANSIBLE_VAULT_PASSWORD: '${{ secrets.ANSIBLE_VAULT_PASSWORD }}'
     steps:
       - name: Checkout Inventory
         uses: actions/checkout@v2
@@ -46,7 +47,8 @@ jobs:
       - name: Install Licenses
         run: |
           mkdir licenses
-          wget https://colabucket.s3.amazonaws.com/users/jasonkin/serialFile.viptela -O licenses/serialFile.viptela
+          echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
+          ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
       - name: Build CA
         run: ansible-playbook -i inventory/hq2 build-ca.yml
       - name: Build VMware
