@@ -47,10 +47,6 @@ jobs:
         run: ansible-playbook -i inventory/hq2 build-ca.yml
       - name: Build VMware
         run: ansible-playbook -i inventory/hq2 build-vmware.yml
-        env:
-          TF_VAR_vsphere_user: '${{ secrets.TF_VAR_vsphere_user }}'
-          TF_VAR_vsphere_password: '${{ secrets.TF_VAR_vsphere_password }}'
-          TF_VAR_vsphere_server: '${{secrets.TF_VAR_vsphere_server }}'
       - name: Configure Control Plane
         run: ansible-playbook -i inventory/hq2 config-vmware.yml
       - name: Deploy Edges
