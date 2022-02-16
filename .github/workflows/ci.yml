@@ -24,12 +24,14 @@ env:
 jobs:
   test_19_2_1:
     runs-on: self-hosted
+    concurrency: hq2
     env:
       VIRL_LAB: 'sdwan-devops-hq2'
       VIPTELA_VERSION: '19.2.1'
       CLOUDINIT_TYPE: 'v1'
       IOSXE_SDWAN_IMAGE: 'iosxe-sdwan-16.12.2r'
       CSR1000V_IMAGE: 'csr1000v-170101'
+    
     steps:
       - name: Checkout Inventory
         uses: actions/checkout@v2
@@ -60,6 +62,7 @@ jobs:
         run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
   test_20_3_2:
     runs-on: self-hosted
+    concurrency: hq2
     env:
       VIRL_LAB: 'sdwan-devops-hq2'
       VIPTELA_VERSION: '20.3.2'
