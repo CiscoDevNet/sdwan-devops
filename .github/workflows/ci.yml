@@ -24,6 +24,7 @@ jobs:
       HQ_EDGE1_IP: '${{ secrets.HQ_EDGE1_IP }}'
       SITE1_EDGE1_IP: '${{ secrets.SITE1_EDGE1_IP }}'
       SITE2_EDGE1_IP: '${{ secrets.SITE2_EDGE1_IP }}'
+      VPN0_GATEWAY: '${{ secrets.VPN0_GATEWAY }}'
       IOSXE_SDWAN_IMAGE: 'iosxe-sdwan-16.12.2r'
       CSR1000V_IMAGE: 'csr1000v-170101'
       ANSIBLE_VAULT_PASSWORD: '${{ secrets.ANSIBLE_VAULT_PASSWORD }}'
