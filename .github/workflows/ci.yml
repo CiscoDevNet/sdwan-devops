@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-19.2.1:
+  test_19_2_1:
     runs-on: self-hosted
     env:
       VIRL_HOST: '${{ secrets.VIRL_HOST }}'
