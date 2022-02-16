@@ -1,0 +1,98 @@
+---
+name: CI
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+
+env:
+  VIRL_HOST: '${{ secrets.VIRL_HOST }}'
+  VIRL_USERNAME: '${{ secrets.VIRL_USERNAME }}'
+  VIRL_PASSWORD: '${{ secrets.VIRL_PASSWORD }}'
+  VMANAGE_ORG: '${{ secrets.VMANAGE_ORG }}'
+  VMANAGE1_IP: '${{ secrets.VMANAGE1_IP }}'
+  VSMART1_IP: '${{ secrets.VSMART1_IP }}'
+  VBOND1_IP: '${{ secrets.VBOND1_IP }}'
+  HQ_EDGE1_IP: '${{ secrets.HQ_EDGE1_IP }}'
+  SITE1_EDGE1_IP: '${{ secrets.SITE1_EDGE1_IP }}'
+  SITE2_EDGE1_IP: '${{ secrets.SITE2_EDGE1_IP }}'
+  VPN0_GATEWAY: '${{ secrets.VPN0_GATEWAY }}'
+  ANSIBLE_VAULT_PASSWORD: '${{ secrets.ANSIBLE_VAULT_PASSWORD }}'
+
+jobs:
+  test_19_2_1:
+    runs-on: self-hosted
+    concurrency: hq2
+    env:
+      VIRL_LAB: 'sdwan-devops-hq2'
+      VIPTELA_VERSION: '19.2.1'
+      CLOUDINIT_TYPE: 'v1'
+      IOSXE_SDWAN_IMAGE: 'iosxe-sdwan-16.12.2r'
+      CSR1000V_IMAGE: 'csr1000v-170101'
+    
+    steps:
+      - name: Checkout Inventory
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install PIP requirements
+        run: pip install -r requirements.txt
+      - name: Clean Existing Deployment
+        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
+      - name: Install Licenses
+        run: |
+          mkdir licenses
+          echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
+          ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
+      - name: Build CA
+        run: ansible-playbook -i inventory/hq2 build-ca.yml
+      - name: Build VMware
+        run: ansible-playbook -i inventory/hq2 build-virl.yml
+      - name: Configure Control Plane
+        run: ansible-playbook -i inventory/hq2 config-virl.yml
+      - name: Deploy Edges
+        run: ansible-playbook -i inventory/hq2 deploy-virl.yml
+      - name: Wait for Edges to Sync
+        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
+      - name: Check SD-WAN
+        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
+      - name: Cleanup
+        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
+  test_20_3_2:
+    runs-on: self-hosted
+    concurrency: hq2
+    env:
+      VIRL_LAB: 'sdwan-devops-hq2'
+      VIPTELA_VERSION: '20.3.2'
+      CLOUDINIT_TYPE: 'v1'
+      IOSXE_SDWAN_IMAGE: 'iosxe-sdwan-16.12.2r'
+      CSR1000V_IMAGE: 'csr1000v-170101'
+    steps:
+      - name: Checkout Inventory
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install PIP requirements
+        run: pip install -r requirements.txt
+      - name: Clean Existing Deployment
+        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
+      - name: Install Licenses
+        run: |
+          mkdir licenses
+          echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
+          ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
+      - name: Build CA
+        run: ansible-playbook -i inventory/hq2 build-ca.yml
+      - name: Build VMware
+        run: ansible-playbook -i inventory/hq2 build-virl.yml
+      - name: Configure Control Plane
+        run: ansible-playbook -i inventory/hq2 config-virl.yml
+      - name: Deploy Edges
+        run: ansible-playbook -i inventory/hq2 deploy-virl.yml
+      - name: Wait for Edges to Sync
+        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
+      - name: Check SD-WAN
+        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
+      - name: Cleanup
+        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
