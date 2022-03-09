@@ -61,7 +61,7 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
 
 1. Configure the SD-WAN control plane using the supplied inventory data.
     ```
-    ./play.sh config-virl.yml
+    ./play.sh config-sdwan.yml
     ```
 
 1. Provision and bootstrap the edges.
@@ -100,9 +100,4 @@ To stop and wipe all of the nodes in the lab.
 To clean individual nodes, use `--limit`.
 ```
 ./play.sh clean-virl.yml --limit=site1-cedge1
-```
-
-To remove the lab completely from the VIRL server.
-```
-./play.sh clean-virl.yml --tags=delete
 ```
