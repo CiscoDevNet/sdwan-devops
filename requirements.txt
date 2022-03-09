@@ -1,4 +1,4 @@
-ansible==2.10.7
+ansible==4.2.0
 ansible-base==2.10.17
 ansible-lint==5.4.0
 ansible-virl==0.0.7
