@@ -17,6 +17,9 @@ RUN sudo apt-get update && sudo apt-get install -y \
       mkisofs \
       git
 
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
+
 WORKDIR /tmp
 ARG terraform_version=0.13.7
 RUN wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
