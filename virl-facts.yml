@@ -13,8 +13,3 @@
 
     - debug:
         var: result.virl_facts.details
-
-    - debug:
-      #   msg: "{{ result.virl_facts.nodes['internet'].interfaces[virl.mgmt_interface].ipv4_addresses }}"
-      # when: virl is defined and virl.mgmt_interface is defined
-
