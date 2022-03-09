@@ -69,7 +69,7 @@ jobs:
       - name: Check SD-WAN
         run: ansible-playbook -i inventory/hq2 check-sdwan.yml
       - name: Cleanup
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
+        run: ansible-playbook -i inventory/hq2 clean-virl.yml
   test_20_3_2:
     runs-on: self-hosted
     concurrency: hq2
@@ -107,8 +107,7 @@ jobs:
       - name: Check SD-WAN
         run: ansible-playbook -i inventory/hq2 check-sdwan.yml
       - name: Cleanup
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
-
+        run: ansible-playbook -i inventory/hq2 clean-virl.yml
   test_20_7_1:
     runs-on: self-hosted
     concurrency: hq2
@@ -146,4 +145,4 @@ jobs:
       - name: Check SD-WAN
         run: ansible-playbook -i inventory/hq2 check-sdwan.yml
       - name: Cleanup
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
+        run: ansible-playbook -i inventory/hq2 clean-virl.yml
