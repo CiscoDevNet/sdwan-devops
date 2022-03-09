@@ -1,1 +1,0 @@
-virl_lab_file: "{{ playbook_dir }}/files/hq1.yaml"

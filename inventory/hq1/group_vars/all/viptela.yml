@@ -1,7 +1,0 @@
-organization_name: "DevNet Sandbox"
-sdwan_vbond: 10.0.0.11
-sdwan_central_policy_name: hq1-centralized-policy
-serial_number_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
-viptela_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
-# Encrypt/Vault this in real life
-viptela_CA_passphrase: Cisc0123
