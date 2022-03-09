@@ -2,8 +2,14 @@
 {#<target>#}
 {#    <candidate/>#}
 {#</target>#}
-<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<config xmlns="http://tail-f.com/ns/config/1.0">
     <system xmlns="http://viptela.com/system">
+        {% if sdwan_personality is defined and sdwan_personality == 'vbond' %}
+        <personality>vedge</personality>
+        {% endif %}
+        {% if sdwan_personality is defined and sdwan_personality != 'vbond' %}
+        <personality>{{ sdwan_personality }}</personality>
+        {% endif %}
         <host-name>{{ inventory_hostname }}</host-name>
         {% if sdwan_system_ip is defined %}
         <system-ip>{{ sdwan_system_ip }}</system-ip>
@@ -11,25 +17,38 @@
         {% if sdwan_site_id is defined %}
         <site-id>{{ sdwan_site_id }}</site-id>
         {% endif %}
+        {% if sdwan_domain_id is defined %}
+        <domain-id>{{ sdwan_site_id }}</domain-id>
+        {% endif %}
         {% if vmanage_org is defined %}
         <organization-name>{{ vmanage_org }}</organization-name>
         {% endif %}
         {% if sdwan_personality is defined and sdwan_personality == 'vbond' %}
         <vbond>
-            <remote>{{ viptela.vbond.remote }}</remote>
+            <remote>{{ vpn0_ip | ipaddr('address') }}</remote>
             {% if sdwan_vbond_port is defined %}
-                <port>{{ sdwan_vbond_port }}</port>
+            <port>{{ sdwan_vbond_port }}</port>
             {% endif %}
-                <local/>
+            <local/>
         </vbond>
         {% elif sdwan_vbond is defined %}
         <vbond>
             <remote>{{ sdwan_vbond }}</remote>
             {% if sdwan_vbond_port is defined %}
-                <port>{{ sdwan_vbond_port }}</port>
+            <port>{{ sdwan_vbond_port }}</port>
             {% endif %}
         </vbond>
         {% endif %}
+        <aaa>
+            <user>
+                <name>admin</name>
+                {% if viptela_encrypted_pass is defined %}
+                <password>{{ viptela_encrypted_pass }}</password>
+                {% else %}{# if viptela_encrypted_pass is defined #}
+                <password>$6$329577c85ea66998$tTtlYqQIpfCGvqNZ2nICRWOSfyIV0/RO0ZWtFwpSJ0bBvlQoCowl6fO9SjzerDwmKYutIbPMAub7B4K/JG4c/0</password>
+                {% endif %}{# if viptela_encrypted_pass is defined #}
+            </user>
+        </aaa>
     </system>
     {% if omp is defined %}
     <omp xmlns="http://viptela.com/omp">
@@ -65,6 +84,11 @@
                     {% endif %}{# interface.ip #}
                     {% if interface.tunnel_interface is defined %}
                         <tunnel-interface>
+                            {% if interface.tunnel_interface.encapsulation is defined %}
+                                <encapsulation>
+                                    <encap>{{ interface.tunnel_interface.encapsulation }}</encap>
+                                </encapsulation>
+                            {% endif %}{# interface.tunnel_interface.encapsulation is defined #}
                             {% if interface.tunnel_interface.allow_service is defined %}
                                 <allow-service>
                                     {% for service in interface.tunnel_interface.allow_service %}
