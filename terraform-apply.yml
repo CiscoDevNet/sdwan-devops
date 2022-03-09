@@ -13,8 +13,7 @@
       template:
         src: "templates/terraform/{{ sdwan_type }}_tfvars.j2"
         dest: "terraform-sdwan/vmware/{{ sdwan_type }}.tfvars"
-      tags:
-        - always
+      tags: [tfvars, plan]
       when: sdwan_type is defined
 
     - name: Terraform plan
@@ -31,8 +30,9 @@
           vsmart_template: "{{ vmware_vsmart_template }}"
           vedge_template: "{{ vmware_vedge_template }}"
           cedge_template: "{{ vmware_cedge_template }}"
+          cloudinit_type: "{{ cloudinit_type }}"
         force_init: yes
-      tags: plan
+      tags: [plan, apply]
       when: sdwan_type is defined
 
     - name: Terraform apply
@@ -44,7 +44,8 @@
         variables_file: "{{ sdwan_type }}.tfvars"
       tags: apply
       when: sdwan_type is defined
-  
+      register: outputs
+
     - meta: refresh_inventory
       tags: always
         

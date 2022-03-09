@@ -47,7 +47,7 @@ build-control:
 config-control:
   stage: config-control
   script:
-    - ansible-playbook config-virl.yml
+    - ansible-playbook config-sdwan.yml
   only:
     changes:
       - files/hq1.yaml

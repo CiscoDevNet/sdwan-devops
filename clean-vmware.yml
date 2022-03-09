@@ -54,4 +54,23 @@
           vsmart_template: "{{ vmware_vsmart_template }}"
           vedge_template: "{{ vmware_vedge_template }}"
           cedge_template: "{{ vmware_cedge_template }}"
+          cloudinit_type: "{{ cloudinit_type }}"
       when: edges_stat_result.stat.exists == true
+
+- name: Remove terraform state files
+  hosts: localhost
+  connection: local
+  tags:
+    - delete
+    - never
+  gather_facts: no
+  tasks:
+    - name: Delete control state
+      file: 
+        state: absent
+        path: terraform-sdwan/vmware/terraform.tfstate.d/control/terraform.tfstate
+
+    - name: Delete edge state
+      file:
+        state: absent
+        path: terraform-sdwan/vmware/terraform.tfstate.d/edges/terraform.tfstate

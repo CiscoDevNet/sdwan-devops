@@ -26,6 +26,7 @@ If you want to skip all the info and documentation below and just run the automa
 - [Build the hq1 topology in CML](docs/virl-hq1.md)
 - [Build the hq2 topology in CML](docs/virl-hq2.md)
 - [Build the hq2 topology in VMware](docs/vmware-hq2.md)
+- [GitLab CI pipeline](docs/gitlab.md)
 
 ## Software Dependancies
 
@@ -69,9 +70,8 @@ Simulation can be used for developing new deployments as well as testing changes
 * `build-virl.yml` or `build-vmware.yml`
   * Creates Day0 config for VNFs based on the data in the `sdwan.yml` file
   * Provision and start VNFs on virtual infrastructure
-* `config-virl.yml` or `config-vmware.yml`
-  * Configure setting on vmanage
-  * Install Enterprise CA when required
+* `config-sdwan.yml`
+  * Configure settings on vmanage
   * Add vbonds and vsmarts to vmanage
   * Create CSRs for vbonds and vsmarts
   * Install certificates into vmanage

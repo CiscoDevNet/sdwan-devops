@@ -1,4 +1,5 @@
-- ios_ping:
+- name: Run the ping
+  ios_ping:
     provider:
       host: "{{ hostvars[ping_vedge].ansible_host }}"
       username: admin
@@ -11,7 +12,8 @@
   delegate_to: localhost
   register: ping
 
-- set_fact:
+- name: Record results
+  set_fact:
     ping_rx: "{{ ping.packets_rx }}"
     ping_tx: "{{ ping.packets_tx }}"
     ping_loss: "{{ ping.packet_loss }}"

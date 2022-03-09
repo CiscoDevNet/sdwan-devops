@@ -28,8 +28,8 @@
         host: "{{ vmanage_ip }}"
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
-        device_username: admin
-        device_password: admin
+        device_username: "{{ hostvars[item].ansible_user }}"
+        device_password: "{{ hostvars[item].ansible_password }}"
         name: "{{ item }}"
         personality: "{{ hostvars[item].sdwan_personality }}"
         transport_ip: "{{ hostvars[item].vpn0_ip | ipaddr('address')}}"
@@ -79,7 +79,7 @@
         provider: ownca
         ownca_path: "{{ sdwan_cert_dir }}/myCA.pem"
         ownca_privatekey_path: "{{ sdwan_cert_dir }}/myCA.key"
-        ownca_privatekey_passphrase: "{{ sdwan_CA_passphrase }}"
+        ownca_privatekey_passphrase: "{{ sdwan_ca_passphrase }}"
       loop: "{{ groups.sdwan_control }}"
       delegate_to: localhost
 

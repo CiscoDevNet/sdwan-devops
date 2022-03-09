@@ -1,8 +1,6 @@
 FROM alpine:3.11
 
 ARG build_date=unspecified
-ARG terraform_version=0.12.24
-# ARG virl2_client_pkg=virl2_client-2.1.0b9-py3-none-any.whl
 
 LABEL org.opencontainers.image.title="Cisco-SDWAN" \
       org.opencontainers.image.description="Cisco SDWAN DevOps" \
@@ -10,48 +8,33 @@ LABEL org.opencontainers.image.title="Cisco-SDWAN" \
       org.opencontainers.image.created="${build_date}" \
       org.opencontainers.image.url="https://github.com/CiscoDevNet/sdwan-devops"
 
+RUN apk add --no-cache gcc musl-dev make
+
+RUN apk add --no-cache python3
+RUN if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi
+
+RUN python3 -m ensurepip
+# RUN rm -r /usr/lib/python*/ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools wheel
+# RUN if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
+
+RUN apk --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen
+
 COPY requirements.txt /tmp/requirements.txt
-# COPY files/${virl2_client_pkg} /tmp/${virl2_client_pkg}
+RUN pip install -r /tmp/requirements.txt
 
-RUN echo "===> Installing GCC <===" && \
-    apk add --no-cache gcc musl-dev make && \
-    \
-    \
-    echo "===> Installing Python <===" && \
-    apk add --no-cache python3 && \
-    if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi && \
-    \
-    \
-    echo "===> Installing pip <===" && \
-    python3 -m ensurepip && \
-    rm -r /usr/lib/python*/ensurepip && \
-    pip3 install --no-cache --upgrade pip setuptools wheel && \
-    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
-    \
-    \
-    echo "===> Installing dependancies <==="  && \
-    apk --update add sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen && \
-    \
-    \
-    echo "===> Installing PIP Requirements <==="  && \
-    pip install -r /tmp/requirements.txt && \
-    \
-    \
-    # echo "===> Installing local virl2 client <===" && \
-    # pip install /tmp/${virl2_client_pkg} && \
-    # \
-    # \
-    echo "===> Installing Terraform <===" && \
-    apk --update add wget unzip cdrkit curl && \
-    \
-    \
-    wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip && \
-    unzip terraform_${terraform_version}_linux_amd64.zip && \
-    mv terraform /usr/bin && \
-    rm terraform_${terraform_version}_linux_amd64.zip
+ARG terraform_version=0.13.7
 
-ENV ANSIBLE_HOST_KEY_CHECKING=false \
-    ANSIBLE_RETRY_FILES_ENABLED=false \
-    ANSIBLE_SSH_PIPELINING=true
+RUN apk --update add wget unzip cdrkit curl
+RUN wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
+RUN unzip terraform_${terraform_version}_linux_amd64.zip
+RUN mv terraform /usr/bin
+RUN rm terraform_${terraform_version}_linux_amd64.zip
+
+ENV ANSIBLE_HOST_KEY_CHECKING=false
+ENV ANSIBLE_RETRY_FILES_ENABLED=false
+ENV ANSIBLE_SSH_PIPELINING=true
+ENV ANSIBLE_LOCAL_TMP=/tmp
+ENV ANSIBLE_REMOTE_TMP=/tmp
 
 WORKDIR /ansible

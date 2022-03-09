@@ -90,7 +90,7 @@ The VMware playbooks make use of terraform to provision the control plane and ed
 
 1. Configure the SD-WAN control plane using the supplied inventory data.
     ```
-    ./play.sh config-vmware.yml
+    ./play.sh config-sdwan.yml
     ```
     > Note: sometimes this playbook will fail because an incorrect IP address was detected for vBond.  If this happens, simply re-run the `build-vmware.yml` playbook as shown above.  This appears to be a bug in the way vBond reports IP addressing to VMware.
 
@@ -110,7 +110,8 @@ The VMware playbooks make use of terraform to provision the control plane and ed
     ```
     ./play.sh check-sdwan.yml
     ```
-
+    > Note: Sometimes VMware does not return the correct primary IP address for a given edge device.  To refresh the terraform state with updated primary IP addresses you can run `ansible-playbook terraform-apply.yml -e sdwan_type=edges --tags apply`.
+    
 ## Clean the topology
 
 To delete the entire simulation, including the control plane and edges.

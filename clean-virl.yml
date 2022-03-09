@@ -17,15 +17,12 @@
   gather_facts: no
   tags:
     - vmanage
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   tasks:
     - block:
-      - set_fact:
-          vmanage_host: "{{ groups.vmanage_hosts | first | default('') }}"
-
-      - set_fact:
-          vmanage_ip: "{{ hostvars[vmanage_host].ansible_host | default('') }}"
-        when: vmanage_host is defined
-
       - name: Remove device from vManage
         vmanage_device:
           host: "{{ vmanage_ip }}"
@@ -76,7 +73,6 @@
   connection: local
   gather_facts: no
   tags:
-    - never
     - delete
   tasks:
     - name: Delete the lab

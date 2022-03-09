@@ -3,7 +3,7 @@
   connection: local
   gather_facts: no
   roles:
-    - sdwan-tests
+    - sdwan_tests
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
@@ -11,7 +11,7 @@
     state: present
   tasks:
     - include_role:
-        name: sdwan-tests
+        name: sdwan_tests
         tasks_from: ping-test
       vars:
         ping_dst_ip: "{{ item.dst_ip }}"

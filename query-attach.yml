@@ -1,14 +1,18 @@
 - name: Attach Templates QUERY
-  hosts: all
-  any_errors_fatal: false
+  hosts: localhost
+  # any_errors_fatal: false
   connection: local
   gather_facts: no
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   tasks:
     - name: Query Attach Template
       vmanage_device_attachment:
-        user: "{{vmanage_user}}"
-        host: "{{vmanage_host}}"
-        password: "{{vmanage_password}}"
+        user: "{{ vmanage_user }}"
+        host: "{{ vmanage_ip }}"
+        password: "{{ ansible_password }}"
         template: "{{ templateName }}"
         state: "query"
       register: attachment_results_query

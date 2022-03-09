@@ -1,0 +1,9 @@
+exclude_paths:
+  - terraform-sdwan/
+  - .github/
+  - files/
+  - extras/
+  - docs/
+  - licenses/
+  - myCA/
+  

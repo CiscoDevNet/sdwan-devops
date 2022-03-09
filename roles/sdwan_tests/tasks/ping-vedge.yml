@@ -1,4 +1,5 @@
-- vmanage_nping:
+- name: Run the ping
+  vmanage_nping:
     user: "{{ vmanage_user }}"
     host: "{{ vmanage_ip }}"
     password: "{{ vmanage_pass }}"
@@ -10,16 +11,12 @@
   register: nping
   delegate_to: localhost
 
-- set_fact:
+- name: Record results
+  set_fact:
     ping_tx: "{{ nping.json.packetsTransmitted }}"
-    # ping_rx: "{{ nping.json.packetsReceived }}"
     ping_rx: "{{ nping.json.rawOutput | select('search', 'Echo reply') | list | length | default('0') }}"
-    ping_loss: "{{ nping.json.lossPercentage }}"
+    ping_loss: "{{ (100 - (100 * (ping_rx|int / ping_tx|int))) | int | string }}%"
     ping_rtt_min: "{{ nping.json.minRoundTrip }}"
     ping_rtt_max: "{{ nping.json.maxRoundTrip }}"
-    ping_rtt_avg: "{{ nping.json.avgRoundTrip }}"
-
-
-- set_fact:
-    ping_loss: "{{ (100 - (100 * (ping_rx|int / ping_tx|int))) | int | string }}%"
+    ping_rtt_avg: "{{ nping.json.avgRoundTrip }}"    
   

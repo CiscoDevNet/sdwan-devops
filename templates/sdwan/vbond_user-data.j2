@@ -1,8 +1,47 @@
 #jinja2: lstrip_blocks: True, trim_blocks: True
+{% if cloudinit_type == 'v2' %}
+#cloud-config
+{% if sdwan_personality == 'vmanage' %}
+fs_setup:
+- device: "/dev/sdb"
+  partition: "none"
+  filesystem: "ext4"
+mounts:
+- [ sdb, /opt/data ]
+{% endif %}{# sdwan_personality == 'vmanage' #}
+write_files:
+{% if sdwan_personality == 'vmanage' %}
+- path: /opt/web-app/etc/persona
+  owner: vmanage:vmanage-admin
+  permissions: '0644'
+  content: '{"persona":"COMPUTE_AND_DATA"}'
+- path: /etc/default/personality
+  content: "vmanage\n"
+{% endif %}{# sdwan_personality == 'vmanage' #}
+{% if sdwan_personality == 'vsmart' %}
+- path: /etc/default/personality
+  content: "vsmart\n"
+{% endif %}{# if sdwan_personality == 'vmsart' #}
+{% if sdwan_personality == 'vbond' %}
+- path: /etc/default/personality
+  content: "vedge\n"
+{% endif %}{# if sdwan_personality == 'vbond' #}
+- path: /etc/default/inited
+  content: "1\n"
+{%if sdwan_ca_cert is defined %}
+- path: /usr/share/viptela/symantec-root-ca.crt
+- path: /usr/share/viptela/root-ca.crt
+  content: |
+{{ lookup('file', sdwan_ca_cert) | indent(4, True) }}
+{% endif %}{# if sdwan_ca_cert is defined #}
+- path: /etc/confd/init/zcloud.xml
+  content: |
+{{ lookup('template', 'sdwan/netconf.j2') | indent(4, true) }}
+{% else %}{# cloudinit_type == 'v2' #}
 Content-Type: multipart/mixed; boundary="===============6560338015520979320=="
 MIME-Version: 1.0
 
-{% if sdwan_personality == 'vmanage' or sdwan_CA_cert is defined %}
+{% if sdwan_personality == 'vmanage' or sdwan_ca_cert is defined %}
 --===============6560338015520979320==
 Content-Type: text/cloud-config; charset="us-ascii"
 MIME-Version: 1.0
@@ -23,17 +62,17 @@ vinitparam:
 {% if vmanage_org is defined %}
  - org : "{{ vmanage_org }}"
 {% endif %}{# sdwan_org is defined #}
-{% if sdwan_CA_cert is defined %}
+{% if sdwan_ca_cert is defined %}
  - rcc : |
-{{ lookup('file', sdwan_CA_cert) | indent(7, True) }}
+{{ lookup('file', sdwan_ca_cert) | indent(7, True) }}
 
 ca-certs:
  remove-defaults: false
  trusted:
      - |
-{{ lookup('file', sdwan_CA_cert) | indent(7, True) }}
-{% endif %}{# sdwan_CA_cert is defined #}
-{% endif %}{# sdwan_personality == 'vmanage' or sdwan_CA_cert is defined #}
+{{ lookup('file', sdwan_ca_cert) | indent(7, True) }}
+{% endif %}{# sdwan_ca_cert is defined #}
+{% endif %}{# sdwan_personality == 'vmanage' or sdwan_ca_cert is defined #}
 
 --===============6560338015520979320==
 Content-Type: text/cloud-boothook; charset="us-ascii"
@@ -84,8 +123,11 @@ device-model {{ sdwan_device_model }}
       task security read
       !
       user admin
-      password $6$siwKBQ==$wT2lUa9BSreDPI6gB8sl4E6PAJoVXgMbgv/whJ8F1C6sWdRazdxorYYTLrL6syiG6qnLABTnrE96HJiKF6QRq1
-      !
+{% if vmanage_pass is defined %}
+       password {{ vmanage_pass }}
+{% else %}
+       password $6$u3jhmUlHRY16I1lI$OpkApAwXhGNo2xdKR.j2x7LF7OkRa9P02aSgACGMvmhidKHvxQ2poG6HTulDYp6BXfsm3clE6dz/wvOKLxA8e1
+{% endif %}{# vmanage_pass is defined #}      !
       !
       logging
       disk
@@ -107,54 +149,34 @@ device-model {{ sdwan_device_model }}
 {% if vpn_instances is defined %}{# if vpn_instances is defined, use that #}
 {%  for vpn in vpn_instances %}
    vpn {{ vpn.vpn_id }}
+{%   for route in vpn.routes|default([]) %}
+      ip route {{ route.prefix }} {{ route.next_hop.address }}
+{%   endfor %}{# for routes #}
 {%   for interface in vpn.interfaces %}
       interface {{ interface.if_name }}
-{%    if interface.ip.address == 'dhcp' %}
-      ip dhcp-client
-{%    else %}
-      ip address {{ interface.ip.address }}
-{%    endif %}{# interface.ip.address == 'dhcp' #}
-{%    if interface.tunnel_interface is defined %}
-      tunnel-interface
-         allow-service dhcp
-         allow-service dns
-         allow-service icmp
-         allow-service sshd
-         allow-service netconf
-         allow-service ntp
-         allow-service stun
-         allow-service https
-{%    endif %}{# interface.tunnel_interface is defiend #}
+{% if interface.ip.dhcp_client is defined %}
+  ip dhcp-client
+{% elif interface.ip.address is defined %}
+  ip address {{ interface.ip.address }}
+{% endif %}
+{% if interface.tunnel_interface is defined %}
+  tunnel-interface
+{% if interface.tunnel_interface.allow_service is defined %}
+{% for service in interface.tunnel_interface.allow_service %}
+   allow-service {{ service }}
+{% endfor %}{# service #}
+{% endif %}{# interface.allow_service #}
+{% endif %}{# interface.tunnel_inteface #}
 {%    if interface.enabled is sameas true %}
       no shutdown
 {%    else %}
       shutdown
 {%    endif %}{# interface.enabled is sameas true  #}
 {%   endfor %}{# for interface #}
-{%   for route in vpn.routes|default([]) %}
-      ip route {{ route.prefix }} {{ route.next_hop.address }}
-{%   endfor %}{# for routes #}
 {%  endfor %}{# for vpn #}
-{%  elif vpn0_ip is defined %}
-   vpn 0
-      interface ge0/0
-      ip address {{ vpn0_ip }}
-      tunnel-interface
-         allow-service dhcp
-         allow-service dns
-         allow-service icmp
-         allow-service sshd
-         allow-service netconf
-         allow-service ntp
-         allow-service stun
-         allow-service https
-      no shutdown
-{%  if vpn0_gateway is defined %}
-      ip route 0.0.0.0/0 {{ vpn0_gateway }}
-{%  endif %}{# if vpn0_gateway is defined #}
 {% else %}
    vpn 0
-      interface eth1
+      interface ge0/0
       ip dhcp-client
       tunnel-interface
          allow-service dhcp
@@ -165,7 +187,6 @@ device-model {{ sdwan_device_model }}
          allow-service ntp
          allow-service stun
          allow-service https
-{% endif %}{# vpn_instances is defined #}
    !
    vpn 512
       interface eth0
@@ -175,4 +196,6 @@ device-model {{ sdwan_device_model }}
   !
  !
 !
+{% endif %}{# vpn_instances is defined #}
 --===============6560338015520979320==
+{% endif %}{# cloudinit_type == 'v2' #}
