@@ -29,7 +29,7 @@ jobs:
         with:
           submodules: recursive
       - name: Remove ansible
-        run: pip uninstall ansible
+        run: pip uninstall -y -r requirements.txt
       - name: Install PIP requirements
         run: pip install -r requirements.txt
       - name: Run ansible-lint
