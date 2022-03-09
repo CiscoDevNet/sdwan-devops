@@ -14,7 +14,7 @@ OPTION_LIST=( \
    "VMANAGE_HOST" \
    "VMANAGE_ORG" \
    "VMANAGE_USERNAME" \
-   "VMANAGE_PASSWORD" \
+   "VMANAGE_PASS" \
    "VMANAGE1_IP" \
    "VBOND1_IP" \
    "VSMART1_IP" \
@@ -39,6 +39,7 @@ OPTION_LIST=( \
    "CSR1000V_IMAGE" \
    "UBUNTU_IMAGE" \
    "VIPTELA_VERSION" \
+   "CLOUDINIT_TYPE"
    )
 
 for OPTION in ${OPTION_LIST[*]}; do
@@ -49,14 +50,14 @@ done
 
 OPTIONS="$OPTIONS --env ANSIBLE_ROLES_PATH=/ansible/roles"
 
-while getopts ":d:l:" opt; do
+while getopts ":dl" opt; do
   case $opt in
     d)
       docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" -v $PWD/../python-viptela:/python-viptela --env USER="$USER" $OPTIONS $IMAGE /bin/ash
       exit
       ;;
     l)
-      docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-lint ${OPTARG}
+      docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-lint
       exit
       ;;
   esac
