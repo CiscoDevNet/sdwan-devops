@@ -14,10 +14,8 @@ RUN sudo apt-get update && sudo apt-get install -y \
       libffi-dev \
       libxml2-dev \
       libxslt-dev \
-      mkisofs
-
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
+      mkisofs \
+      git
 
 WORKDIR /tmp
 ARG terraform_version=0.13.7
