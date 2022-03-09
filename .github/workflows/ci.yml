@@ -28,6 +28,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: Remove ansible
+        run: pip uninstall ansible
       - name: Install PIP requirements
         run: pip install -r requirements.txt
       - name: Run ansible-lint
