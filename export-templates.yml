@@ -1,35 +1,15 @@
-- name: Export vManage Policy Lists
+- name: Export vManage Templates
   hosts: localhost
   connection: local
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
-    file: vmanage_templates.yml
+    file: vmanage-templates.yml
   gather_facts: no
   tasks:
-    - name: Get device templates
-      vmanage_device_template_facts:
+    - vmanage_template_export:
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        factory_default: no
-      register: device_template_facts
-
-    - name: Get feature templates
-      vmanage_feature_template_facts:
-        user: "{{ ansible_user }}"
-        host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
-        factory_default: no
-      register: feature_template_facts
-
-    - set_fact:
-        viptela_templates:
-          device_templates: "{{ device_template_facts.device_templates }}"
-          feature_templates: "{{ feature_template_facts.feature_templates }}"
-
-    - name: Write out templates to {{ file }}
-      copy:
-        content: "{{ viptela_templates | to_nice_yaml }}"
-        dest: "{{ file }}"
+        file: "{{ file }}"
