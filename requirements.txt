@@ -1,5 +1,6 @@
-ansible==2.8.6
-ansible-lint==4.2.0
+ansible==2.10.7
+ansible-base==2.10.17
+ansible-lint==5.4.0
 ansible-virl==0.0.7
 asn1crypto==0.24.0
 bcrypt==3.1.7
@@ -31,5 +32,5 @@ SecretStorage==2.3.1
 selectors2==2.0.1
 six==1.11.0
 urllib3==1.25.3
-viptela==0.3.4
+viptela==0.3.9.dev1
 virl2_client==2.2.1.post1
