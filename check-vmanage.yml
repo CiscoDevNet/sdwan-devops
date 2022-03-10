@@ -63,5 +63,5 @@
       delegate_to: localhost
       failed_when: false
       until: uri_results.msg.find("OK") != -1
-      retries: 60
+      retries: 75
       delay: 10
