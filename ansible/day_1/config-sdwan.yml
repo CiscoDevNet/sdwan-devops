@@ -1,0 +1,10 @@
+- import_playbook: import-templates.yml
+
+- import_playbook: import-policy.yml
+
+- import_playbook: attach-template.yml
+  vars:
+    passed: vsmart_hosts
+
+- import_playbook: activate-policy.yml
+

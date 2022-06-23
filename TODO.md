@@ -16,7 +16,7 @@ Some of the tasks listed here relate to the `terraform-sdwan` submodule
 - [x] Support for specifying password and encoding it
 - [ ] Static addressing has some conflicting configurations, clean that up
 - [ ] Update Docker container (pull in Nathan's work)
-- [ ] Split our day 1 automation (pull in Marcelo's work)
+- [x] Split out day 1 automation (pull in Marcelo's work)
 
 ### Generic multi-infra support
 
