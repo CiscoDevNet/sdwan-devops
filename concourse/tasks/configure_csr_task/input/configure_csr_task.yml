@@ -1,0 +1,13 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: {repository: sconrod/netmiko}
+
+inputs:
+  - name: input
+run:
+  path: /bin/sh
+  args: ["./input/8000v.sh"]
+

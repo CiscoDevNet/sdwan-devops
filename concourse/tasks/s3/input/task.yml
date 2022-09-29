@@ -1,0 +1,35 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: sconrod/ubuntu-kops
+    tag: '1.22'
+
+inputs:
+  - name: input
+run:
+  path: /bin/sh
+  args:
+    - -ce
+    - |
+      cd input
+      export AWS_PAGER=""
+      export NAME=$NAME
+      echo $NAME
+      aws configure set aws_access_key_id $AWS_KEY_ID
+      aws configure set aws_secret_access_key $AWS_KEY
+      aws configure set default.region $REGION
+      aws sts get-caller-identity --query Account --output text
+      export AWS_PAGER=""
+      chmod a+x task.sh
+      ./task.sh
+
+params:
+  AWS_KEY_ID: ((Access_key_ID.Access_key))
+  AWS_KEY: ((Secret_access_key.Secret_access_key))
+  REGION: ((aws.region))
+  NAME: ((az.name))
+  VAULT_ADDR: ((vault.addr))
+  SSH_TOKEN: ((ssh-token.token))
