@@ -6,6 +6,7 @@
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   connection: local
   gather_facts: no
+  environment: "{{ hostvars['localhost']['proxy_env'] }}"
   tasks:
     - name: Remove device from vManage
       vmanage_device:

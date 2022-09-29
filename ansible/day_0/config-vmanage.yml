@@ -10,6 +10,7 @@
     - vmanage
   any_errors_fatal: true
   gather_facts: no
+  environment: "{{ proxy_env }}"
   tasks:
     - name: vManage Settings
       vmanage_settings:

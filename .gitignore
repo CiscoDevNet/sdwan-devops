@@ -1,9 +1,11 @@
 *.pyc
 *.retry
-/myCA
+/ansible/myCA
 viptela_api_cookie
 topo.virl
-/licenses
+/ansible/licenses
+/ansible/facts_cache
 .virlrc
 /.virl
 set*.sh
+*_env_*.sh

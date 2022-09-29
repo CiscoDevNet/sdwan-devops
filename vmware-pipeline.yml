@@ -11,7 +11,7 @@
 # Refresh terraform state, just in case
 - import_playbook: terraform-apply.yml
   vars:
-    sdwan_type: edges
+    sdwan_component: edges
   tags: apply
 
 # Wait for edges to sync in vManage

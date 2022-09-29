@@ -30,3 +30,11 @@ EOF
     }{% if not loop.last %},{% endif %}
 {% endfor %}
 }
+
+folder           = "{{ folder }}-control-{{ ansible_date_time.iso8601_basic }}"
+vmanage_template = "{{ vmware_vmanage_template }}"
+vbond_template   = "{{ vmware_vbond_template }}"
+vsmart_template  = "{{ vmware_vsmart_template }}"
+vedge_template   = "{{ vmware_vedge_template }}"
+cedge_template   = "{{ vmware_cedge_template }}"
+cloudinit_type   = "{{ cloudinit_type }}"

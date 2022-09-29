@@ -6,6 +6,7 @@
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+  environment: "{{ hostvars['localhost']['proxy_env'] }}"
   tasks:
     - name: Attach template to device
       vmanage_device_attachment:

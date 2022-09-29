@@ -1,13 +1,28 @@
 #jinja2: lstrip_blocks: True, trim_blocks: True
 {% if cloudinit_type == 'v2' %}
 #cloud-config
+{% if ssh_pubkey is defined and ssh_pubkey != "" %}
+users:
+- name: admin
+  ssh_authorized_keys:
+  - {{ ssh_pubkey }}
+{% endif %}{# if ssh_pubkey is defined #}
 {% if sdwan_personality == 'vmanage' %}
+{% if sdwan_control_infra == 'aws' %}
+fs_setup:
+- device: "/dev/xvdb"
+  partition: "none"
+  filesystem: "ext4"
+mounts:
+- [ xvdb, /opt/data ]
+{% else %}
 fs_setup:
 - device: "/dev/sdb"
   partition: "none"
   filesystem: "ext4"
 mounts:
 - [ sdb, /opt/data ]
+{% endif %}{# if sdwan_control_infra == 'aws' #}
 {% endif %}{# sdwan_personality == 'vmanage' #}
 write_files:
 {% if sdwan_personality == 'vmanage' %}

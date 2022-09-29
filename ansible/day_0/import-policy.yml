@@ -8,6 +8,7 @@
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   gather_facts: no
+  environment: "{{ proxy_env }}"
   tasks:
     - vmanage_policy_import:
         user: "{{ ansible_user }}"

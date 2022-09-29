@@ -1,0 +1,21 @@
+network_state_file = "../Provision_VPC/terraform.tfstate.d/aws_network/terraform.tfstate"
+vbond_ami = "{{ aws_vbond_ami }}"
+vbond_count = "1"
+vmanage_ami = "{{ aws_vmanage_ami }}"
+vmanage_count = "1"
+vsmart_ami = "{{ aws_vsmart_ami }}"
+vsmart_count = "1"
+vbond_instances_type = "{{ aws_vbond_instance_type }}"
+vmanage_instances_type = "{{ aws_vmanage_instance_type }}"
+vsmart_instances_type = "{{ aws_vsmart_instance_type }}"
+ssh_pubkey = "{{ ssh_pubkey }}"
+sdwan_org = "{{ vmanage_org }}"
+vmanage_day0 = <<EOF
+{{ hostvars[groups['vmanage_hosts'][0]]['day0_config'] }}
+EOF
+vbond_day0 = <<EOF
+{{ hostvars[groups['vbond_hosts'][0]]['day0_config'] }}
+EOF
+vsmart_day0 = <<EOF
+{{ hostvars[groups['vsmart_hosts'][0]]['day0_config'] }}
+EOF

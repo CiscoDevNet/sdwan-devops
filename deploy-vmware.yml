@@ -8,4 +8,4 @@
 
 - import_playbook: terraform-apply.yml
   vars:
-    sdwan_type: edges
+    sdwan_component: edges

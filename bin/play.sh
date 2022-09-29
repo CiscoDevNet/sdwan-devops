@@ -7,6 +7,21 @@ if [[ ! -z "$ANSIBLE_VAULT_PASSWORD_FILE" ]]; then
 fi
 
 OPTION_LIST=( \
+   "SSH_PUBKEY_BASE64" \
+   "AWS_ACCESS_KEY_ID" \
+   "AWS_SECRET_ACCESS_KEY" \
+   "AWS_SESSION_TOKEN" \
+   "AWS_REGION" \
+   "VMANAGE_AMI" \
+   "VMANAGE_INSTANCE_TYPE" \
+   "VBOND_AMI" \
+   "VBOND_INSTANCE_TYPE" \
+   "VSMART_AMI" \
+   "VSMART_INSTANCE_TYPE"
+   "SDWAN_CONTROL_INFRA" \
+   "SDWAN_DATACENTER" \
+   "ACL_RANGES_IPV4_BASE64" \
+   "ACL_RANGES_IPV6_BASE64" \
    "VIRL_HOST" \
    "VIRL_USERNAME" \
    "VIRL_PASSWORD" \
@@ -15,6 +30,7 @@ OPTION_LIST=( \
    "VMANAGE_ORG" \
    "VMANAGE_USERNAME" \
    "VMANAGE_PASS" \
+   "NETWORK_CIDR" \
    "VMANAGE1_IP" \
    "VBOND1_IP" \
    "VSMART1_IP" \
@@ -48,18 +64,18 @@ for OPTION in ${OPTION_LIST[*]}; do
    fi
 done
 
-OPTIONS="$OPTIONS --env ANSIBLE_ROLES_PATH=/ansible/roles"
+OPTIONS="$OPTIONS --env ANSIBLE_ROLES_PATH=/ansible/roles --env ANSIBLE_STDOUT_CALLBACK=debug"
 
 while getopts ":dl" opt; do
   case $opt in
     d)
-      docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" -v $PWD/../python-viptela:/python-viptela --env USER="$USER" $OPTIONS $IMAGE /bin/ash
+      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible --env PWD="/ansible" -v $PWD/../python-viptela:/python-viptela --env USER="$USER" $OPTIONS $IMAGE /bin/ash
       exit
       ;;
     l)
-      docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-lint
+      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-lint
       exit
       ;;
   esac
 done
-docker run -it --rm -v $PWD:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-playbook "$@"
+docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-playbook "$@"

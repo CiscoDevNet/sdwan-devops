@@ -23,7 +23,7 @@ RUN apk --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
-ARG terraform_version=0.13.7
+ARG terraform_version=1.2.6
 
 RUN apk --update add wget unzip cdrkit curl
 RUN wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip

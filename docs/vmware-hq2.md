@@ -24,7 +24,7 @@ The VMware playbooks make use of terraform to provision the control plane and ed
     inventory = ./inventory/hq2
     ```
     
-1. Set the needed environment variables for access to your VMware infrastucture.  Replace the values below with your server, credentials and environment info.
+1. Set the needed environment variables for access to your VMware infrastructure.  Replace the values below with your server, credentials and environment info.
     ```
     export TF_VAR_vsphere_user=administrator@vsphere.local
     export TF_VAR_vsphere_password=foo
@@ -110,7 +110,7 @@ The VMware playbooks make use of terraform to provision the control plane and ed
     ```
     ./play.sh check-sdwan.yml
     ```
-    > Note: Sometimes VMware does not return the correct primary IP address for a given edge device.  To refresh the terraform state with updated primary IP addresses you can run `ansible-playbook terraform-apply.yml -e sdwan_type=edges --tags apply`.
+    > Note: Sometimes VMware does not return the correct primary IP address for a given edge device.  To refresh the terraform state with updated primary IP addresses you can run `ansible-playbook terraform-apply.yml -e sdwan_component=edges --tags apply`.
     
 ## Clean the topology
 

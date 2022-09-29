@@ -1,4 +1,4 @@
-- name: Activate central policy
+- name: Import vManage Feature/Device Templates
   hosts: localhost
   gather_facts: no
   connection: local
@@ -6,14 +6,11 @@
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
-  tags:
-    - policy
+  environment: "{{ proxy_env }}"
   tasks:
-    - name: Activate central policy
-      vmanage_central_policy:
+    - vmanage_template_import:
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        state: activated
-        name: "{{ sdwan_central_policy_name }}"
-        wait: yes
+        file: "{{ vmanage_templates_file }}"
+      when: vmanage_templates_file is defined

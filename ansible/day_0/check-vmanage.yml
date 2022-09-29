@@ -11,6 +11,7 @@
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+  environment: "{{ proxy_env }}"
   tasks:
     - name: Wait until the mgmt interface comes up
       virl_lab_facts:
@@ -47,6 +48,7 @@
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
   any_errors_fatal: true
   gather_facts: no
+  environment: "{{ proxy_env }}"
   tasks:
     - name: Waiting for vManage API to start
       uri:

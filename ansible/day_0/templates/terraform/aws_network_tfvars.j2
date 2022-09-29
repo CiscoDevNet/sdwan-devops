@@ -1,0 +1,11 @@
+region = "{{ sdwan_datacenter }}"
+cidr_block = "{{ sdwan_cidr }}"
+{% if ssh_pubkey is defined and ssh_pubkey != "" %}
+ssh_pubkey = "{{ ssh_pubkey }}"
+{% endif %}
+{% if acl_cidr_blocks is defined and acl_cidr_blocks != "" %}
+acl_cidr_blocks = [ {{ acl_cidr_blocks }} ]
+{% endif %}
+{% if acl6_cidr_blocks is defined and acl6_cidr_blocks != "" %}
+acl6_cidr_blocks = [ {{ acl6_cidr_blocks }} ]
+{% endif %}
