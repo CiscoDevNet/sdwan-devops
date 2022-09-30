@@ -27,7 +27,7 @@ however, when you delete a pipeline you lose all your build history. Therefore, 
 Typically pipeline files remain fairly static. Its the code they process that changes rapidly.
 
 
-In the configuraiton in this lab, under the vault mount point:concourse/sdwan is where our code will read/write variables, config files, ssh-keys etc.
+In the configuration in this lab, under the vault mount point:concourse/sdwan is where our code will read/write variables, config files, ssh-keys etc.
 Concourse/sdwan has a policy assigned to it - see sample policy under the VAULT directory in this rep
 
 There is a token generated from this policy called "ssh-token" which is a secret under the mount point

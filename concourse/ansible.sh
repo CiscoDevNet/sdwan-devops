@@ -13,7 +13,7 @@ touch ~/.bashrc
 terraform -install-autocomplete
 pwd
 ls -la
-cd git-cisco-terraform-sdwan/aws/Provision_VPC
+cd cisco-terraform-sdwan/aws/Provision_VPC
 terraform init
 terraform plan
 terraform apply --auto-approve
