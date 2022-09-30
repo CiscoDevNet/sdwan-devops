@@ -65,7 +65,7 @@ jobs:
               aws configure set default.region $REGION
               aws sts get-caller-identity --query Account --output text
               export AWS_PAGER=""
-              echo "Hello, I am your curatedOCI Build Container"
+              echo "Hello I am your curated OCI Build Container"
               echo "I have all the required libraries and packages already installed and I have already pulled your branch onto my container"
               echo "Now I will build your code...."
               chmod a+x sdwan-devops/concourse/ansible.sh
