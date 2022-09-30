@@ -1,0 +1,375 @@
+jobs:
+- name: lab-prep
+  plan:
+  - get: git-cisco-sdwan-devops
+    trigger: true
+  - get: git-cisco-terraform-sdwan
+    trigger: true
+  - config:
+      image_resource:
+        name: ""
+        source:
+          repository: sconrod/python-aws-image
+          tag: 2
+        type: docker-image
+      inputs:
+      - name: git-cisco-sdwan-devops
+      - name: git-cisco-terraform-sdwan
+      platform: linux
+      run:
+        path: sh
+        args:
+          - -ce
+          - |
+            export AWS_PAGER=""
+            export Name=$NAME
+            echo $NAME
+            aws configure set aws_access_key_id $AWS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_KEY
+            aws configure set default.region $REGION
+            aws sts get-caller-identity --query Account --output text
+            echo "WELCOME TO THE CISCO SDWAN AUTOMATION LAB FOR DEVOPS/NETOPS ENGINEERS"
+    task: check-aws
+    params:
+      AWS_KEY_ID: ((Access_key_ID.Access_key))
+      AWS_KEY: ((Secret_access_key.Secret_access_key))
+      REGION: ((aws.region))
+      NAME: ((az.name))
+      VAULT_ADDR: ((vault.addr))
+
+- name: deploy-aws-env
+  plan:
+    - get: git-resource
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-cisco-sdwan-devops
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-cisco-sdwan-devops
+              cd concourse
+              echo "Working Directory is......"
+              pwd
+              export AWS_PAGER=""
+              export NAME=$NAME
+              echo $NAME
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x aws_key_vault.sh
+              chmod a+x aws_deploy_sdwan.sh
+              ./aws_key_vault.sh
+              ./aws_deploy_sdwan.sh
+      task: build-vpc
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        REGION: ((aws.region))
+        NAME: ((az.name))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-vedge
+  plan:
+    - get: git-resource
+      trigger: false
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-resource
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-resource/concourse
+              export NAME=$NAME
+              echo $NAME
+              export AWS_PAGER=""
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x vedge_deploy.sh
+              ./vedge_deploy.sh
+      task: build-vedge
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        REGION: ((aws.region))
+        NAME: ((az.name))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-ubuntu-lan
+  plan:
+    - get: git-resource
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-resource
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-resource/resource
+              export NAME=$NAME
+              echo $NAME
+              export AWS_PAGER=""
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x aws_ubuntu_lan_deploy.sh
+              ./aws_ubuntu_lan_deploy.sh
+              export
+      task: build-ubuntu-lan
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        REGION: ((aws.region))
+        NAME: ((az.name))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-ubuntu-router
+  plan:
+    - get: git-resource
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-resource
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-resource/concourse
+              export NAME=$NAME
+              echo $NAME
+              export AWS_PAGER=""
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x aws_ubuntu_router_deploy.sh
+              ./aws_ubuntu_router_deploy.sh
+              echo $REGION
+      task: build-ubuntu-router
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        NAME: ((az.name))
+        REGION: ((aws.region))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-centos-router
+  plan:
+    - get: git-resource
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-resource
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-resource/concourse
+              export NAME=$NAME
+              echo $NAME
+              export AWS_PAGER=""
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x aws_centos_deploy.sh
+              ./aws_centos_deploy.sh
+              echo $REGION
+      task: build-centos-router
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        NAME: ((az.name))
+        REGION: ((aws.region))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-vmanage
+  plan:
+    - get: git-resource
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-resource
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-resource/concourse
+              export NAME=$NAME
+              echo $NAME
+              export AWS_PAGER=""
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x vmanage_deploy.sh
+              ./vmanage_deploy.sh
+              echo $REGION
+      task: build-vmanage
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        NAME: ((az.name))
+        REGION: ((aws.region))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-vsmart
+  plan:
+    - get: git-resource
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-resource
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-resource/concourse
+              export NAME=$NAME
+              echo $NAME
+              export AWS_PAGER=""
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x vsmart_deploy.sh
+              ./vsmart_deploy.sh
+              echo $REGION
+      task: build-vsmart
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        NAME: ((az.name))
+        REGION: ((aws.region))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-vbond
+  plan:
+    - get: git-resource
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/python-aws-image
+            tag: 2
+          type: docker-image
+        inputs:
+          - name: git-resource
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              cd git-resource/concourse
+              export NAME=$NAME
+              echo $NAME
+              export AWS_PAGER=""
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              chmod a+x vbond_deploy.sh
+              ./vbond_deploy.sh
+              echo $REGION
+      task: build-vbond
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        NAME: ((az.name))
+        REGION: ((aws.region))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+
+resource_types:
+resources:
+  - name: git-cisco-sdwan-devops
+    source:
+      Username: ((Username))
+      branch: concourse
+      email: ((email))
+      private_key: ((private_key))
+      uri: git@github.com:CiscoDevNet/sdwan-devops.git
+    type: git
+
+  - name: git-cisco-terraform-sdwan
+    source:
+      Username: sconrod-tester
+      branch: SDWANAUTO-2
+      email:
+      private_key: ((private_key))
+      uri: git@github.com:CiscoDevNet/terraform-sdwan.git
+    type: git

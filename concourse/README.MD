@@ -1,15 +1,22 @@
 IMPORTANT 
 =========
-Pre to run pipeline - install concourse and vault.
+This repo is being forked temporarily from the internal cisco sdwan-devops repo until that repo is made public to unblock me on the 
+pipeline access to a git repo to build the code.
 
-It is fast and easy if you have an existing kubernetes cluster, to simply install the vanilla vault and concourse helm charts. I have included sample HELM values files. 
+This is because it is not possible to vpn in from a build container.
 
-1. on kubernetes deploy vault helm, initialize and create a read/write policy for vault and setup
-applicationID and tokenf or vault. Update the concourse helm chart with this and the URL of the vault server.
-The token will continously renew itself, unless you show down either vault or helm in access of the time duration set for token expiration. In this case you would simply logon to vault, generate a new token and do a helm upgrade of concourse.
+I followed these steps:
 
-2. create a mount point for concourse and a submount point for any teams you have configured in concourse helm values.yml
+Added my cisco-ssh key to this repo
+From the Cisco Repo here, https://wwwin-github.cisco.com/automation/sdwan-devops
+I did these steps:
+git remote add cisco git@github.com:devops-ontap/cisco-sdwan-devops.git
+git remove -v
+git push -u cisco master
+git push -u cisco concourse
+git push -u cisco sconrod
 
+Will be working out of the concourse branch - can collaps or merge the sconrod branch in then delete it.
 
 
 *It is worth noting the vault set up.
@@ -19,7 +26,7 @@ under concourse sdwan is where all the objects will get automatically provisione
 Concourse/sdwan has a policy assigned to it
 There is a token generated from this policy called "ssh-token" which is a secret under the mount point
 This gets injected into the concourse pipeline - this allows jobs in the pipeline to call out to vault,
-either via CLI or the REST API, in order to read/write objects into this mount point and no others.
+either via CLI or the REST API, in order to read/write objects into this mount point. 
 
 It does not have access to any other mount points in the vault.
 
@@ -183,5 +190,7 @@ https://concourse-ci.org/user-roles.html
 Many different kinds of auth can be set up to concourse as described here:
 https://concourse-ci.org/configuring-auth.html
 
+
+fly -t sdwan set-pipeline -c /Users/sconrod/dev/cisco-sdwan-devops/concourse/pipeline-sdwan.yml -p sdwan-terraform -l /Users/sconrod/dev/cisco-fso-lab-gen/params/sdwan-us-west-2a.yml -v aws.region=us-west-2 -v az.name=us-west-2a -v vault.addr=http://prod-vault.devops-ontap.com:8200
 
 
