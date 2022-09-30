@@ -1,22 +1,15 @@
 IMPORTANT 
 =========
-This repo is being forked temporarily from the internal cisco sdwan-devops repo until that repo is made public to unblock me on the 
-pipeline access to a git repo to build the code.
+Pre to run pipeline - install concourse and vault.
 
-This is because it is not possible to vpn in from a build container.
+It is fast and easy if you have an existing kubernetes cluster, to simply install the vanilla vault and concourse helm charts. I have included sample HELM values files. 
 
-I followed these steps:
+1. on kubernetes deploy vault helm, initialize and create a read/write policy for vault and setup
+applicationID and tokenf or vault. Update the concourse helm chart with this and the URL of the vault server.
+The token will continously renew itself, unless you show down either vault or helm in access of the time duration set for token expiration. In this case you would simply logon to vault, generate a new token and do a helm upgrade of concourse.
 
-Added my cisco-ssh key to this repo
-From the Cisco Repo here, https://wwwin-github.cisco.com/automation/sdwan-devops
-I did these steps:
-git remote add cisco git@github.com:devops-ontap/cisco-sdwan-devops.git
-git remove -v
-git push -u cisco master
-git push -u cisco concourse
-git push -u cisco sconrod
+2. create a mount point for concourse and a submount point for any teams you have configured in concourse helm values.yml
 
-Will be working out of the concourse branch - can collaps or merge the sconrod branch in then delete it.
 
 
 *It is worth noting the vault set up.
@@ -26,7 +19,7 @@ under concourse sdwan is where all the objects will get automatically provisione
 Concourse/sdwan has a policy assigned to it
 There is a token generated from this policy called "ssh-token" which is a secret under the mount point
 This gets injected into the concourse pipeline - this allows jobs in the pipeline to call out to vault,
-either via CLI or the REST API, in order to read/write objects into this mount point. 
+either via CLI or the REST API, in order to read/write objects into this mount point and no others.
 
 It does not have access to any other mount points in the vault.
 
