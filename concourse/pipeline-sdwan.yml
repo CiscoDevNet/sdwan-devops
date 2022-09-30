@@ -57,10 +57,6 @@ jobs:
           args:
             - -ce
             - |
-              echo "Working Directory is......"
-              pwd
-              echo "The contents of the working directory is..."
-              ls -la
               export AWS_PAGER=""
               export NAME=$NAME
               echo $NAME
@@ -69,6 +65,9 @@ jobs:
               aws configure set default.region $REGION
               aws sts get-caller-identity --query Account --output text
               export AWS_PAGER=""
+              echo "Hello, I am your curatedOCI Build Container"
+              echo "I have all the required libraries and packages already installed and I have already pulled your branch onto my container"
+              echo "Now I will build your code...."
               chmod a+x sdwan-devops/concourse/ansible.sh
               ./sdwan-devops/concourse/ansible.sh
 
@@ -89,7 +88,7 @@ resources:
       branch: cloud
       email: ((email))
       private_key: ((private_key))
-      uri: git@github.com:CiscoDevNet/terraform-sdwan.git
+      uri: git@github.com:CiscoDevNet/sdwan-devops.git
     type: git
 
   - name: terraform-sdwan
