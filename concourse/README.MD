@@ -1,32 +1,38 @@
 IMPORTANT 
 =========
-This repo is being forked temporarily from the internal cisco sdwan-devops repo until that repo is made public to unblock me on the 
-pipeline access to a git repo to build the code.
 
-This is because it is not possible to vpn in from a build container.
+There are two versions of the pipeline. One builds the SDWAN using Python3 and the other Ansible and Terraform
 
-I followed these steps:
+Most companies will already have a vault and Kubernetes Cluster setup. But if you need to set that up first, its super simple and should take a few moments.
+This process is automated in a separate repo which in the future will be linked to this repo.
 
-Added my cisco-ssh key to this repo
-From the Cisco Repo here, https://wwwin-github.cisco.com/automation/sdwan-devops
-I did these steps:
-git remote add cisco git@github.com:devops-ontap/cisco-sdwan-devops.git
-git remove -v
-git push -u cisco master
-git push -u cisco concourse
-git push -u cisco sconrod
+Pipelining makes building code from multiple repos and branches very fast and easy.
 
-Will be working out of the concourse branch - can collaps or merge the sconrod branch in then delete it.
+To set up vault and concourse helm,  install the helm charts for vault and concourse. Refer to readme.md file in the HELM directory to find out which lines you need to edit in these files 
+to update your DNS FDQN, and change password and names of local users if you desire.
+
+Sample helm values files are included in the HELM directory of this repo
+
+If you are using AWS DNS, once the service is ready in kubernetes, you need to create a CNAME entry in route 53 that points to the kubernetes load balancer service.
+
+- Use Fly to Setup your team(s) in concourse. Refer to concourse documentation on how to set up teams and local access.
+- Concourse can be set up to authenticate via SSO (refer to docs)
+
+Currently local access is setup for concourse but in the near future the goal is to use github authentication.
+
+Setup your Teams and Access Roles in Concourse.
+For example, setup a team "sdwan"
+Grant Access - Typically we restrict the Owner role to Devops as this role can delete pipelines. Pipelines can instantly be recreated from the pipeline file, 
+however, when you delete a pipeline you lose all your build history. Therefore, typically only  Admin Role is to a few users in DEV and NONE in QA or Prod. 
+Typically pipeline files remain fairly static. Its the code they process that changes rapidly.
 
 
-*It is worth noting the vault set up.
-In concourse - I have set up a Team: sdwan
-In Vault I set up a mount point concourse/sdwan
-under concourse sdwan is where all the objects will get automatically provisioned
-Concourse/sdwan has a policy assigned to it
+In the configuraiton in this lab, under the vault mount point:concourse/sdwan is where our code will read/write variables, config files, ssh-keys etc.
+Concourse/sdwan has a policy assigned to it - see sample policy under the VAULT directory in this rep
+
 There is a token generated from this policy called "ssh-token" which is a secret under the mount point
 This gets injected into the concourse pipeline - this allows jobs in the pipeline to call out to vault,
-either via CLI or the REST API, in order to read/write objects into this mount point. 
+either via CLI or the REST API from within the ephemeral build containers, and in order to read/write objects into this mount point. 
 
 It does not have access to any other mount points in the vault.
 

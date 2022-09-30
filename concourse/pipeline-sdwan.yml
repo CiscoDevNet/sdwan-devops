@@ -3,7 +3,7 @@ jobs:
   plan:
   - get: sdwan-devops
     trigger: true
-  - get: git-terraform-sdwan
+  - get: terraform-sdwan
     trigger: true
   - config:
       image_resource:
@@ -40,7 +40,7 @@ jobs:
 - name: deploy-aws-env
   plan:
     - get: sdwan-devops
-    - get: git-terraform-sdwan
+    - get: terraform-sdwan
     - config:
         image_resource:
           name: ""
@@ -50,7 +50,7 @@ jobs:
           type: docker-image
         inputs:
           - name: sdwan-devops
-          - name: git-terraform-sdwan
+          - name: terraform-sdwan
         platform: linux
         run:
           path: /bin/sh

@@ -1061,7 +1061,7 @@ concourse:
         ## Make sure you have local users support enabled (`concourse.web.localAuth.enabled`) and
         ## that the users were added (`secrets.localUsers`).
         ##
-        localUser: "ci:u%SNj?fs-8M%.9Z{#1"
+        localUser: "ci:UPDATEPASSWORD"
 
         # Define how to display user ID for each authentication connector.
         # Format is <connector>:<fieldname>. Valid field names are user_id,
