@@ -6,6 +6,8 @@ From time to time, we add new tools or upgrade our OCI Build containers. This is
 When you bump the version of your OCI container to docker, you can then bump the image tag version in the pipleine and build pipeline to ensure there are no issues
 with a new revision of your build container.
 
+Note: You can just retain all of the vars in the vault if you like. I am passing via params file.
+
 Example
 ======
 
