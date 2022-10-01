@@ -1,0 +1,13 @@
+git-branch: your git branch
+git-uri-docker: this is the git ssh url to the repo
+image-repo-name: this is your docker repo nae
+Username: this is your git repo username
+email: this is your git repo login email
+private_key: |
+  -----BEGIN OPENSSH PRIVATE KEY-----
+  THIS IS YOUR GIT PRIVATE KEY
+  from mac do:
+  pbcopy < keyname
+
+registry-username: this is your dockerhub username
+registry-password: this is your docker hub password
