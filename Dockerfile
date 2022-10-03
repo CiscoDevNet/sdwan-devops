@@ -4,7 +4,7 @@ MAINTAINER Sherri Conrod <devopsontap@yahoo.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
-  apt -y install software-properties-common vim pwgen unzip curl python3 python3-pip glibc-source groff less git-core jq openssl openssh-client gcc make musl-dev sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen && \
+  apt -y install software-properties-common vim pwgen unzip curl python3 python3-pip glibc-source groff less git-core jq openssl openssh-client gcc make musl-dev sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl && \
   apt clean && \
   rm -rf /var/lib/apt/lists/* \
 
