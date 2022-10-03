@@ -20,7 +20,7 @@ export VSMART_INSTANCE_TYPE="t2.medium"
 
 # Example to generate a random password
 # TODO  save it somewhere?
-export VMANAGE_USER="admin"
+export VMANAGE_USERNAME="admin"
 export VMANAGE_PASS="$(openssl rand -base64 12)"
 export VMANAGE_ENCRYPTED_PASS="$(echo "$VMANAGE_PASS" | openssl passwd -6 -stdin)"
 export SDWAN_CA_PASSPHRASE="$(openssl rand -base64 15)"
