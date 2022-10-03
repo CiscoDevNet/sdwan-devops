@@ -23,14 +23,14 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
 RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools wheel
 
-RUN apk --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen
+RUN apt --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
 ARG terraform_version=1.2.6
 
-RUN apk --update add wget unzip cdrkit curl
+RUN apt --update add wget unzip cdrkit curl
 RUN wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
 RUN unzip terraform_${terraform_version}_linux_amd64.zip
 RUN mv terraform /usr/bin

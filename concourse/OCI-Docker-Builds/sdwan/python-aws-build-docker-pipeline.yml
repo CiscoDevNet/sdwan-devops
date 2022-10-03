@@ -5,13 +5,13 @@ resources:
     icon: github
     source:
       uri: ((git-uri-docker))
-      branch: python-aws
+      branch: cloud
       Username: ((Username))
       email: ((email))
       private_key: ((private_key))
 
   # Where we will push the image
-  - name: python-aws-image
+  - name: sdwan-ubuntu
     type: registry-image
     icon: docker
     source:
