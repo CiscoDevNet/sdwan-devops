@@ -1,3 +1,4 @@
+RUN apk add --no-cache --upgrade bash
 #!/bin/sh
 export AWS_PAGER=""
 rm -rf __pycache__
@@ -15,6 +16,9 @@ pwd
 ls -la
 chmod a+x bin/aws_env_example.sh
 ./aws_env_example.sh
+#Write all the vars to the vault - because there are so many just call a shell script to do it
+
+
 #cd sdwan-devops/bin
 #chmod a+x install_ca.sh
 #./install_ca.sh
