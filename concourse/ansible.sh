@@ -13,10 +13,12 @@ touch ~/.bashrc
 terraform -install-autocomplete
 pwd
 ls -la
-cd terraform-sdwan/aws/Provision_VPC
+cd sdwan-devops/terraform-sdwan/aws/Provision_VPC
 terraform init
-terraform plan
-terraform apply --auto-approve
+cd ../../../sdwan-devops/sdwan-edge/Catalyst8000v/aws/cedge
+terraform init
+#terraform plan
+#terraform apply --auto-approve
 
 
 
