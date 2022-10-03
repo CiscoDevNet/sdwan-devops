@@ -26,7 +26,7 @@ RUN pip3 install --no-cache --upgrade pip setuptools wheel
 RUN apt --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen
 
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
 ARG terraform_version=1.2.6
 
