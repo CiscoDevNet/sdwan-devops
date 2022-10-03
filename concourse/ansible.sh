@@ -11,8 +11,8 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 apt-get install terraform
 touch ~/.bashrc
 terraform -install-autocomplete
-chmod a+x concourse/ansible.sh
-./concourse/ansible.sh
+chmod a+x sdwan-devops/concourse/ansible.sh
+./sdwan-devops/concourse/ansible.sh
 python3 vault.py
 #Write all the vars to the vault - because there are so many just call a shell script to do it
 
