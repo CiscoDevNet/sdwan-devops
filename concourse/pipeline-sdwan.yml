@@ -60,6 +60,7 @@ jobs:
               aws configure set default.region $REGION
               aws sts get-caller-identity --query Account --output text
               chmod a+x sdwan-devops/concourse/ansible.sh
+              ./sdwan-devops/concourse/ansible.sh
 
 
       task: build-vpc
