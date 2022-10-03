@@ -4,17 +4,21 @@ rm -rf __pycache__
 echo "Until OCI Build Container is updated with Terraform and Ansible - installing it now on the container....."
 pip3 install ansible
 pip3 show ansible
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+apt-get update && apt-get install -y gnupg software-properties-common
+apt-get install wget
 wget -O- https://apt.releases.hashicorp.com/gpg gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
 gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
 apt-get install terraform
 touch ~/.bashrc
 terraform -install-autocomplete
+cd sdwan-devops
+git status
+git submodule update --init --recursive
 chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
 ./sdwan-devops/bin/aws_env_example_pipe.sh
-#python3 vault.py
-#Write all the vars to the vault - because there are so many just call a shell script to do it
+printenv
+
 
 
 #cd sdwan-devops/bin
