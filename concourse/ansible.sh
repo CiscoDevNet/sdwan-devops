@@ -1,4 +1,3 @@
-RUN apk add --no-cache --upgrade bash
 #!/bin/sh
 export AWS_PAGER=""
 rm -rf __pycache__
@@ -12,8 +11,6 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 apt-get install terraform
 touch ~/.bashrc
 terraform -install-autocomplete
-pwd
-ls -la
 chmod a+x bin/aws_env_example.sh
 ./aws_env_example.sh
 #Write all the vars to the vault - because there are so many just call a shell script to do it
