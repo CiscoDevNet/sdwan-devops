@@ -11,5 +11,5 @@ mkdir $LICENSE_DIR
 echo eeShahv3 > $LICENSE_DIR/vault-password-file
 #TODO is this the right location for the serialFile? Should the serialFile be in a different directory on its own?
 ansible-vault decrypt --vault-password-file $LICENSE_DIR/vault-password-file $PROJ_ROOT/ansible/files/serialFile.viptela --output $LICENSE_DIR/serialFile.viptela
-
+#require to write to the vault
 ./play.sh "/ansible/day_-1/build-ca.yml"
