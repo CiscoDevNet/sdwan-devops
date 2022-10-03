@@ -15,8 +15,8 @@ terraform -install-autocomplete
 cd sdwan-devops
 git status
 git submodule update --init --recursive
-chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
-./sdwan-devops/bin/aws_env_example_pipe.sh
+chmod bin/aws_env_example_pipe.sh
+./bin/aws_env_example_pipe.sh
 printenv
 
 
