@@ -22,7 +22,7 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
 
 RUN pip3 install --no-cache --upgrade pip setuptools wheel
 
-RUN apt --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen
+RUN apt -y install sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
