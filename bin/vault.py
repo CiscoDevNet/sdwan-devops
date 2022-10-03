@@ -444,7 +444,8 @@ resp = requests.post(url, headers=headers, json=data_json)
 print(resp)
 print(resp.status_code)
 
-=====
+'''
+
 export PROJ_ROOT=$SCRIPT_DIR/..
 export SSH_PUBKEY_BASE64="$(cat $HOME/.ssh/id_rsa.pub | base64)"
 export SDWAN_CONTROL_INFRA="aws"
@@ -499,3 +500,5 @@ export VIPTELA_VERSION=20.8.1
 export VMANAGE_ORG=CIDR_SDWAN_WORKSHOPS
 
 export CLOUDINIT_TYPE=v2
+
+'''
