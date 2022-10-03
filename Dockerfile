@@ -4,7 +4,7 @@ MAINTAINER Sherri Conrod <devopsontap@yahoo.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
-  apt -y install software-properties-common vim pwgen unzip curl python3 python3-pip glibc-source groff less git-core jq openssl openssh-client gcc make musl-dev && \
+  apt -y install software-properties-common vim pwgen unzip curl python3 python3-pip glibc-source groff less git-core jq openssl openssh-client gcc make musl-dev sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen && \
   apt clean && \
   rm -rf /var/lib/apt/lists/* \
 
@@ -21,8 +21,6 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
   apt update && apt -y install vault
 
 RUN pip3 install --no-cache --upgrade pip setuptools wheel
-
-RUN apt -y install sshpass libffi-dev libxml2-dev libxslt-dev python3-dev openssl-dev openssh-keygen
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
