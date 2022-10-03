@@ -13,12 +13,14 @@ touch ~/.bashrc
 terraform -install-autocomplete
 pwd
 ls -la
-cd sdwan-devops/bin
-chmod a+x install_ca.sh
-./install_ca.sh
+chmod a+x bin/aws_env_example.sh
+./aws_env_example.sh
+#cd sdwan-devops/bin
+#chmod a+x install_ca.sh
+#./install_ca.sh
 #install control plane -
-chmod a+x install_cp.sh
-./install_cp.sh
+#chmod a+x install_cp.sh
+#./install_cp.sh
 
 
 
