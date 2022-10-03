@@ -25,13 +25,6 @@ RUN pip3 install --no-cache --upgrade pip setuptools wheel
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
 
-ARG terraform_version=1.2.6
-
-RUN wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
-RUN unzip terraform_${terraform_version}_linux_amd64.zip
-RUN mv terraform /usr/bin
-RUN rm terraform_${terraform_version}_linux_amd64.zip
-
 ENV ANSIBLE_HOST_KEY_CHECKING=false
 ENV ANSIBLE_RETRY_FILES_ENABLED=false
 ENV ANSIBLE_SSH_PIPELINING=true
