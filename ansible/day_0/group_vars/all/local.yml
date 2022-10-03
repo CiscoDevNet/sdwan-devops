@@ -1,6 +1,6 @@
 #TODO trim to basics
 #TODO does this actually work? The variables should have TF_VAR_. Where do these variables come from?
-vmanage_user: "{{ lookup('env','VMANAGE_USER') }}"
+vmanage_user: "{{ lookup('env','VMANAGE_USERNAME') }}"
 vmanage_pass: "{{ lookup('env','VMANAGE_PASS') }}"
 # default is "cisco" encrypted, 20.5 and above don't allow plaintext passwords
 viptela_encrypted_pass: "{{ lookup('env','VMANAGE_ENCRYPTED_PASS') }}"
