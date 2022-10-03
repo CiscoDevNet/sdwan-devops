@@ -13,7 +13,7 @@ touch ~/.bashrc
 terraform -install-autocomplete
 chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
 ./sdwan-devops/bin/aws_env_example_pipe.sh
-python3 vault.py
+#python3 vault.py
 #Write all the vars to the vault - because there are so many just call a shell script to do it
 
 
