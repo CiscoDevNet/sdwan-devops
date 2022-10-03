@@ -3,8 +3,6 @@ jobs:
   plan:
   - get: sdwan-devops
     trigger: true
-  - get: terraform-sdwan
-    trigger: true
   - config:
       image_resource:
         name: ""
@@ -14,7 +12,6 @@ jobs:
         type: docker-image
       inputs:
       - name: sdwan-devops
-      - name: terraform-sdwan
       platform: linux
       run:
         path: sh
@@ -40,7 +37,6 @@ jobs:
 - name: deploy-aws-env
   plan:
     - get: sdwan-devops
-    - get: terraform-sdwan
     - config:
         image_resource:
           name: ""
@@ -50,7 +46,6 @@ jobs:
           type: docker-image
         inputs:
           - name: sdwan-devops
-          - name: terraform-sdwan
         platform: linux
         run:
           path: /bin/sh
@@ -89,13 +84,4 @@ resources:
       email: ((email))
       private_key: ((private_key))
       uri: git@github.com:CiscoDevNet/sdwan-devops.git
-    type: git
-
-  - name: terraform-sdwan
-    source:
-      Username: ((Username))
-      branch: cloud
-      email: ((email))
-      private_key: ((private_key))
-      uri: git@github.com:CiscoDevNet/terraform-sdwan.git
     type: git
