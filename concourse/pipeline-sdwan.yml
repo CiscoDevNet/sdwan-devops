@@ -3,17 +3,18 @@ jobs:
   plan:
   - get: sdwan-devops
     trigger: true
-  - get: sdwan-terraform
+  - get: terraform-sdwan
     trigger: true
   - config:
       image_resource:
         name: ""
         source:
           repository: sconrod/sdwan-ubuntu
-          tag: 1
+          tag: 1.0
         type: docker-image
       inputs:
       - name: sdwan-devops
+      - name: terraform-sdwan
       platform: linux
       run:
         path: sh
@@ -39,7 +40,7 @@ jobs:
 - name: deploy-aws-env
   plan:
     - get: sdwan-devops
-    - get: sdwan-terraform
+    - get: terraform-sdwan
     - config:
         image_resource:
           name: ""
@@ -49,6 +50,7 @@ jobs:
           type: docker-image
         inputs:
           - name: sdwan-devops
+          - name: terraform-sdwan
         platform: linux
         run:
           path: /bin/sh
@@ -56,15 +58,18 @@ jobs:
             - -ce
             - |
               export AWS_PAGER=""
-              export Name=$NAME
+              export NAME=$NAME
               echo $NAME
               aws configure set aws_access_key_id $AWS_KEY_ID
               aws configure set aws_secret_access_key $AWS_KEY
               aws configure set default.region $REGION
               aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              echo "Hello, I am your curatedOCI Build Container"
+              echo "I have all the required libraries and packages already installed and I have already pulled your branch onto my container"
+              echo "Now I will build your code...."
               chmod a+x sdwan-devops/concourse/ansible.sh
               ./sdwan-devops/concourse/ansible.sh
-
 
       task: build-vpc
       params:
