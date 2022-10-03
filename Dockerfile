@@ -27,7 +27,6 @@ RUN pip3 install -r /tmp/requirements.txt
 
 ARG terraform_version=1.2.6
 
-RUN apt --update add wget unzip cdrkit curl
 RUN wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
 RUN unzip terraform_${terraform_version}_linux_amd64.zip
 RUN mv terraform /usr/bin
