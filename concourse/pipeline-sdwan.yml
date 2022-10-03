@@ -7,8 +7,8 @@ jobs:
       image_resource:
         name: ""
         source:
-          repository: sconrod/python-aws-image
-          tag: 2
+          repository: sconrod/sdwan-ubuntu
+          tag: 1
         type: docker-image
       inputs:
       - name: sdwan-devops
@@ -41,35 +41,26 @@ jobs:
         image_resource:
           name: ""
           source:
-            repository: sconrod/sdwan-devops
+            repository: sconrod/sdwan-ubuntu
             tag: 1.0
           type: docker-image
         inputs:
           - name: sdwan-devops
         platform: linux
         run:
-          path: /bin/ash
+          path: /bin/sh
           args:
             - -cex
             - |
-              apk update \
-               && apk --no-cache add curl \
-               && apk --no-cache add unzip \
-               && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-               && unzip awscliv2.zip \
-               && ./aws/install             
-              /usr/local/bin/aws --version
               export AWS_PAGER=""
               export Name=$NAME
               echo $NAME
               aws configure set aws_access_key_id $AWS_KEY_ID
               aws configure set aws_secret_access_key $AWS_KEY
               aws configure set default.region $REGION
-              aws sts get-caller-identity --query Account --output text  
-              apk add --no-cache --upgrade bash
-              RUN apk upgrade --update-cache --available && apk add openssl && rm -rf /var/cache/apk/*              
-              chmod a+x sdwan-devops/bin/aws_env_example.sh
-              ./sdwan-devops/bin/aws_env_example.sh
+              aws sts get-caller-identity --query Account --output text
+              chmod a+x sdwan-devops/concourse/ansible.sh
+
 
       task: build-vpc
       params:
