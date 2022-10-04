@@ -33,4 +33,4 @@ selectors2==2.0.1
 six==1.11.0
 urllib3==1.25.3
 viptela==0.3.9
-virl2_client==2.2.1.post1
+virl2_client==2.4.0
