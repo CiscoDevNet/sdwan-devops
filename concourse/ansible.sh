@@ -15,8 +15,8 @@ pwd
 ls -la
 chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
 ./sdwan-devops/bin/aws_env_example_pipe.sh
-chmod a+x sdwan-devops/bin/initialize.sh
-./sdwan-devops/bin/initialize.sh
+#chmod a+x sdwan-devops/bin/initialize.sh
+#./sdwan-devops/bin/initialize.sh
 
 
 
