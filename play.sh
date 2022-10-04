@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-IMAGE="ghcr.io/ciscodevnet/sdwan-devops:0.0.6"
+IMAGE="ghcr.io/ciscodevnet/sdwan-devops:0.0.7"
 OPTIONS=""
 
 if [[ ! -z "$ANSIBLE_VAULT_PASSWORD_FILE" ]]; then
