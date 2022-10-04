@@ -10,9 +10,9 @@ from subprocess import call, check_output
 VAULT_ADDR = os.getenv('VAULT_ADDRR')
 VAULT_TOKEN = os.getenv('SSH_TOKEN') #This gets the vault token from the ephemeral build container
 
-lab_vars='lab_vars.py'
-import lab_vars
-from lab_vars import *
+vars='vars.py'
+import vars
+from vars import *
 
 outfile_vars="vars"
 sg_name=name
