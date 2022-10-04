@@ -3,6 +3,11 @@
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 
 #Logon to Vault here
+NAME="us-west-2a"
+export NAME=$NAME
+export VAULT_ADDR=$VAULT_ADDR
+export VAULT_TOKEN=$SSH_TOKEN
+vault login --no-print $VAULT_TOKEN
 #Pass in the public key from vault that will be used for ssh later
 
 
@@ -10,6 +15,7 @@ export PROJ_ROOT=$SCRIPT_DIR/..
 #put this in the vault - local task.
 #export SSH_PUBKEY_BASE64="$(cat $HOME/.ssh/id_rsa.pub | base64)"
 export SDWAN_CONTROL_INFRA="aws"
+vault kv put concourse/sdwan/$NAME/SDWAN_CONTROL_INFRA SDWAN_CONTROL_INFRA=$SDWAN_CONTROL_INFRA
 export AWS_PROFILE="default"
 export AWS_ACCESS_KEY_ID=$(aws configure get $AWS_PROFILE.aws_access_key_id)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get $AWS_PROFILE.aws_secret_access_key)
