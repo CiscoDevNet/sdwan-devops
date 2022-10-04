@@ -11,9 +11,11 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 apt-get install terraform
 touch ~/.bashrc
 terraform -install-autocomplete
-apt-get install ansible-vault
+pip3 install ansible-vault
 chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
 ./sdwan-devops/bin/aws_env_example_pipe.sh
+#Step 1 - manual task to write all VARS to vault.
+
 #chmod a+x sdwan-devops/bin/initialize.sh
 #./sdwan-devops/bin/initialize.sh
 

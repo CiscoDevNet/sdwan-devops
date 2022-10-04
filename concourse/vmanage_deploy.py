@@ -43,7 +43,7 @@ with open (outfile_get_vpcid) as access_json:
     print(vpcid)
     vpcid_var=('vpcid=' + "'" + "{}".format(vpcid) + "'")
 
-with open(outfile_vars, 'w') as my_file:
+wwith open(outfile_vars, 'w') as my_file:
     my_file.write(vpcid_var + "\n")
 
 

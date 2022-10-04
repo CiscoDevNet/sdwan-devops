@@ -2,7 +2,7 @@
 NAME="us-west=2a"
 SDWAN_CONTROL_INFRA="aws"
 AWS_PROFILE="default"
-REGION=$REGION
+REGION='us-west-2'
 
 #amis are for us-west-2
 VMANAGE_AMI="ami-0f727aeff8bfca1be"
