@@ -6,6 +6,9 @@ from requests.structures import CaseInsensitiveDict
 import subprocess
 from subprocess import call, check_output
 
+import vars.py
+from vars import *
+
 #This allows this script to logon to the vault and write the vars under the concourse/sdwan mount point as this is the only dir that the
 #policy in vault will grant this token access to read/write
 VAULT_ADDR = os.getenv('VAULT_ADDRR')
