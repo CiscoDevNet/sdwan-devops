@@ -15,7 +15,7 @@ Some of the tasks listed here relate to the `terraform-sdwan` submodule
 - [ ] Discuss Ansible variable approach with some Ansible experts from the team
 - [x] Support for specifying password and encoding it
 - [ ] Static addressing has some conflicting configurations, clean that up
-- [ ] Update Docker container (pull in Nathan's work)
+- [x] Update Docker container (pull in Nathan's work)
 - [x] Split out day 1 automation (pull in Marcelo's work)
 
 ### Generic multi-infra support

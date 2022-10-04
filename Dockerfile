@@ -1,6 +1,8 @@
-FROM alpine:3.11
+FROM alpine:3.16
 
 ARG build_date=unspecified
+ARG terraform_version=1.3.1
+ARG arch=amd64
 
 LABEL org.opencontainers.image.title="Cisco-SDWAN" \
       org.opencontainers.image.description="Cisco SDWAN DevOps" \
@@ -8,8 +10,12 @@ LABEL org.opencontainers.image.title="Cisco-SDWAN" \
       org.opencontainers.image.created="${build_date}" \
       org.opencontainers.image.url="https://github.com/CiscoDevNet/sdwan-devops"
 
-RUN apk update && upgrade
-RUN apk add --no-cache --upgrade bash
+RUN apk --update add wget unzip cdrkit curl
+RUN wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_${arch}.zip
+RUN unzip terraform_${terraform_version}_linux_${arch}.zip
+RUN mv terraform /usr/bin
+RUN rm terraform_${terraform_version}_linux_${arch}.zip
+
 RUN apk add --no-cache gcc musl-dev make
 
 
@@ -25,14 +31,6 @@ RUN apk --update add git sshpass libffi-dev libxml2-dev libxslt-dev python3-dev 
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
-
-ARG terraform_version=1.2.6
-
-RUN apk --update add wget unzip cdrkit curl
-RUN wget --quiet https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
-RUN unzip terraform_${terraform_version}_linux_amd64.zip
-RUN mv terraform /usr/bin
-RUN rm terraform_${terraform_version}_linux_amd64.zip
 
 ENV ANSIBLE_HOST_KEY_CHECKING=false
 ENV ANSIBLE_RETRY_FILES_ENABLED=false
