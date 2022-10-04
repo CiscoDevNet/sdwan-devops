@@ -11,8 +11,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 apt-get install terraform
 touch ~/.bashrc
 terraform -install-autocomplete
-pwd
-ls -la
+apt-get install ansible-vault
 chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
 ./sdwan-devops/bin/aws_env_example_pipe.sh
 #chmod a+x sdwan-devops/bin/initialize.sh
