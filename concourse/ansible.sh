@@ -13,10 +13,14 @@ touch ~/.bashrc
 terraform -install-autocomplete
 pwd
 ls -la
-cd terraform-sdwan/aws/Provision_VPC
-terraform init
-terraform plan
-terraform apply --auto-approve
+chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
+./sdwan-devops/bin/aws_env_example_pipe.sh
+chmod a+x sdwan-devops/bin/initialize.sh
+./sdwan-devops/bin/initialize.sh
+
+
+
+
 
 
 
