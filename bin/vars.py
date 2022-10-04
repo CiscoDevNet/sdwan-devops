@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+NAME="us-west=2a"
 SDWAN_CONTROL_INFRA="aws"
 AWS_PROFILE="default"
 REGION=$REGION
