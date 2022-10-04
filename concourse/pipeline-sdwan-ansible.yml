@@ -65,8 +65,9 @@ jobs:
               aws configure set default.region $REGION
               aws sts get-caller-identity --query Account --output text
               export AWS_PAGER=""
-              echo "Hello, I am your curatedOCI Build Container"
+              echo "Hello, I am your curated OCI Build Container - Concourse will pull an image specified in this job from the image repo and generate an OCI Build Container"
               echo "I have all the required libraries and packages already installed and I have already pulled your branch onto my container"
+              echo "I will then do a git pull of the repo and branch specified in this job, then launch the scripts to build the environment"
               echo "Now I will build your code...."
               chmod a+x sdwan-devops/concourse/ansible.sh
               ./sdwan-devops/concourse/ansible.sh
@@ -128,7 +129,7 @@ resources:
   - name: sdwan-devops
     source:
       Username: ((Username))
-      branch: cloud
+      branch: cloud-concourse
       email: ((email))
       private_key: ((private_key))
       uri: git@github.com:CiscoDevNet/sdwan-devops.git
@@ -137,7 +138,7 @@ resources:
   - name: terraform-sdwan
     source:
       Username: ((Username))
-      branch: cloud
+      branch: cloud-concourse
       email: ((email))
       private_key: ((private_key))
       uri: git@github.com:CiscoDevNet/terraform-sdwan.git
