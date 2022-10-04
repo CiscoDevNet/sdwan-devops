@@ -14,7 +14,7 @@
 
     - name: Generate an OpenSSL private key.
       openssl_privatekey:
-        cipher: des3
+        cipher: auto
         passphrase: "{{ sdwan_ca_passphrase }}"
         path: "{{ sdwan_cert_dir }}/myCA.key"
 
