@@ -13,7 +13,7 @@ touch ~/.bashrc
 terraform -install-autocomplete
 pip3 install ansible-vault
 chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
-./sdwan-devops/bin/aws_env_example.sh
+./sdwan-devops/bin/aws_env_example_pipe.sh
 #Step 1 - manual task to write all VARS to vault.
 
 #chmod a+x sdwan-devops/bin/initialize.sh
