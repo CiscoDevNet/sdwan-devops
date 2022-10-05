@@ -2,7 +2,9 @@ name: Publish container
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - cloud
     # Publish semver tags as releases.
     tags: [ '*.*.*' ]
   pull_request:
