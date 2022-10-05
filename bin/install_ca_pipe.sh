@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-pip3 install ansible-vault
 set -o pipefail
 
 if [ -z ${PROJ_ROOT+x} ]; then echo "PROJ_ROOT is unset, please source the env script"; exit 1; else echo "PROJ_ROOT is set to '$PROJ_ROOT'"; fi
