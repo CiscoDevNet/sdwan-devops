@@ -113,8 +113,8 @@ jobs:
               echo "I have all the required libraries and packages already installed and I have already pulled your branch onto my container"
               echo "Now I will build your code...."
               export PROJ_ROOT=sdwan-devops
-              chmod a+x sdwan-devops/bin/install_ca.sh
-              ./sdwan-devops/bin/install_ca.sh
+              chmod a+x sdwan-devops/concourse/install_ca.sh
+              ./sdwan-devops/concourse/install_ca.sh
       task: build-ca
       params:
         AWS_KEY_ID: ((Access_key_ID.Access_key))
