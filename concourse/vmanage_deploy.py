@@ -246,7 +246,7 @@ with open(outfile_vars, 'a') as my_file:
 
 
 
-
+'''
 #Add additional SSD of 1 TB to the instance
 #Create the volume and get the volume id - /dev/sdf
 outfile_volume='volume.json'
