@@ -34,12 +34,12 @@ resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
 
 
-#1 - Create a Key Pair
+#1 - Create a Key Pair & Write it to the vault
 keypair_name=name
 outfile_key_pair = 'keypair_name' + '.json'
-
-#Create the keypair
 create_keypair='aws ec2 create-key-pair --key-name' + " " +  "{}".format(name) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az)
+#Write Key to Vault
+
 
 #2 - CREATE THE NEW VPC AND GET VPCID
 outfile = 'aws-vpc.json'
