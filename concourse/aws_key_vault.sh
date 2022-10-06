@@ -3,7 +3,9 @@ export AWS_PAGER=""
 #This is required for vault
 setcap cap_ipc_lock= /usr/bin/vault
 #cd git-resource
-python3 /sdwan-devops/concourse/aws_key.py
+echo "working directory"
+pwd
+python3 aws_key.py
 cat *.pem
 rm sshkey.pem
 PRIVATE_KEY=$(ls *.pem)

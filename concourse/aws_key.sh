@@ -4,7 +4,7 @@ rm -rf __pycache__
 apt -y update
 apt -y install jq
 pip3 install vault-cli
-python3 sdwan-devops/concourse/aws_key.pyaws_key.py
+python3 sdwan-devops/concourse/aws_key.aws_key.py
 #name the pem key with the name var
 #See how the pem key is named
 echo $name
