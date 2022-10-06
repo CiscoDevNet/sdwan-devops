@@ -297,12 +297,12 @@ with open(outfile_add_vmanage_nic) as access_json:
    print(read_content)
    question_access=read_content['NetworkInterface']
    question_data=question_access['NetworkInterfaceId']
-   PUBLIC_eni_id=question_data
+   public_eni_id=question_data
 #write the interface eni out to the vars file will  need it to attach it
-   PUBLIC_eni_id_var=('eni_id=' + "'" + "{}".format(PUBLIC_eni_id) + "'")
-   print(PUBLIC_eni_id_var)
+   public_eni_id_var=('eni_id=' + "'" + "{}".format(public_eni_id) + "'")
+   print(public_eni_id_var)
 with open(outfile_vars, 'a') as my_file:
-   my_file.write(PUBLIC_eni_id_var + "\n")
+   my_file.write(public_eni_id_var + "\n")
 
 
 outfile_attach_vmanage_nic='attach-vmanage-nic.json'
