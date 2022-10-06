@@ -187,29 +187,6 @@ vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " 
 output = check_output("{}".format(vmanage_tag_inst), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
-#Add additional SSD of 1 TB to the instance
-#Create the volume and get the volume id - /dev/sdf
-outfile_volume='volume.json'
-cmd_create_volume='aws ec2 create-volume --volume-type gp2 --size 1000 --availability-zone' + " " + az + " " + '--tag-specifications' + " " + 'ResourceType=volume,Tags=[{Key=Description,Value=vmanage-vol}]'
-output = check_output("{}".format(cmd_create_volume), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-with open(outfile_volume, 'a') as my_file:
-    my_file.write(output + "\n")
-
-with open(outfile_volume) as access_json:
-    read_content = json.load(access_json)
-    print(read_content)
-    question_access=read_content['VolumeId']
-    print(question_access)
-    vol_id=question_access
-    print(vol_id)
-
-#Attach the volume to the instance
-#aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
-cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
-output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-
 
 #Capture the network interface id from the instance_id
 # aws ec2 describe-instances --instance-id i-0253ef13177c9cc75 --query 'Reservations[].Instances[].NetworkInterfaces[*].NetworkInterfaceId'
@@ -317,6 +294,29 @@ output = check_output("{}".format(cmd_associate_eip_public), shell=True).decode(
 print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_public, 'w') as my_file:
    my_file.write(output)
+
+#Add additional SSD of 1 TB to the instance
+#Create the volume and get the volume id - /dev/sdf
+outfile_volume='volume.json'
+cmd_create_volume='aws ec2 create-volume --volume-type gp2 --size 1000 --availability-zone' + " " + az + " " + '--tag-specifications' + " " + 'ResourceType=volume,Tags=[{Key=Description,Value=vmanage-vol}]'
+output = check_output("{}".format(cmd_create_volume), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_volume, 'a') as my_file:
+    my_file.write(output + "\n")
+
+with open(outfile_volume) as access_json:
+    read_content = json.load(access_json)
+    print(read_content)
+    question_access=read_content['VolumeId']
+    print(question_access)
+    vol_id=question_access
+    print(vol_id)
+
+#Attach the volume to the instance
+#aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
+cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
+output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
 
 '''
 #######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
