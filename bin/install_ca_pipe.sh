@@ -10,4 +10,4 @@ vault kv put concourse/sdwan/serialFile.viptela serialFile.viptela=@$LICENSE
 #require to write to the vault
 pwd
 ls -la
-#./bin/play_pipe.sh "/ansible/day_-1/build-ca.yml"
+#./sdwan-devops/bin/play_pipe.sh "sdwan-devops/ansible/day_-1/build-ca.yml"
