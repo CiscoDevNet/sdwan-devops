@@ -315,12 +315,12 @@ with open(outfile_attach_vmanage_nic, 'w') as my_file:
 
 #assign an elastic ip to the secondary nic
 #aws ec2 associate-address --allocation-id eipalloc-06a51c0591881f9cf --network-interface-id eni-1a2b3c4d
-outfile_associate_eip_PUBLIC='associate_eip_PUBLIC.json'
-cmd_associate_eip_PUBLIC='aws ec2 associate-address --allocation-id' + " " + eip_PUBLIC + " " +  '--network-interface-id' + " " + PUBLIC_eni_id
-print(cmd_associate_eip_PUBLIC)
-output = check_output("{}".format(cmd_associate_eip_PUBLIC), shell=True).decode().strip()
+outfile_associate_eip_public='associate_eip_PUBLIC.json'
+cmd_associate_eip_public='aws ec2 associate-address --allocation-id' + " " + eip_PUBLIC + " " +  '--network-interface-id' + " " + PUBLIC_eni_id
+print(cmd_associate_eip_public)
+output = check_output("{}".format(cmd_associate_eip_public), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-with open(outfile_associate_eip_PUBLIC, 'w') as my_file:
+with open(outfile_associate_eip_public, 'w') as my_file:
    my_file.write(output)
 
 '''
