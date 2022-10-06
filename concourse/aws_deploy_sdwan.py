@@ -348,13 +348,13 @@ print("Output: \n{}\n".format(output))
 #aws ec2 authorize-security-group-ingress --group-id sg-1234567890abcdef0 --protocol tcp --port 22 --cidr 0.0.0.0/0
 auth_inbound_ssh='aws ec2 authorize-security-group-ingress --region' + " " + "{}".format(region) + " " + '--group-id' + " " "{}".format(SDWAN_sg_id) + " " + '--ip-permissions IpProtocol=tcp,FromPort=23456,ToPort=24156,IpRanges=' + "'[{CidrIp=0.0.0.0/0}]'''"
 print(auth_inbound_ssh)
-#output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip()
-#print("Output: \n{}\n".format(output))
+output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
 
 #aws ec2 authorize-security-group-ingress --group-id sg-1234567890abcdef0 --protocol tcp --port 22 --cidr 0.0.0.0/0
 auth_inbound_ssh='aws ec2 authorize-security-group-ingress --region' + " " + "{}".format(region) + " " + '--group-id' + " " "{}".format(SDWAN_sg_id) + " " + '--ip-permissions IpProtocol=udp,FromPort=12346,ToPort=13046,IpRanges=' + "'[{CidrIp=0.0.0.0/0}]'''"
-#output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip()
-#print("Output: \n{}\n".format(output))
+output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
 
 
 #VAULT SECTION
