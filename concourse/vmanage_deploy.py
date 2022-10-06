@@ -9,7 +9,7 @@ import lab_vars
 from lab_vars import *
 
 keypair_name=name
-sg_name=name
+sg_name='SDWAN'
 ami_id=vManage_ami_id
 
 path = os.getcwd()
@@ -23,10 +23,11 @@ instance_type='c5.2xlarge'
 outfile_deploy_vmanage='deploy-vmanage.json'
 outfile_get_vpcid='outfile_get_vpcid.json'
 
-inst_name="vmanage-3"
-eip_mgmt='eipalloc-06a51c0591881f9cf'
-eip_tunnel='eipalloc-09aed7f139dd18a5b'
-eip_cluster='eipalloc-0634a30f16210c3c3'
+
+#Will need to add code to generate the EIPs or look for some that are availabae
+inst_name="vmanage-1"
+eip_mgmt='eipalloc-0132ed8fd16ab494c'
+eip_public='eipalloc-0132ed8fd16ab494c'
 
 #Get VPCID
 get_vpcid='aws ec2 describe-vpcs --region' + " " + "{}".format(region) + " " + '--filters Name=tag:Name,Values=' + "{}".format(name)
@@ -96,7 +97,7 @@ with open(outfile_vars, 'a') as my_file:
     my_file.write(subnetid_MGMT_var + "\n")
 
 
-#get the subnetid_TUNNEL
+#get the subnetid_PUBLIC
 outfile_get_subnetid_TUNNEL='outfile_subnetid_TUNNEL.json'
 get_subnetid_TUNNEL='aws ec2 describe-subnets --region' + " " + "{}".format(region) + " " '--filters' + " " + '"Name=availability-zone,Values=' + "{}".format(az) + '"' + " " + '"Name=tag:Name,Values=SUBNET_TUNNEL' + '"'
 print(get_subnetid_TUNNEL)
@@ -120,6 +121,7 @@ with open(outfile_get_subnetid_TUNNEL) as access_json:
 with open(outfile_vars, 'a') as my_file:
    my_file.write(subnetid_TUNNEL_var + "\n")
 
+'''
 
 #get the subnetid_CLUSTER
 outfile_get_subnetid_CLUSTER='outfile_subnetid_CLUSTER.json'
@@ -142,7 +144,7 @@ with open(outfile_get_subnetid_CLUSTER) as access_json:
 
 with open(outfile_vars, 'a') as my_file:
    my_file.write(subnetid_CLUSTER_var + "\n")
-
+'''
 
 #Create the Instance
 #aws ec2 run-instances --image-id ami-067c66abd840abc24 --instance-type t2.medium --subnet-id subnet-008617eb0c9782f55 --security-group-ids sg-0b0384b66d7d692f9 --PrivateIpAddress "10.10.10.100" --associate-public-ip-address --key-name blitz-user-1
