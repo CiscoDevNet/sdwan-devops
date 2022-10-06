@@ -19,8 +19,7 @@ os.listdir(path)
 #Tag the Instance with the name vmanage
 #aws ec2 create-key-pair --key-name MyKeyPair moved to aws prep
 
-#instance_type='c5.2xlarge'
-instance_type='t2.micro'
+instance_type='c5.2xlarge'
 outfile_deploy_vmanage='deploy-vmanage.json'
 outfile_get_vpcid='outfile_get_vpcid.json'
 
@@ -48,8 +47,6 @@ with open (outfile_get_vpcid) as access_json:
 with open(outfile_vars, 'w') as my_file:
     my_file.write(vpcid_var + "\n")
 
-
-
 #get the mgmt security group id
 #aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-01bdad153448ce387" --filters "Name=group-name,Values=sg01
 #get_sgid='aws ec2 describe-security-groups --region' + " " + "{}".format(region) + " " + '--filters "Name=group-name,Values=' + "{}".format(sg_name) + '"' + " " + '"Name=availability-zone,Values=' + "{}".format(az) + '"'
@@ -70,8 +67,6 @@ with open (outfile_get_sgid) as access_json:
     sgid_var=('sgid=' + "'" + "{}".format(sgid) + "'")
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(sgid_var + "\n")
-
-
 
 #Get the mgmt subnetid
 outfile_get_subnetid_mgmt='subnet_id_mgmt.json'
@@ -96,7 +91,6 @@ with open(outfile_get_subnetid_mgmt) as access_json:
 
 with open(outfile_vars, 'a') as my_file:
     my_file.write(subnetid_mgmt_var + "\n")
-
 
 #get the subnetid_public
 outfile_get_subnetid_public='outfile_subnetid_public.json'
@@ -173,22 +167,16 @@ with open (outfile_deploy_vmanage) as access_json:
 with open(outfile_vars, 'a+') as my_file:
    my_file.write(vmanage_instance_id_var + "\n")
 
-
-
-#Capture the instance_id and write to the var file or vault
 vmanage_instance_id_var=('vmanage_instance_id=' + "'" + "{}".format(vmanage_instance_id) + "'")
 print(vmanage_instance_id_var)
 with open(outfile_vars, 'a') as my_file:
    my_file.write(vmanage_instance_id_var + "\n")
-
 
 #tag the vmanage instance
 #tag_vmanage='aws ec2 create-tags --resources' + " " + "{}".format(vmanage_instance_id) '--tags "'Key="[Name]",Value=vmanage'"
 vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-3.0' + "'"
 output = check_output("{}".format(vmanage_tag_inst), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-
-
 
 #Capture the network interface id from the instance_id
 # aws ec2 describe-instances --instance-id i-0253ef13177c9cc75 --query 'Reservations[].Instances[].NetworkInterfaces[*].NetworkInterfaceId'
@@ -209,6 +197,17 @@ with open (outfile_get_mgmt_eni_id) as access_json:
    print(mgmt_eni_id)
 
 
+
+#tag the vmanage_mgmt_eni_id
+#write the eip to the vault
+#Pole until the instance is created....
+##!!HERE WE NEED TO POLL AND WAIT UNTIL THE INSTANCE IS IN AN INITIALIZED STATE -
+#aws ec2 wait instance-status-ok --instance-ids vmanage_instance_id
+cmd_check_instance='aws ec2 wait instance-running --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
+output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+
+
 #Get the external public address assigned to the vmanage and write it to the var file or vault
 outfile_vmanage_pub_ip='vmanage_pub_ip.json'
 cmd_get_vmanage_pub_ip='aws ec2 describe-instances --region' + " " + "{}".format(region) + " " '--instance-id' + " " + "{}".format(vmanage_instance_id) + " " + '--query "Reservations[*].Instances[*].publicIpAddress"'
@@ -220,20 +219,37 @@ with open(outfile_vmanage_pub_ip, 'w') as my_file:
 outfile_vmanage_pub_ip='vmanage_pub_ip.json'
 with open(outfile_vmanage_pub_ip) as access_json:
    read_content = json.load(access_json)
-   print("Printing line 224 read_content")
-   print(read_content)
    question_access = read_content[0]
-   print("Line 227 question_access")
-   print(question_access)
-   vmanage_pub_ip=question_access
+   print(read_content)
+   question_data=question_access[0]
+   vmanage_pub_ip=question_data
    print(vmanage_pub_ip)
 
 
-#Capture the External IP address and write it to the var file or vault
-vmanage_pub_ip_var=('vmanage_pub_ip=' + "'" + "{}".format(vmanage_pub_ip) + "'")
-print(vmanage_pub_ip_var)
-with open(outfile_vars, 'a') as my_file:
-   my_file.write(vmanage_pub_ip_var + "\n")
+#Add additional SSD of 1 TB to the instance
+#Create the volume and get the volume id - /dev/sdf
+outfile_volume='volume.json'
+cmd_create_volume='aws ec2 create-volume --volume-type gp2 --size 1000 --availability-zone' + " " + az + " " + '--tag-specifications' + " " + 'ResourceType=volume,Tags=[{Key=Description,Value=vmanage-vol}]'
+output = check_output("{}".format(cmd_create_volume), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_volume, 'a') as my_file:
+   my_file.write(output + "\n")
+
+with open(outfile_volume) as access_json:
+   read_content = json.load(access_json)
+   print(read_content)
+   question_access=read_content['VolumeId']
+   print(question_access)
+   vol_id=question_access
+   print(vol_id)
+
+#POLL TO SEE IF THE VOLUME IS READY
+
+#Attach the volume to the instance
+#aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
+cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
+output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
 
 
 #associate an eip with the default nic
@@ -286,14 +302,7 @@ print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_public, 'w') as my_file:
    my_file.write(output)
 
-#Wait to check the instance is initialized
-#Check that the instance is initialized
-cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
-output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-
 '''
-
 #######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
 
 #Create a Tertiary NIC and assign to the CLUSTER subnet
@@ -336,27 +345,5 @@ print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_CLUSTER, 'w') as my_file:
    my_file.write(output)
 '''
-#Add additional SSD of 1 TB to the instance
-#Create the volume and get the volume id - /dev/sdf
-outfile_volume='volume.json'
-cmd_create_volume='aws ec2 create-volume --volume-type gp2 --size 1000 --availability-zone' + " " + az + " " + '--tag-specifications' + " " + 'ResourceType=volume,Tags=[{Key=Description,Value=vmanage-vol}]'
-output = check_output("{}".format(cmd_create_volume), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-with open(outfile_volume, 'a') as my_file:
-    my_file.write(output + "\n")
 
-with open(outfile_volume) as access_json:
-    read_content = json.load(access_json)
-    print(read_content)
-    question_access=read_content['VolumeId']
-    print(question_access)
-    vol_id=question_access
-    print(vol_id)
-
-
-#Attach the volume to the instance
-#aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
-cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
-output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
 
