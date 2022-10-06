@@ -98,28 +98,28 @@ with open(outfile_vars, 'a') as my_file:
 
 
 #get the subnetid_PUBLIC
-outfile_get_subnetid_TUNNEL='outfile_subnetid_TUNNEL.json'
-get_subnetid_TUNNEL='aws ec2 describe-subnets --region' + " " + "{}".format(region) + " " '--filters' + " " + '"Name=availability-zone,Values=' + "{}".format(az) + '"' + " " + '"Name=tag:Name,Values=SUBNET_TUNNEL' + '"'
-print(get_subnetid_TUNNEL)
-output = check_output("{}".format(get_subnetid_TUNNEL), shell=True).decode().strip()
+outfile_get_subnetid_PUBLIC='outfile_subnetid_PUBLIC.json'
+get_subnetid_PUBLIC='aws ec2 describe-subnets --region' + " " + "{}".format(region) + " " '--filters' + " " + '"Name=availability-zone,Values=' + "{}".format(az) + '"' + " " + '"Name=tag:Name,Values=SUBNET_PUBLIC' + '"'
+print(get_subnetid_PUBLIC)
+output = check_output("{}".format(get_subnetid_PUBLIC), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
-with open(outfile_get_subnetid_TUNNEL, 'w') as my_file:
+with open(outfile_get_subnetid_PUBLIC, 'w') as my_file:
    my_file.write(output)
-with open(outfile_get_subnetid_TUNNEL) as access_json:
+with open(outfile_get_subnetid_PUBLIC) as access_json:
    read_content = json.load(access_json)
    print(read_content)
    question_access = read_content['Subnets']
    print(question_access)
    replies_access = question_access[0]
    replies_data=replies_access['SubnetId']
-   subnetid_TUNNEL=replies_data
-   ("Printing subnetid tunnel.....")
-   print(subnetid_TUNNEL)
-   subnetid_TUNNEL_var=('subnetid_TUNNEL=' + "'" + "{}".format(subnetid_TUNNEL) + "'")
+   subnetid_PUBLIC=replies_data
+   ("Printing subnetid PUBLIC.....")
+   print(subnetid_PUBLIC)
+   subnetid_PUBLIC_var=('subnetid_PUBLIC=' + "'" + "{}".format(subnetid_PUBLIC) + "'")
 
 with open(outfile_vars, 'a') as my_file:
-   my_file.write(subnetid_TUNNEL_var + "\n")
+   my_file.write(subnetid_PUBLIC_var + "\n")
 
 '''
 
@@ -140,7 +140,7 @@ with open(outfile_get_subnetid_CLUSTER) as access_json:
    subnetid_CLUSTER=replies_data
    ("Printing subnetid_cluster.....")
    print(subnetid_CLUSTER)
-   subnetid_CLUSTER_var=('subnetid_TUNNEL=' + "'" + "{}".format(subnetid_CLUSTER) + "'")
+   subnetid_CLUSTER_var=('subnetid_PUBLIC=' + "'" + "{}".format(subnetid_CLUSTER) + "'")
 
 with open(outfile_vars, 'a') as my_file:
    my_file.write(subnetid_CLUSTER_var + "\n")
@@ -148,7 +148,7 @@ with open(outfile_vars, 'a') as my_file:
 
 #Create the Instance
 #aws ec2 run-instances --image-id ami-067c66abd840abc24 --instance-type t2.medium --subnet-id subnet-008617eb0c9782f55 --security-group-ids sg-0b0384b66d7d692f9 --PrivateIpAddress "10.10.10.100" --associate-public-ip-address --key-name blitz-user-1
-cmd_deploy_vmanage='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_TUNNEL) +  " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az)
+cmd_deploy_vmanage='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_PUBLIC) +  " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az)
 #cmd_deploy_vmanage='aws ec2 run-instances --image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_MGMT) +  " " + '--security-group-ids' + " " + "{}".format(MGMT_sg_id) + " " + '--associate-public-ip-address' + " " + '--key-name' + " " + "{}".format(keypair_name)
 #print(cmd_deploy_vmanage)
 output = check_output("{}".format(cmd_deploy_vmanage), shell=True).decode().strip()
@@ -280,33 +280,33 @@ output = check_output("{}".format(cmd_associate_eip_MGMT), shell=True).decode().
 print("Output: \n{}\n".format(output))
 print("Associating eip with the mgmt nic")
 
-#Create a Secondary NIC and assign to the TUNNEL subnet
-#cmd_add_nic_MGMT='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_TUNNEL) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(MGMT_sg_id) + " " + '--private-ip-address 10.10.20.100'
+#Create a Secondary NIC and assign to the PUBLIC subnet
+#cmd_add_nic_MGMT='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_PUBLIC) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(MGMT_sg_id) + " " + '--private-ip-address 10.10.20.100'
 outfile_add_vmanage_nic='add-vmanage-nic.json'
-cmd_add_vmanage_nic='aws ec2 create-network-interface --region' + " " "{}".format(region) + " " + '--subnet-id' + " " + "{}".format(subnetid_TUNNEL) + " " + '--description "vmanage_nic_TUNNEL_sub"' + " " + '--groups' + " " + "{}".format(sgid) + " " + '--tag-specifications' + " " + "'ResourceType=network-interface,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
+cmd_add_vmanage_nic='aws ec2 create-network-interface --region' + " " "{}".format(region) + " " + '--subnet-id' + " " + "{}".format(subnetid_PUBLIC) + " " + '--description "vmanage_nic_PUBLIC_sub"' + " " + '--groups' + " " + "{}".format(sgid) + " " + '--tag-specifications' + " " + "'ResourceType=network-interface,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
 output = check_output("{}".format(cmd_add_vmanage_nic), shell=True).decode().strip()
-("Creating Secondary NIC on Tunnel Subne....t")
+("Creating Secondary NIC on PUBLIC Subne....t")
 print("Output: \n{}\n".format(output))
 with open(outfile_add_vmanage_nic, 'w') as my_file:
    my_file.write(output)
 
-#Capture the secondary TUNNEL eni_id out of the json output
+#Capture the secondary PUBLIC eni_id out of the json output
 
 with open(outfile_add_vmanage_nic) as access_json:
    read_content = json.load(access_json)
    print(read_content)
    question_access=read_content['NetworkInterface']
    question_data=question_access['NetworkInterfaceId']
-   tunnel_eni_id=question_data
+   PUBLIC_eni_id=question_data
 #write the interface eni out to the vars file will  need it to attach it
-   tunnel_eni_id_var=('eni_id=' + "'" + "{}".format(tunnel_eni_id) + "'")
-   print(tunnel_eni_id_var)
+   PUBLIC_eni_id_var=('eni_id=' + "'" + "{}".format(PUBLIC_eni_id) + "'")
+   print(PUBLIC_eni_id_var)
 with open(outfile_vars, 'a') as my_file:
-   my_file.write(tunnel_eni_id_var + "\n")
+   my_file.write(PUBLIC_eni_id_var + "\n")
 
 
 outfile_attach_vmanage_nic='attach-vmanage-nic.json'
-cmd_attach_vmanage_nic='aws ec2 attach-network-interface --region' + " " + "{}".format(region) + " " +  '--network-interface-id' + " " + "{}".format(tunnel_eni_id) + " " + '--instance-id' + " " + "{}".format(vmanage_instance_id) + " " + '--device-index 1'
+cmd_attach_vmanage_nic='aws ec2 attach-network-interface --region' + " " + "{}".format(region) + " " +  '--network-interface-id' + " " + "{}".format(PUBLIC_eni_id) + " " + '--instance-id' + " " + "{}".format(vmanage_instance_id) + " " + '--device-index 1'
 output = check_output("{}".format(cmd_attach_vmanage_nic), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 with open(outfile_attach_vmanage_nic, 'w') as my_file:
@@ -315,19 +315,19 @@ with open(outfile_attach_vmanage_nic, 'w') as my_file:
 
 #assign an elastic ip to the secondary nic
 #aws ec2 associate-address --allocation-id eipalloc-06a51c0591881f9cf --network-interface-id eni-1a2b3c4d
-outfile_associate_eip_TUNNEL='associate_eip_TUNNEL.json'
-cmd_associate_eip_TUNNEL='aws ec2 associate-address --allocation-id' + " " + eip_tunnel + " " +  '--network-interface-id' + " " + tunnel_eni_id
-print(cmd_associate_eip_TUNNEL)
-output = check_output("{}".format(cmd_associate_eip_TUNNEL), shell=True).decode().strip()
+outfile_associate_eip_PUBLIC='associate_eip_PUBLIC.json'
+cmd_associate_eip_PUBLIC='aws ec2 associate-address --allocation-id' + " " + eip_PUBLIC + " " +  '--network-interface-id' + " " + PUBLIC_eni_id
+print(cmd_associate_eip_PUBLIC)
+output = check_output("{}".format(cmd_associate_eip_PUBLIC), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-with open(outfile_associate_eip_TUNNEL, 'w') as my_file:
+with open(outfile_associate_eip_PUBLIC, 'w') as my_file:
    my_file.write(output)
 
-
+'''
 #######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
 
 #Create a Tertiary NIC and assign to the CLUSTER subnet
-#cmd_add_nic_MGMT='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_TUNNEL) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(MGMT_sg_id) + " " + '--private-ip-address 10.10.20.100'
+#cmd_add_nic_MGMT='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_PUBLIC) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(MGMT_sg_id) + " " + '--private-ip-address 10.10.20.100'
 outfile_add_vmanage_cluster_nic='add-vmanage-cluster-nic.json'
 cmd_add_cluster_nic='aws ec2 create-network-interface --region' + " " "{}".format(region) + " " + '--subnet-id' + " " + "{}".format(subnetid_CLUSTER) + " " + '--description "vmanage_nic_CLUSTER_sub"' + " " + '--groups' + " " + "{}".format(sgid) + " " + '--tag-specifications' + " " + "'ResourceType=network-interface,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
 output = check_output("{}".format(cmd_add_cluster_nic), shell=True).decode().strip()
@@ -365,7 +365,7 @@ output = check_output("{}".format(cmd_associate_eip_CLUSTER), shell=True).decode
 print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_CLUSTER, 'w') as my_file:
    my_file.write(output)
-
+'''
 #Wait to check the instance is initialized
 #Check that the instance is initialized
 cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
