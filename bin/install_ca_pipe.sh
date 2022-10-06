@@ -8,4 +8,6 @@ echo eeShahv3 > serialFile.viptela
 LICENSE='serialFile.viptela'
 vault kv put concourse/sdwan/serialFile.viptela serialFile.viptela=@$LICENSE
 #require to write to the vault
-./bin/play_pipe.sh "/ansible/day_-1/build-ca.yml"
+pwd
+ls -la
+#./bin/play_pipe.sh "/ansible/day_-1/build-ca.yml"
