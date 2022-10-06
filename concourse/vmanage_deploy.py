@@ -372,10 +372,3 @@ cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vman
 output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
-'''
-#To Do
-#Do an EC2 instance describe and get the enid of the first nic deployed to the mgmt subnet
-#get the eni_id of the first nic
-#consider instead of associating public ip with first nic on mgmt subnet, instead associate elastic ip
-#fix up code so that you can first enter in the elastic ip reservation ids into the vault and call from there
-
