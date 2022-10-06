@@ -16,6 +16,7 @@ cd terraform-sdwan/aws/Provision_VPC
 terraform init
 terraform plan
 terraform apply --auto-approve
+cd ../
 cd terraform-sdwan/aws/Provision_Instances
 terraform init
 terraform plan
