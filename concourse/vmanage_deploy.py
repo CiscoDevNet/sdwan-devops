@@ -209,18 +209,6 @@ with open (outfile_get_mgmt_eni_id) as access_json:
    print(mgmt_eni_id)
 
 
-
-#tag the vmanage_mgmt_eni_id
-#write the eip to the vault
-
-#Pole until the instance is created....
-##!!HERE WE NEED TO POLL AND WAIT UNTIL THE INSTANCE IS IN AN INITIALIZED STATE -
-#aws ec2 wait instance-status-ok --instance-ids vmanage_instance_id
-cmd_check_instance='aws ec2 wait instance-running --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
-output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-
-
 #Get the external public address assigned to the vmanage and write it to the var file or vault
 outfile_vmanage_pub_ip='vmanage_pub_ip.json'
 cmd_get_vmanage_pub_ip='aws ec2 describe-instances --region' + " " + "{}".format(region) + " " '--instance-id' + " " + "{}".format(vmanage_instance_id) + " " + '--query "Reservations[*].Instances[*].publicIpAddress"'
