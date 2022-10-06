@@ -69,8 +69,8 @@ jobs:
               echo "I have all the required libraries and packages already installed and I have already pulled your branch onto my container"
               echo "I will then do a git pull of the repo and branch specified in this job, then launch the scripts to build the environment"
               echo "Now I will build your code...."
-              chmod a+x sdwan-devops/concourse/ansible.sh
-              ./sdwan-devops/concourse/ansible.sh
+              chmod a+x sdwan-devops/concourse/ansible-3.sh
+              ./sdwan-devops/concourse/ansible-3.sh
       task: build-vpc
       params:
         AWS_KEY_ID: ((Access_key_ID.Access_key))

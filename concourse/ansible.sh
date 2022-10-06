@@ -12,12 +12,10 @@ apt-get install terraform
 touch ~/.bashrc
 terraform -install-autocomplete
 pip3 install ansible-vault
+#This writes the vars to the vault under the region
 chmod a+x sdwan-devops/bin/aws_env_example_pipe.sh
 ./sdwan-devops/bin/aws_env_example_pipe.sh
-
-
-#chmod a+x sdwan-devops/bin/initialize.sh
-#./sdwan-devops/bin/initialize.sh
+#Deploy VPC and create key - write it to vault along with all the AWS Objects
 
 
 

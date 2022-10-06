@@ -2,7 +2,6 @@
 import json, re, sys, os, json, time, logging, requests, urllib3
 from requests.structures import CaseInsensitiveDict
 urllib3.disable_warnings()
-from requests.structures import CaseInsensitiveDict
 import subprocess
 from subprocess import call, check_output
 
@@ -20,28 +19,12 @@ from lab_vars import *
 outfile_vars="vars"
 sg_name=name
 
-#1 - Create a Key Pair
-keypair_name=name
-outfile_key_pair = 'keypair_name' + '.json'
-
-#Write the var to the vault
-import json, re, sys, os, json, subprocess, time, logging, requests, urllib3
-from subprocess import call, check_output
-from requests.structures import CaseInsensitiveDict
-urllib3.disable_warnings()
-
-
-#Import Lab Vars
-lab_vars='lab_vars.py'
-import lab_vars
-from lab_vars import *
-
 #Inject the vault var vals into the ephemeral oci build container
 
 VAULT_ADDR = os.getenv('VAULT_ADDR')
 VAULT_TOKEN = os.getenv('SSH_TOKEN')
 #VAULT_TOKEN = os.getenv('VAULT_TOKEN')
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "key_name"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "key_name"
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
 headers["Content-Type"] = "application/json"
@@ -50,6 +33,10 @@ data_json = {"key_name": name }
 resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
 
+
+#1 - Create a Key Pair
+keypair_name=name
+outfile_key_pair = 'keypair_name' + '.json'
 
 #Create the keypair
 create_keypair='aws ec2 create-key-pair --key-name' + " " +  "{}".format(name) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az)
@@ -330,8 +317,10 @@ print("Output: \n{}\n".format(output))
 
 #VAULT SECTION
 
+#Write Key to vault
+
 #Write vpcid  to the vault
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "vpcid"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "vpcid"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
@@ -346,7 +335,7 @@ print(resp.status_code)
 
 #3 Write the subnetid_TUNNEL to the vault
 
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "subnetid_TUNNEL"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "subnetid_TUNNEL"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
@@ -360,7 +349,7 @@ print(resp.status_code)
 
 #4 Write the subnetid_MGMT to the vault
 
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "subnetid_MGMT"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "subnetid_MGMT"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
@@ -374,7 +363,7 @@ print(resp.status_code)
 
 #5 Write the igid to the vault
 
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "igid"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "igid"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
@@ -388,7 +377,7 @@ print(resp.status_code)
 
 #10 - Write rt_MGMT_id to the vault
 
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_MGMT_id"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_MGMT_id"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
@@ -401,7 +390,7 @@ resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
 
 #11 - Write rt_tunnel_id to the vault
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_tunnel_id"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_tunnel_id"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
@@ -415,7 +404,7 @@ print(resp.status_code)
 
 #13 - Write the TUNNEL_sg_id to the vault
 
-url = "http://prod-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "TUNNEL_sg_id"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "TUNNEL_sg_id"
 print(url)
 
 headers = CaseInsensitiveDict()
