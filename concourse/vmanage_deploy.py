@@ -365,14 +365,14 @@ output = check_output("{}".format(cmd_associate_eip_CLUSTER), shell=True).decode
 print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_CLUSTER, 'w') as my_file:
    my_file.write(output)
-'''
+
 #Wait to check the instance is initialized
 #Check that the instance is initialized
 cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
 output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
-
+'''
 #To Do
 #Do an EC2 instance describe and get the enid of the first nic deployed to the mgmt subnet
 #get the eni_id of the first nic
