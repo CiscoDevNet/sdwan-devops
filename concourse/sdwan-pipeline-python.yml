@@ -118,7 +118,9 @@ jobs:
         VAULT_ADDR: ((vault.addr))
         SSH_TOKEN: ((ssh-token.token))
 
-- name: deploy-aws-vmanage
+===
+
+- name: deploy-aws-instances
   plan:
     - get: sdwan-devops
     - get: terraform-sdwan
@@ -147,9 +149,9 @@ jobs:
               aws sts get-caller-identity --query Account --output text
               export AWS_PAGER=""
               cd sdwan-devops/concourse
-              chmod a+x vmanage_deploy.sh
-              ./vmanage_deploy.sh
-      task: deploy-vmanage
+              chmod a+x deploy_instances.sh
+              ./deploy_instances.sh
+      task: build-instances
       params:
         AWS_KEY_ID: ((Access_key_ID.Access_key))
         AWS_KEY: ((Secret_access_key.Secret_access_key))
