@@ -341,6 +341,7 @@ print("Output: \n{}\n".format(output))
 auth_inbound_ssh='aws ec2 authorize-security-group-ingress --region' + " " + "{}".format(region) + " " + '--group-id' + " " "{}".format(SDWAN_sg_id) + " " + '--protocol tcp --port 830 --cidr 0.0.0.0/0'
 output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
+'''
 
 #Figure out how to do ranges
 #Create inbound rule on the security group to allow 830
@@ -353,7 +354,7 @@ print("Output: \n{}\n".format(output))
 auth_inbound_ssh='aws ec2 authorize-security-group-ingress --region' + " " + "{}".format(region) + " " + '--group-id' + " " "{}".format(SDWAN_sg_id) + " " + '--ip-permissions IpProtocol=udp,FromPort=12346,ToPort=13046,IpRanges='[{CidrIp=0.0.0.0/0}]''
 output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-
+'''
 
 #VAULT SECTION
 
