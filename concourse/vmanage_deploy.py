@@ -121,6 +121,30 @@ with open(outfile_get_subnetid_public) as access_json:
 with open(outfile_vars, 'a') as my_file:
    my_file.write(subnetid_public_var + "\n")
 
+'''
+
+#get the subnetid_CLUSTER
+outfile_get_subnetid_CLUSTER='outfile_subnetid_CLUSTER.json'
+get_subnetid_CLUSTER='aws ec2 describe-subnets --region' + " " + "{}".format(region) + " " '--filters' + " " + '"Name=availability-zone,Values=' + "{}".format(az) + '"' + " " + '"Name=tag:Name,Values=SUBNET_CLUSTER' + '"'
+output = check_output("{}".format(get_subnetid_CLUSTER), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_get_subnetid_CLUSTER, 'w') as my_file:
+   my_file.write(output)
+with open(outfile_get_subnetid_CLUSTER) as access_json:
+   read_content = json.load(access_json)
+   print(read_content)
+   question_access = read_content['Subnets']
+   print(question_access)
+   replies_access = question_access[0]
+   replies_data=replies_access['SubnetId']
+   subnetid_CLUSTER=replies_data
+   ("Printing subnetid_cluster.....")
+   print(subnetid_CLUSTER)
+   subnetid_CLUSTER_var=('subnetid_public=' + "'" + "{}".format(subnetid_CLUSTER) + "'")
+
+with open(outfile_vars, 'a') as my_file:
+   my_file.write(subnetid_CLUSTER_var + "\n")
+'''
 
 #Create the Instance
 #aws ec2 run-instances --image-id ami-067c66abd840abc24 --instance-type t2.medium --subnet-id subnet-008617eb0c9782f55 --security-group-ids sg-0b0384b66d7d692f9 --PrivateIpAddress "10.10.10.100" --associate-public-ip-address --key-name blitz-user-1
@@ -159,7 +183,7 @@ with open(outfile_vars, 'a') as my_file:
 
 #tag the vmanage instance
 #tag_vmanage='aws ec2 create-tags --resources' + " " + "{}".format(vmanage_instance_id) '--tags "'Key="[Name]",Value=vmanage'"
-vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-1.0' + "'"
+vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-3.0' + "'"
 output = check_output("{}".format(vmanage_tag_inst), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
@@ -183,6 +207,19 @@ with open (outfile_get_mgmt_eni_id) as access_json:
    mgmt_eni_id=question_access[0]
    print(mgmt_eni_id)
 
+
+
+#tag the vmanage_mgmt_eni_id
+#write the eip to the vault
+
+#Pole until the instance is created....
+##!!HERE WE NEED TO POLL AND WAIT UNTIL THE INSTANCE IS IN AN INITIALIZED STATE -
+#aws ec2 wait instance-status-ok --instance-ids vmanage_instance_id
+cmd_check_instance='aws ec2 wait instance-running --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
+output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+
+'''
 #Get the external public address assigned to the vmanage and write it to the var file or vault
 outfile_vmanage_pub_ip='vmanage_pub_ip.json'
 cmd_get_vmanage_pub_ip='aws ec2 describe-instances --region' + " " + "{}".format(region) + " " '--instance-id' + " " + "{}".format(vmanage_instance_id) + " " + '--query "Reservations[*].Instances[*].publicIpAddress"'
@@ -210,16 +247,6 @@ with open(outfile_vars, 'a') as my_file:
 
 
 
-#tag the vmanage_mgmt_eni_id
-#write the eip to the vault
-
-#Pole until the instance is created....
-##!!HERE WE NEED TO POLL AND WAIT UNTIL THE INSTANCE IS IN AN INITIALIZED STATE -
-#aws ec2 wait instance-status-ok --instance-ids vmanage_instance_id
-cmd_check_instance='aws ec2 wait instance-running --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
-output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-
 #Add additional SSD of 1 TB to the instance
 #Create the volume and get the volume id - /dev/sdf
 outfile_volume='volume.json'
@@ -242,6 +269,8 @@ with open(outfile_volume) as access_json:
 cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
 output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
+
+'''
 
 
 #associate an eip with the default nic
@@ -294,4 +323,59 @@ print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_public, 'w') as my_file:
    my_file.write(output)
 
+'''
+#######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
+
+#Create a Tertiary NIC and assign to the CLUSTER subnet
+#cmd_add_nic_mgmt='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_public) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(mgmt_sg_id) + " " + '--private-ip-address 10.10.20.100'
+outfile_add_vmanage_cluster_nic='add-vmanage-cluster-nic.json'
+cmd_add_cluster_nic='aws ec2 create-network-interface --region' + " " "{}".format(region) + " " + '--subnet-id' + " " + "{}".format(subnetid_CLUSTER) + " " + '--description "vmanage_nic_CLUSTER_sub"' + " " + '--groups' + " " + "{}".format(sgid) + " " + '--tag-specifications' + " " + "'ResourceType=network-interface,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
+output = check_output("{}".format(cmd_add_cluster_nic), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_add_vmanage_cluster_nic, 'w') as my_file:
+   my_file.write(output)
+
+#Capture the tertiary CLUSTER eni_id out of the json output
+
+with open(outfile_add_vmanage_cluster_nic) as access_json:
+   read_content = json.load(access_json)
+   question_access=read_content['NetworkInterface']
+   question_data=question_access['NetworkInterfaceId']
+   cluster_eni_id=question_data
+   #write the interface eni out to the vars file will  need it to attach it
+   cluster_eni_id_var=('eni_id=' + "'" + "{}".format(cluster_eni_id) + "'")
+   print(cluster_eni_id_var)
+with open(outfile_vars, 'a') as my_file:
+   my_file.write(cluster_eni_id_var + "\n")
+
+
+outfile_attach_vmanage_nic='attach-cluster-nic.json'
+cmd_attach_cluster_nic='aws ec2 attach-network-interface --region' + " " + "{}".format(region) + " " +  '--network-interface-id' + " " + "{}".format(cluster_eni_id) + " " + '--instance-id' + " " + "{}".format(vmanage_instance_id) + " " + '--device-index 2'
+output = check_output("{}".format(cmd_attach_cluster_nic), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_attach_vmanage_nic, 'w') as my_file:
+   my_file.write(output)
+
+#assign an elastic ip to the tertiary nic
+#aws ec2 associate-address --allocation-id eipalloc-06a51c0591881f9cf --network-interface-id eni-1a2b3c4d
+outfile_associate_eip_CLUSTER='associate_eip_CLUSTER.json'
+cmd_associate_eip_CLUSTER='aws ec2 associate-address --allocation-id' + " " +  eip_cluster + " " + '--network-interface-id' + " " + cluster_eni_id
+print(cmd_associate_eip_CLUSTER)
+output = check_output("{}".format(cmd_associate_eip_CLUSTER), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_associate_eip_CLUSTER, 'w') as my_file:
+   my_file.write(output)
+'''
+#Wait to check the instance is initialized
+#Check that the instance is initialized
+cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
+output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+
+
+#To Do
+#Do an EC2 instance describe and get the enid of the first nic deployed to the mgmt subnet
+#get the eni_id of the first nic
+#consider instead of associating public ip with first nic on mgmt subnet, instead associate elastic ip
+#fix up code so that you can first enter in the elastic ip reservation ids into the vault and call from there
 
