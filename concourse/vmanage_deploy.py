@@ -220,10 +220,12 @@ with open(outfile_vmanage_pub_ip, 'w') as my_file:
 outfile_vmanage_pub_ip='vmanage_pub_ip.json'
 with open(outfile_vmanage_pub_ip) as access_json:
    read_content = json.load(access_json)
-   question_access = read_content[0]
+   print("Printing line 224 read_content")
    print(read_content)
-   question_data=question_access[0]
-   vmanage_pub_ip=question_data
+   question_access = read_content[0]
+   print("Line 227 question_access")
+   print(question_access)
+   vmanage_pub_ip=question_access
    print(vmanage_pub_ip)
 
 
