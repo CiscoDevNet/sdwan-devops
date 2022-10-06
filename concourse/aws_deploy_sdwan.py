@@ -17,7 +17,7 @@ import lab_vars
 from lab_vars import *
 
 outfile_vars="vars"
-sg_name=name
+sg_name=SDWAN
 
 #Inject the vault var vals into the ephemeral oci build container
 
@@ -43,8 +43,8 @@ create_keypair='aws ec2 create-key-pair --key-name' + " " +  "{}".format(name) +
 
 #2 - CREATE THE NEW VPC AND GET VPCID
 outfile = 'aws-vpc.json'
-#cmd_deploy='aws ec2 create-vpc --region' + " " + "{}".format(region) + " " + '--cidr-block 10.10.0.0/16 --tag-specifications' + " " + "'ResourceType=vpc,Tags=[{Key=Name,Value=trainee1}]'"
-cmd_deploy='aws ec2 create-vpc --region' + " " + "{}".format(region) + " " + '--cidr-block 10.0.0.0/16 --tag-specifications' + " " + "'ResourceType=vpc,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
+#cmd_deploy='aws ec2 create-vpc --region' + " " + "{}".format(region) + " " + '--cidr-block 10.100.0.0/22 --tag-specifications' + " " + "'ResourceType=vpc,Tags=[{Key=Name,Value=trainee1}]'"
+cmd_deploy='aws ec2 create-vpc --region' + " " + "{}".format(region) + " " + '--cidr-block 10.100.0.0/22 --tag-specifications' + " " + "'ResourceType=vpc,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
 output = check_output("{}".format(cmd_deploy), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 with open(outfile, 'w') as my_file:
@@ -62,9 +62,9 @@ with open(outfile_vars, 'a+') as my_file:
     my_file.write(vpcid_var + "\n")
 
 
-#3- CREATE THE MGMT 512 SUBNET -  Interface Index 1 for Controllers. Learned that if you try to change this to default interface it requires a disconnect from SSH
+#3- CREATE THE MGMT AZ1 SUBNET -  Interface Index 1 for Controllers. Learned that if you try to change this to default interface it requires a disconnect from SSH
 outfile_subnet_MGMT = 'aws-subnet-MGMT.json'
-cmd_subnet_MGMT='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.0.1.0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_MGMT}]'"
+cmd_subnet_MGMT='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.100..0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_MGMT}]'"
 print(cmd_subnet_MGMT)
 output = check_output("{}".format(cmd_subnet_MGMT), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
@@ -83,29 +83,29 @@ with open(outfile_vars, 'a+') as my_file:
     my_file.write(subnetid_MGMT_var + "\n")
 
 
-#4- CREATE THE TUNNEL SUBNET for vpn0 - transport TUNNEL for interface VPN0
-outfile_subnet_TUNNEL = 'aws-subnet-TUNNEL.json'
-cmd_subnet_TUNNEL='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.0.2.0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_TUNNEL}]'"
-print(cmd_subnet_TUNNEL)
-output = check_output("{}".format(cmd_subnet_TUNNEL), shell=True).decode().strip()
+#4- CREATE THE PUBLIC SUBNET
+outfile_subnet_PUBLIC = 'aws-subnet-PUBLIC.json'
+cmd_subnet_PUBLIC='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.100.1.0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_PUBLIC}]'"
+print(cmd_subnet_PUBLIC)
+output = check_output("{}".format(cmd_subnet_PUBLIC), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-with open(outfile_subnet_TUNNEL, 'w') as my_file:
+with open(outfile_subnet_PUBLIC, 'w') as my_file:
     my_file.write(output)
-with open (outfile_subnet_TUNNEL) as access_json:
+with open (outfile_subnet_PUBLIC) as access_json:
     read_content = json.load(access_json)
     question_access = read_content['Subnet']
     replies_access = question_access['SubnetId']
-    subnetid_TUNNEL = replies_access
-    print(subnetid_TUNNEL)
-    subnetid_TUNNEL_var=('subnetid_TUNNEL=' + "'" + "{}".format(subnetid_TUNNEL) + "'")
+    subnetid_PUBLIC = replies_access
+    print(subnetid_PUBLIC)
+    subnetid_PUBLIC_var=('subnetid_PUBLIC=' + "'" + "{}".format(subnetid_PUBLIC) + "'")
 
 with open(outfile_vars, 'a+') as my_file:
-    my_file.write(subnetid_TUNNEL_var + "\n")
+    my_file.write(subnetid_PUBLIC_var + "\n")
 
-
+'''
 #5- CREATE THE CLUSTER SUBNET
 outfile_subnet_CLUSTER = 'aws-subnet-CLUSTER.json'
-cmd_subnet_CLUSTER='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.0.3.0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_CLUSTER}]'"
+cmd_subnet_CLUSTER='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.100.2.0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_CLUSTER}]'"
 print(cmd_subnet_CLUSTER)
 output = check_output("{}".format(cmd_subnet_CLUSTER), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
@@ -122,7 +122,7 @@ subnetid_CLUSTER_var=('subnetid_CLUSTER=' + "'" + "{}".format(subnetid_CLUSTER) 
 
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(subnetid_CLUSTER_var + "\n")
-
+'''
 
 #5 - CREATE INTERNET GATEWAY
 outfile_ig = 'aws-ig.json'
@@ -176,7 +176,7 @@ def_vpc_rt_id_var=('def_vpc_rt_id=' + "'" + "{}".format(def_vpc_rt_id) + "'")
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(def_vpc_rt_id_var + "\n")
 
-#Tag the default rout table --resources   --tags Key=Name,Value=DEFAULT_RT
+#Tag the default route table --resources --tags Key=Name,Value=DEFAULT_RT
 
 #8 - aws ec2 create-tags to identify the vpc default route table
 tag_def_vpc_rt='aws ec2 create-tags --resources --region' + " " + "{}".format(region) + " " + " " + "{}".format(def_vpc_rt_id) + " " + '--tags Key=Name,Value=DEFAULT_RT_' + "{}".format(name)
@@ -210,24 +210,26 @@ rt_MGMT_id_var=('rt_MGMT_id=' + "'" + "{}".format(rt_MGMT_id) + "'")
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(rt_MGMT_id_var + "\n")
 
-#11 - Create TUNNEL Route Table
-outfile_TUNNEL_rt = 'aws-rt-TUNNEL.json'
-cmd_TUNNEL_rt='aws ec2 create-route-table --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--tag-specifications' + " " + "'ResourceType=route-table,Tags=[{Key=Name,Value=TUNNEL_RT}]'"
-print(cmd_TUNNEL_rt)
-output = check_output("{}".format(cmd_TUNNEL_rt), shell=True).decode().strip()
+'''
+
+#11 - Create PUBLIC Route Table
+outfile_PUBLIC_rt = 'aws-rt-PUBLIC.json'
+cmd_PUBLIC_rt='aws ec2 create-route-table --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--tag-specifications' + " " + "'ResourceType=route-table,Tags=[{Key=Name,Value=PUBLIC_RT}]'"
+print(cmd_PUBLIC_rt)
+output = check_output("{}".format(cmd_PUBLIC_rt), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-with open(outfile_TUNNEL_rt, 'w') as my_file:
+with open(outfile_PUBLIC_rt, 'w') as my_file:
     my_file.write(output)
-with open (outfile_TUNNEL_rt) as access_json:
+with open (outfile_PUBLIC_rt) as access_json:
     read_content = json.load(access_json)
     question_access = read_content['RouteTable']
     replies_access = question_access['RouteTableId']
-rt_TUNNEL_id = replies_access
-print(rt_TUNNEL_id)
+rt_PUBLIC_id = replies_access
+print(rt_PUBLIC_id)
 
-rt_TUNNEL_id_var=('rt_rt_id=' + "'" + "{}".format(rt_TUNNEL_id) + "'")
+rt_PUBLIC_id_var=('rt_rt_id=' + "'" + "{}".format(rt_PUBLIC_id) + "'")
 with open(outfile_vars, 'a+') as my_file:
-    my_file.write(rt_TUNNEL_id_var + "\n")
+    my_file.write(rt_PUBLIC_id_var + "\n")
 
 
 #11 - Create CLUSTER Route Table
@@ -249,8 +251,9 @@ rt_CLUSTER_id_var=('rt_rt_id=' + "'" + "{}".format(rt_CLUSTER_id) + "'")
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(rt_CLUSTER_id_var + "\n")
 
+'''
 
-#12 - ASSOCIATE THE MGMT ROUTE TABLE WITH THE MGMT SUBNET
+#12 - ASSOCIATE THE MGMT ROUTE TABLE WITH THE MGMT SUBNET(Check with Team if there should be just one route table and this would be renamed just "main route table"
 outfile_ass_MGMT_sub = 'ass_rt_MGMT_sub.json'
 ass_rt_MGMT_sub='aws ec2 associate-route-table --region' + " " + "{}".format(region) + " " + '--route-table-id' + " " + "{}".format(rt_MGMT_id) + " " + '--subnet-id' + " " + "{}".format(subnetid_MGMT)
 print(ass_rt_MGMT_sub)
@@ -259,14 +262,26 @@ print("Output: \n{}\n".format(output))
 with open(outfile_ass_MGMT_sub, 'w') as my_file:
     my_file.write(output)
 
+#ASSOCIATE ALL THE SUBNETS WITH THE MGMT ROUTE TABLE
 
-#ASSOCIATE THE TUNNEL ROUTE TABLE WITH THE TUNNEL SUBNET
-outfile_ass_TUNNEL_sub = 'ass_TUNNEL_sub.json'
-ass_rt_TUNNEL_sub='aws ec2 associate-route-table' + " " + '--region' + " " + "{}".format(region) + " " + '--route-table-id' + " " + "{}".format(rt_TUNNEL_id) + " " +  '--subnet-id' + " " + "{}".format(subnetid_TUNNEL)
-print(ass_rt_TUNNEL_sub)
-output = check_output("{}".format(ass_rt_TUNNEL_sub), shell=True).decode().strip()
+# - ASSOCIATE THE MGMT ROUTE TABLE WITH THE PUBLIC SUBNET
+outfile_ass_PUBLIC_sub = 'ass_rt_MGMT_sub.json'
+ass_rt_PUBLIC_sub='aws ec2 associate-route-table --region' + " " + "{}".format(region) + " " + '--route-table-id' + " " + "{}".format(rt_MGMT_id) + " " + '--subnet-id' + " " + "{}".format(subnetid_PUBLIC)
+print(ass_rt_PUBLIC_sub)
+output = check_output("{}".format(ass_rt_PUBLIC_sub), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-with open(outfile_ass_TUNNEL_sub, 'w') as my_file:
+with open(outfile_ass_PUBLIC_sub, 'w') as my_file:
+    my_file.write(output)
+
+
+'''
+#ASSOCIATE THE PUBLIC ROUTE TABLE WITH THE PUBLIC SUBNET
+outfile_ass_PUBLIC_sub = 'ass_PUBLIC_sub.json'
+ass_rt_PUBLIC_sub='aws ec2 associate-route-table' + " " + '--region' + " " + "{}".format(region) + " " + '--route-table-id' + " " + "{}".format(rt_PUBLIC_id) + " " +  '--subnet-id' + " " + "{}".format(subnetid_PUBLIC)
+print(ass_rt_PUBLIC_sub)
+output = check_output("{}".format(ass_rt_PUBLIC_sub), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_ass_PUBLIC_sub, 'w') as my_file:
     my_file.write(output)
 
 #ASSOCIATE THE CLUSTER ROUTE TABLE WITH THE CLUSTER SUBNET
@@ -278,41 +293,45 @@ print("Output: \n{}\n".format(output))
 with open(outfile_ass_rt_CLUSTER_sub, 'w') as my_file:
     my_file.write(output)
 
+'''
 
-
-#Add a route to this TUNNEL route table that is to the internet gateway
+#Add a route to this PUBLIC route table that is to the internet gateway
 #Destination 0.0.0.0/0 Target: The igw for the VPC
 #aws ec2 create-route --route-table-id rtb-22574640 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-c0a643a9
 #Need the RT ID and the GatewayID
 #aws ec2 create-route --route-table-id rt_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id igid
 #aws ec2 create-route --route-table-id rtb-037f6e0a9f82e1d9e --destination-cidr-block 0.0.0.0/0 --gateway-id igw-0cd42c1b9fdd2bc6d
-print("Creating TUNNEL Route Table Route and Associating with Gateway")
-cmd_create_TUNNEL_rt_route='aws ec2 create-route --route-table-id' + " " + "{}".format(rt_TUNNEL_id) + " " + '--destination-cidr-block 0.0.0.0/0' + " " + '--gateway-id' + " " + igid
-print(cmd_create_TUNNEL_rt_route)
-output = check_output("{}".format(cmd_create_TUNNEL_rt_route), shell=True).decode().strip()
+print("Creating PUBLIC Route Table Route and Associating with Gateway")
+cmd_create_PUBLIC_rt_route='aws ec2 create-route --route-table-id' + " " + "{}".format(rt_PUBLIC_id) + " " + '--destination-cidr-block 0.0.0.0/0' + " " + '--gateway-id' + " " + igid
+print(cmd_create_PUBLIC_rt_route)
+output = check_output("{}".format(cmd_create_PUBLIC_rt_route), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
 #13 - Create a Security Group
-out_file_sg_TUNNEL='outfile-sg-TUNNEL.json'
+out_file_sg_SDWAN='outfile-sg-PUBLIC.json'
 cmd_security_group='aws ec2 create-security-group --group-name --region' + " " + "{}".format(region) + " " + " " + "{}".format(sg_name) + " " + '--description' + " " + "{}".format(sg_name) + " " + '--vpc-id' + " " + "{}".format(vpcid)
 output = check_output("{}".format(cmd_security_group), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-with open(out_file_sg_TUNNEL, 'w') as my_file:
+with open(out_file_sg_SDWAN, 'w') as my_file:
     my_file.write(output)
-with open (out_file_sg_TUNNEL) as access_json:
+with open (out_file_sg_SDWAN) as access_json:
     read_content = json.load(access_json)
     question_access = read_content['GroupId']
-    TUNNEL_sg_id=question_access
-    TUNNEL_sg_id_var=('TUNNEL_sg_id=' + "'" + "{}".format(TUNNEL_sg_id) + "'")
-    print(TUNNEL_sg_id_var)
+    SDWAN_sg_id=question_access
+    SDWAN_sg_id_var=('SDWAN_sg_id=' + "'" + "{}".format(SDWAN_sg_id) + "'")
+    print(SDWAN_sg_id_var)
 with open(outfile_vars, 'a+') as my_file:
-    my_file.write(TUNNEL_sg_id_var + "\n")
+    my_file.write(SDWAN_sg_id_var + "\n")
 
 #Create inbound rule on the security group to allow SSH
 #aws ec2 authorize-security-group-ingress --group-id sg-1234567890abcdef0 --protocol tcp --port 22 --cidr 0.0.0.0/0
-auth_inbound_ssh='aws ec2 authorize-security-group-ingress --region' + " " + "{}".format(region) + " " + '--group-id' + " " "{}".format(TUNNEL_sg_id) + " " + '--protocol tcp --port 22 --cidr 0.0.0.0/0'
+auth_inbound_ssh='aws ec2 authorize-security-group-ingress --region' + " " + "{}".format(region) + " " + '--group-id' + " " "{}".format(SDWAN_sg_id) + " " + '--protocol tcp --port 22 --cidr 0.0.0.0/0'
 output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
+
+
+
+
 
 
 #VAULT SECTION
@@ -333,16 +352,16 @@ resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
 
 
-#3 Write the subnetid_TUNNEL to the vault
+#3 Write the subnetid_PUBLIC to the vault
 
-url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "subnetid_TUNNEL"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "subnetid_PUBLIC"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
 headers["Content-Type"] = "application/json"
 
 #data = f'{{"token": "{TOKEN}"}}'
-data_json = {"subnetid_TUNNEL": subnetid_TUNNEL }
+data_json = {"subnetid_PUBLIC": subnetid_PUBLIC }
 
 resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
@@ -389,22 +408,22 @@ data_json = {"rt_MGMT_id": rt_MGMT_id }
 resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
 
-#11 - Write rt_tunnel_id to the vault
-url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_tunnel_id"
+#11 - Write rt_PUBLIC_id to the vault
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_PUBLIC_id"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
 headers["Content-Type"] = "application/json"
 
 #data = f'{{"token": "{TOKEN}"}}'
-data_json = {"rt_TUNNEL_id": rt_TUNNEL_id }
+data_json = {"rt_PUBLIC_id": rt_PUBLIC_id }
 
 resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
 
-#13 - Write the TUNNEL_sg_id to the vault
+#13 - Write the SDWAN_sg_id to the vault
 
-url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "TUNNEL_sg_id"
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "SDWAN_sg_id"
 print(url)
 
 headers = CaseInsensitiveDict()
@@ -412,7 +431,7 @@ headers["X-Vault-Token"] = VAULT_TOKEN
 headers["Content-Type"] = "application/json"
 
 #data = f'{{"token": "{TOKEN}"}}'
-data_json = {"TUNNEL_sg_id": TUNNEL_sg_id }
+data_json = {"SDWAN_sg_id": SDWAN_sg_id }
 
 resp = requests.post(url, headers=headers, json=data_json)
 print(resp)
