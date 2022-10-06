@@ -72,15 +72,15 @@ with open(outfile_vars, 'a+') as my_file:
 
 
 
-#Get the MGMT subnetid
-outfile_get_subnetid_MGMT='subnet_id_MGMT.json'
-get_subnetid_MGMT='aws ec2 describe-subnets --region' + " " + "{}".format(region) + " " '--filters' + " " + '"Name=availability-zone,Values=' + "{}".format(az)  + '"' + " " + '"Name=tag:Name,Values=SUBNET_MGMT"'
-output = check_output("{}".format(get_subnetid_MGMT), shell=True).decode().strip()
+#Get the mgmt subnetid
+outfile_get_subnetid_mgmt='subnet_id_mgmt.json'
+get_subnetid_mgmt='aws ec2 describe-subnets --region' + " " + "{}".format(region) + " " '--filters' + " " + '"Name=availability-zone,Values=' + "{}".format(az)  + '"' + " " + '"Name=tag:Name,Values=SUBNET_mgmt"'
+output = check_output("{}".format(get_subnetid_mgmt), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
-with open(outfile_get_subnetid_MGMT, 'w') as my_file:
+with open(outfile_get_subnetid_mgmt, 'w') as my_file:
     my_file.write(output)
-with open(outfile_get_subnetid_MGMT) as access_json:
+with open(outfile_get_subnetid_mgmt) as access_json:
     read_content = json.load(access_json)
     print(read_content)
     question_access = read_content['Subnets']
@@ -88,13 +88,13 @@ with open(outfile_get_subnetid_MGMT) as access_json:
     replies_access = question_access[0]
     print(replies_access)
     replies_data=replies_access['SubnetId']
-    subnetid_MGMT=replies_data
-    print("Printing out the subnetid_MGMT.....")
-    print(subnetid_MGMT)
-    subnetid_MGMT_var=('subnetid_MGMT=' + "'" + "{}".format(subnetid_MGMT) + "'")
+    subnetid_mgmt=replies_data
+    print("Printing out the subnetid_mgmt.....")
+    print(subnetid_mgmt)
+    subnetid_mgmt_var=('subnetid_mgmt=' + "'" + "{}".format(subnetid_mgmt) + "'")
 
 with open(outfile_vars, 'a') as my_file:
-    my_file.write(subnetid_MGMT_var + "\n")
+    my_file.write(subnetid_mgmt_var + "\n")
 
 
 #get the subnetid_public
@@ -149,7 +149,7 @@ with open(outfile_vars, 'a') as my_file:
 #Create the Instance
 #aws ec2 run-instances --image-id ami-067c66abd840abc24 --instance-type t2.medium --subnet-id subnet-008617eb0c9782f55 --security-group-ids sg-0b0384b66d7d692f9 --PrivateIpAddress "10.10.10.100" --associate-public-ip-address --key-name blitz-user-1
 cmd_deploy_vmanage='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_public) +  " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az)
-#cmd_deploy_vmanage='aws ec2 run-instances --image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_MGMT) +  " " + '--security-group-ids' + " " + "{}".format(MGMT_sg_id) + " " + '--associate-public-ip-address' + " " + '--key-name' + " " + "{}".format(keypair_name)
+#cmd_deploy_vmanage='aws ec2 run-instances --image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_mgmt) +  " " + '--security-group-ids' + " " + "{}".format(mgmt_sg_id) + " " + '--associate-public-ip-address' + " " + '--key-name' + " " + "{}".format(keypair_name)
 #print(cmd_deploy_vmanage)
 output = check_output("{}".format(cmd_deploy_vmanage), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
@@ -274,14 +274,14 @@ print("Output: \n{}\n".format(output))
 
 
 #associate an eip with the default nic
-cmd_associate_eip_MGMT='aws ec2 associate-address --allocation-id' + " " +  eip_mgmt + " " + '--network-interface-id' + " " + mgmt_eni_id
-print(cmd_associate_eip_MGMT)
-output = check_output("{}".format(cmd_associate_eip_MGMT), shell=True).decode().strip()
+cmd_associate_eip_mgmt='aws ec2 associate-address --allocation-id' + " " +  eip_mgmt + " " + '--network-interface-id' + " " + mgmt_eni_id
+print(cmd_associate_eip_mgmt)
+output = check_output("{}".format(cmd_associate_eip_mgmt), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 print("Associating eip with the mgmt nic")
 
 #Create a Secondary NIC and assign to the public subnet
-#cmd_add_nic_MGMT='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_public) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(MGMT_sg_id) + " " + '--private-ip-address 10.10.20.100'
+#cmd_add_nic_mgmt='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_public) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(mgmt_sg_id) + " " + '--private-ip-address 10.10.20.100'
 outfile_add_vmanage_nic='add-vmanage-nic.json'
 cmd_add_vmanage_nic='aws ec2 create-network-interface --region' + " " "{}".format(region) + " " + '--subnet-id' + " " + "{}".format(subnetid_public) + " " + '--description "vmanage_nic_public_sub"' + " " + '--groups' + " " + "{}".format(sgid) + " " + '--tag-specifications' + " " + "'ResourceType=network-interface,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
 output = check_output("{}".format(cmd_add_vmanage_nic), shell=True).decode().strip()
@@ -327,7 +327,7 @@ with open(outfile_associate_eip_public, 'w') as my_file:
 #######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
 
 #Create a Tertiary NIC and assign to the CLUSTER subnet
-#cmd_add_nic_MGMT='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_public) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(MGMT_sg_id) + " " + '--private-ip-address 10.10.20.100'
+#cmd_add_nic_mgmt='aws ec2 create-network-interface --subnet-id' + " " + "{}".format(subnetid_public) + " " + '--description "vmanage_nic"' + " " + '--groups' + " " + "{}".format(mgmt_sg_id) + " " + '--private-ip-address 10.10.20.100'
 outfile_add_vmanage_cluster_nic='add-vmanage-cluster-nic.json'
 cmd_add_cluster_nic='aws ec2 create-network-interface --region' + " " "{}".format(region) + " " + '--subnet-id' + " " + "{}".format(subnetid_CLUSTER) + " " + '--description "vmanage_nic_CLUSTER_sub"' + " " + '--groups' + " " + "{}".format(sgid) + " " + '--tag-specifications' + " " + "'ResourceType=network-interface,Tags=[{Key=Name,Value=" + "{}".format(name) + '}]'"" + "'"
 output = check_output("{}".format(cmd_add_cluster_nic), shell=True).decode().strip()
@@ -374,8 +374,8 @@ print("Output: \n{}\n".format(output))
 
 
 #To Do
-#Do an EC2 instance describe and get the enid of the first nic deployed to the MGMT subnet
+#Do an EC2 instance describe and get the enid of the first nic deployed to the mgmt subnet
 #get the eni_id of the first nic
-#consider instead of associating public ip with first nic on MGMT subnet, instead associate elastic ip
+#consider instead of associating public ip with first nic on mgmt subnet, instead associate elastic ip
 #fix up code so that you can first enter in the elastic ip reservation ids into the vault and call from there
 
