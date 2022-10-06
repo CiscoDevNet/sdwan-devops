@@ -17,7 +17,7 @@ import lab_vars
 from lab_vars import *
 
 outfile_vars="vars"
-sg_name=SDWAN
+sg_name='SDWAN'
 
 #Inject the vault var vals into the ephemeral oci build container
 
