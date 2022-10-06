@@ -64,7 +64,7 @@ with open(outfile_vars, 'a+') as my_file:
 
 #3- CREATE THE MGMT AZ1 SUBNET -  Interface Index 1 for Controllers. Learned that if you try to change this to default interface it requires a disconnect from SSH
 outfile_subnet_MGMT = 'aws-subnet-MGMT.json'
-cmd_subnet_MGMT='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.100..0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_MGMT}]'"
+cmd_subnet_MGMT='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.100.0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_MGMT}]'"
 print(cmd_subnet_MGMT)
 output = check_output("{}".format(cmd_subnet_MGMT), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
