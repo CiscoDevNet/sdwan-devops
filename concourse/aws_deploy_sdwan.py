@@ -302,7 +302,7 @@ with open(outfile_ass_rt_CLUSTER_sub, 'w') as my_file:
 #aws ec2 create-route --route-table-id rt_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id igid
 #aws ec2 create-route --route-table-id rtb-037f6e0a9f82e1d9e --destination-cidr-block 0.0.0.0/0 --gateway-id igw-0cd42c1b9fdd2bc6d
 print("Creating Router Route Table Route and Associating with Gateway")
-cmd_create_router_rt_route='aws ec2 create-route --route-table-id' + " " + "{}".format(rt_rt_id) + " " + '--destination-cidr-block 0.0.0.0/0' + " " + '--gateway-id' + " " + igid
+cmd_create_router_rt_route='aws ec2 create-route --route-table-id' + " " + "{}".format(rt_MGMT_id) + " " + '--destination-cidr-block 0.0.0.0/0' + " " + '--gateway-id' + " " + igid
 print(cmd_create_router_rt_route)
 output = check_output("{}".format(cmd_create_router_rt_route), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
