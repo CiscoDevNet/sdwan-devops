@@ -409,15 +409,15 @@ data_json = {"rt_MGMT_id": rt_MGMT_id }
 resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
 
-#11 - Write rt_PUBLIC_id to the vault
-url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_PUBLIC_id"
+#11 - Write rt_MGMT_id to the vault
+url = "http://dev-vault.devops-ontap.com:8200/v1/concourse/sdwan/" + name + "/" + "rt_MGMT_id"
 
 headers = CaseInsensitiveDict()
 headers["X-Vault-Token"] = VAULT_TOKEN
 headers["Content-Type"] = "application/json"
 
 #data = f'{{"token": "{TOKEN}"}}'
-data_json = {"rt_PUBLIC_id": rt_PUBLIC_id }
+data_json = {"rt_MGMT_id": rt_MGMT_id }
 
 resp = requests.post(url, headers=headers, json=data_json)
 print(resp.status_code)
