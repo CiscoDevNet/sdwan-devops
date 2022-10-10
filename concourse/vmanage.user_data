@@ -33,7 +33,7 @@ write_files:
         <aaa>
           <user>
             <name>admin</name>
-            <password>$6$Yr4UfGuMs2C$2gsBhG9T8pWIG3RQYKlQiBEW7ncsiS2oFktyUBXzlHDFzNG3X4bz0qkx.95npJHN7dlp58mCZ4uBVYrlewRek1</password>
+            <password>admin</password>
           </user>
         </aaa>
         <ntp>
