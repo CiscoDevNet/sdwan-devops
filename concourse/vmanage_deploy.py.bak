@@ -10,7 +10,7 @@ from lab_vars import *
 
 keypair_name=name
 sg_name='SDWAN'
-ami_id=vManage_ami_id
+ami_id=vmanage_ami_id
 
 path = os.getcwd()
 print(path)
@@ -26,7 +26,7 @@ outfile_get_vpcid='outfile_get_vpcid.json'
 
 #Will need to add code to generate the EIPs or look for some that are availabae
 inst_name="vmanage-1"
-eip_mgmt='eipalloc-0132ed8fd16ab494c'
+eip_mgmt='eipalloc-0ae261ca48171b615'
 eip_public='eipalloc-0132ed8fd16ab494c'
 
 #Get VPCID
@@ -148,7 +148,7 @@ with open(outfile_vars, 'a') as my_file:
 
 #Create the Instance
 #aws ec2 run-instances --image-id ami-067c66abd840abc24 --instance-type t2.medium --subnet-id subnet-008617eb0c9782f55 --security-group-ids sg-0b0384b66d7d692f9 --PrivateIpAddress "10.10.10.100" --associate-public-ip-address --key-name blitz-user-1
-cmd_deploy_vmanage='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_public) +  " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az)
+cmd_deploy_vmanage='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_mgmt) +  " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az) + " " + '--user-data file://vmanage.user_data'
 #cmd_deploy_vmanage='aws ec2 run-instances --image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_mgmt) +  " " + '--security-group-ids' + " " + "{}".format(mgmt_sg_id) + " " + '--associate-public-ip-address' + " " + '--key-name' + " " + "{}".format(keypair_name)
 #print(cmd_deploy_vmanage)
 output = check_output("{}".format(cmd_deploy_vmanage), shell=True).decode().strip()
@@ -183,10 +183,9 @@ with open(outfile_vars, 'a') as my_file:
 
 #tag the vmanage instance
 #tag_vmanage='aws ec2 create-tags --resources' + " " + "{}".format(vmanage_instance_id) '--tags "'Key="[Name]",Value=vmanage'"
-vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-1.0' + "'"
+vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-3.0' + "'"
 output = check_output("{}".format(vmanage_tag_inst), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-
 
 
 #Capture the network interface id from the instance_id
@@ -244,34 +243,7 @@ print(vmanage_pub_ip_var)
 with open(outfile_vars, 'a') as my_file:
    my_file.write(vmanage_pub_ip_var + "\n")
 
-
-
-
-#Add additional SSD of 1 TB to the instance
-#Create the volume and get the volume id - /dev/sdf
-outfile_volume='volume.json'
-cmd_create_volume='aws ec2 create-volume --volume-type gp2 --size 1000 --availability-zone' + " " + az + " " + '--tag-specifications' + " " + 'ResourceType=volume,Tags=[{Key=Description,Value=vmanage-vol}]'
-output = check_output("{}".format(cmd_create_volume), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-with open(outfile_volume, 'a') as my_file:
-   my_file.write(output + "\n")
-
-with open(outfile_volume) as access_json:
-   read_content = json.load(access_json)
-   print(read_content)
-   question_access=read_content['VolumeId']
-   print(question_access)
-   vol_id=question_access
-   print(vol_id)
-
-#Attach the volume to the instance
-#aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
-cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
-output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
-print("Output: \n{}\n".format(output))
-
 '''
-
 
 #associate an eip with the default nic
 cmd_associate_eip_mgmt='aws ec2 associate-address --allocation-id' + " " +  eip_mgmt + " " + '--network-interface-id' + " " + mgmt_eni_id
@@ -322,6 +294,30 @@ output = check_output("{}".format(cmd_associate_eip_public), shell=True).decode(
 print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_public, 'w') as my_file:
    my_file.write(output)
+
+
+#Add additional SSD of 1 TB to the instance
+#Create the volume and get the volume id - /dev/sdf
+outfile_volume='volume.json'
+cmd_create_volume='aws ec2 create-volume --volume-type gp2 --size 1000 --availability-zone' + " " + az + " " + '--tag-specifications' + " " + 'ResourceType=volume,Tags=[{Key=Description,Value=vmanage-vol}]'
+output = check_output("{}".format(cmd_create_volume), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+with open(outfile_volume, 'a') as my_file:
+    my_file.write(output + "\n")
+
+with open(outfile_volume) as access_json:
+    read_content = json.load(access_json)
+    print(read_content)
+    question_access=read_content['VolumeId']
+    print(question_access)
+    vol_id=question_access
+    print(vol_id)
+
+#Attach the volume to the instance
+#aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
+cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
+output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
 
 '''
 #######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
