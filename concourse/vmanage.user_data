@@ -65,7 +65,7 @@ write_files:
             <aaa>
                 <user>
                     <name>admin</name>
-                    <password>$6$xGAS6QN0lTE/po9j$OMywMofGESUViT1TinMhzdzs71jRuI5G2637tK7qTgxI5FdhQVV8VilU0DUKUGQBQPiJpYdAu1Ygm/4DNiOwn.</password>
+                    <password>cisco</password>
                 </user>
             </aaa>
         </system>
