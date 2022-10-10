@@ -1,12 +1,8 @@
-%{ if day0 != "" }${day0}%{ else }
 #cloud-config
 users:
 - name: admin
-  ssh_authorized_keys:
-  - us-west-2a
 fs_setup:
 - device: "/dev/xvdb"
-  label: data
   partition: "none"
   filesystem: "ext4"
 mounts:
@@ -20,61 +16,93 @@ write_files:
   content: "vmanage\n"
 - path: /etc/default/inited
   content: "1\n"
+- path: /usr/share/viptela/symantec-root-ca.crt
+- path: /usr/share/viptela/root-ca.crt
+  content: |
+    -----BEGIN CERTIFICATE-----
+    MIIFEDCCAvigAwIBAgIUZwwqefcZEu7TDNSS0ynsOUhzxw4wDQYJKoZIhvcNAQEL
+    BQAwGjEYMBYGA1UEAwwPdmlwdGVsYUNBLmxvY2FsMB4XDTIyMTAxMDIwMzkxMFoX
+    DTMyMTAwNzIwMzkxMFowGjEYMBYGA1UEAwwPdmlwdGVsYUNBLmxvY2FsMIICIjAN
+    BgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA66lu2WRpinnX/dusGvqgXyyqtT9x
+    BAHr6p4A3GZD3yNx+CDUW5Fo3zSpyS2f4AWR8Z8Ltd/oiYgZshmMXfq09iC0R3ER
+    dw1VPkwT7kaoYjCv/uCRFYDdqxmKfOjqMCPqhzW+EdxR3xNGtZNB3BDP3NFk5i2t
+    oOsss5zko5m0glPf9uJrKzopXdjKyeAER1m+tTwSdC+Kn8VC0mAa7MGDSW+jQ8gk
+    KG3RhisM7BTYwD8Keshv9iA+IReQSyw/6XAqH9k+GNW8sa5Rfk+qtsaHTNEaHW3f
+    Cp/N4RpilFPmHvRwX5PK7tBc7w1bjgLg+FxV+yw1mqGqUn/LFWdAi8k98Fz78yGx
+    DBEUTX0q5x+4iHxErwjtaMy8tiPC3z2i226aTlyDjtUtTNDbH7zPG81UlgmuGiBR
+    o5ASQZFuIqX0Y8/SN2/2SEOgeKmwNLHD9QInXBiYT007+Jj5FCo/M6z8SNsK8Npd
+    U7r+WQkxA0gI/MKgCVdDvWEULNUJrBsz/I086ltFEsKKkJpi9xKAXEXfs/IQeNml
+    +CfDM72ixnNJsEPZ2eH0mJbcvB977SEjfXi/jtHtHhYA3LSAWsr90X9nuCT6eC03
+    YfhcmrIecbf17qj1I32R1R7dhKowiYMWesxpkSD02ouVQdGzCiKylfczNcaLZ6Up
+    LHVJBsnt6bqsH78CAwEAAaNOMEwwGgYDVR0RBBMwEYIPdmlwdGVsYUNBLmxvY2Fs
+    MA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFPZDOxHq7sgTi8tdcXbeGLQsyWuT
+    MA0GCSqGSIb3DQEBCwUAA4ICAQAeor53M87iTfu9z740kmfI5oKfORHJS8+bGkkn
+    wj4+EI7bEE/hNNpcTlCTXvDqy4DoMUSntLiMF5WyaZL3fZOYrunD74q2kqE6oUk6
+    6AhexTtXleegJU3vS8xkSL1taBy0mMYJimQnGLq3wGBX8yhZkSDuFhPBi6Ef2fwK
+    C0yv1aIbXzujs3XHr0VqO9SkSvONeUBVjotOjoQUFsUwKJ+Lzzk5QXRx5skvl7ec
+    qL9lK7YREqDwHO4MrsoVFIvq/UF9SWyyu90H2/NUe0KpmS1Kep0z/26mleYWPn+s
+    5zPG61sdJ+koX1buPOrtLDZNT+6wAH3FUV58Yughr28W9O0bR5PHYfJDsQYnrTdA
+    QRGbmxTx6jbUUUd8f+s+AXD0cJD/vF0A2OIGDk96w8uFfAPydtSw7JXtEPaSjFH8
+    F2IX+WQfoy3P88xq2JI/swccyLY9ndmqjZwyckeAlTrMScFZfS0m1DTVNMuM5kHo
+    O7eJ5mFv1jvhnftcUhpgh5kulAmr3zKgaNRJLs1mo79gypUYbRIrvLoBB1nCw9ja
+    DGjYWlMVqPUkYP7uz2l3/OXECj0p/k6xDLB+gunkgr5kGLzBY//j+eHdxQygRbdw
+    X1utSP5QW2kdli0IWJ2D6Ye7PXzsL+naTgyRtmpfZcVScg+ft2CuyrLLBsrHh7dj
+    VAM2TQ==
+    -----END CERTIFICATE-----
 - path: /etc/confd/init/zcloud.xml
   content: |
     <config xmlns="http://tail-f.com/ns/config/1.0">
-      <system xmlns="http://viptela.com/system">
-        <personality>vmanage</personality>
-        <host-name>${hostname}</host-name>
-        <organization-name>${sdwan_org}</organization-name>
-        <sp-organization-name>${sdwan_org}</sp-organization-name>
-        <site-id>100</site-id>
-        <system-ip>192.168.1.${index}</system-ip>
-        <aaa>
-          <user>
-            <name>admin</name>
-            <password>password</password>
-          </user>
-        </aaa>
-        <ntp>
-          <server>
-            <name>169.254.169.123</name>
-            <prefer>true</prefer>
-          </server>
-        </ntp>
-      </system>
-      <vpn xmlns="http://viptela.com/vpn">
-        <vpn-instance>
-          <vpn-id>0</vpn-id>
-          <interface>
-            <if-name>eth1</if-name>
-            <ip>
-              <dhcp-client>true</dhcp-client>
-            </ip>
-            <tunnel-interface>
-              <allow-service>
-                <dhcp>true</dhcp>
-                <dns>true</dns>
-                <ntp>true</ntp>
-                <icmp>true</icmp>
-                <sshd>true</sshd>
-                <netconf>true</netconf>
-                <https>true</https>
-              </allow-service>
-            </tunnel-interface>
-            <shutdown>false</shutdown>
-          </interface>
-        </vpn-instance>
-        <vpn-instance>
-          <vpn-id>512</vpn-id>
-          <interface>
-            <if-name>eth0</if-name>
-            <ip>
-              <dhcp-client>true</dhcp-client>
-            </ip>
-            <shutdown>false</shutdown>
-          </interface>
-        </vpn-instance>
-      </vpn>
+        <system xmlns="http://viptela.com/system">
+            <personality>vmanage</personality>
+            <host-name>vmanage1</host-name>
+            <system-ip>1.1.1.1</system-ip>
+            <site-id>1</site-id>
+            <domain-id>1</domain-id>
+            <organization-name>CIDR_SDWAN_WORKSHOPS</organization-name>
+            <vbond>
+                <remote>10.128.1.12</remote>
+            </vbond>
+            <aaa>
+                <user>
+                    <name>admin</name>
+                    <password>$6$xGAS6QN0lTE/po9j$OMywMofGESUViT1TinMhzdzs71jRuI5G2637tK7qTgxI5FdhQVV8VilU0DUKUGQBQPiJpYdAu1Ygm/4DNiOwn.</password>
+                </user>
+            </aaa>
+        </system>
+        <vpn xmlns="http://viptela.com/vpn">
+            <vpn-instance>
+                <vpn-id>0</vpn-id>
+                <interface>
+                        <if-name>eth1</if-name>
+                            <ip>
+                                    <address>10.128.1.11/24</address>
+                            </ip>
+                            <tunnel-interface>
+                                    <allow-service>
+                                            <all>true</all>
+                                    </allow-service>
+                            </tunnel-interface>
+                            <shutdown>false</shutdown>
+                </interface>
+                <ip>
+                        <route>
+                            <prefix>0.0.0.0/0</prefix>
+                                <next-hop>
+                                    <address>10.128.1.1</address>
+                                    <distance>1</distance>
+                                </next-hop>
+                        </route>
+                </ip>
+            </vpn-instance>
+            <vpn-instance>
+                <vpn-id>512</vpn-id>
+                <interface>
+                        <if-name>eth0</if-name>
+                            <ip>
+                                    <dhcp-client>true</dhcp-client>
+                            </ip>
+                            <shutdown>false</shutdown>
+                </interface>
+            </vpn-instance>
+        </vpn>
     </config>
-%{ endif }
