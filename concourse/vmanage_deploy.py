@@ -295,6 +295,8 @@ print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_public, 'w') as my_file:
    my_file.write(output)
 
+aws ec2 stop-instances --instance-ids
+
 #Add additional SSD of 1 TB to the instance
 #Create the volume and get the volume id - /dev/sdf
 outfile_volume='volume.json'
