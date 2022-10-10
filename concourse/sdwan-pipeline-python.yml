@@ -189,7 +189,7 @@ jobs:
               cd sdwan-devops/concourse
               chmod a+x deploy_vmanage.sh
               ./deploy_vmanage.sh
-      task: build-instances
+      task: build-vmanage
       params:
         AWS_KEY_ID: ((Access_key_ID.Access_key))
         AWS_KEY: ((Secret_access_key.Secret_access_key))
