@@ -12,8 +12,8 @@ keypair_name=name
 print('Printing out the Name of the Region')
 print(region)
 
-#Create the ubuntu router subnet tools instance
-ubuntu_ami_id=ubuntu_ami_id
+#Create the vmanage router subnet tools instance
+vmanage_ami_id=vmanage_ami_id
 instance_type='t2.medium'
 
 outfile_get_vpcid='outfile_get_vpcid.json'
@@ -102,39 +102,39 @@ with open(outfile_get_subnetid_tunnel) as access_json:
 with open(outfile_vars, 'a') as my_file:
     my_file.write(subnetid_tunnel_var + "\n")
 
-outfile_deploy_ubuntu_router='deploy-ubuntu-router.json'
+outfile_deploy_vmanage_router='deploy-vmanage-router.json'
 #aws ec2 run-instances --image-id ami-067c66abd840abc24 --instance-type t2.medium --subnet-id subnet-008617eb0c9782f55 --security-group-ids sg-0b0384b66d7d692f9 --associate-public-ip-address --key-name blitz-user-1
-cmd_deploy_ubuntu_router='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ubuntu_ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_mgmt) + " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--associate-public-ip-address' + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az)
-print(cmd_deploy_ubuntu_router)
+cmd_deploy_vmanage_router='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(vmanage_ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_mgmt) + " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--associate-public-ip-address' + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az)
+print(cmd_deploy_vmanage_router)
 
-output = check_output("{}".format(cmd_deploy_ubuntu_router), shell=True).decode().strip()
+output = check_output("{}".format(cmd_deploy_vmanage_router), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
-with open(outfile_deploy_ubuntu_router, 'w') as my_file:
+with open(outfile_deploy_vmanage_router, 'w') as my_file:
     my_file.write(output)
 #Get the instance ID and write it to the vars file
-with open (outfile_deploy_ubuntu_router) as access_json:
+with open (outfile_deploy_vmanage_router) as access_json:
     read_content = json.load(access_json)
     question_access = read_content['Instances']
     replies_access = question_access[0]
     replies_data=replies_access['InstanceId']
     print(replies_data)
-    ubuntu_router_instance_id=replies_data
+    vmanage_router_instance_id=replies_data
 
 #Wait to check the instance is initialized
 #Check that the instance is initialized
-cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + ubuntu_router_instance_id + " " + '--region' + " " + "{}".format(region)
+cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vmanage_router_instance_id + " " + '--region' + " " + "{}".format(region)
 output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
 
 #tag the instance
-ubuntu_router_tag='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(ubuntu_router_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=ubuntu_router' + "'"
-output = check_output("{}".format(ubuntu_router_tag), shell=True).decode().strip()
+vmanage_router_tag='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_router_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage_router' + "'"
+output = check_output("{}".format(vmanage_router_tag), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
 #Get the external public address assigned to the router ec2 instance and write it to the var file or vault
 outfile_router_pub_ip='router_pub_ip.json'
-cmd_get_router_pub_ip='aws ec2 describe-instances --region' + " " + "{}".format(region) + " " '--instance-id' + " " + "{}".format(ubuntu_router_instance_id) + " " + '--query "Reservations[*].Instances[*].PublicIpAddress"'
+cmd_get_router_pub_ip='aws ec2 describe-instances --region' + " " + "{}".format(region) + " " '--instance-id' + " " + "{}".format(vmanage_router_instance_id) + " " + '--query "Reservations[*].Instances[*].PublicIpAddress"'
 output = check_output("{}".format(cmd_get_router_pub_ip), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 with open(outfile_router_pub_ip, 'w') as my_file:
