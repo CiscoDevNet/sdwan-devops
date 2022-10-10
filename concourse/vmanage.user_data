@@ -3,7 +3,7 @@
 users:
 - name: admin
   ssh_authorized_keys:
-  - ${ssh_pubkey}
+  - us-west-2a
 fs_setup:
 - device: "/dev/xvdb"
   label: data
