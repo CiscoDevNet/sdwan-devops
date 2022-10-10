@@ -26,8 +26,8 @@ outfile_get_vpcid='outfile_get_vpcid.json'
 
 #Will need to add code to generate the EIPs or look for some that are availabae
 inst_name="vmanage-1"
-eip_mgmt='eipalloc-0ae261ca48171b615'
-eip_public='eipalloc-0132ed8fd16ab494c'
+eip_mgmt='eipalloc-06d883e17a87e2338'
+eip_public='eipalloc-0c78cb1a321d6de4f'
 
 #Get VPCID
 get_vpcid='aws ec2 describe-vpcs --region' + " " + "{}".format(region) + " " + '--filters Name=tag:Name,Values=' + "{}".format(name)
