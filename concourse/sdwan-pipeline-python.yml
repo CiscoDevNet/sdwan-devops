@@ -158,7 +158,7 @@ jobs:
         VAULT_ADDR: ((vault.addr))
         SSH_TOKEN: ((ssh-token.token))
 
-- name: deploy-aws-vmanage
+- name: deploy-aws-vmanage-1
   plan:
     - get: sdwan-devops
     - get: terraform-sdwan
@@ -187,9 +187,9 @@ jobs:
               aws sts get-caller-identity --query Account --output text
               export AWS_PAGER=""
               cd sdwan-devops/concourse
-              chmod a+x deploy_vmanage.sh
-              ./deploy_vmanage.sh
-      task: build-vmanage
+              chmod a+x deploy_vmanage_1.sh
+              ./deploy_vmanage_1.sh
+      task: build-vmanage-1
       params:
         AWS_KEY_ID: ((Access_key_ID.Access_key))
         AWS_KEY: ((Secret_access_key.Secret_access_key))
@@ -197,6 +197,87 @@ jobs:
         NAME: ((az.name))
         VAULT_ADDR: ((vault.addr))
         SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-aws-vmanage-2
+  plan:
+    - get: sdwan-devops
+    - get: terraform-sdwan
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/sdwan-ubuntu
+            tag: 1.0
+          type: docker-image
+        inputs:
+          - name: sdwan-devops
+          - name: terraform-sdwan
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              export AWS_PAGER=""
+              export NAME=$NAME
+              echo $NAME
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              cd sdwan-devops/concourse
+              chmod a+x deploy_vmanage_2.sh
+              ./deploy_vmanage_2.sh
+      task: build-vmanage-2
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        REGION: ((aws.region))
+        NAME: ((az.name))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+- name: deploy-aws-vmanage-3
+  plan:
+    - get: sdwan-devops
+    - get: terraform-sdwan
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/sdwan-ubuntu
+            tag: 1.0
+          type: docker-image
+        inputs:
+          - name: sdwan-devops
+          - name: terraform-sdwan
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -ce
+            - |
+              export AWS_PAGER=""
+              export NAME=$NAME
+              echo $NAME
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              cd sdwan-devops/concourse
+              chmod a+x deploy_vmanage_3.sh
+              ./deploy_vmanage_3.sh
+      task: build-vmanage-3
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        REGION: ((aws.region))
+        NAME: ((az.name))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
 
 resource_types:
 resources:
