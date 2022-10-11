@@ -313,6 +313,13 @@ with open(outfile_volume) as access_json:
     vol_id=question_access
     print(vol_id)
 
+#Wait until the volume is read to attach
+#aws ec2 wait volume-available --volume-ids vol-1234567890abcdef0
+cmd_check_volume='aws ec2 wait volume-available --volume-ids' + " " + vol_id + " " + '--region' + " " + "{}".format(region)
+output = check_output("{}".format(cmd_check_volume), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+
+
 #Attach the volume to the instance
 #aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
 cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
