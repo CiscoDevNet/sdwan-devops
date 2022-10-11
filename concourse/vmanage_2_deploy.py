@@ -183,7 +183,7 @@ with open(outfile_vars, 'a') as my_file:
 
 #tag the vmanage instance
 #tag_vmanage='aws ec2 create-tags --resources' + " " + "{}".format(vmanage_instance_id) '--tags "'Key="[Name]",Value=vmanage'"
-vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-3.0' + "'"
+vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-2.0' + "'"
 output = check_output("{}".format(vmanage_tag_inst), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 

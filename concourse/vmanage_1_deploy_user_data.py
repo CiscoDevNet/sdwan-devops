@@ -25,7 +25,7 @@ outfile_get_vpcid='outfile_get_vpcid.json'
 
 
 #Will need to add code to generate the EIPs or look for some that are availabae
-inst_name="vmanage-1"
+inst_name="vmanage-1-user-data"
 eip_mgmt='eipalloc-06d883e17a87e2338'
 eip_public='eipalloc-0c78cb1a321d6de4f'
 
@@ -183,7 +183,7 @@ with open(outfile_vars, 'a') as my_file:
 
 #tag the vmanage instance
 #tag_vmanage='aws ec2 create-tags --resources' + " " + "{}".format(vmanage_instance_id) '--tags "'Key="[Name]",Value=vmanage'"
-vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-3.0' + "'"
+vmanage_tag_inst='aws ec2 create-tags --region' + " " + "{}".format(region) + " " + '--resources' + " " +  "{}".format(vmanage_instance_id) + " " + '--tags' + " " + "'" + 'Key="Name",Value=vmanage-1.0' + "'"
 output = check_output("{}".format(vmanage_tag_inst), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
