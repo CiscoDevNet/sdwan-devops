@@ -102,7 +102,7 @@ with open (outfile_subnet_public) as access_json:
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(subnetid_public_var + "\n")
 
-'''
+
 #5- CREATE THE CLUSTER SUBNET
 outfile_subnet_CLUSTER = 'aws-subnet-CLUSTER.json'
 cmd_subnet_CLUSTER='aws ec2 create-subnet --vpc-id' + " " + "{}".format(vpcid) + " " + '--region' + " " + "{}".format(region) + " " + '--availability-zone' + " " + "{}".format(az) + " " + '--cidr-block 10.100.2.0/24 --tag-specifications' + " " "'ResourceType=subnet,Tags=[{Key=Name,Value=SUBNET_CLUSTER}]'"
@@ -122,7 +122,7 @@ subnetid_CLUSTER_var=('subnetid_CLUSTER=' + "'" + "{}".format(subnetid_CLUSTER) 
 
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(subnetid_CLUSTER_var + "\n")
-'''
+
 
 #5 - CREATE INTERNET GATEWAY
 outfile_ig = 'aws-ig.json'
@@ -230,7 +230,7 @@ print(rt_public_id)
 rt_public_id_var=('rt_rt_id=' + "'" + "{}".format(rt_public_id) + "'")
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(rt_public_id_var + "\n")
-
+'''
 
 #11 - Create CLUSTER Route Table
 outfile_CLUSTER_rt = 'aws-rt-CLUSTER.json'
@@ -251,7 +251,7 @@ rt_CLUSTER_id_var=('rt_rt_id=' + "'" + "{}".format(rt_CLUSTER_id) + "'")
 with open(outfile_vars, 'a+') as my_file:
     my_file.write(rt_CLUSTER_id_var + "\n")
 
-'''
+
 
 #12 - ASSOCIATE THE mgmt ROUTE TABLE WITH THE mgmt SUBNET(Check with Team if there should be just one route table and this would be renamed just "main route table"
 outfile_ass_mgmt_sub = 'ass_rt_mgmt_sub.json'
@@ -283,7 +283,7 @@ output = check_output("{}".format(ass_rt_public_sub), shell=True).decode().strip
 print("Output: \n{}\n".format(output))
 with open(outfile_ass_public_sub, 'w') as my_file:
     my_file.write(output)
-
+'''
 #ASSOCIATE THE CLUSTER ROUTE TABLE WITH THE CLUSTER SUBNET
 outfile_ass_rt_CLUSTER_sub = 'ass_rt_CLUSTER_sub.json'
 ass_rt_CLUSTER_sub='aws ec2 associate-route-table' + " " + '--region' + " " + "{}".format(region) + " " + '--route-table-id' + " " + "{}".format(rt_CLUSTER_id) + " " +  '--subnet-id' + " " + "{}".format(subnetid_CLUSTER)
@@ -293,7 +293,6 @@ print("Output: \n{}\n".format(output))
 with open(outfile_ass_rt_CLUSTER_sub, 'w') as my_file:
     my_file.write(output)
 
-'''
 
 #Add a route to this public route table that is to the internet gateway
 #Destination 0.0.0.0/0 Target: The igw for the VPC
@@ -343,7 +342,7 @@ output = check_output("{}".format(auth_inbound_ssh), shell=True).decode().strip(
 print("Output: \n{}\n".format(output))
 
 
-#Figure out how to do ranges
+
 #Create inbound rule on the security group to allow 830
 #aws ec2 authorize-security-group-ingress --group-id sg-1234567890abcdef0 --protocol tcp --port 22 --cidr 0.0.0.0/0
 auth_inbound_ssh='aws ec2 authorize-security-group-ingress --region' + " " + "{}".format(region) + " " + '--group-id' + " " "{}".format(SDWAN_sg_id) + " " + '--ip-permissions IpProtocol=tcp,FromPort=23456,ToPort=24156,IpRanges=' + "'[{CidrIp=0.0.0.0/0}]'''"
