@@ -19,7 +19,7 @@ os.listdir(path)
 #Tag the Instance with the name vmanage
 #aws ec2 create-key-pair --key-name MyKeyPair moved to aws prep
 
-instance_type='t2.micro'
+instance_type='t2.medium'
 outfile_deploy_vmanage='deploy-vmanage.json'
 outfile_get_vpcid='outfile_get_vpcid.json'
 
@@ -28,6 +28,7 @@ outfile_get_vpcid='outfile_get_vpcid.json'
 inst_name="vmanage-2"
 eip_mgmt='eipalloc-0b5954142638e6e0c'
 eip_public='eipalloc-0330e38be6f75aa84'
+eip_cluster='eipalloc-010a0322ca9ce5fbf'
 
 #Get VPCID
 get_vpcid='aws ec2 describe-vpcs --region' + " " + "{}".format(region) + " " + '--filters Name=tag:Name,Values=' + "{}".format(name)
@@ -121,7 +122,7 @@ with open(outfile_get_subnetid_public) as access_json:
 with open(outfile_vars, 'a') as my_file:
    my_file.write(subnetid_public_var + "\n")
 
-'''
+
 
 #get the subnetid_CLUSTER
 outfile_get_subnetid_CLUSTER='outfile_subnetid_CLUSTER.json'
@@ -144,11 +145,10 @@ with open(outfile_get_subnetid_CLUSTER) as access_json:
 
 with open(outfile_vars, 'a') as my_file:
    my_file.write(subnetid_CLUSTER_var + "\n")
-'''
+
 
 #Create the Instance
 #aws ec2 run-instances --image-id ami-067c66abd840abc24 --instance-type t2.medium --subnet-id subnet-008617eb0c9782f55 --security-group-ids sg-0b0384b66d7d692f9 --PrivateIpAddress "10.10.10.100" --associate-public-ip-address --key-name blitz-user-1
-#cmd_deploy_vmanage='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_mgmt) +  " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az) + " " + '--user-data file://vmanage.user_data'
 cmd_deploy_vmanage='aws ec2 run-instances --region' + " " + "{}".format(region) + " " + '--image-id' + " " + "{}".format(ami_id) + " " + '--instance-type' + " " + "{}".format(instance_type) + " " + '--subnet-id' + " " + "{}".format(subnetid_mgmt) +  " " + '--security-group-ids' + " " + "{}".format(sgid) + " " + '--key-name' + " " + "{}".format(keypair_name) + " " + '--placement AvailabilityZone=' + "{}".format(az)
 #print(cmd_deploy_vmanage)
 output = check_output("{}".format(cmd_deploy_vmanage), shell=True).decode().strip()
@@ -313,13 +313,20 @@ with open(outfile_volume) as access_json:
     vol_id=question_access
     print(vol_id)
 
+#Wait until the volume is read to attach
+#aws ec2 wait volume-available --volume-ids vol-1234567890abcdef0
+cmd_check_volume='aws ec2 wait volume-available --volume-ids' + " " + vol_id + " " + '--region' + " " + "{}".format(region)
+output = check_output("{}".format(cmd_check_volume), shell=True).decode().strip()
+print("Output: \n{}\n".format(output))
+
+
 #Attach the volume to the instance
 #aws ec2 attach-volume --volume-id vol-1234567890abcdef0 --instance-id i-01474ef662b89480 --device /dev/sdf
 cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--instance-id' + " " + vmanage_instance_id + " " + '--device /dev/sdf'
 output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
-'''
+
 #######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
 
 #Create a Tertiary NIC and assign to the CLUSTER subnet
@@ -361,13 +368,14 @@ output = check_output("{}".format(cmd_associate_eip_CLUSTER), shell=True).decode
 print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_CLUSTER, 'w') as my_file:
    my_file.write(output)
-'''
+
 #Wait to check the instance is initialized
 #Check that the instance is initialized
 cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
 output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
+'''
 
 #To Do
 #Do an EC2 instance describe and get the enid of the first nic deployed to the mgmt subnet
@@ -375,3 +383,4 @@ print("Output: \n{}\n".format(output))
 #consider instead of associating public ip with first nic on mgmt subnet, instead associate elastic ip
 #fix up code so that you can first enter in the elastic ip reservation ids into the vault and call from there
 
+'''
