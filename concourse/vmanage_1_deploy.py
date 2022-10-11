@@ -28,6 +28,7 @@ outfile_get_vpcid='outfile_get_vpcid.json'
 inst_name="vmanage-1"
 eip_mgmt='eipalloc-06d883e17a87e2338'
 eip_public='eipalloc-0c78cb1a321d6de4f'
+eip_cluster='eipalloc-077e809815b14984f'
 
 #Get VPCID
 get_vpcid='aws ec2 describe-vpcs --region' + " " + "{}".format(region) + " " + '--filters Name=tag:Name,Values=' + "{}".format(name)
