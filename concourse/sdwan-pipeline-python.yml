@@ -118,46 +118,6 @@ jobs:
         VAULT_ADDR: ((vault.addr))
         SSH_TOKEN: ((ssh-token.token))
 
-- name: deploy-aws-instances
-  plan:
-    - get: sdwan-devops
-    - get: terraform-sdwan
-    - config:
-        image_resource:
-          name: ""
-          source:
-            repository: sconrod/sdwan-ubuntu
-            tag: 1.0
-          type: docker-image
-        inputs:
-          - name: sdwan-devops
-          - name: terraform-sdwan
-        platform: linux
-        run:
-          path: /bin/sh
-          args:
-            - -ce
-            - |
-              export AWS_PAGER=""
-              export NAME=$NAME
-              echo $NAME
-              aws configure set aws_access_key_id $AWS_KEY_ID
-              aws configure set aws_secret_access_key $AWS_KEY
-              aws configure set default.region $REGION
-              aws sts get-caller-identity --query Account --output text
-              export AWS_PAGER=""
-              cd sdwan-devops/concourse
-              chmod a+x deploy_instances.sh
-              ./deploy_instances.sh
-      task: build-instances
-      params:
-        AWS_KEY_ID: ((Access_key_ID.Access_key))
-        AWS_KEY: ((Secret_access_key.Secret_access_key))
-        REGION: ((aws.region))
-        NAME: ((az.name))
-        VAULT_ADDR: ((vault.addr))
-        SSH_TOKEN: ((ssh-token.token))
-
 - name: deploy-aws-vmanage-1
   plan:
     - get: sdwan-devops

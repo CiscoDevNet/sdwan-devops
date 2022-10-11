@@ -19,7 +19,7 @@ os.listdir(path)
 #Tag the Instance with the name vmanage
 #aws ec2 create-key-pair --key-name MyKeyPair moved to aws prep
 
-instance_type='c5.2xlarge'
+instance_type='t2.micro'
 outfile_deploy_vmanage='deploy-vmanage.json'
 outfile_get_vpcid='outfile_get_vpcid.json'
 
