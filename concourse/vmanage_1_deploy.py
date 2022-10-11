@@ -319,7 +319,7 @@ cmd_attach_vol='aws ec2 attach-volume --volume-id' + " " + vol_id + " " + '--ins
 output = check_output("{}".format(cmd_attach_vol), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
-'''
+
 #######CREATE THE THIRD NIC AND ATTACH IT AND THEN ASSIGN THE ELASTIC IP
 
 #Create a Tertiary NIC and assign to the CLUSTER subnet
@@ -361,13 +361,14 @@ output = check_output("{}".format(cmd_associate_eip_CLUSTER), shell=True).decode
 print("Output: \n{}\n".format(output))
 with open(outfile_associate_eip_CLUSTER, 'w') as my_file:
    my_file.write(output)
-'''
+
 #Wait to check the instance is initialized
 #Check that the instance is initialized
 cmd_check_instance='aws ec2 wait instance-status-ok --instance-ids' + " " + vmanage_instance_id + " " + '--region' + " " + "{}".format(region)
 output = check_output("{}".format(cmd_check_instance), shell=True).decode().strip()
 print("Output: \n{}\n".format(output))
 
+'''
 
 #To Do
 #Do an EC2 instance describe and get the enid of the first nic deployed to the mgmt subnet
@@ -375,3 +376,4 @@ print("Output: \n{}\n".format(output))
 #consider instead of associating public ip with first nic on mgmt subnet, instead associate elastic ip
 #fix up code so that you can first enter in the elastic ip reservation ids into the vault and call from there
 
+'''
