@@ -1,0 +1,95 @@
+version: 2.1
+
+parameters:
+  deploy-infra:
+    type: string
+    default: aws
+  remove-deployment:
+    type: boolean
+    default: true
+  wait-for-external-pipeline:
+    type: integer
+    default: 180
+
+jobs:
+  "Create Enterprise CA":
+    # IP ranges are only supported for Docker executors, disabling for now
+    #circleci_ip_ranges: true        # https://circleci.com/docs/ip-ranges
+    machine:
+      image: ubuntu-2204:2022.07.1  # https://circleci.com/docs/configuration-reference#available-linux-machine-images-cloud
+    resource_class: medium          # https://circleci.com/docs/configuration-reference/#linuxvm-execution-environment
+    steps:
+      - checkout
+      - run:
+          name: Running certificate creation script
+          command: cd bin && ./install_ca.sh
+      - run:
+          # This step is necessary because the docker container runs and
+          # creates files in mounted volumes as root
+          name: Resetting file ownership
+          command: sudo chown -R circleci:circleci ansible
+      - persist_to_workspace:
+          root: ansible
+          paths:
+            - "myCA"
+            - "licenses"
+  "Deploy SD-WAN Control Plane":
+    # IP ranges are only supported for Docker executors, disabling for now
+    #circleci_ip_ranges: true        # https://circleci.com/docs/ip-ranges
+    machine:
+      image: ubuntu-2204:2022.07.1  # https://circleci.com/docs/configuration-reference#available-linux-machine-images-cloud
+    resource_class: medium          # https://circleci.com/docs/configuration-reference/#linuxvm-execution-environment
+    environment:
+      SDWAN_CONTROL_INFRA: << pipeline.parameters.deploy-infra >>
+    steps:
+      - checkout
+      - run:
+          name: Sync Git submodules
+          command: git submodule sync
+      - run:
+          name: Checkout Git submodules
+          command: git submodule update --init
+      - attach_workspace:
+          at: ansible
+      - run:
+          name: Creating networks and VMs
+          command: cd bin && ./play.sh -v /ansible/day_0/build-control-plane.yml
+      - run:
+          name: Waiting 5 minutes
+          command: sleep 300
+      - run:
+          name: SD-WAN control plane day 0 configuration
+          command: cd bin && ./play.sh -v /ansible/day_0/config-sdwan.yml
+      # This is a hack, will need to find an infra independent way to export this
+      # We can start with an ansible fact, but ideally Vault or equivalent
+      - run:
+          name: Exporting vManage external IP as shell variable VMANAGE_EXTERNAL_IP
+          command: export VMANAGE_EXTERNAL_IP=$(jq -r '.outputs.vmanages_vmanageEth0EIP.value[0]' terraform-sdwan/aws/Provision_Instances/terraform.tfstate.d/aws_control/terraform.tfstate) && echo $VMANAGE_EXTERNAL_IP
+      - run:
+          name: Triggering external pipeline
+          command: |
+            curl -X POST https://circleci.com/api/v2/project/gh/$EXTERNAL_PIPELINE_REPOUSER/$EXTERNAL_PIPELINE_REPONAME/pipeline \
+              -H "Circle-Token: $CIRCLE_TOKEN" -H "Content-Type: application/json" \
+              -d "{\"branch\":\"$EXTERNAL_PIPELINE_BRANCH\",\"parameters\":{\"vmanage_host\":\"$VMANAGE_EXTERNAL_IP\"}}}"
+      - run:
+          name: Cleaning up due to failure
+          command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
+          when: on_fail
+      - when:
+          condition: << pipeline.parameters.remove-deployment >>
+          steps:
+            # Another hack, a proper inter-pipeline communication is needed (or a single pipeline)
+            - run:
+                name: Waiting for external pipeline to run
+                command: sleep << pipeline.parameters.wait-for-external-pipeline >>
+            - run:
+                name: Removing deployment (VMs and networks)
+                command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
+
+workflows:
+  "Deploy SD-WAN Control Plane":
+    jobs:
+      - "Create Enterprise CA"
+      - "Deploy SD-WAN Control Plane":
+          requires:
+            - "Create Enterprise CA"
