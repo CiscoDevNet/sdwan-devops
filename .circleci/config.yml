@@ -9,7 +9,7 @@ parameters:
     default: true
   wait-for-external-pipeline:
     type: integer
-    default: 180
+    default: 0
 
 jobs:
   "Create Enterprise CA":
@@ -66,22 +66,26 @@ jobs:
           name: Exporting vManage external IP as shell variable VMANAGE_EXTERNAL_IP
           command: export VMANAGE_EXTERNAL_IP=$(jq -r '.outputs.vmanages_vmanageEth0EIP.value[0]' terraform-sdwan/aws/Provision_Instances/terraform.tfstate.d/aws_control/terraform.tfstate) && echo $VMANAGE_EXTERNAL_IP
       - run:
-          name: Triggering external pipeline
-          command: |
-            curl -X POST https://circleci.com/api/v2/project/gh/$EXTERNAL_PIPELINE_REPOUSER/$EXTERNAL_PIPELINE_REPONAME/pipeline \
-              -H "Circle-Token: $CIRCLE_TOKEN" -H "Content-Type: application/json" \
-              -d "{\"branch\":\"$EXTERNAL_PIPELINE_BRANCH\",\"parameters\":{\"vmanage_host\":\"$VMANAGE_EXTERNAL_IP\"}}}"
-      - run:
           name: Cleaning up due to failure
           command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
           when: on_fail
-      - when:
-          condition: << pipeline.parameters.remove-deployment >>
+      - unless:
+          condition:
+            equal: [ 0, << pipeline.parameters.wait-for-external-pipeline >> ]
           steps:
+            - run:
+                name: Triggering external pipeline
+                command: |
+                  curl -X POST https://circleci.com/api/v2/project/gh/$EXTERNAL_PIPELINE_REPOUSER/$EXTERNAL_PIPELINE_REPONAME/pipeline \
+                    -H "Circle-Token: $CIRCLE_TOKEN" -H "Content-Type: application/json" \
+                    -d "{\"branch\":\"$EXTERNAL_PIPELINE_BRANCH\",\"parameters\":{\"vmanage_host\":\"$VMANAGE_EXTERNAL_IP\"}}}"
             # Another hack, a proper inter-pipeline communication is needed (or a single pipeline)
             - run:
                 name: Waiting for external pipeline to run
                 command: sleep << pipeline.parameters.wait-for-external-pipeline >>
+      - when:
+          condition: << pipeline.parameters.remove-deployment >>
+          steps:
             - run:
                 name: Removing deployment (VMs and networks)
                 command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
