@@ -10,7 +10,7 @@ from lab_vars import *
 
 keypair_name=name
 sg_name='SDWAN'
-ami_id=vmanage_ami_id
+ami_id='ami-051d5e945cdc0c366''
 
 path = os.getcwd()
 print(path)
