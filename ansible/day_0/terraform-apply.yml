@@ -48,6 +48,17 @@
         var: proxy_env
       when: sdwan_component == "network"
 
+    - name: Set vManage/vBond external IP
+      set_fact:
+        sdwan_vmanage: "{{ outputs.outputs.vmanages_vmanageEth0EIP.value[0] }}"
+        sdwan_vbond: "{{ outputs.outputs.vbonds_vbondEth1EIP.value[0] }}"
+        cacheable: yes
+      when: sdwan_component == "control" and infra == "aws"
+
+    - debug:
+        msg: "vManage external IP: {{ sdwan_vmanage }}\nvBond external IP: {{ sdwan_vbond }}"
+      when: sdwan_component == "control" and infra == "aws"
+
     - meta: refresh_inventory
       tags: always
         

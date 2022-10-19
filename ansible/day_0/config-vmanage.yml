@@ -123,3 +123,7 @@
 
     - debug:
         msg: "vManage IP: {{ vmanage_ip }}"
+
+    - debug:
+        msg: "vManage external IP: {{ sdwan_vmanage }}"
+      when: sdwan_vmanage is defined
