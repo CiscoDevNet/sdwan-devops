@@ -3,6 +3,7 @@
   connection: local
   gather_facts: no
   vars:
+    ansible_async_dir: "/tmp/ansible_async"
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
