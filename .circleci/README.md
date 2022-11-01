@@ -25,7 +25,7 @@ See the list of possible environment variables in the follwoing table. They can 
 | VSMART1_IP              | required    | 10.128.1.13/24 | 10.128.1.13/24         | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | VPN0_GATEWAY            | required    | 10.128.1.1     | 10.1281.1.1            | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | SSH_PUBKEY_BASE64       | recommended | -              | -                      | Not strictly required, but recommended for SSH login into `devbox` and SD-WAN VMs |
-| VIPTELA_VERSION         | optional    | -              | -                      | May be used in the future to auto-detect AMIs or VMware templates with standardized naming |
+| VIPTELA_VERSION         | required    | -              | -                      | Used to choose device template (v19 or v20), and may be used in the future to auto-detect AMIs or VMware templates with standardized naming |
 | CLOUDINIT_TYPE          | required    | -              | v2                     | Depends on SD_WAN version, `v1` up to 20.4.x, `v2` for later |
 | VMANAGE_AMI             | required    | -              | -                      | Should be an existing AMI in the selected AWS region |
 | VBOND_AMI               | required    | -              | -                      | Should be an existing AMI in the selected AWS region |
@@ -36,7 +36,7 @@ See the list of possible environment variables in the follwoing table. They can 
 | VMANAGE_USERNAME        | required    | admin          | admin                  | It's good to have an `admin` user as some scripts may have it hardcoded or expected |
 | VMANAGE_PASS            | required    | -              | -                      | The clear text password for vManage, needed for API access |
 | VMANAGE_ENCRYPTED_PASS  | required    | -              | -                      | The SHA256 hashed password for vManage, needed for `user-data`. Can be obtained with `echo "$VMANAGE_PASS" | openssl passwd -6 -stdin` |
-| VMANAGE_ORG             | required    | -              | CIDR_SDWAN_WORKSHOPS   | The recommended value is needed if you want to use the included `ansible/files/serialFile.viptela` |
+| VMANAGE_ORG             | required    | -              | CIDR_SDWAN_WORKSHOPS   | The recommended value is needed if you want to use the included `ansible/files/serialFile.viptela` (it must match the org in the `serialFile.viptela` being used) |
 
 ### External pipeline
 
