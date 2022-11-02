@@ -50,7 +50,7 @@
 
     - name: Set vManage/vBond external IP
       set_fact:
-        sdwan_vmanage: "{{ outputs.outputs.vmanages_vmanageEth0EIP.value[0] }}"
+        sdwan_vmanage: "{{ outputs.outputs.vmanages_vmanageEth1EIP.value[0] }}"
         sdwan_vbond: "{{ outputs.outputs.vbonds_vbondEth1EIP.value[0] }}"
         cacheable: yes
       when: sdwan_component == "control" and infra == "aws"
