@@ -52,3 +52,5 @@ for OPTION in ${OPTION_LIST[*]}; do
     curl --request POST -sSLk --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "$GITLAB_HOST/api/v4/projects/$GITLAB_USER%2f$GITLAB_PROJECT/variables" --form "key=$OPTION" --form "value=${!OPTION}"    
   fi
 done
+
+git push https://$GITLAB_USER:$GITLAB_PASSWORD@$GITLAB_HOST/$GITLAB_USER/$GITLAB_PROJECT
