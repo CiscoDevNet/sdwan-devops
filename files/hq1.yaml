@@ -70,7 +70,6 @@ nodes:
        login local
        transport input ssh
       exit
-    image_definition: csr1000v-161101b
     tags: []
     interfaces:
       - id: i0
@@ -98,7 +97,7 @@ nodes:
         type: physical
   - id: n1
     label: site1-cedge1
-    node_definition: iosxe-sdwan
+    node_definition: viptela-cedge
     x: -400
     y: 150
     configuration: |-
@@ -355,7 +354,6 @@ nodes:
       !
 
       --===============3619051782563442762==--
-    image_definition: iosxe-sdwan-16.12.1b
     tags: []
     interfaces:
       - id: i0
@@ -433,7 +431,6 @@ nodes:
        login local
        transport input ssh
       exit
-    image_definition: csr1000v-161101b
     tags: []
     interfaces:
       - id: i0
@@ -518,7 +515,6 @@ nodes:
        login local
        transport input ssh
       exit
-    image_definition: csr1000v-161101b
     tags: []
     interfaces:
       - id: i0
@@ -601,7 +597,6 @@ nodes:
        login local
        transport input ssh
       exit
-    image_definition: csr1000v-161101b
     tags: []
     interfaces:
       - id: i0
@@ -625,7 +620,7 @@ nodes:
         type: physical
   - id: n7
     label: hq-cedge1
-    node_definition: iosxe-sdwan
+    node_definition: viptela-cedge
     x: 250
     y: -150
     configuration: |-
@@ -897,7 +892,6 @@ nodes:
       !
 
       --===============1456243811871901727==--
-    image_definition: iosxe-sdwan-16.12.1b
     tags: []
     interfaces:
       - id: i0
@@ -1098,7 +1092,6 @@ nodes:
        !
       !
       --===============7621452758582633985==
-    image_definition: viptela-manage-19.2.0
     tags: []
     interfaces:
       - id: i0
@@ -1269,7 +1262,6 @@ nodes:
        !
       !
       --===============6560338015520979320==
-    image_definition: viptela-bond-19.2.0
     tags: []
     interfaces:
       - id: i0
@@ -1500,7 +1492,6 @@ nodes:
       !
 
       --===============1267387516634370450==--
-    image_definition: viptela-edge-19.2.0
     tags: []
     interfaces:
       - id: i0
@@ -1530,7 +1521,6 @@ nodes:
        - ip address add 10.0.1.10/24 dev enp0s2
        - ip link set dev enp0s2 up
        - ip route add 0.0.0.0/0 via 10.0.1.1
-    image_definition: ubuntu-18-04
     tags: []
     interfaces:
       - id: i0
@@ -1552,7 +1542,6 @@ nodes:
        - ip address add 192.168.1.10/24 dev enp0s2
        - ip link set dev enp0s2 up
        - ip route add 0.0.0.0/0 via 192.168.1.1
-    image_definition: ubuntu-18-04
     tags: []
     interfaces:
       - id: i0
@@ -1574,7 +1563,6 @@ nodes:
        - ip address add 192.168.2.10/24 dev enp0s2
        - ip link set dev enp0s2 up
        - ip route add 0.0.0.0/0 via 192.168.2.1
-    image_definition: ubuntu-18-04
     tags: []
     interfaces:
       - id: i0
@@ -1630,7 +1618,6 @@ nodes:
       ssh_pwauth: True
       ssh_authorized_keys:
          - your-ssh-pubkey-line-goes-here
-    image_definition: ubuntu-18-04
     tags: []
     interfaces:
       - id: i0
@@ -1791,7 +1778,6 @@ nodes:
        !
       !
       --===============7621452758582633985==
-    image_definition: viptela-smart-19.2.0
     tags: []
     interfaces:
       - id: i0

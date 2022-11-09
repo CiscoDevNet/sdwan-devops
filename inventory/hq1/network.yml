@@ -8,6 +8,7 @@ all:
     network:
       vars:
         virl_image_definition: "{{ csr1000v_image }}"
+        virl_node_definition: "{{ csr1000v_nodedef }}"
       children:
         internet_routers:
           hosts:

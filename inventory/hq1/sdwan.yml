@@ -1,7 +1,6 @@
 all:
   vars:
     virl_lab_file: "{{ playbook_dir }}/files/hq1.yaml"
-    iosxe_sdwan_image: "{{ lookup('env','IOSXE_SDWAN_IMAGE') | default('csr1000v-16.12.2r', true) }}"
     viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('19.2.1', true) }}"
     cloudinit_type: "{{ lookup('env','CLOUDINIT_TYPE') | default('v1')}}"
     viptela_major_version: "{{ viptela_version | regex_replace('^(\\d*)\\..*$', '\\1') }}"
@@ -53,7 +52,7 @@ all:
               vars:
                 sdwan_personality: vbond
                 sdwan_device_model: vbond
-                virl_image_definition: "viptela-bond-{{ viptela_version }}"
+                virl_image_definition: "viptela-edge-{{ viptela_version }}"
                 virl_config_template: sdwan/vbond_user-data.j2
               hosts:
                 vbond1:
@@ -124,6 +123,7 @@ all:
           hosts:
             hq-cedge1:
               virl_image_definition: "{{ iosxe_sdwan_image }}"
+              virl_node_definition: "{{ iosxe_sdwan_nodedef }}"
               sdwan_system_ip: '1.1.1.4'
               sdwan_site_id: 1
               sdwan_model: vedge-CSR-1000v
@@ -194,8 +194,9 @@ all:
     system:
       vars:
         virl_config_template: virl/host.j2
-        host_interface: ens3
+        host_interface: ens2
         virl_image_definition: "{{ ubuntu_image }}"
+        virl_node_definition: "{{ ubuntu_nodedef }}"
       children:
         client:
           hosts:
