@@ -8,7 +8,7 @@ stages:
   - waitfor-edges
   - test
 
-image: ghcr.io/ciscodevnet/sdwan-devops
+image: ghcr.io/ciscodevnet/sdwan-devops:0.0.7
 
 variables:
   ANSIBLE_GATHERING: "smart"

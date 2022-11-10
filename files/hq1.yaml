@@ -1104,7 +1104,7 @@ nodes:
         type: physical
   - id: n11
     label: vbond1
-    node_definition: viptela-bond
+    node_definition: viptela-edge
     x: 400
     y: 100
     configuration: |-
