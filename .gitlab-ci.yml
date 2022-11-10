@@ -1,6 +1,7 @@
 stages:
   - clean
   - build-ca
+  - decrypt-license
   - build-control
   - config-control
   - deploy-edges
@@ -19,6 +20,7 @@ variables:
 cache:
   paths:
     - myCA/
+    - licenses/
 
 clean:
   stage: clean
@@ -35,7 +37,18 @@ build-ca:
   only:
     changes:
       - files/hq1.yaml
-  
+
+decrypt-license:
+  stage: decrypt-license
+  script: |
+    mkdir licenses
+    echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
+    ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
+
+  only:
+    changes:
+      - files/hq1.yaml
+
 build-control:
   stage: build-control
   script:
