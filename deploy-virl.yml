@@ -23,4 +23,5 @@
         lab: "{{ virl_lab }}"
         state: started
         image_definition: "{{ virl_image_definition | default(omit) }}"
+        node_definition: "{{ virl_node_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"

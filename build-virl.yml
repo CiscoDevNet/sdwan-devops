@@ -77,6 +77,7 @@
         lab: "{{ virl_lab }}"
         state: started
         image_definition: "{{ virl_image_definition | default(omit) }}"
+        node_definition: "{{ virl_node_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Check initial topology connectivity
@@ -147,6 +148,7 @@
         lab: "{{ virl_lab }}"
         state: started
         image_definition: "{{ virl_image_definition | default(omit) }}"
+        node_definition: "{{ virl_node_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
 
 - name: Start the SD-WAN control nodes
@@ -171,55 +173,5 @@
         lab: "{{ virl_lab }}"
         state: started
         image_definition: "{{ virl_image_definition | default(omit) }}"
+        node_definition: "{{ virl_node_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"
-
-# - hosts: network:sdwan_control:&virl_hosts
-#   connection: local
-#   any_errors_fatal: true
-#   gather_facts: no
-#   tasks:
-#     - name: Wait until the mgmt interface comes up
-#       virl_lab_facts:
-#         host: "{{ virl_host }}"
-#         user: "{{ virl_username }}"
-#         password: "{{ virl_password }}"
-#         lab: "{{ virl_lab }}"
-#       register: result
-#       until: result.virl_facts.nodes[inventory_hostname].interfaces[virl_mgmt_interface].ipv4_addresses | default(0) | count > 0
-#       when: virl_mgmt_interface is defined
-#       retries: 12
-#       delay: 10
-
-#     - name: Refresh Inventory
-#       meta: refresh_inventory
-
-# - name: Push NETCONF template
-#   hosts: vbond_hosts:&virl_hosts
-#   connection: local
-#   tags:
-#     - control
-#     - netconf
-#   any_errors_fatal: true
-#   gather_facts: no
-#   tasks:
-#     - netconf_config:
-#         content: "{{ lookup('template', 'viptela/netconf.j2') }}"
-#       connection: netconf
-
-# - name: Check connectivity to the SD-WAN control nodes
-#   hosts: internet_routers:&virl_hosts
-#   connection: network_cli
-#   tags:
-#     - control
-#     - check_control
-#     - check_all
-#   any_errors_fatal: true
-#   gather_facts: no
-#   tasks:
-#     - ios_ping:
-#         dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
-#       loop: "{{ groups.sdwan_control }}"
-#       register: result
-#       retries: 60
-#       delay: 10
-#       until: result is not failed

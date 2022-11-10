@@ -21,7 +21,10 @@ OPTION_LIST=( \
    "VIRL_USERNAME" \
    "VIRL_PASSWORD" \
    "VIRL_LAB" \
+   "VMANAGE_HOST" \
    "VMANAGE_ORG" \
+   "VMANAGE_USERNAME" \
+   "VMANAGE_PASS" \
    "VMANAGE1_IP" \
    "VBOND1_IP" \
    "VSMART1_IP" \
@@ -46,9 +49,20 @@ OPTION_LIST=( \
    "CSR1000V_IMAGE" \
    "UBUNTU_IMAGE" \
    "VIPTELA_VERSION" \
+   "CLOUDINIT_TYPE" \
+   "CSR1000V_NODEDEF" \
+   "IOSXE_SDWAN_NODEDEF" \
+   "UBUNTU_NODEDEF" \
+   "VMANAGE_NODEDEF" \
+   "VSMART_NODEDEF" \
+   "VEDGE_NODEDEF" \
+   "ANSIBLE_VAULT_PASSWORD" \
    )
+
 for OPTION in ${OPTION_LIST[*]}; do
   if [[ ! -z "${!OPTION}" ]]; then
     curl --request POST -sSLk --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "$GITLAB_HOST/api/v4/projects/$GITLAB_USER%2f$GITLAB_PROJECT/variables" --form "key=$OPTION" --form "value=${!OPTION}"    
   fi
 done
+
+git push https://$GITLAB_USER:$GITLAB_PASSWORD@$GITLAB_HOST/$GITLAB_USER/$GITLAB_PROJECT
