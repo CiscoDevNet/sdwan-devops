@@ -10,12 +10,12 @@ ansible_password: "{{ vmanage_pass }}"
 sdwan_serial_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
 sdwan_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
 # Set these as env vars to match your CML node definition IDs
-csr1000v_nodedef: csr1000v
-iosxe_sdwan_nodedef: viptela-cedge
-ubuntu_nodedef: ubuntu
-vmanage_nodedef: viptela-manage
-vsmart_nodedef: viptela-smart
-vedge_nodedef: viptela-edge
+csr1000v_nodedef: "{{ lookup('env','CSR1000V_NODEDEF') | default('csr1000v', true) }}"
+iosxe_sdwan_nodedef: "{{ lookup('env','IOSXE_SDWAN_NODEDEF') | default('viptela-cedge', true) }}"
+ubuntu_nodedef: "{{ lookup('env','UBUNTU_NODEDEF') | default('ubuntu', true) }}"
+vmanage_nodedef: "{{ lookup('env','VMANAGE_NODEDEF') | default('viptela-manage', true) }}"
+vsmart_nodedef: "{{ lookup('env','VSMART_NODEDEF') | default('viptela-smart', true) }}"
+vedge_nodedef: "{{ lookup('env','VEDGE_NODEDEF') | default('viptela-edge') }}"
 # Set these as env vars to match your CML image definition IDs
 csr1000v_image: "{{ lookup('env','CSR1000V_IMAGE') | default('csr1000v-16.12.02r', true) }}"
 iosxe_sdwan_image: "{{ lookup('env','IOSXE_SDWAN_IMAGE') | default('csr1000v-16.12.2r', true) }}"

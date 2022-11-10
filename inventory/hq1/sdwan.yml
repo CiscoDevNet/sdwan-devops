@@ -22,6 +22,7 @@ all:
                 sdwan_device_model: vmanage
                 mgmt_interface: ansible_host
                 virl_image_definition: "viptela-manage-{{ viptela_version }}"
+                virl_node_definition: "{{ vmanage_nodedef }}"
                 virl_config_template: sdwan/user-data.j2
               hosts:
                 vmanage1:
@@ -53,6 +54,7 @@ all:
                 sdwan_personality: vbond
                 sdwan_device_model: vbond
                 virl_image_definition: "viptela-edge-{{ viptela_version }}"
+                virl_node_definition: "{{ vedge_nodedef }}"
                 virl_config_template: sdwan/vbond_user-data.j2
               hosts:
                 vbond1:
@@ -85,6 +87,7 @@ all:
                 sdwan_personality: vsmart
                 sdwan_device_model: vsmart
                 virl_image_definition: "viptela-smart-{{ viptela_version }}"
+                virl_node_definition: "{{ vsmart_nodedef }}"
                 virl_config_template: sdwan/user-data.j2
               hosts:
                 vsmart1:
@@ -148,6 +151,7 @@ all:
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
             site1-cedge1:
               virl_image_definition: "{{ iosxe_sdwan_image }}"
+              virl_node_definition: "{{ iosxe_sdwan_nodedef }}"
               sdwan_system_ip: '1.1.2.1'
               sdwan_site_id: 2
               sdwan_model: vedge-CSR-1000v
@@ -171,6 +175,7 @@ all:
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
             site2-vedge1:
               virl_image_definition: "viptela-edge-{{ viptela_version }}"
+              virl_node_definition: "{{ vedge_nodedef }}"
               sdwan_system_ip: '1.1.3.1'
               sdwan_site_id: 3
               sdwan_model: vedge-cloud
