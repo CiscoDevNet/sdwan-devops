@@ -1,0 +1,66 @@
+- import_playbook: remove-device.yml
+  vars:
+    passed: sdwan_edge
+  tags: [edges]
+
+- name: Delete Edge VMs
+  hosts: sdwan_edge
+  connection: local
+  tags:
+    - terraform
+    - edges
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Check for edge .tfvars file
+      stat:
+        path: "{{ terraform_project_path[infra]['edges'] }}/{{ infra }}_edges_{{ inventory_hostname }}.tfvars"
+      register: edges_stat_result
+
+    - name: Terraform Destroy Edges
+      terraform:
+        project_path: "{{ terraform_project_path[infra]['edges'] }}"
+        state: absent
+        workspace: "{{ infra }}_edges_{{ inventory_hostname }}"
+        variables_file: "{{ infra }}_edges_{{ inventory_hostname }}.tfvars"
+      when: edges_stat_result.stat.exists == true
+
+- name: Delete Edge Networks
+  hosts: sdwan_edge
+  connection: local
+  tags:
+    - terraform
+    - edge_network
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Check for edge network .tfvars file
+      stat:
+        path: "{{ terraform_project_path[infra]['edge_network'] }}/{{ infra }}_edge_network_{{ inventory_hostname }}.tfvars"
+      register: edge_networks_stat_result
+
+    - name: Terraform Destroy Control Plane Network
+      terraform:
+        project_path: "{{ terraform_project_path[infra]['edge_network'] }}"
+        state: absent
+        workspace: "{{ infra }}_edge_network_{{ inventory_hostname }}"
+        variables_file: "{{ infra }}_edge_network_{{ inventory_hostname }}.tfvars"
+      when: edge_networks_stat_result.stat.exists == true
+
+- name: Remove terraform state files
+  hosts: sdwan_edge
+  connection: local
+  tags:
+    - delete
+    - never
+  gather_facts: no
+  tasks:
+    - name: Delete edge state
+      file:
+        state: absent
+        path: "{{ terraform_project_path[infra]['edges'] }}/terraform.tfstate.d/{{ infra }}_edges_{{ inventory_hostname }}/terraform.tfstate"
+
+    - name: Delete edge network state
+      file:
+        state: absent
+        path: "{{ terraform_project_path[infra]['edge_network'] }}/terraform.tfstate.d/{{ infra }}_edge_network_{{ inventory_hostname }}/terraform.tfstate"

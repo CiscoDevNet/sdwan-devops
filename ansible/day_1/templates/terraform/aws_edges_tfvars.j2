@@ -1,0 +1,13 @@
+name = "{{ hostvars[inventory_hostname]['inventory_hostname'] }}"
+region = "{{ sdwan_datacenter }}"
+vpc_id = "{{ sdwan_network }}"
+subnet_transport = "sdwan-subnet-transport"
+subnet_service = "sdwan-subnet-service"
+{% if aws_ami is defined and aws_ami != "" %}
+image_id = "{{ aws_ami }}"
+{% else %}
+image_id = "{{ aws_cedge_ami }}"
+{% endif %}
+{% if aws_cedge_instance_type is defined and aws_cedge_instance_type != "" %}
+instance_type = "{{ aws_cedge_instance_type }}"
+{% endif %}

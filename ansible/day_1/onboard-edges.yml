@@ -8,4 +8,8 @@
 
 - import_playbook: terraform-apply.yml
   vars:
+    sdwan_component: edge_network
+
+- import_playbook: terraform-apply.yml
+  vars:
     sdwan_component: edges

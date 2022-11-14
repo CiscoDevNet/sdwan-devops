@@ -36,9 +36,9 @@ OPTION_LIST=( \
    "VMANAGE1_IP" \
    "VBOND1_IP" \
    "VSMART1_IP" \
-   "HQ_EDGE1_IP" \
-   "SITE1_EDGE1_IP" \
-   "SITE2_EDGE1_IP" \
+   "HQ_EDGE1_RANGE" \
+   "SITE1_EDGE1_RANGE" \
+   "SITE2_EDGE1_RANGE" \
    "VPN0_GATEWAY" \
    "TF_VAR_vsphere_user" \
    "TF_VAR_vsphere_password" \
@@ -80,4 +80,4 @@ while getopts ":dl" opt; do
       ;;
   esac
 done
-docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-playbook "$@"
+docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan -v $PROJ_ROOT/sdwan-edge:/sdwan-edge --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-playbook "$@"

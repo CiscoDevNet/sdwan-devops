@@ -1,0 +1,49 @@
+- name: Run terraform
+  hosts: sdwan_edge
+  connection: local
+  any_errors_fatal: true
+  vars:
+    project_path: "{{ terraform_project_path[infra][sdwan_component] }}"
+  tasks:
+    - assert:
+        that:
+          - sdwan_component == "edge_network" or sdwan_component == "edges"
+        msg: "sdwan_component must be set to either 'edge_network' or 'edges'"
+
+    - name: Generate Terraform variables file
+      template:
+        src: "terraform/{{ infra }}_{{ sdwan_component }}_tfvars.j2"
+        dest: "{{ project_path }}/{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfvars"
+      tags: [tfvars, plan]
+      when: sdwan_component is defined
+
+    - name: Terraform plan
+      terraform:
+        project_path: "{{ project_path }}"
+        state: planned
+        plan_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfplan"
+        workspace: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}"
+        variables_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfvars"
+        force_init: yes
+      tags: [plan, apply]
+      when: sdwan_component is defined
+
+    - name: Terraform apply
+      terraform:
+        project_path: "{{ lookup('env', 'PROJ_ROOT') }}{{ project_path }}"
+        state: present
+        plan_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfplan"
+        workspace: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}"
+        variables_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfvars"
+      tags: apply
+      when: sdwan_component is defined
+      register: outputs
+
+    - name: Save VPD ID
+      set_fact:
+        sdwan_network: "{{ outputs.outputs.vpc_id.value }}"
+        cacheable: yes
+      when: sdwan_component == "edge_network"
+
+    - meta: refresh_inventory
+      tags: always
