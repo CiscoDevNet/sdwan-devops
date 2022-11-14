@@ -1,0 +1,7 @@
+name = "SD-WAN Edges"
+region = "{{ sdwan_datacenter }}"
+availability_zone = "{{ sdwan_datacenter }}b"
+subnet_name_prefix = "sdwan-subnet"
+address_space = "{{ cidr_range }}"
+subnet_transport_prefix = "{{ vpn0_range }}"
+subnet_service_prefix = "{{ vpn1_range }}"

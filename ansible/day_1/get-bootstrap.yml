@@ -10,6 +10,8 @@
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
     ansible_network_os: ios
+    generated_cloud_init: "{{ terraform_project_path[infra]['edges'] }}/cloud-init/ciscosdwan_cloud_init.cfg"
+  environment: "{{ hostvars['localhost']['proxy_env'] }}"
   serial: 1
   # This is a workaround for a bug in vmanage.  When multiple requests
   # for boostrap are made to vmanage at the same time, it gets corrupted
@@ -19,6 +21,7 @@
         host: "{{ vmanage_ip }}"
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
+        model: " {{ sdwan_model }}"
         uuid: "{{ sdwan_uuid }}"
         version: "{{ cloudinit_type }}"
       register: result
@@ -30,4 +33,15 @@
     # replace filter is a hack to workaround cloud-init defect for enterprise ca in viptela 20.5 and up
     - set_fact:
         day0_config: "{{ result.bootstrap.bootstrapConfig | replace('- path: /etc/viptela/rootcert_reinstall', '- path: /usr/share/viptela/symantec-root-ca.crt')}}"
+        cacheable: yes
       when: result.bootstrap.bootstrapConfig is defined
+
+    - name: Save day0 to terraform directory
+      template:
+        src: templates/day0_attached.j2
+        dest: "{{ generated_cloud_init }}"
+      when: result.bootstrap.bootstrapConfig is defined
+
+    # AWS user-data is limited to 16KB
+    - name: Remove root CA certificates from day0 config
+      shell: sed -i '/^ca-certs:/,/^$/d' {{ generated_cloud_init }}

@@ -6,6 +6,9 @@
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 
+export VIPTELA_VERSION=20.8.1
+export IOSXE_VERSION=17.08.01a
+
 export PROJ_ROOT=$SCRIPT_DIR/..
 export SSH_PUBKEY_BASE64="$(cat $HOME/.ssh/id_rsa.pub | base64)"
 export SDWAN_CONTROL_INFRA="aws"
@@ -21,6 +24,9 @@ export VBOND_AMI="ami-081b3a108aa230f88"
 export VBOND_INSTANCE_TYPE="t2.medium"
 export VSMART_AMI="ami-063f1b59c2694a7ef"
 export VSMART_INSTANCE_TYPE="t2.medium"
+
+export CEDGE_AMI=$(aws ec2 describe-images --filters "Name=name,Values=Cisco-C8K-${IOSXE_VERSION}-42cb6e93-8d9d-490b-a73c-e3e56077ffd1" --query "reverse(sort_by(Images,&CreationDate))[0].ImageId" --output text --region $AWS_REGION)
+export CEDGE_INSTANCE_TYPE="t3.medium"
 
 # Example to generate a random password
 # TODO  save it somewhere?
@@ -49,13 +55,12 @@ export VPN0_GATEWAY=10.128.1.1
 #export VPN512_PORTGROUP="cpn-rtp-colab4"
 #export SERVICEVPN_PORTGROUP="cpn-rtp-colab4"
 
-export HQ_EDGE1_IP=1.1.1.4/24
-export SITE1_EDGE1_IP=1.1.1.5/24
-export SITE2_EDGE1_IP=1.1.1.6/24
+# Each site is expected to have a /23, as Ansible will compute static addresses based on this assumption
+export HQ_EDGE1_RANGE=10.128.4.0/23
+export SITE1_EDGE1_RANGE=10.128.6.0/23
+export SITE2_EDGE1_RANGE=10.128.8.0/23
 
-export IOSXE_SDWAN_IMAGE=iosxe-sdwan-16.12.5
-
-export VIPTELA_VERSION=20.8.1
+export IOSXE_SDWAN_IMAGE=iosxe-sdwan-${IOSXE_VERSION}
 
 export VMANAGE_ORG=CIDR_SDWAN_WORKSHOPS
 

@@ -1,0 +1,195 @@
+all:
+  vars:
+    iosxe_sdwan_image: "{{ lookup('env','IOSXE_SDWAN_IMAGE') | default('iosxe-sdwan-16.12.2r', true) }}"
+    viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('19.2.1', true) }}"
+    cloudinit_type: "{{ lookup('env','CLOUDINIT_TYPE') | default('v1')}}"
+    viptela_major_version: "{{ viptela_version | regex_replace('^(\\d*)\\..*$', '\\1') }}"
+    vmanage_templates_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq3_vmanage_templates_v{{ viptela_major_version }}.yml"
+    vmanage_policy_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq3_vmanage_policy_v{{ viptela_major_version }}.yml"
+    sdwan_vbond: "{{ lookup('env','VBOND1_IP') | ipaddr('address') }}"
+    sdwan_control_infra: "{{ lookup('env','SDWAN_CONTROL_INFRA') | default('vmware', true)}}"
+    terraform_project_path:
+      vmware:
+        network: ""
+        control: "/terraform-sdwan/vmware"
+        edge_network: ""
+        edges: "/sdwan-edge/Catalyst8000v/vmware/cedge"
+      aws:
+        network: "/terraform-sdwan/aws/Provision_VPC"
+        control: "/terraform-sdwan/aws/Provision_Instances"
+        edge_network: "/sdwan-edge/Catalyst8000v/aws/vpc"
+        edges: "/sdwan-edge/Catalyst8000v/aws/cedge"
+    sdwan_central_policy_name: hq3-centralized-policy
+  children:
+    sdwan:
+      children:
+        sdwan_control:
+          vars:            
+            infra: "{{ sdwan_control_infra }}"
+            vpn0_portgroup: "{{ lookup('env','VPN0_PORTGROUP') }}"
+            vpn0_gateway: "{{ lookup('env','VPN0_GATEWAY') }}"
+            vpn512_portgroup: "{{ lookup('env','VPN512_PORTGROUP') }}"
+            sdwan_domain_id: 1
+          children:
+            vmanage_hosts:
+              vars:
+                sdwan_personality: vmanage
+                sdwan_device_model: vmanage
+                mgmt_interface: vpn0_ip
+                virl_image_definition: "viptela-manage-{{ viptela_version }}"
+                virl_config_template: "sdwan/user-data.j2"
+              hosts:
+                vmanage1:
+                  sdwan_system_ip: '1.1.1.1'
+                  vpn0_ip: "{{ lookup('env','VMANAGE1_IP') }}"
+                  sdwan_site_id: 1
+                  vpn_instances:
+                    - vpn_id: 0
+                      interfaces:
+                        - if_name: eth1
+                          enabled: true
+                          ip:
+                            address: "{{ lookup('env','VMANAGE1_IP') }}"
+                          tunnel_interface:
+                            allow_service:
+                              - all
+                      routes:
+                        - prefix: 0.0.0.0/0
+                          next_hop:
+                            address: "{{ lookup('env','VPN0_GATEWAY') }}"
+                    - vpn_id: 512
+                      interfaces:
+                        - if_name: eth0
+                          enabled: true
+                          ip:
+                            dhcp_client: true
+            vbond_hosts:
+              vars:
+                sdwan_personality: vbond
+                sdwan_device_model: vbond
+                mgmt_interface: vpn0_ip
+                virl_image_definition: "viptela-bond-{{ viptela_version }}"
+                virl_config_template: "sdwan/vbond_user-data.j2"
+              hosts:
+                vbond1:
+                  sdwan_system_ip: '1.1.1.2'
+                  vpn0_ip: "{{ lookup('env','VBOND1_IP') }}"
+                  sdwan_site_id: 1
+                  vpn_instances:
+                    - vpn_id: 0
+                      interfaces:
+                        - if_name: ge0/0
+                          enabled: true
+                          ip:
+                            address: "{{ lookup('env','VBOND1_IP') }}"
+                          tunnel_interface:
+                            encapsulation: ipsec
+                            allow_service:
+                              - all
+                      routes:
+                        - prefix: 0.0.0.0/0
+                          next_hop:
+                            address: "{{ lookup('env','VPN0_GATEWAY') }}"
+                    - vpn_id: 512
+                      interfaces:
+                        - if_name: eth0
+                          enabled: true
+                          ip:
+                            dhcp_client: true
+            vsmart_hosts:
+              vars:
+                sdwan_personality: vsmart
+                sdwan_device_model: vsmart
+                mgmt_interface: vpn0_ip
+                virl_image_definition: "viptela-smart-{{ viptela_version }}"
+                virl_config_template: "sdwan/user-data.j2"
+              hosts:
+                vsmart1:
+                  sdwan_system_ip: '1.1.1.3'
+                  vpn0_ip: "{{ lookup('env','VSMART1_IP') }}"
+                  sdwan_site_id: 1
+                  sdwan_template:
+                    name: vsmart
+                    variables:
+                      'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
+                      'vpn0_default_gateway': "{{ vpn0_gateway }}"
+                  vpn_instances:
+                    - vpn_id: 0
+                      interfaces:
+                        - if_name: eth1
+                          enabled: true
+                          ip:
+                            address: "{{ lookup('env','VSMART1_IP') }}"
+                          tunnel_interface:
+                            allow_service:
+                              - all
+                      routes:
+                        - prefix: 0.0.0.0/0
+                          next_hop:
+                            address: "{{ lookup('env','VPN0_GATEWAY') }}"
+                    - vpn_id: 512
+                      interfaces:
+                        - if_name: eth0
+                          enabled: true
+                          ip:
+                            dhcp_client: true
+        sdwan_edge:
+          vars:
+            sdwan_personality: vedge
+            login_banner: "Hello!"
+            vpn0_portgroup: "{{ lookup('env','VPN0_PORTGROUP') }}"
+            vpn512_portgroup: "{{ lookup('env','VPN512_PORTGROUP') }}"
+            servicevpn_portgroup: "{{ lookup('env','SERVICEVPN_PORTGROUP') }}"
+            vpn0_gateway: "{{ lookup('env','VPN0_GATEWAY') }}"
+          hosts:
+            hq-cedge1:
+              infra: "aws"
+              sdwan_datacenter: "us-east-1"
+              aws_ami: ami-09db869a0fe05bd4e
+              virl_image_definition: "{{ iosxe_sdwan_image }}"
+              cidr_range: "{{ lookup('env','HQ_EDGE1_RANGE') }}"
+              vpn0_range: "{{ cidr_range | ipsubnet(24, 0) }}"
+              vpn1_range: "{{ cidr_range | ipsubnet(24, 1) }}"
+              vpn0_ip: "{{ vpn0_range | ipaddr('net') | ipaddr('11') }}"
+              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
+              sdwan_system_ip: '1.1.1.4'
+              sdwan_site_id: 1
+              sdwan_model: vedge-C8000V
+              sdwan_uuid: C8K-73C3B1FA-D4FC-3FAE-9D2B-9ED0285DAEE8
+              cloudinit_type: v1
+              sdwan_template:
+                name: hq-c8000v
+                variables:
+                  'vpn512_interface': GigabitEthernet3
+                  'vpn0_interface': GigabitEthernet1
+                  'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
+                  'vpn0_default_gateway': "{{ vpn0_range | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"
+                  'vpn1_ipv4_address': "{{ vpn1_range | ipaddr('net') | ipaddr('11') }}"
+                  'vpn1_interface': GigabitEthernet2
+                  'vpn1_ospf_interface': GigabitEthernet2
+                  'system_latitude': '37.411343'
+                  'system_longitude': '-121.938803'
+                  'system_site_id': "{{ sdwan_site_id }}"
+                  'system_host_name': "{{ inventory_hostname }}"
+                  'system_system_ip': "{{ sdwan_system_ip }}"
+                  'banner_login': "{{ login_banner }}"
+                  'banner_motd': "Welcome to {{ inventory_hostname }}!"
+    system:
+      vars:
+        virl_config_template: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/templates/virl/host.j2"
+        virl_image_defintion: "{{ ubuntu_image }}"
+        host_interface: ens2
+      children:
+        client:
+          hosts:
+            site1-host1:
+              host_ip: 192.168.1.10/24
+              host_gateway: '192.168.1.1'
+            site2-host1:
+              host_ip: 192.168.2.10/24
+              host_gateway: '192.168.2.1'
+        public_hosts:
+          hosts:
+            hq-host1:    
+              host_ip: 10.0.1.10/24
+              host_gateway: '10.0.1.1'

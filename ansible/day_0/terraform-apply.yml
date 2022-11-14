@@ -5,8 +5,8 @@
   tasks:
     - assert:
         that:
-          - sdwan_component == "network" or sdwan_component == "control" or sdwan_component == "edges"
-        msg: "sdwan_component must be set to either 'network', 'control' or 'edges'"
+          - sdwan_component == "network" or sdwan_component == "control"
+        msg: "sdwan_component must be set to either 'network' or 'control'"
 
     - name: Generate Terraform variables file
       template:
