@@ -1,0 +1,34 @@
+---
+global_config:
+#  tf_vars_folder: ""
+  csr1000v_image: "csr1000v-16.12.02r"
+  ubuntu_image: "ubuntu-22-04"
+
+control_plane_infra:
+  provider: "aws"
+  datacenter: "us-east-1"
+  certificate_authority:
+    passphrase: "123"
+  acl_ingress_ipv4: [ "0.0.0.0/1", "128.0.0.0/1" ]
+  acl_ingress_ipv6: [ "::/0" ]
+  cidr: "10.128.0.0/22"
+  vmanage:
+    image_id: "ami-02b3d4da3fc136dab"
+    instance_type: "t2.xlarge"
+    sw_version: "20.8.1"
+    config:
+      username: "admin"
+#     password: ""
+      organization_name: "CIDR_SDWAN_WORKSHOPS"
+  vbond:
+    image_id: "ami-05ea2898dccbd19bc"
+    instance_type: "t2.medium"
+  vsmart:
+    image_id: "ami-08a51380a937e415f"
+    instance_type: "t2.medium"
+
+
+wan_edge_infra:
+  iosxe_sdwan_image: "iosxe-sdwan-16.12.5"
+
+...
