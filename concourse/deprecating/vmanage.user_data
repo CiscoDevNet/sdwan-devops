@@ -2,11 +2,11 @@
 users:
 - name: admin
 fs_setup:
-- device: "/dev/sdb"
+- device: "/dev/sdf"
   partition: "none"
   filesystem: "ext4"
 mounts:
-- [ /dev/sdb, /opt/data ]
+- [ /dev/sdf, /opt/data ]
 write_files:
 - path: /opt/web-app/etc/persona
   owner: vmanage:vmanage-admin
