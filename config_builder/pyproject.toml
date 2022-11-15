@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "config_builder"
+description = "Cisco SDWAN Configuration Builder Tool"
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: System :: Networking",
+    "Typing :: Typed",
+    "Development Status :: 4 - Beta"
+]
+keywords = ["sdwan", "cisco", "viptela", "network"]
+requires-python = ">=3.8"
+dependencies = [
+    "Jinja2",
+    "PyYAML",
+    "pydantic"
+]
+dynamic = ["version"]
+
+[project.scripts]
+config_build = "src.config_builder.__main__:main"
+
+[tool.hatch.version]
+path = "src/config_builder/__version__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+]

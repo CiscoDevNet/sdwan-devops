@@ -1,4 +1,3 @@
-*.pyc
 *.retry
 /ansible/myCA
 viptela_api_cookie
@@ -9,3 +8,17 @@ topo.virl
 /.virl
 set*.sh
 *_env_*.sh
+logs/
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+# venv
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
