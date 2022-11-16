@@ -1,3 +1,0 @@
-{% if dns_servers is defined %}
-ip name-server {{ dns_servers | join(' ') }}
-{% endif %}

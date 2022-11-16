@@ -1,8 +1,0 @@
-vmanage_user: "{{ lookup('env','VMANAGE_USERNAME') }}"
-vmanage_pass: "{{ lookup('env','VMANAGE_PASS') }}"
-viptela_encrypted_pass: "{{ lookup('env','VMANAGE_ENCRYPTED_PASS') }}"
-vmanage_org: "{{ lookup('env','VMANAGE_ORG') | default('', true) }}"
-smart_token: "{{ lookup('env','SMART_TOKEN') | default('', true) }}"
-ansible_user: "{{ vmanage_user }}"
-ansible_password: "{{ vmanage_pass }}"
-ssh_pubkey: "{{ lookup('env','SSH_PUBKEY_BASE64') | b64decode | trim }}"

@@ -1,9 +1,0 @@
-{% if static_routes is defined %}
-{%  for vrf, value in static_routes.items() %}
-{%   for route in value|default([]) %}
-{%    for dest in route.fwd_list|default([]) %}
-ip route {{ '' if vrf == 'global' else vrf }} {{ route.network|ipaddr('network')  }} {{ route.network|ipaddr('netmask') }} {{ dest.fwd }} {{ dest.metric|default('') }}
-{%    endfor %}
-{%   endfor %}
-{%  endfor %}
-{% endif %}

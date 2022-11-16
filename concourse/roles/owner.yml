@@ -1,4 +1,0 @@
-roles:
-  - name: owner
-    local:
-      users: ["us-west-2a"]

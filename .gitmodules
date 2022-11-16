@@ -1,7 +1,0 @@
-[submodule "terraform-sdwan"]
-	path = terraform-sdwan
-	url = https://github.com/CiscoDevNet/terraform-sdwan.git
-	branch = cloud-concourse
-[submodule "sdwan-edge"]
-	path = sdwan-edge
-	url = https://github.com/CiscoDevNet/sdwan-edge.git

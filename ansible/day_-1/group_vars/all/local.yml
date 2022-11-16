@@ -1,6 +1,0 @@
-sdwan_serial_file: "/ansible/licenses/serialFile.viptela"
-sdwan_cert_dir: "/ansible/myCA"
-# TODO Encrypt/Vault this in real life
-sdwan_ca_passphrase: "{{ lookup('env','SDWAN_CA_PASSPHRASE') }}"
-sdwan_ca_cert: "{{ sdwan_cert_dir }}/myCA.pem"
-
