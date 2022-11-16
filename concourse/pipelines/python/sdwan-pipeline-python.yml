@@ -1,0 +1,150 @@
+display:
+  background_image: https://info.hummingbirdnetworks.com/hubfs/Cisco/cisco%20security.jpg
+jobs:
+- name: lab-prep
+  plan:
+  - get: git-resource
+    trigger: true
+  - config:
+      image_resource:
+        name: ""
+        source:
+          repository: sconrod/sdwan-ubuntu
+          tag: 1.0
+        type: docker-image
+      inputs:
+      - name: git-resource
+      platform: linux
+      run:
+        path: sh
+        args:
+          - -ce
+          - |
+            export AWS_PAGER=""
+            export Name=$NAME
+            echo $NAME
+            aws configure set aws_access_key_id $AWS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_KEY
+            aws configure set default.region $REGION
+            aws sts get-caller-identity --query Account --output text
+            echo "WELCOME TO THE CISCO git-resource AUTOMATION LAB FOR DEVOPS/NETOPS ENGINEERS"
+    task: check-aws
+    params:
+      AWS_KEY_ID: ((Access_key_ID.Access_key))
+      AWS_KEY: ((Secret_access_key.Secret_access_key))
+      REGION: ((aws.region))
+      NAME: ((az.name))
+      VAULT_ADDR: ((vault.addr))
+
+- name: deploy-aws-key
+  plan:
+    - get: git-resource
+      trigger: true
+    - task: aws_deploy
+      file: git-resource/tasks/aws_deploy/aws_key_deploy.yml
+
+- name: delete-aws-vpc-non-cluster
+  public: true
+  plan:
+    - get: git-resource
+      passed: [deploy-aws-vpc-non-cluster]
+    - task: aws_delete_vpc
+      file: git-resource/tasks/aws_delete/aws_vpc_delete_non_cluster.yml
+
+- name: deploy-aws-vmanage-non-cluster
+  public: true
+  plan:
+    - get: git-resource
+      trigger: true
+      passed: [deploy-aws-vpc-non-cluster]
+      trigger: true
+    - in_parallel:
+        - task: ed25519
+          file: git-resource/tasks/aws_deploy/ed25519.yml
+        - task: aws_deploy_vmanage-non-cluster
+          file: git-resource/tasks/aws_deploy/aws_deploy_vmanage.yml
+
+- name: deploy-aws-vpc-cluster
+  plan:
+    - get: git-resource
+    - task: aws_deploy_key
+      file: git-resource/tasks/aws_deploy/aws_key_deploy.yml
+    - task: aws_deploy_vpc
+      file: git-resource/tasks/aws_deploy/aws_env_deploy_cluster.yml
+
+- name: deploy-aws-vpc-non-cluster
+  public: true
+  plan:
+    - get: git-resource
+    - task: aws_deploy_non_cluster_key
+      file: git-resource/tasks/aws_deploy/aws_key_deploy.yml
+    - task: aws_deploy
+      file: git-resource/tasks/aws_deploy/aws_env_deploy.yml
+
+- name: delete-aws-vpc-cluster
+  plan:
+    - get: git-resource
+      passed: [deploy-aws-vpc-cluster]
+    - task: aws_delete_vpc
+      file: git-resource/tasks/aws_delete/aws_vpc_delete.yml
+
+- name: deploy-aws-vmanage-cluster
+  plan:
+    - get: git-resource
+      passed: [deploy-aws-vpc-cluster]
+      trigger: true
+    - in_parallel:
+      - task: ed25519
+        file: git-resource/tasks/aws_deploy/ed25519.yml
+      - task: aws_deploy_vmanage_1
+        file: git-resource/tasks/aws_deploy/aws_deploy_vmanage_1.yml
+      - task: aws_deploy_vmanage_2
+        file: git-resource/tasks/aws_deploy/aws_deploy_vmanage_2.yml
+      - task: aws_deploy_vmanage_3
+        file: git-resource/tasks/aws_deploy/aws_deploy_vmanage_3.yml
+
+- name: delete-aws-vmanage-cluster
+  plan:
+    - get: git-resource
+      passed: [deploy-aws-vmanage-cluster]
+    - in_parallel:
+        - task: delete-aws-vmanage-1
+          file: git-resource/tasks/aws_delete/aws_vmanage_1_delete.yml
+        - task: delete-aws-vmanage-2
+          file: git-resource/tasks/aws_delete/aws_vmanage_2_delete.yml
+        - task: delete-aws-vmanage-3
+          file: git-resource/tasks/aws_delete/aws_vmanage_3_delete.yml
+
+- name: delete-aws-vmanage-non-cluster
+  plan:
+    - get: git-resource
+      passed: [deploy-aws-vmanage-non-cluster]
+    - in_parallel:
+        - task: delete-aws-vmanage
+          file: git-resource/tasks/aws_delete/aws_vmanage_delete.yml
+
+- name: configure-aws-vmanage-cluster
+  plan:
+    - get: git-resource
+    - in_parallel:
+        - task: configure-aws-vmanage-cluster
+          file: git-resource/tasks/aws_deploy/aws_config_vmanage_cluster.yml
+
+- name: configure-aws-vmanage-non-cluster
+  public: true
+  plan:
+    - get: git-resource
+    - in_parallel:
+        - task: configure-aws-vmanage-non-cluster
+          file: git-resource/sdwan/tasks/aws_deploy/aws_config_vmanage.yml
+
+resource_types:
+resources:
+  - name: git-resource
+    source:
+      Username: ((Username))
+      branch: main
+      email: ((email))
+      private_key: ((private_key))
+      uri: git@github.com:devops-ontap/sdwan.git
+    type: git

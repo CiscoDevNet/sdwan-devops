@@ -2,15 +2,13 @@
 #cloud-config
 users:
 - name: admin
-  ssh_authorized_keys:
-  - ${ssh_pubkey}
 fs_setup:
-- device: "/dev/xvdb"
+- device: "/dev/sdf"
   label: data
   partition: "none"
   filesystem: "ext4"
 mounts:
-- [ xvdb, /opt/data ]
+- [ /dev/sdf, /opt/data ]
 write_files:
 - path: /opt/web-app/etc/persona
   owner: vmanage:vmanage-admin
@@ -33,7 +31,7 @@ write_files:
         <aaa>
           <user>
             <name>admin</name>
-            <password>$6$Yr4UfGuMs2C$2gsBhG9T8pWIG3RQYKlQiBEW7ncsiS2oFktyUBXzlHDFzNG3X4bz0qkx.95npJHN7dlp58mCZ4uBVYrlewRek1</password>
+            <password>cisco</password>
           </user>
         </aaa>
         <ntp>
