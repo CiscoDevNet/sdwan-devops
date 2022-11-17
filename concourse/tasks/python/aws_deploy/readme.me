@@ -1,0 +1,7 @@
+
+C5 Instance Types require ed25519 key type
+
+aws ec2-instance-connect send-serial-console-ssh-public-key --instance-id i-01c770b5cff2f50c2 --serial-port 0 --ssh-public-key file://ed25519.pub --region us-west-2
+
+ssh -i ed25519 i-09c88972535fd8038.port0@serial-console.ec2-instance-connect.us-west-2.aws
+

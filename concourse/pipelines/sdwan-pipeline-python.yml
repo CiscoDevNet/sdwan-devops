@@ -1,0 +1,153 @@
+display:
+  background_image: https://info.hummingbirdnetworks.com/hubfs/Cisco/cisco%20security.jpg
+jobs:
+- name: lab-prep
+  plan:
+    - get: git-cisco-sdwan-devops
+      trigger: true
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/sdwan-ubuntu
+            tag: 1.0
+          type: docker-image
+        inputs:
+          - name: git-cisco-sdwan-devops
+        platform: linux
+        run:
+          path: sh
+          args:
+            - -cex
+            - |
+              pwd
+              ls -la
+              export AWS_PAGER=""
+              export Name=$NAME
+              echo $NAME
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              echo "WELCOME TO THE CISCO SDWAN AUTOMATION LAB FOR DEVOPS/NETOPS ENGINEERS"
+      task: check-aws
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        REGION: ((aws.region))
+        NAME: ((az.name))
+        VAULT_ADDR: http://vault.cisco-sdwan-labs.com:8200
+
+- name: deploy-aws-key
+  plan:
+    - get: git-cisco-sdwan-devops
+      trigger: true
+    - task: aws_deploy
+      file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_key_deploy.yml
+
+- name: delete-aws-vpc-non-cluster
+  public: true
+  plan:
+    - get: git-cisco-sdwan-devops
+      passed: [deploy-aws-vpc-non-cluster]
+    - task: aws_delete_vpc
+      file: git-cisco-sdwan-devops/tasks/python/aws_delete/aws_vpc_delete_non_cluster.yml
+
+- name: deploy-aws-vmanage-non-cluster
+  public: true
+  plan:
+    - get: git-cisco-sdwan-devops
+      trigger: true
+      passed: [deploy-aws-vpc-non-cluster]
+      trigger: true
+    - in_parallel:
+        - task: ed25519
+          file: git-cisco-sdwan-devops/tasks/python/aws_deploy/ed25519.yml
+        - task: aws_deploy_vmanage-non-cluster
+          file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_deploy_vmanage.yml
+
+- name: deploy-aws-vpc-cluster
+  plan:
+    - get: git-cisco-sdwan-devops
+    - task: aws_deploy_key
+      file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_key_deploy.yml
+    - task: aws_deploy_vpc
+      file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_env_deploy_cluster.yml
+
+- name: deploy-aws-vpc-non-cluster
+  public: true
+  plan:
+    - get: git-cisco-sdwan-devops
+    - task: aws_deploy_non_cluster_key
+      file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_key_deploy.yml
+    - task: aws_deploy
+      file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_env_deploy.yml
+
+- name: delete-aws-vpc-cluster
+  plan:
+    - get: git-cisco-sdwan-devops
+      passed: [deploy-aws-vpc-cluster]
+    - task: aws_delete_vpc
+      file: git-cisco-sdwan-devops/tasks/python/aws_delete/aws_vpc_delete.yml
+
+- name: deploy-aws-vmanage-cluster
+  plan:
+    - get: git-cisco-sdwan-devops
+      passed: [deploy-aws-vpc-cluster]
+      trigger: true
+    - in_parallel:
+      - task: ed25519
+        file: git-cisco-sdwan-devops/tasks/python/aws_deploy/ed25519.yml
+      - task: aws_deploy_vmanage_1
+        file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_deploy_vmanage_1.yml
+      - task: aws_deploy_vmanage_2
+        file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_deploy_vmanage_2.yml
+      - task: aws_deploy_vmanage_3
+        file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_deploy_vmanage_3.yml
+
+- name: delete-aws-vmanage-cluster
+  plan:
+    - get: git-cisco-sdwan-devops
+      passed: [deploy-aws-vmanage-cluster]
+    - in_parallel:
+        - task: delete-aws-vmanage-1
+          file: git-cisco-sdwan-devops/tasks/python/aws_delete/aws_vmanage_1_delete.yml
+        - task: delete-aws-vmanage-2
+          file: git-cisco-sdwan-devops/tasks/python/aws_delete/aws_vmanage_2_delete.yml
+        - task: delete-aws-vmanage-3
+          file: git-cisco-sdwan-devops/tasks/python/aws_delete/aws_vmanage_3_delete.yml
+
+- name: delete-aws-vmanage-non-cluster
+  plan:
+    - get: git-cisco-sdwan-devops
+      passed: [deploy-aws-vmanage-non-cluster]
+    - in_parallel:
+        - task: delete-aws-vmanage
+          file: git-cisco-sdwan-devops/tasks/python/aws_delete/aws_vmanage_delete.yml
+
+- name: configure-aws-vmanage-cluster
+  plan:
+    - get: git-cisco-sdwan-devops
+    - in_parallel:
+        - task: configure-aws-vmanage-cluster
+          file: git-cisco-sdwan-devops/tasks/python/aws_deploy/aws_config_vmanage_cluster.yml
+
+- name: configure-aws-vmanage-non-cluster
+  public: true
+  plan:
+    - get: git-cisco-sdwan-devops
+    - in_parallel:
+        - task: configure-aws-vmanage-non-cluster
+          file: git-cisco-sdwan-devops/sdwan/tasks/python/aws_deploy/aws_config_vmanage.yml
+
+resource_types:
+resources:
+  - name: git-cisco-sdwan-devops
+    source:
+      Username: ((Username))
+      branch: cloud-concourse
+      email: ((email))
+      private_key: ((private_key))
+      uri: git@github.com:CiscoDevNet/sdwan-devops.git
+    type: git
+

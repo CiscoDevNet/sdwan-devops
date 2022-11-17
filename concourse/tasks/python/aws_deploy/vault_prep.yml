@@ -1,0 +1,26 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: sconrod/python-aws-image
+    tag: 2
+
+inputs:
+  - name: git-cisco-sdwan-devops
+
+params:
+  VAULT_ADDR: http://ci.cisco-sdwan-labs.com:8200
+  SSH_TOKEN: ((ssh-token.token))
+
+run:
+  path: /bin/sh
+  args:
+    - -ce
+    - |
+      chmod a+x git-cisco-sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
+      ./git-cisco-sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
+
+
+      

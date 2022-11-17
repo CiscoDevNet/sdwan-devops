@@ -1,0 +1,88 @@
+jobs:
+- name: lab-prep
+  plan:
+  - get: sdwan-devops
+    trigger: true
+  - config:
+      image_resource:
+        name: ""
+        source:
+          repository: sconrod/python-aws-image
+          tag: 2
+        type: docker-image
+      inputs:
+      - name: sdwan-devops
+      platform: linux
+      run:
+        path: sh
+        args:
+          - -ce
+          - |
+            export AWS_PAGER=""
+            export Name=$NAME
+            echo $NAME
+            aws configure set aws_access_key_id $AWS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_KEY
+            aws configure set default.region $REGION
+            aws sts get-caller-identity --query Account --output text
+            echo "WELCOME TO THE CISCO SDWAN AUTOMATION LAB FOR DEVOPS/NETOPS ENGINEERS"
+    task: check-aws
+    params:
+      AWS_KEY_ID: ((Access_key_ID.Access_key))
+      AWS_KEY: ((Secret_access_key.Secret_access_key))
+      REGION: ((aws.region))
+      NAME: ((az.name))
+      VAULT_ADDR: ((vault.addr))
+
+- name: deploy-aws-env
+  plan:
+    - get: sdwan-devops
+    - config:
+        image_resource:
+          name: ""
+          source:
+            repository: sconrod/sdwan-devops
+            tag: 1.0
+          type: docker-image
+        inputs:
+          - name: sdwan-devops
+        platform: linux
+        run:
+          path: /bin/sh
+          args:
+            - -cex
+            - |
+              export AWS_PAGER=""
+              export NAME=$NAME
+              echo $NAME
+              aws configure set aws_access_key_id $AWS_KEY_ID
+              aws configure set aws_secret_access_key $AWS_KEY
+              aws configure set default.region $REGION
+              aws sts get-caller-identity --query Account --output text
+              export AWS_PAGER=""
+              echo "Hello I am your curated OCI Build Container"
+              echo "I have all the required libraries and packages already installed and I have already pulled your branch onto my container"
+              echo "Now I will build your code...."
+              apk add --no-cache --upgrade bash
+              chmod a+x sdwan-devops/concourse/ansible.sh
+              ./sdwan-devops/concourse/ansible.sh
+
+      task: build-vpc
+      params:
+        AWS_KEY_ID: ((Access_key_ID.Access_key))
+        AWS_KEY: ((Secret_access_key.Secret_access_key))
+        REGION: ((aws.region))
+        NAME: ((az.name))
+        VAULT_ADDR: ((vault.addr))
+        SSH_TOKEN: ((ssh-token.token))
+
+resource_types:
+resources:
+  - name: sdwan-devops
+    source:
+      Username: ((Username))
+      branch: cloud
+      email: ((email))
+      private_key: ((private_key))
+      uri: git@github.com:CiscoDevNet/sdwan-devops.git
+    type: git

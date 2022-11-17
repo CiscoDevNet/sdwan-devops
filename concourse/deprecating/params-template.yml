@@ -1,0 +1,6 @@
+git-branch: concourse
+git-uri: git@wwwin-github.cisco.com:automation/sdwan-devops.git
+Username:
+email:
+private_key: |
+  -----BEGIN OPENSSH PRIVATE KEY-----
