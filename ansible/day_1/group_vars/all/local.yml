@@ -10,3 +10,4 @@ sdwan_datacenter: "{{ lookup('env', 'SDWAN_DATACENTER') }}"
 # AWS
 aws_cedge_ami: "{{ lookup('env','CEDGE_AMI') }}"
 aws_cedge_instance_type: "{{ lookup('env', 'CEDGE_INSTANCE_TYPE')  | default('t3.medium', true) }}"
+aws_ntp_server: "169.254.169.123"

@@ -31,17 +31,23 @@
       delegate_to: localhost
 
     # replace filter is a hack to workaround cloud-init defect for enterprise ca in viptela 20.5 and up
-    - set_fact:
-        day0_config: "{{ result.bootstrap.bootstrapConfig | replace('- path: /etc/viptela/rootcert_reinstall', '- path: /usr/share/viptela/symantec-root-ca.crt')}}"
+    - name: Set variables
+      set_fact:
+        bootstrap: "{{ result.bootstrap.bootstrapConfig | replace('- path: /etc/viptela/rootcert_reinstall', '- path: /usr/share/viptela/symantec-root-ca.crt')}}"
         cacheable: yes
       when: result.bootstrap.bootstrapConfig is defined
 
     - name: Save day0 to terraform directory
       template:
+        src: templates/day0.j2
+        dest: "{{ generated_cloud_init }}"
+      when: '"multipart/mixed" not in bootstrap'
+    - name: Save day0 to terraform directory (template is atteched in vmanage)
+      template:
         src: templates/day0_attached.j2
         dest: "{{ generated_cloud_init }}"
-      when: result.bootstrap.bootstrapConfig is defined
+      when: '"multipart/mixed" in bootstrap'
 
     # AWS user-data is limited to 16KB
     - name: Remove root CA certificates from day0 config
-      shell: sed -i '/^ca-certs:/,/^$/d' {{ generated_cloud_init }}
+      shell: sed -i '/^ - rcc/,/^$/d' {{ generated_cloud_init }}

@@ -1,0 +1,65 @@
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-config; charset="us-ascii"
+
+{{ bootstrap }}
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+#cloud-boothook
+
+hostname {{ inventory_hostname }}
+!
+username admin privilege 15 password {{ vmanage_pass }}
+!
+system
+ system-ip             {{ sdwan_system_ip }}
+ site-id               {{ sdwan_site_id }}
+ organization-name     "{{ vmanage_org }}"
+ sp-organization-name  "{{ vmanage_org }}"
+ vbond {{ sdwan_vbond }}
+!
+interface GigabitEthernet1
+ description   TRANSPORT - INET
+ ip address dhcp
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description   SERVICE
+ ip address dhcp
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface Tunnel1
+ ip unnumbered GigabitEthernet1
+ tunnel source GigabitEthernet1
+ tunnel mode sdwan
+!
+sdwan
+ interface GigabitEthernet1
+  tunnel-interface
+   encapsulation ipsec
+   allow-service all
+   no allow-service bgp
+   allow-service dhcp
+   allow-service dns
+   allow-service icmp
+   allow-service sshd
+   no allow-service netconf
+   no allow-service ntp
+   no allow-service ospf
+   no allow-service stun
+   no allow-service https
+   no allow-service snmp
+   no allow-service bfd
+!
+line vty 0 4
+ transport input ssh
+!
+--==BOUNDARY==
