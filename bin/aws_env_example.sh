@@ -2,7 +2,7 @@
 
 # If you're on a Mac and used Hombrew to install OpenSSL 3, uncomment the
 # following line (if you want to take advantage of the password hashing ability)
-#export PATH="/usr/local/opt/openssl@3/bin:$PATH"
+#export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 
