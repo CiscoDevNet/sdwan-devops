@@ -39,7 +39,7 @@
       when: sdwan_component is defined
       register: outputs
 
-    - name: Save VPD ID
+    - name: Save VPC ID
       set_fact:
         sdwan_network: "{{ outputs.outputs.vpc_id.value }}"
         cacheable: yes
