@@ -37,6 +37,7 @@ See the list of possible environment variables in the follwoing table. They can 
 | VMANAGE_PASS            | required    | -              | -                      | The clear text password for vManage, needed for API access |
 | VMANAGE_ENCRYPTED_PASS  | required    | -              | -                      | The SHA256 hashed password for vManage, needed for `user-data`. Can be obtained with `echo "$VMANAGE_PASS" | openssl passwd -6 -stdin` |
 | VMANAGE_ORG             | required    | -              | CIDR_SDWAN_WORKSHOPS   | The recommended value is needed if you want to use the included `ansible/files/serialFile.viptela` (it must match the org in the `serialFile.viptela` being used) |
+| VAULT_PASS              | required    | -              | -                      | The clear text password for Ansible Vault, needed to decrypt the included `ansible/files/serialFile.viptela` |
 
 ### External pipeline
 

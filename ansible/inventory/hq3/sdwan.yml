@@ -155,7 +155,7 @@ all:
               sdwan_system_ip: '1.1.1.4'
               sdwan_site_id: 1
               sdwan_model: vedge-C8000V
-              sdwan_uuid: C8K-73C3B1FA-D4FC-3FAE-9D2B-9ED0285DAEE8
+              sdwan_uuid: C8K-01D10B0E-3012-6FE0-514D-D9E146FC3DA9
               cloudinit_type: v1
               sdwan_template:
                 name: hq-c8000v

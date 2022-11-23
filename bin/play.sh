@@ -29,7 +29,6 @@ OPTION_LIST=( \
    "VIRL_PASSWORD" \
    "VIRL_LAB" \
    "VMANAGE_HOST" \
-   "VMANAGE_ORG" \
    "VMANAGE_USERNAME" \
    "VMANAGE_PASS" \
    "VMANAGE_ENCRYPTED_PASS" \
@@ -82,4 +81,4 @@ while getopts ":dl" opt; do
       ;;
   esac
 done
-docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan -v $PROJ_ROOT/sdwan-edge:/sdwan-edge --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-playbook "$@"
+docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan -v $PROJ_ROOT/sdwan-edge:/sdwan-edge --env PWD="/ansible" --env USER="$USER" --env VMANAGE_ORG="$VMANAGE_ORG" $OPTIONS $IMAGE ansible-playbook "$@"
