@@ -34,6 +34,7 @@ export VMANAGE_USERNAME="admin"
 export VMANAGE_PASS="$(openssl rand -base64 12)"
 export VMANAGE_ENCRYPTED_PASS="$(echo "$VMANAGE_PASS" | openssl passwd -6 -stdin)"
 export SDWAN_CA_PASSPHRASE="$(openssl rand -base64 15)"
+export VAULT_PASS=
 
 # Distinguishing single and double quotes is very important for this to work
 export ACL_RANGES_IPV4_BASE64=$(echo '"0.0.0.0/1", "128.0.0.0/1"' | base64)
@@ -62,6 +63,6 @@ export SITE2_EDGE1_RANGE=10.128.8.0/23
 
 export IOSXE_SDWAN_IMAGE=iosxe-sdwan-${IOSXE_VERSION}
 
-export VMANAGE_ORG=CIDR_SDWAN_WORKSHOPS
+export VMANAGE_ORG="Cisco CX Canada"
 
 export CLOUDINIT_TYPE=v2
