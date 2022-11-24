@@ -9,6 +9,8 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && 
 export PROJ_ROOT=$SCRIPT_DIR/..
 #put this in the vault - local task.
 #export SSH_PUBKEY_BASE64="$(cat $HOME/.ssh/id_rsa.pub | base64)"
+# The below is used for adding SSH public key fingerprints to cEdges. It will only work with ssh-rsa type keys
+#export SSH_PUBKEY_FP_BASE64="$(ssh-keygen -E md5 -lf ~/.ssh/id_rsa.pub | awk '{ print toupper($2) " " $3 }' | sed 's/MD5://' | sed 's/://g' | base64)"
 export SDWAN_CONTROL_INFRA="aws"
 export AWS_PROFILE="default"
 export AWS_ACCESS_KEY_ID=$(aws configure get $AWS_PROFILE.aws_access_key_id)

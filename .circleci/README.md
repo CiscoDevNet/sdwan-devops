@@ -26,6 +26,7 @@ See the list of possible environment variables in the follwoing table. They can 
 | VSMART1_IP              | required    | 10.128.1.13/24 | 10.128.1.13/24         | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | VPN0_GATEWAY            | required    | 10.128.1.1     | 10.1281.1.1            | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | SSH_PUBKEY_BASE64       | recommended | -              | -                      | Not strictly required, but recommended for SSH login into `devbox` and SD-WAN VMs |
+| SSH_PUBKEY_FP_BASE64    | recommended | -              | -                      | Used for adding SSH public key fingerprints to cEdges. It will only work with ssh-rsa type keys |
 | VIPTELA_VERSION         | required    | -              | -                      | Used to choose device template (v19 or v20), and may be used in the future to auto-detect AMIs or VMware templates with standardized naming |
 | CLOUDINIT_TYPE          | required    | -              | v2                     | Depends on SD_WAN version, `v1` up to 20.4.x, `v2` for later |
 | VMANAGE_AMI             | required    | -              | -                      | Should be an existing AMI in the selected AWS region |
