@@ -69,9 +69,11 @@ vinitparam:
 {% if sdwan_personality == 'vmanage' %}
  - format-partition : 1
 {% endif %}{# sdwan_personality == 'vmanage' #}
-{% if hostvars['localhost']['sdwan_vbond'] is defined %}
- - vbond : {{ hostvars['localhost']['sdwan_vbond'] }}
-{% endif %}{# hostvars['localhost']['sdwan_vbond'] is defined #}
+{% if sdwan_personality == "vbond" %}
+ - vbond : {{ vpn0_ip | ipaddr('address') }}
+{% elif sdwan_vbond is defined %}
+ - vbond : {{ sdwan_vbond }}
+{% endif %}{# sdwan_vbond is defined #}
 {% if vmanage_org is defined %}
  - org : "{{ vmanage_org }}"
 {% endif %}{# sdwan_org is defined #}
@@ -114,10 +116,12 @@ device-model {{ sdwan_device_model }}
 {% endif %}{# sdwan_site_id is defined #}
 {% if vmanage_org is defined %}
       organization-name       "{{ vmanage_org }}"
-{% endif %}{# vmanage_org is defined #}
-{% if hostvars['localhost']['sdwan_vbond'] is defined %}
-      vbond                   {{ hostvars['localhost']['sdwan_vbond'] }}
-{% endif %}{# hostvars['localhost']['sdwan_vbond'] is defined #}
+{% endif %}{# viptela.org is defined #}
+{% if sdwan_personality == "vbond" %}
+      vbond                   {{ vpn0_ip | ipaddr('address') }} local
+{% elif sdwan_vbond is defined %}
+      vbond                   {{ sdwan_vbond }}
+{% endif %}{# sdwan_vbond is defined #}
       aaa
       auth-order local radius tacacs
       usergroup basic
