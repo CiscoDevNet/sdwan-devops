@@ -6,10 +6,10 @@
   vars:
     passed: sdwan_edge
 
-- import_playbook: terraform-apply.yml
+- import_playbook: terraform-apply-edges.yml
   vars:
     sdwan_component: edge_network
 
-- import_playbook: terraform-apply.yml
+- import_playbook: terraform-apply-edges.yml
   vars:
     sdwan_component: edges

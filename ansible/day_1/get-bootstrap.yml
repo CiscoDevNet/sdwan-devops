@@ -9,8 +9,12 @@
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+    sdwan_vbond: "{{ hostvars['localhost']['sdwan_vbond'] }}"
+    # TODO  make this conditional
+    ntp_server: "{{ aws_ntp_server }}"
     ansible_network_os: ios
-    generated_cloud_init: "{{ terraform_project_path[infra]['edges'] }}/cloud-init/ciscosdwan_cloud_init.cfg"
+    generated_cloud_init: "{{ terraform_project_path[infra]['edges'] }}/cloud-init/ciscosdwan_cloud_init.{{ inventory_hostname }}.cfg"
+    ca_cert: "{{ lookup('file', sdwan_ca_cert) | indent(3, True) | replace('\n', '\\n') }}"
   environment: "{{ hostvars['localhost']['proxy_env'] }}"
   serial: 1
   # This is a workaround for a bug in vmanage.  When multiple requests
@@ -50,4 +54,4 @@
 
     # AWS user-data is limited to 16KB
     - name: Remove root CA certificates from day0 config
-      shell: sed -i '/^ - rcc/,/^$/d' {{ generated_cloud_init }}
+      shell: sed -i '/^   -----BEGIN CERTIFICATE-----/,/^$/c\{{ ca_cert }}' {{ generated_cloud_init }}

@@ -7,6 +7,8 @@ ansible_user: "{{ vmanage_user }}"
 ansible_password: "{{ vmanage_pass }}"
 ssh_pubkey: "{{ lookup('env','SSH_PUBKEY_BASE64') | b64decode | trim }}"
 sdwan_datacenter: "{{ lookup('env', 'SDWAN_DATACENTER') }}"
+sdwan_cert_dir: "/ansible/myCA"
+sdwan_ca_cert: "{{ sdwan_cert_dir }}/myCA.pem"
 # AWS
 aws_cedge_ami: "{{ lookup('env','CEDGE_AMI') }}"
 aws_cedge_instance_type: "{{ lookup('env', 'CEDGE_INSTANCE_TYPE')  | default('t3.medium', true) }}"
