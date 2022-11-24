@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.17
 
 ARG build_date=unspecified
 ARG terraform_version=1.3.4
