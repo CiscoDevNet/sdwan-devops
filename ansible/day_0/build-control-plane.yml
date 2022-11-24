@@ -1,3 +1,10 @@
+- import_playbook: terraform-apply.yml
+  vars:
+    infra: "{{ sdwan_control_infra }}"
+    sdwan_component: network
+    project_path: "{{ terraform_project_path[infra][sdwan_component] }}"
+  when: sdwan_control_infra == "aws"
+
 - name: Generate day0 configs for control hosts
   hosts: sdwan_control
   connection: local
@@ -7,13 +14,6 @@
       set_fact:
         day0_config: "{{ lookup('template', virl_config_template) }}"
       when: virl_config_template is defined
-
-- import_playbook: terraform-apply.yml
-  vars:
-    infra: "{{ sdwan_control_infra }}"
-    sdwan_component: network
-    project_path: "{{ terraform_project_path[infra][sdwan_component] }}"
-  when: sdwan_control_infra == "aws"
 
 - import_playbook: terraform-apply.yml
   vars:
