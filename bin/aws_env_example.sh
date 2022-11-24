@@ -43,6 +43,8 @@ export ACL_RANGES_IPV6_BASE64=$(echo '"::/0"' | base64)
 # SDWAN_DATACENTER is the generic variable which is the region for AWS or the
 # vSphere datacenter, depending on the infra
 export SDWAN_DATACENTER=$AWS_REGION
+# If set, add A records for control plane element external addresses in AWS Route 53
+export DNS_DOMAIN=
 # Terraform for AWS has some computation built-in, hence the below values
 # TODO  document static addressing
 export NETWORK_CIDR=10.128.0.0/22
