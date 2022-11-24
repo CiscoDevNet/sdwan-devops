@@ -10,6 +10,9 @@ vmanage_instances_type = "{{ aws_vmanage_instance_type }}"
 vsmart_instances_type = "{{ aws_vsmart_instance_type }}"
 ssh_pubkey = "{{ ssh_pubkey }}"
 sdwan_org = "{{ vmanage_org }}"
+{% if aws_route53_zone is defined and aws_route53_zone != "" %}
+route53_zone = "{{ aws_route53_zone }}"
+{% endif %}
 vmanage_day0 = <<EOF
 {{ hostvars[groups['vmanage_hosts'][0]]['day0_config'] }}
 EOF

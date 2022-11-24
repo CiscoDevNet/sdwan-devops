@@ -17,6 +17,7 @@ See the list of possible environment variables in the follwoing table. They can 
 | AWS_SESSION_TOKEN       | optional    | -              | -                      | Depends on how authentication on AS is set up |
 | AWS_REGION              | optional    | -              | -                      | |
 | SDWAN_DATACENTER        | required    | us-east-1      | -                      | Should be the same as AWS_REGION (if set) if SDWAN_CONTROL_INFRA is aws |
+| DNS_DOMAIN              | optional    | -              | -                      | If set, A records for control plane elements will be added to the AWS Route 53 zone with the same name (which should be pre-configured) |
 | ACL_RANGES_IPV4_BASE64  | recommended | "0.0.0.0/0"    | -                      | Only allow connections to TCP ports 22, 443, and 8443 from these IPv4 ranges. The format is a list of CIDR ranges, double quoted, separated by commas, and finally the whole string base64 encoded
 | ACL_RANGES_IPV6_BASE64  | recommended | "::/0"         | -                      | Only allow connections to TCP ports 22, 443, and 8443 from these IPv6 ranges. The format is a list of CIDR ranges, double quoted, separated by commas, and finally the whole string base64 encoded
 | NETWORK_CIDR            | required    | 10.128.0.0/22  | 10.128.0.0/22          | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
