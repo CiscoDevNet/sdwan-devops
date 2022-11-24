@@ -142,7 +142,7 @@ all:
             servicevpn_portgroup: "{{ lookup('env','SERVICEVPN_PORTGROUP') }}"
             vpn0_gateway: "{{ lookup('env','VPN0_GATEWAY') }}"
           hosts:
-            hq-cedge1:
+            cedge-aws:
               infra: "aws"
               sdwan_datacenter: "us-east-1"
               aws_ami: ami-09db869a0fe05bd4e

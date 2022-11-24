@@ -43,7 +43,11 @@
       set_fact:
         sdwan_network: "{{ outputs.outputs.vpc_id.value }}"
         cacheable: yes
-      when: sdwan_component == "edge_network"
+      when: sdwan_component == "edge_network" and infra == "aws"
+
+    - debug:
+        msg: "cEdge external IP: {{ outputs.outputs.cedge_transport_public_ip.value }}"
+      when: sdwan_component == "edges" and infra == "aws"
 
     - meta: refresh_inventory
       tags: always
