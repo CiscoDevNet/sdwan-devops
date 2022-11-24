@@ -23,19 +23,14 @@
         {% if vmanage_org is defined %}
         <organization-name>{{ vmanage_org }}</organization-name>
         {% endif %}
-        {% if sdwan_personality is defined and sdwan_personality == 'vbond' %}
+        {% if hostvars['localhost']['sdwan_vbond'] is defined %}
         <vbond>
-            <remote>{{ vpn0_ip | ipaddr('address') }}</remote>
+            <remote>{{ hostvars['localhost']['sdwan_vbond'] }}</remote>
             {% if sdwan_vbond_port is defined %}
             <port>{{ sdwan_vbond_port }}</port>
             {% endif %}
+            {% if sdwan_personality is defined and sdwan_personality == 'vbond' %}
             <local/>
-        </vbond>
-        {% elif sdwan_vbond is defined %}
-        <vbond>
-            <remote>{{ sdwan_vbond }}</remote>
-            {% if sdwan_vbond_port is defined %}
-            <port>{{ sdwan_vbond_port }}</port>
             {% endif %}
         </vbond>
         {% endif %}

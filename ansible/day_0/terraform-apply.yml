@@ -37,21 +37,21 @@
       when: sdwan_component is defined
       register: outputs
 
-    - name: Set proxy IP
+    - name: Save vBond and proxy IP
       set_fact:
+        sdwan_vbond: "{{ outputs.outputs.vbond_ip.value }}"
         proxy_env:
           https_proxy: "http://{{ outputs.outputs.devbox_public_ip.value }}:8443"
         cacheable: yes
       when: sdwan_component == "network"
 
     - debug:
-        var: proxy_env
+        msg: "vBond external IP: {{ sdwan_vbond }}\nProxy URL: {{ proxy_env }}"
       when: sdwan_component == "network"
 
-    - name: Set vManage/vBond external IP
+    - name: Save vManage external IP
       set_fact:
         sdwan_vmanage: "{{ outputs.outputs.vmanages_vmanageEth1EIP.value[0] }}"
-        sdwan_vbond: "{{ outputs.outputs.vbonds_vbondEth1EIP.value[0] }}"
         cacheable: yes
       when: sdwan_component == "control" and infra == "aws"
 
