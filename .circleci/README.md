@@ -25,6 +25,7 @@ See the list of possible environment variables in the follwoing table. They can 
 | VBOND1_IP               | required    | 10.128.1.12/24 | 10.128.1.12/24         | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | VSMART1_IP              | required    | 10.128.1.13/24 | 10.128.1.13/24         | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | VPN0_GATEWAY            | required    | 10.128.1.1     | 10.1281.1.1            | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
+| HQ_EDGE1_RANGE          | required    | -              | 10.128.4.0/23          | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | SSH_PUBKEY_BASE64       | recommended | -              | -                      | Not strictly required, but recommended for SSH login into `devbox` and SD-WAN VMs |
 | SSH_PUBKEY_FP_BASE64    | recommended | -              | -                      | Used for adding SSH public key fingerprints to cEdges. It will only work with ssh-rsa type keys |
 | VIPTELA_VERSION         | required    | -              | -                      | Used to choose device template (v19 or v20), and may be used in the future to auto-detect AMIs or VMware templates with standardized naming |
