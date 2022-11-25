@@ -12,7 +12,7 @@ parameters:
     default: 0
 
 jobs:
-  "Create Enterprise CA":
+  "Create Root CA":
     # IP ranges are only supported for Docker executors, disabling for now
     #circleci_ip_ranges: true        # https://circleci.com/docs/ip-ranges
     machine:
@@ -33,7 +33,7 @@ jobs:
           paths:
             - "myCA"
             - "licenses"
-  "Deploy SD-WAN Control Plane":
+  "Deploy SD-WAN":
     # IP ranges are only supported for Docker executors, disabling for now
     #circleci_ip_ranges: true        # https://circleci.com/docs/ip-ranges
     machine:
@@ -63,6 +63,9 @@ jobs:
       - run:
           name: SD-WAN control plane day 1 configuration
           command: cd bin && ./play.sh -v /ansible/day_1/config-sdwan.yml
+      - run:
+          name: Onboarding SD-WAN edges
+          command: cd bin && ./play.sh -v /ansible/day_1/onboard-edges.yml
       # This is a hack, will need to find an infra independent way to export this
       # We can start with an ansible fact, but ideally Vault or equivalent
       - run:
@@ -70,7 +73,7 @@ jobs:
           command: export VMANAGE_EXTERNAL_IP=$(jq -r '.outputs.vmanages_vmanageEth0EIP.value[0]' terraform-sdwan/aws/Provision_Instances/terraform.tfstate.d/aws_control/terraform.tfstate) && echo $VMANAGE_EXTERNAL_IP
       - run:
           name: Cleaning up due to failure
-          command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
+          command: cd bin && ./play.sh -v /ansible/day_1/clean-edges.yml; ./play.sh -v /ansible/day_0/clean-control-plane.yml
           when: on_fail
       - unless:
           condition:
@@ -90,13 +93,16 @@ jobs:
           condition: << pipeline.parameters.remove-deployment >>
           steps:
             - run:
-                name: Removing deployment (VMs and networks)
+                name: Removing edge devices deployment (VMs and networks)
+                command: cd bin && ./play.sh -v /ansible/day_1/clean-edges.yml
+            - run:
+                name: Removing control plane deployment (VMs and networks)
                 command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
 
 workflows:
-  "Deploy SD-WAN Control Plane":
+  "Deploy SD-WAN":
     jobs:
-      - "Create Enterprise CA"
-      - "Deploy SD-WAN Control Plane":
+      - "Create Root CA"
+      - "Deploy SD-WAN":
           requires:
-            - "Create Enterprise CA"
+            - "Create Root CA"
