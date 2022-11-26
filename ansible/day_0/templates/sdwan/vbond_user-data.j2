@@ -78,8 +78,7 @@ vinitparam:
  - org : "{{ vmanage_org }}"
 {% endif %}{# sdwan_org is defined #}
 {% if sdwan_ca_cert is defined %}
- - rcc : |
-{{ lookup('file', sdwan_ca_cert) | indent(7, True) }}
+ - rcc : 1
 
 ca-certs:
  remove-defaults: false
@@ -169,23 +168,23 @@ device-model {{ sdwan_device_model }}
 {%   endfor %}{# for routes #}
 {%   for interface in vpn.interfaces %}
       interface {{ interface.if_name }}
-{% if interface.ip.dhcp_client is defined %}
-  ip dhcp-client
-{% elif interface.ip.address is defined %}
-  ip address {{ interface.ip.address }}
-{% endif %}
-{% if interface.tunnel_interface is defined %}
-  tunnel-interface
-{% if interface.tunnel_interface.allow_service is defined %}
-{% for service in interface.tunnel_interface.allow_service %}
-   allow-service {{ service }}
-{% endfor %}{# service #}
-{% endif %}{# interface.allow_service #}
-{% endif %}{# interface.tunnel_inteface #}
+{%    if interface.ip.dhcp_client is defined %}
+         ip dhcp-client
+{%    elif interface.ip.address is defined %}
+         ip address {{ interface.ip.address }}
+{%    endif %}
+{%    if interface.tunnel_interface is defined %}
+         tunnel-interface
+{%     if interface.tunnel_interface.allow_service is defined %}
+{%      for service in interface.tunnel_interface.allow_service %}
+            allow-service {{ service }}
+{%      endfor %}{# service #}
+{%     endif %}{# interface.allow_service #}
+{%    endif %}{# interface.tunnel_inteface #}
 {%    if interface.enabled is sameas true %}
-      no shutdown
+         no shutdown
 {%    else %}
-      shutdown
+         shutdown
 {%    endif %}{# interface.enabled is sameas true  #}
 {%   endfor %}{# for interface #}
 {%  endfor %}{# for vpn #}

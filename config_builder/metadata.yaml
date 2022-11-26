@@ -6,9 +6,15 @@ targets_config:
   jinja_renderer:
     templates_dir: "templates"
     targets:
-      - description: "Ansible vars"
-        template: "local.j2"
-        filename: "local.yml"
+      - description: "Ansible day_-1 vars"
+        template: "day-1_local.j2"
+        filename: "../ansible/day_-1/group_vars/all/local.yml"
+      - description: "Ansible day_0 vars"
+        template: "day0_local.j2"
+        filename: "../ansible/day_0/group_vars/all/local.yml"
+      - description: "Ansible day_1 vars"
+        template: "day1_local.j2"
+        filename: "../ansible/day_1/group_vars/all/local.yml"
 
 
 logging_config:
@@ -23,16 +29,8 @@ logging_config:
       class: "logging.StreamHandler"
       level: "INFO"
       formatter: "simple"
-#    file:
-#      class: "logging.handlers.RotatingFileHandler"
-#      filename: "logs/config_builder.log"
-#      backupCount: 5
-#      maxBytes: 524288
-#      level: "DEBUG"
-#      formatter: "detailed"
   root:
     handlers:
       - "console"
-#     - "file"
     level: "DEBUG"
 ...
