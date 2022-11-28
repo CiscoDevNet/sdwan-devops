@@ -1,13 +1,9 @@
 all:
   vars:
-    iosxe_sdwan_image: "{{ lookup('env','IOSXE_SDWAN_IMAGE') | default('iosxe-sdwan-16.12.2r', true) }}"
-    viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('19.2.1', true) }}"
-    cloudinit_type: "{{ lookup('env','CLOUDINIT_TYPE') | default('v1')}}"
+    sdwan_vbond: "{{ vbond_vpn0_ipv4 | ipaddr('address') }}"
     viptela_major_version: "{{ viptela_version | regex_replace('^(\\d*)\\..*$', '\\1') }}"
     vmanage_templates_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq3_vmanage_templates_v{{ viptela_major_version }}.yml"
     vmanage_policy_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq3_vmanage_policy_v{{ viptela_major_version }}.yml"
-    sdwan_vbond: "{{ lookup('env','VBOND1_IP') | ipaddr('address') }}"
-    sdwan_control_infra: "{{ lookup('env','SDWAN_CONTROL_INFRA') | default('vmware', true)}}"
     terraform_project_path:
       vmware:
         network: ""
@@ -73,7 +69,7 @@ all:
               hosts:
                 vbond1:
                   sdwan_system_ip: '1.1.1.2'
-                  vpn0_ip: "{{ lookup('env','VBOND1_IP') }}"
+                  vpn0_ip: "{{ vbond_vpn0_ipv4 }}"
                   sdwan_site_id: 1
                   vpn_instances:
                     - vpn_id: 0
@@ -81,11 +77,7 @@ all:
                         - if_name: ge0/0
                           enabled: true
                           ip:
-                            address: "{{ lookup('env','VBOND1_IP') }}"
-                          tunnel_interface:
-                            encapsulation: ipsec
-                            allow_service:
-                              - all
+                            address: "{{ vbond_vpn0_ipv4 }}"
                       routes:
                         - prefix: 0.0.0.0/0
                           next_hop:
@@ -153,9 +145,9 @@ all:
               vpn0_ip: "{{ vpn0_range | ipaddr('net') | ipaddr('11') }}"
               ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
               sdwan_system_ip: '1.1.1.4'
-              sdwan_site_id: 1
+              sdwan_site_id: 101
               sdwan_model: vedge-C8000V
-              sdwan_uuid: C8K-01D10B0E-3012-6FE0-514D-D9E146FC3DA9
+              sdwan_uuid: "C8K-F6A3B082-EDDB-BA43-93DB-2AA42DFE58DB"
               cloudinit_type: v1
               sdwan_template:
                 name: hq-c8000v

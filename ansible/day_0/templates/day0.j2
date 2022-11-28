@@ -5,7 +5,6 @@ MIME-Version: 1.0
 Content-Type: text/cloud-config; charset="us-ascii"
 
 {{ bootstrap }}
-
 --==BOUNDARY==
 Content-Type: text/cloud-boothook; charset="us-ascii"
 
@@ -61,12 +60,6 @@ sdwan
    no allow-service snmp
    no allow-service bfd
 !
-{% if ssh_pubkey is defined and ssh_pubkey != "" %}
-ip ssh pubkey-chain
- username admin
-  key-hash ssh-rsa {{ ssh_pubkey_fp }}
-!
-{% endif %}
 line vty 0 4
  transport input ssh
 !

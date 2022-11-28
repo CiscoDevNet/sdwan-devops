@@ -1,7 +1,3 @@
-# - import_playbook: attach-template.yml
-#   vars:
-#     passed: sdwan_edge
-
 - import_playbook: get-bootstrap.yml
   vars:
     passed: sdwan_edge

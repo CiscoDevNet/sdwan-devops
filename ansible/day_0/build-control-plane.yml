@@ -20,3 +20,9 @@
     infra: "{{ sdwan_control_infra }}"
     sdwan_component: control
     project_path: "{{ terraform_project_path[infra][sdwan_component] }}"
+
+- import_playbook: check-reqs.yml
+
+- import_playbook: check-vmanage.yml
+
+- import_playbook: config-vmanage.yml

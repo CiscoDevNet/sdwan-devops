@@ -66,4 +66,4 @@
       failed_when: false
       until: uri_results.msg.find("OK") != -1
       retries: 75
-      delay: 10
+      delay: 30

@@ -82,8 +82,7 @@ vinitparam:
  - org : "{{ vmanage_org }}"
 {% endif %}{# sdwan_org is defined #}
 {% if sdwan_ca_cert is defined %}
- - rcc : |
-{{ lookup('file', sdwan_ca_cert) | indent(7, True) }}
+ - rcc : 1
 {% endif %}{# sdwan_ca_cert is defined #}
 {% endif %}{# sdwan_personality == 'vmanage' or sdwan_ca_cert is defined #}
 
