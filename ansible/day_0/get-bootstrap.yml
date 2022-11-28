@@ -41,14 +41,14 @@
         cacheable: yes
       when: result.bootstrap.bootstrapConfig is defined
 
-    - name: Save day0 to terraform directory
+    - name: Save cloud-init to terraform directory
       template:
-        src: templates/day0.j2
+        src: templates/sdwan/cedge_user-data.j2
         dest: "{{ generated_cloud_init }}"
       when: '"multipart/mixed" not in bootstrap'
-    - name: Save day0 to terraform directory (template is atteched in vmanage)
+    - name: Save cloud-init to terraform directory (template is atteched in vmanage)
       template:
-        src: templates/day0_attached.j2
+        src: templates/sdwan/cedge_user-data_attached.j2
         dest: "{{ generated_cloud_init }}"
       when: '"multipart/mixed" in bootstrap'
 

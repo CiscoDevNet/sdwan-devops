@@ -1,28 +1,6 @@
-- import_playbook: terraform-apply.yml
-  vars:
-    infra: "{{ sdwan_control_infra }}"
-    sdwan_component: network
-    project_path: "{{ terraform_project_path[infra][sdwan_component] }}"
-  when: sdwan_control_infra == "aws"
+- import_playbook: build-control-plane.yml
 
-- name: Generate day0 configs for control hosts
-  hosts: sdwan_control
-  connection: local
-  gather_facts: no
-  tasks:
-    - name: Generating day0 config for virl_config_template
-      set_fact:
-        day0_config: "{{ lookup('template', virl_config_template) }}"
-      when: virl_config_template is defined
+- import_playbook: config-control-plane.yml
 
-- import_playbook: terraform-apply.yml
-  vars:
-    infra: "{{ sdwan_control_infra }}"
-    sdwan_component: control
-    project_path: "{{ terraform_project_path[infra][sdwan_component] }}"
-
-- import_playbook: check-reqs.yml
-
-- import_playbook: check-vmanage.yml
-
-- import_playbook: config-vmanage.yml
+- debug:
+    msg: "vManage IP: {{ sdwan_vmanage }}\nvBond IP: {{ sdwan_vbond }}"
