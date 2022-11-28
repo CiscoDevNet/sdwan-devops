@@ -1,6 +1,7 @@
 vmanage_user: "{{ lookup('env','VMANAGE_USERNAME') }}"
 vmanage_pass: "{{ lookup('env','VMANAGE_PASS') }}"
 viptela_encrypted_pass: "{{ lookup('env','VMANAGE_ENCRYPTED_PASS') }}"
+viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('19.2.1', true) }}"
 vmanage_org: "{{ lookup('env','VMANAGE_ORG') | default('', true) }}"
 smart_token: "{{ lookup('env','SMART_TOKEN') | default('', true) }}"
 ansible_user: "{{ vmanage_user }}"
