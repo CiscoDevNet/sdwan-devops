@@ -60,6 +60,12 @@ sdwan
    no allow-service snmp
    no allow-service bfd
 !
+{% if ssh_pubkey_fp is defined and ssh_pubkey_fp != "" %}
+ip ssh pubkey-chain
+ username admin
+  key-hash ssh-rsa {{ ssh_pubkey_fp }}
+!
+{% endif %}
 line vty 0 4
  transport input ssh
 !

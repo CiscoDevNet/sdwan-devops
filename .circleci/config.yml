@@ -53,19 +53,19 @@ jobs:
           at: ansible
       - run:
           name: Creating networks and VMs
-          command: cd bin && ./play.sh -v /ansible/day_0/build-control-plane.yml
+          command: cd bin && ./play.sh -v /ansible/day_0/deploy-control-plane.yml
       - run:
           name: Waiting 5 minutes
           command: sleep 300
       - run:
           name: SD-WAN control plane day 0 configuration
-          command: cd bin && ./play.sh -v /ansible/day_0/config-sdwan.yml
+          command: cd bin && ./play.sh -v /ansible/day_0/config-control-plane.yml
       - run:
           name: SD-WAN control plane day 1 configuration
           command: cd bin && ./play.sh -v /ansible/day_1/config-sdwan.yml
       - run:
           name: Onboarding SD-WAN edges
-          command: cd bin && ./play.sh -v /ansible/day_1/onboard-edges.yml
+          command: cd bin && ./play.sh -v /ansible/day_0/onboard-edges.yml
       # This is a hack, will need to find an infra independent way to export this
       # We can start with an ansible fact, but ideally Vault or equivalent
       - run:
