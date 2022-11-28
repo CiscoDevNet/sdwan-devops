@@ -2,4 +2,4 @@
 
 set -o pipefail
 
-./play.sh /ansible/day_1/onboard-edges.yml
+./play.sh /ansible/day_0/onboard-edges.yml

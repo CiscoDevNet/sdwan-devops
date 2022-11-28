@@ -22,12 +22,13 @@ requires-python = ">=3.8"
 dependencies = [
     "Jinja2",
     "PyYAML",
-    "pydantic"
+    "pydantic",
+    "passlib"
 ]
 dynamic = ["version"]
 
 [project.scripts]
-config_build = "src.config_builder.__main__:main"
+config_build = "config_builder.__main__:main"
 
 [tool.hatch.version]
 path = "src/config_builder/__version__.py"

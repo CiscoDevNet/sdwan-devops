@@ -1,14 +1,18 @@
 ---
 global_config:
-#  tf_vars_folder: ""
+  # tf_vars_folder: ""
   csr1000v_image: "csr1000v-16.12.02r"
   ubuntu_image: "ubuntu-22-04"
+  ssh_public_key_file: "{home_dir}/.ssh/id_rsa.pub"
+  # ssh_public_key: "test"
 
 control_plane_infra:
   provider: "aws"
   datacenter: "us-east-1"
+  # dns_domain: "acme.com"
+  ntp_server: "169.254.169.123"
   certificate_authority:
-    passphrase: "123"
+    cert_dir: '/ansible/myCA'
   acl_ingress_ipv4: [ "0.0.0.0/1", "128.0.0.0/1" ]
   acl_ingress_ipv6: [ "::/0" ]
   cidr: "10.128.0.0/22"
@@ -18,17 +22,25 @@ control_plane_infra:
     sw_version: "20.8.1"
     config:
       username: "admin"
-#     password: ""
-      organization_name: "CIDR_SDWAN_WORKSHOPS"
+      password: "C1sco12345"
+      organization_name: "Cisco CX Canada"
   vbond:
     image_id: "ami-05ea2898dccbd19bc"
     instance_type: "t2.medium"
+    config:
+      vpn0_interface_ipv4: "10.128.1.12/24"
   vsmart:
     image_id: "ami-08a51380a937e415f"
     instance_type: "t2.medium"
 
-
 wan_edge_infra:
-  iosxe_sdwan_image: "iosxe-sdwan-16.12.5"
+  wan_edge_defaults:
+    provider: "aws"
+    datacenter: "us-east-1"
+    sw_version: "17.08.01a"
+    iosxe_sdwan_image: "iosxe-sdwan-16.12.5"
+    image_id: "ami-08a51380a937e415f"
+    instance_type: "t3.medium"
+    cloud_init_format: "v2"
 
 ...
