@@ -7,7 +7,7 @@ all:
     viptela_major_version: "{{ viptela_version | regex_replace('^(\\d*)\\..*$', '\\1') }}"
     vmanage_templates_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq2_vmanage_templates_v{{ viptela_major_version }}.yml"
     vmanage_policy_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq2_vmanage_policy_v{{ viptela_major_version }}.yml"
-    sdwan_vbond: "{{ lookup('env','VBOND1_IP') | ipaddr('address') }}"
+    sdwan_vbond: "{{ lookup('env','VBOND1_IP') | ansible.utils.ipaddr('address') }}"
     sdwan_control_infra: "{{ lookup('env','SDWAN_CONTROL_INFRA') | default('vmware', true)}}"
     terraform_project_path:
       vmware:
@@ -144,7 +144,7 @@ all:
             hq-cedge1:
               virl_image_definition: "{{ iosxe_sdwan_image }}"
               vpn0_ip: "{{ lookup('env','HQ_EDGE1_IP') }}"
-              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
+              ansible_host: "{{ vpn0_ip | ansible.utils.ipaddr('address') }}"
               sdwan_system_ip: '1.1.1.4'
               sdwan_site_id: 1
               sdwan_model: vedge-CSR-1000v
@@ -170,7 +170,7 @@ all:
             site1-cedge1:
               virl_image_definition: "{{ iosxe_sdwan_image }}"
               vpn0_ip: "{{ lookup('env','SITE1_EDGE1_IP') }}"
-              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
+              ansible_host: "{{ vpn0_ip | ansible.utils.ipaddr('address') }}"
               sdwan_system_ip: '1.1.2.1'
               sdwan_site_id: 2
               sdwan_model: vedge-CSR-1000v
@@ -195,7 +195,7 @@ all:
             site2-vedge1:
               virl_image_definition: "viptela-edge-{{ viptela_version }}"
               vpn0_ip: "{{ lookup('env','SITE2_EDGE1_IP') }}"
-              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
+              ansible_host: "{{ vpn0_ip | ansible.utils.ipaddr('address') }}"
               sdwan_system_ip: '1.1.3.1'
               sdwan_site_id: 3
               sdwan_model: vedge-cloud

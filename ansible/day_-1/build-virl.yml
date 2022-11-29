@@ -107,7 +107,7 @@
 
     - name: Ping outside interface of Internet routers
       ios_ping:
-        dest: "{{ hostvars[item].interfaces.GigabitEthernet2.ip.primary | ipaddr('address') }}"
+        dest: "{{ hostvars[item].interfaces.GigabitEthernet2.ip.primary | ansible.utils.ipaddr('address') }}"
       loop: "{{ groups.internet_routers | intersect(groups.virl_hosts) }}"
       register: result
       retries: 60
@@ -117,7 +117,7 @@
 
     - name: Ping inside interface of Internet routers
       ios_ping:
-        dest: "{{ hostvars[item].interfaces.GigabitEthernet3.ip.primary | ipaddr('address') }}"
+        dest: "{{ hostvars[item].interfaces.GigabitEthernet3.ip.primary | ansible.utils.ipaddr('address') }}"
       loop: "{{ groups.internet_routers | intersect(groups.virl_hosts) }}"
       register: result
       retries: 60
@@ -217,7 +217,7 @@
 #   gather_facts: no
 #   tasks:
 #     - ios_ping:
-#         dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ipaddr('address') }}"
+#         dest: "{{ hostvars[item].vpn_instances[0].interfaces[0].ip.address | ansible.utils.ipaddr('address') }}"
 #       loop: "{{ groups.sdwan_control }}"
 #       register: result
 #       retries: 60
