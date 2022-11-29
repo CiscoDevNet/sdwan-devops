@@ -18,7 +18,7 @@
       when: sdwan_component is defined
 
     - name: Terraform plan
-      terraform:
+      community.general.terraform:
         project_path: "{{ project_path }}"
         state: planned
         plan_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfplan"
@@ -29,7 +29,7 @@
       when: sdwan_component is defined
 
     - name: Terraform apply
-      terraform:
+      community.general.terraform:
         project_path: "{{ lookup('env', 'PROJ_ROOT') }}{{ project_path }}"
         state: present
         plan_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfplan"

@@ -18,7 +18,7 @@
       register: control_stat_result
 
     - name: Terraform Destroy Control Plane
-      terraform:
+      community.general.terraform:
         project_path: "{{ terraform_project_path[sdwan_control_infra]['control'] }}"
         state: absent
         workspace: "{{ sdwan_control_infra }}_control"
@@ -40,7 +40,7 @@
       register: network_stat_result
 
     - name: Terraform Destroy Control Plane Network
-      terraform:
+      community.general.terraform:
         project_path: "{{ terraform_project_path[sdwan_control_infra]['network'] }}"
         state: absent
         workspace: "{{ sdwan_control_infra }}_network"
