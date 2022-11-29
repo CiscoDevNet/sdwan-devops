@@ -1,6 +1,11 @@
-- import_playbook: build-control-plane.yml
+- import_playbook: deploy-control-plane.yml
 
 - import_playbook: config-control-plane.yml
 
-- debug:
-    msg: "vManage IP: {{ sdwan_vmanage }}\nvBond IP: {{ sdwan_vbond }}"
+- name: Print IP summary
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - debug:
+        msg: "vManage IP: {{ sdwan_vmanage }}\nvBond IP: {{ sdwan_vbond }}"
