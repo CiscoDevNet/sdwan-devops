@@ -1,0 +1,14 @@
+name = "{{ hostvars[inventory_hostname]['inventory_hostname'] }}"
+project = "{{ gcp_project }}"
+region = "{{ sdwan_datacenter }}"
+zone = "{{ sdwan_datacenter }}-c"
+subnet_transport = "sdwan-transport-subnet"
+subnet_service = "sdwan-service-subnet"
+{% if gcp_image_id is defined and gcp_image_id != "" %}
+image_id = "{{ gcp_image_id }}"
+{% else %}
+image_id = "{{ gcp_cedge_image_id }}"
+{% endif %}
+{% if gcp_cedge_instance_type is defined and gcp_cedge_instance_type != "" %}
+instance_type = "{{ gcp_cedge_instance_type }}"
+{% endif %}

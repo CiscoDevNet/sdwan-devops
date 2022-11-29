@@ -11,7 +11,7 @@
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ansible.utils.ipaddr('address') }}"
     sdwan_vbond: "{{ hostvars['localhost']['sdwan_vbond'] }}"
     # TODO  make this conditional
-    ntp_server: "{{ aws_ntp_server }}"
+    ntp_server: "{{ ntp_servers[hostvars[inventory_hostname]['infra']] }}"
     ansible_network_os: ios
     generated_cloud_init: "{{ terraform_project_path[infra]['edges'] }}/cloud-init/ciscosdwan_cloud_init.{{ inventory_hostname }}.cfg"
     ca_cert: "{{ lookup('file', sdwan_ca_cert) | indent(3, True) | replace('\n', '\\n') }}"

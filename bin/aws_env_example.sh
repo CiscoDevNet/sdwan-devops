@@ -8,6 +8,7 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && 
 
 export VIPTELA_VERSION=20.8.1
 export IOSXE_VERSION=17.08.01a
+export IOSXE_VERSION_DASHES=17-08-01a
 
 export PROJ_ROOT=$SCRIPT_DIR/..
 export SSH_PUBKEY_BASE64="$(cat $HOME/.ssh/id_rsa.pub | base64)"
@@ -28,7 +29,11 @@ export VSMART_AMI="ami-063f1b59c2694a7ef"
 export VSMART_INSTANCE_TYPE="t2.medium"
 
 export CEDGE_AMI=$(aws ec2 describe-images --filters "Name=name,Values=Cisco-C8K-${IOSXE_VERSION}-42cb6e93-8d9d-490b-a73c-e3e56077ffd1" --query "reverse(sort_by(Images,&CreationDate))[0].ImageId" --output text --region $AWS_REGION)
-export CEDGE_INSTANCE_TYPE="t3.medium"
+export CEDGE_AWS_INSTANCE_TYPE="t3.medium"
+
+export CEDGE_GCP_IMAGE_ID="cisco-public/cisco-c8k-${IOSXE_VERSION_DASHES}"
+export CEDGE_GCP_INSTANCE_TYPE="n1-standard-4"
+export GCP_PROJECT=
 
 # Example to generate a random password
 # TODO  save it somewhere?
