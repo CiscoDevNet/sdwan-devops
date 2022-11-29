@@ -1,6 +1,6 @@
 all:
   vars:
-    sdwan_vbond: "{{ vbond_vpn0_ipv4 | ipaddr('address') }}"
+    sdwan_vbond: "{{ vbond_vpn0_ipv4 | ansible.utils.ipaddr('address') }}"
     viptela_major_version: "{{ viptela_version | regex_replace('^(\\d*)\\..*$', '\\1') }}"
     vmanage_templates_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq3_vmanage_templates_v{{ viptela_major_version }}.yml"
     vmanage_policy_file: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/files/hq3_vmanage_policy_v{{ viptela_major_version }}.yml"
@@ -140,10 +140,10 @@ all:
               aws_ami: ami-09db869a0fe05bd4e
               virl_image_definition: "{{ iosxe_sdwan_image }}"
               cidr_range: "{{ lookup('env','HQ_EDGE1_RANGE') }}"
-              vpn0_range: "{{ cidr_range | ipsubnet(24, 0) }}"
-              vpn1_range: "{{ cidr_range | ipsubnet(24, 1) }}"
-              vpn0_ip: "{{ vpn0_range | ipaddr('net') | ipaddr('11') }}"
-              ansible_host: "{{ vpn0_ip | ipaddr('address') }}"
+              vpn0_range: "{{ cidr_range | ansible.utils.ipsubnet(24, 0) }}"
+              vpn1_range: "{{ cidr_range | ansible.utils.ipsubnet(24, 1) }}"
+              vpn0_ip: "{{ vpn0_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('11') }}"
+              ansible_host: "{{ vpn0_ip | ansible.utils.ipaddr('address') }}"
               sdwan_system_ip: '1.1.1.4'
               sdwan_site_id: 101
               sdwan_model: vedge-C8000V
@@ -155,8 +155,8 @@ all:
                   'vpn512_interface': GigabitEthernet3
                   'vpn0_interface': GigabitEthernet1
                   'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
-                  'vpn0_default_gateway': "{{ vpn0_range | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"
-                  'vpn1_ipv4_address': "{{ vpn1_range | ipaddr('net') | ipaddr('11') }}"
+                  'vpn0_default_gateway': "{{ vpn0_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('1') | ansible.utils.ipaddr('address') }}"
+                  'vpn1_ipv4_address': "{{ vpn1_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('11') }}"
                   'vpn1_interface': GigabitEthernet2
                   'vpn1_ospf_interface': GigabitEthernet2
                   'system_latitude': '37.411343'
