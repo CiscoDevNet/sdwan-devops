@@ -13,11 +13,21 @@ all:
       vmware:
         network: ""
         control: "/terraform-sdwan/vmware"
+        edge_network: ""
         edges: "/sdwan-edge/Catalyst8000v/vmware/cedge"
       aws:
         network: "/terraform-sdwan/aws/Provision_VPC"
         control: "/terraform-sdwan/aws/Provision_Instances"
+        edge_network: "/sdwan-edge/Catalyst8000v/aws/vpc"
         edges: "/sdwan-edge/Catalyst8000v/aws/cedge"
+      gcp:
+        network: ""
+        control: ""
+        edge_network: "/sdwan-edge/Catalyst8000v/gcp/vpc"
+        edges: "/sdwan-edge/Catalyst8000v/gcp/cedge"
+    ntp_servers:
+      aws: "169.254.169.123"
+      gcp: "metadata.google.internal"
     sdwan_central_policy_name: hq2-centralized-policy
   children:
     sdwan:

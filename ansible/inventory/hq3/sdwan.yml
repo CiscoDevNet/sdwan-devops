@@ -15,6 +15,14 @@ all:
         control: "/terraform-sdwan/aws/Provision_Instances"
         edge_network: "/sdwan-edge/Catalyst8000v/aws/vpc"
         edges: "/sdwan-edge/Catalyst8000v/aws/cedge"
+      gcp:
+        network: ""
+        control: ""
+        edge_network: "/sdwan-edge/Catalyst8000v/gcp/vpc"
+        edges: "/sdwan-edge/Catalyst8000v/gcp/cedge"
+    ntp_servers:
+      aws: "169.254.169.123"
+      gcp: "metadata.google.internal"
     sdwan_central_policy_name: hq3-centralized-policy
   children:
     sdwan:
@@ -138,7 +146,6 @@ all:
               infra: "aws"
               sdwan_datacenter: "us-east-1"
               aws_ami: ami-09db869a0fe05bd4e
-              virl_image_definition: "{{ iosxe_sdwan_image }}"
               cidr_range: "{{ lookup('env','HQ_EDGE1_RANGE') }}"
               vpn0_range: "{{ cidr_range | ansible.utils.ipsubnet(24, 0) }}"
               vpn1_range: "{{ cidr_range | ansible.utils.ipsubnet(24, 1) }}"
@@ -148,6 +155,37 @@ all:
               sdwan_site_id: 101
               sdwan_model: vedge-C8000V
               sdwan_uuid: "C8K-F6A3B082-EDDB-BA43-93DB-2AA42DFE58DB"
+              cloudinit_type: v1
+              sdwan_template:
+                name: hq-c8000v
+                variables:
+                  'vpn512_interface': GigabitEthernet3
+                  'vpn0_interface': GigabitEthernet1
+                  'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
+                  'vpn0_default_gateway': "{{ vpn0_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('1') | ansible.utils.ipaddr('address') }}"
+                  'vpn1_ipv4_address': "{{ vpn1_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('11') }}"
+                  'vpn1_interface': GigabitEthernet2
+                  'vpn1_ospf_interface': GigabitEthernet2
+                  'system_latitude': '37.411343'
+                  'system_longitude': '-121.938803'
+                  'system_site_id': "{{ sdwan_site_id }}"
+                  'system_host_name': "{{ inventory_hostname }}"
+                  'system_system_ip': "{{ sdwan_system_ip }}"
+                  'banner_login': "{{ login_banner }}"
+                  'banner_motd': "Welcome to {{ inventory_hostname }}!"
+            cedge-gcp:
+              infra: "gcp"
+              sdwan_datacenter: "europe-west3"
+              gcp_image_id: "cisco-public/cisco-c8k-17-08-01a"
+              cidr_range: "{{ lookup('env','SITE1_EDGE1_RANGE') }}"
+              vpn0_range: "{{ cidr_range | ansible.utils.ipsubnet(24, 0) }}"
+              vpn1_range: "{{ cidr_range | ansible.utils.ipsubnet(24, 1) }}"
+              vpn0_ip: "{{ vpn0_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('11') }}"
+              ansible_host: "{{ vpn0_ip | ansible.utils.ipaddr('address') }}"
+              sdwan_system_ip: '1.1.1.5'
+              sdwan_site_id: 102
+              sdwan_model: vedge-C8000V
+              sdwan_uuid: "C8K-6DF43510-2590-5146-3AAA-EEF129DAC175"
               cloudinit_type: v1
               sdwan_template:
                 name: hq-c8000v

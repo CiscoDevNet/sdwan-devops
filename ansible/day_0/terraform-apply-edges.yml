@@ -47,7 +47,7 @@
 
     - debug:
         msg: "cEdge external IP: {{ outputs.outputs.cedge_transport_public_ip.value }}"
-      when: sdwan_component == "edges" and infra == "aws"
+      when: sdwan_component == "edges" and (infra == "aws" or infra == "gcp")
 
     - meta: refresh_inventory
       tags: always
