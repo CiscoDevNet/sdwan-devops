@@ -34,6 +34,11 @@ export CEDGE_AWS_INSTANCE_TYPE="t3.medium"
 export CEDGE_GCP_IMAGE_ID="cisco-public/cisco-c8k-${IOSXE_VERSION_DASHES}"
 export CEDGE_GCP_INSTANCE_TYPE="n1-standard-4"
 export GCP_PROJECT=
+# You need only one of the two following variables. The first one is best for
+# local runs, and is more secure. The second one is the easiest option for CI/CD
+# and other automation
+#export GOOGLE_OAUTH_ACCESS_TOKEN=$(gcloud auth print-access-token)
+#export GOOGLE_CREDENTIALS=$(cat key.json | tr -s '\n' ' ')
 
 # Example to generate a random password
 # TODO  save it somewhere?
