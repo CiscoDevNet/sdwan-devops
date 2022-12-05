@@ -17,6 +17,8 @@ See the list of possible environment variables in the follwoing table. They can 
 | AWS_SESSION_TOKEN       | optional    | -              | -                      | Depends on how authentication on AS is set up |
 | AWS_REGION              | optional    | -              | -                      | |
 | SDWAN_DATACENTER        | required    | us-east-1      | -                      | Should be the same as AWS_REGION (if set) if SDWAN_CONTROL_INFRA is aws |
+| GOOGLE_CREDENTIALS      | required    | -              | -                      | Contents (not the path) of a GCP service account key file in JSON format (without newline characters), for deploying a cEdge on GCP |
+| GCP_PROJECT             | required    | -              | -                      | A cEdge is deployed on GCP |
 | DNS_DOMAIN              | optional    | -              | -                      | If set, A records for control plane elements will be added to the AWS Route 53 zone with the same name (which should be pre-configured) |
 | ACL_RANGES_IPV4_BASE64  | recommended | "0.0.0.0/0"    | -                      | Only allow connections to TCP ports 22, 443, and 8443 from these IPv4 ranges. The format is a list of CIDR ranges, double quoted, separated by commas, and finally the whole string base64 encoded
 | ACL_RANGES_IPV6_BASE64  | recommended | "::/0"         | -                      | Only allow connections to TCP ports 22, 443, and 8443 from these IPv6 ranges. The format is a list of CIDR ranges, double quoted, separated by commas, and finally the whole string base64 encoded
@@ -26,6 +28,7 @@ See the list of possible environment variables in the follwoing table. They can 
 | VSMART1_IP              | required    | 10.128.1.13/24 | 10.128.1.13/24         | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | VPN0_GATEWAY            | required    | 10.128.1.1     | 10.1281.1.1            | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | HQ_EDGE1_RANGE          | required    | -              | 10.128.4.0/23          | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
+| SITE1_EDGE1_RANGE       | required    | -              | 10.128.6.0/23          | Properly handling IP addressing is still a work in progress, please use the recommended values for now |
 | SSH_PUBKEY_BASE64       | recommended | -              | -                      | Not strictly required, but recommended for SSH login into `devbox` and SD-WAN VMs |
 | SSH_PUBKEY_FP_BASE64    | recommended | -              | -                      | Used for adding SSH public key fingerprints to cEdges. It will only work with ssh-rsa type keys |
 | VIPTELA_VERSION         | required    | -              | -                      | Used to choose device template (v19 or v20), and may be used in the future to auto-detect AMIs or VMware templates with standardized naming |

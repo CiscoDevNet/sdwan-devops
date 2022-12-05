@@ -88,4 +88,12 @@ while getopts ":dl" opt; do
       ;;
   esac
 done
-docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-playbook "$@"
+docker run -it --rm -v $PROJ_ROOT/ansible:/ansible \
+   -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan \
+   -v $PROJ_ROOT/sdwan-edge:/sdwan-edge \
+   --env PWD="/ansible" \
+   --env USER="$USER" \
+   --env VMANAGE_ORG="$VMANAGE_ORG" \
+   --env GOOGLE_CREDENTIALS="$GOOGLE_CREDENTIALS" \
+   $OPTIONS \
+   $IMAGE ansible-playbook "$@"
