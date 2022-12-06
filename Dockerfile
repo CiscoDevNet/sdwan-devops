@@ -1,7 +1,7 @@
 FROM alpine:3.17
 
 ARG build_date=unspecified
-ARG terraform_version=1.3.4
+ARG terraform_version=1.3.6
 ARG arch=amd64
 
 LABEL org.opencontainers.image.title="Cisco-SDWAN" \
