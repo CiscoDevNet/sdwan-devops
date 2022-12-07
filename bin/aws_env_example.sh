@@ -23,14 +23,14 @@ export AWS_SESSION_TOKEN=$(aws configure get $AWS_PROFILE.aws_session_token)
 export AWS_REGION="us-east-2"
 
 export VMANAGE_AMI="ami-00383691e06a97ec6"
-export VMANAGE_INSTANCE_TYPE="t2.xlarge"
+export VMANAGE_INSTANCE_TYPE="c5.2xlarge"
 export VBOND_AMI="ami-081b3a108aa230f88"
-export VBOND_INSTANCE_TYPE="t2.medium"
+export VBOND_INSTANCE_TYPE="c5.large"
 export VSMART_AMI="ami-063f1b59c2694a7ef"
-export VSMART_INSTANCE_TYPE="t2.medium"
+export VSMART_INSTANCE_TYPE="c5.large"
 
 export CEDGE_AMI=$(aws ec2 describe-images --filters "Name=name,Values=Cisco-C8K-${IOSXE_VERSION}-42cb6e93-8d9d-490b-a73c-e3e56077ffd1" --query "reverse(sort_by(Images,&CreationDate))[0].ImageId" --output text --region $AWS_REGION)
-export CEDGE_AWS_INSTANCE_TYPE="t3.medium"
+export CEDGE_AWS_INSTANCE_TYPE="c5n.large"
 
 export CEDGE_GCP_IMAGE_ID="cisco-public/cisco-c8k-${IOSXE_VERSION_DASHES}"
 export CEDGE_GCP_INSTANCE_TYPE="n1-standard-4"

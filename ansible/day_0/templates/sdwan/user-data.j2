@@ -9,17 +9,35 @@ users:
 {% endif %}{# if ssh_pubkey is defined #}
 {% if sdwan_personality == 'vmanage' %}
 {% if sdwan_control_infra == 'aws' %}
+{% if aws_vmanage_instance_type.startswith('t2.') %}
 fs_setup:
-- device: "/dev/xvdb"
-  partition: "none"
-  filesystem: "ext4"
+- device: /dev/xvdb
+  label: data
+  partition: none
+  filesystem: ext4
 mounts:
 - [ xvdb, /opt/data ]
 {% else %}
+disk_setup:
+  /dev/nvme1n1:
+    table_type: mbr
+    layout: false
+    overwrite: false
 fs_setup:
-- device: "/dev/sdb"
-  partition: "none"
-  filesystem: "ext4"
+- device: /dev/nvme1n1
+  label: data
+  partition: none
+  filesystem: ext4
+  overwrite: false
+mounts:
+- [ /dev/nvme1n1, /opt/data ]
+{% endif %}{# if aws_vmanage_instance_type.startswith('t2.') #}
+{% else %}
+fs_setup:
+- device: /dev/sdb
+  label: data
+  partition: none
+  filesystem: ext4
 mounts:
 - [ sdb, /opt/data ]
 {% endif %}{# if sdwan_control_infra == 'aws' #}
