@@ -1,0 +1,16 @@
+name = "{{ hostvars[inventory_hostname]['inventory_hostname'] }}"
+region = "{{ sdwan_datacenter }}"
+rg = "sdwan-rg"
+virtual_network = "sdwan-vnet"
+subnet_transport = "sdwan-subnet-transport"
+subnet_service = "sdwan-subnet-service"
+{% if azure_image_id is defined and azure_image_id != "" %}
+image_id = "{{ azure_image_id }}"
+{% else %}
+image_id = "{{ azure_cedge_image_id }}"
+{% endif %}
+{% if azure_cedge_instance_type is defined and azure_cedge_instance_type != "" %}
+instance_type = "{{ azure_cedge_instance_type }}"
+{% endif %}
+account_username = "admin"
+account_password = "{{ vmanage_pass }}"
