@@ -36,9 +36,9 @@ See the list of possible environment variables in the follwoing table. They can 
 | VMANAGE_AMI             | required    | -              | -                      | Should be an existing AMI in the selected AWS region |
 | VBOND_AMI               | required    | -              | -                      | Should be an existing AMI in the selected AWS region |
 | VSMART_AMI              | required    | -              | -                      | Should be an existing AMI in the selected AWS region |
-| VMANAGE_INSTANCE_TYPE   | recommended | t2.2xlarge     | t2.xlarge              | For now, only `t2` instance types are supported. `t2.xlarge` is the smallest that will allow vManage to start |
-| VBOND_INSTANCE_TYPE     | optional    | t2.medium      | -                      | Not tested, but instance types othee than `t2` should be supported |
-| VSMART_INSTANCE_TYPE    | optional    | t2.medium      | -                      | Not tested, but instance types othee than `t2` should be supported |
+| VMANAGE_INSTANCE_TYPE   | recommended | c5.4xlarge     | c5.2xlarge             | Default value is that recommended in Cisco documentation for small deployments, recommended value is minimum size that still works |
+| VBOND_INSTANCE_TYPE     | optional    | c5.large       | c5.large               | Default value is that recommended in Cisco documentation for small deployments |
+| VSMART_INSTANCE_TYPE    | optional    | c5.large       | c5.large               | Default value is that recommended in Cisco documentation for small deployments |
 | VMANAGE_USERNAME        | required    | admin          | admin                  | It's good to have an `admin` user as some scripts may have it hardcoded or expected |
 | VMANAGE_PASS            | required    | -              | -                      | The clear text password for vManage, needed for API access |
 | VMANAGE_ENCRYPTED_PASS  | required    | -              | -                      | The SHA256 hashed password for vManage, needed for `user-data`. Can be obtained with `echo "$VMANAGE_PASS" | openssl passwd -6 -stdin` |
@@ -64,9 +64,13 @@ The pipeline accepts the following parameters (can be set with an API trigger, s
 
 ## Manual trigger
 
-A [personal API token](https://app.circleci.com/settings/user/tokens) needs to be generated first, and its value stored in the `CIRCLE_TOKEN` environment variable. Using cURL:
+A [personal API token](https://app.circleci.com/settings/user/tokens) needs to be generated first, and its value stored in the `CIRCLE_TOKEN` environment variable. One can check CircleCI API access with:
+
+    curl https://circleci.com/api/v2/me --header "Circle-Token: $CIRCLE_TOKEN"
+
+To trigger the pipeline:
 
     curl -X POST https://circleci.com/api/v2/project/gh/ljakab/sdwan-devops/pipeline \
         -H "Circle-Token: $CIRCLE_TOKEN" \
         -H "Content-Type: application/json" \
-        -d '{"branch":"circleci","parameters":{"deploy-infra":"aws","remove-deployment":true}}'
+        -d '{"branch":"cloud","parameters":{"deploy-infra":"aws","remove-deployment":true}}'
