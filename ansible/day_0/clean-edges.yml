@@ -17,7 +17,7 @@
         path: "{{ terraform_project_path[infra]['edges'] }}/{{ infra }}_edges_{{ inventory_hostname }}.tfvars"
       register: edges_stat_result
 
-    - name: Terraform Destroy Edges
+    - name: Terraform Destroy Edge VMs
       community.general.terraform:
         project_path: "{{ terraform_project_path[infra]['edges'] }}"
         state: absent
@@ -39,7 +39,7 @@
         path: "{{ terraform_project_path[infra]['edge_network'] }}/{{ infra }}_edge_network_{{ inventory_hostname }}.tfvars"
       register: edge_networks_stat_result
 
-    - name: Terraform Destroy Control Plane Network
+    - name: Terraform Destroy Edge Networks
       community.general.terraform:
         project_path: "{{ terraform_project_path[infra]['edge_network'] }}"
         state: absent

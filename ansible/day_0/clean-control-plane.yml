@@ -17,7 +17,7 @@
         path: "{{ terraform_project_path[sdwan_control_infra]['control'] }}/{{ sdwan_control_infra }}_control.tfvars"
       register: control_stat_result
 
-    - name: Terraform Destroy Control Plane
+    - name: Terraform Destroy Control Plane VMs
       community.general.terraform:
         project_path: "{{ terraform_project_path[sdwan_control_infra]['control'] }}"
         state: absent
