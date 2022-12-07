@@ -50,5 +50,8 @@ aws_ntp_server: "169.254.169.123"
 aws_route53_zone: "{{ lookup('env','DNS_DOMAIN') }}"
 # GCP
 gcp_project: "{{ lookup('env','GCP_PROJECT') }}"
-gcp_cedge_image_id: "{{ lookup('env','CEDGE_IMAGE_ID') }}"
+gcp_cedge_image_id: "{{ lookup('env','CEDGE_GCP_IMAGE_ID') }}"
 gcp_cedge_instance_type: "{{ lookup('env', 'CEDGE_GCP_INSTANCE_TYPE')  | default('n1-standard-4', true) }}"
+# Azure
+azure_cedge_image_id: "{{ lookup('env','CEDGE_AZURE_IMAGE_ID') }}"
+azure_cedge_instance_type: "{{ lookup('env', 'CEDGE_AZURE_INSTANCE_TYPE')  | default('Standard_DS1_v2', true) }}"

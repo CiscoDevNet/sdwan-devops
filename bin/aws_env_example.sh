@@ -9,6 +9,7 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && 
 export VIPTELA_VERSION=20.8.1
 export IOSXE_VERSION=17.08.01a
 export IOSXE_VERSION_DASHES=17-08-01a
+export IOSXE_VERSION_UNDERSCORES=17_08_01a
 
 export PROJ_ROOT=$SCRIPT_DIR/..
 export SSH_PUBKEY_BASE64="$(cat $HOME/.ssh/id_rsa.pub | base64)"
@@ -39,6 +40,16 @@ export GCP_PROJECT=
 # and other automation
 #export GOOGLE_OAUTH_ACCESS_TOKEN=$(gcloud auth print-access-token)
 #export GOOGLE_CREDENTIALS=$(cat key.json | tr -s '\n' ' ')
+
+export CEDGE_AZURE_IMAGE_ID="${IOSXE_VERSION_UNDERSCORES}-byol"
+export CEDGE_AZURE_INSTANCE_TYPE="Standard_DS1_v2"
+# If your organization allows you to set up and use service principals, uncomment the following
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret
+#export ARM_CLIENT_ID=
+#export ARM_CLIENT_SECRET=
+#export ARM_SUBSCRIPTION_ID=
+#export ARM_TENANT_ID=
+
 
 # Example to generate a random password
 # TODO  save it somewhere?
