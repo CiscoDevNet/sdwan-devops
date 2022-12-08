@@ -9,8 +9,8 @@ Some of the tasks listed here relate to the `terraform-sdwan` submodule
 ### Generic
 
 - [ ] **Update README to cover changes**
-- [ ] Switch to the public [sdwan-edge](https://github.com/CiscoDevNet/sdwan-edge/) code (imported as a Git submodule) for deploying cEdges.
-- [ ] Fix the network interface detection issue
+- [x] Switch to the public [sdwan-edge](https://github.com/CiscoDevNet/sdwan-edge/) code (imported as a Git submodule) for deploying cEdges.
+- [x] Fix the network interface detection issue
 - [ ] Fix the `deviceIP` issue affecting 20.9.1 (and DHCP deployments) in the `config-sdwan.yml` play
 - [ ] Discuss Ansible variable approach with some Ansible experts from the team
 - [x] Support for specifying password and encoding it
@@ -18,7 +18,7 @@ Some of the tasks listed here relate to the `terraform-sdwan` submodule
 - [x] Update Docker container (pull in Nathan's work)
 - [x] Split out day 1 automation (pull in Marcelo's work)
 - [ ] Decouple serial file management from certificate authority, as it is related to edge deployment
-- [ ] Optimize Docker image (it's very large, and every little update changes all layers!)
+- [x] Optimize Docker image (it's very large, and every little update changes all layers!)
 
 ### Generic multi-infra support
 
@@ -34,6 +34,7 @@ We should be able to use the same Ansible workflow to deploy both on-prem and al
 - [x] Support for ACLs or adding IP ranges to the security group
 - [ ] On AWS, if possible, use the APIs to check if quotas are enough for VPC and elastic IP before attempting to deploy. For bonus points, request quota increase automatically
 - [ ] Support IPv6 Elastic IPs on AWS
+- [ ] Support firewall rules for edges
 
 ### Integrations with SaaS tools
 
