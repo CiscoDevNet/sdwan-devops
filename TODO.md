@@ -33,6 +33,7 @@ We should be able to use the same Ansible workflow to deploy both on-prem and al
 - [ ] Support deploying into existing VPC
 - [x] Support for ACLs or adding IP ranges to the security group
 - [ ] On AWS, if possible, use the APIs to check if quotas are enough for VPC and elastic IP before attempting to deploy. For bonus points, request quota increase automatically
+- [ ] Support IPv6 Elastic IPs on AWS
 
 ### Integrations with SaaS tools
 
