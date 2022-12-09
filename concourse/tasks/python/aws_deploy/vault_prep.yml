@@ -19,8 +19,8 @@ run:
   args:
     - -ce
     - |
-      chmod a+x cisco-sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
-      ./sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
+      ls -la
+      pwd
 
 
       
