@@ -8,10 +8,10 @@ image_resource:
     tag: 2
 
 inputs:
-  - name: git-cisco-sdwan-devops
+  - name: sdwan-devops
 
 params:
-  VAULT_ADDR: http://ci.cisco-sdwan-labs.com:8200
+  VAULT_ADDR: http://vault.cisco-sdwan-labs.com:8200
   SSH_TOKEN: ((ssh-token.token))
 
 run:
@@ -19,8 +19,8 @@ run:
   args:
     - -ce
     - |
-      chmod a+x git-cisco-sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
-      ./git-cisco-sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
+      chmod a+x cisco-sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
+      ./sdwan-devops/tasks/python/aws_deploy/vault_prep.sh
 
 
       

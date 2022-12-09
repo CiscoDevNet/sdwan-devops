@@ -6,13 +6,15 @@ jobs:
   plan:
     - get: sdwan-devops
       trigger: true
+    - get: sdwan-terraform
+      trigger: true
     - task: lab_prep
-      file: git-resource/tasks/aws_deploy/vault_prep.yml
+      file: sdwan-devops/concourse/python/tasks/aws_deploy/vault_prep.yml
 
 - name: deploy-aws-env
   plan:
     - get: sdwan-devops
-    - get: terraform-sdwan
+    - get: sdwan-terraform
     - config:
         image_resource:
           name: ""
@@ -57,17 +59,17 @@ resources:
   - name: sdwan-devops
     source:
       Username: ((Username))
-      branch: ((git-branch))
+      branch: cloud-concourse
       email: ((email))
       private_key: ((private_key))
       uri: git@github.com:CiscoDevNet/sdwan-devops.git
     type: git
 
-  - name: terraform-sdwan
+  - name: sdwan-terraform
     source:
       Username: ((Username))
-      branch: ((git-branch))
+      branch: main
       email: ((email))
       private_key: ((private_key))
-      uri: git@github.com:CiscoDevNet/terraform-sdwan.git
+      uri: git@github.com:CiscoDevNet/terraform-provider-sdwan.git
     type: git
