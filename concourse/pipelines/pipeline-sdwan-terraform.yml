@@ -9,7 +9,7 @@ jobs:
     - get: sdwan-terraform
       trigger: true
     - task: lab_prep
-      file: sdwan-devops/concourse/python/tasks/aws_deploy/vault_prep.yml
+      file: sdwan-devops/concourse/tasks/python/aws_deploy/vault_prep.yml
 
 - name: deploy-aws-env
   plan:
@@ -51,7 +51,7 @@ jobs:
         AWS_KEY: ((Secret_access_key.Secret_access_key))
         REGION: ((aws.region))
         NAME: ((az.name))
-        VAULT_ADDR: ((vault.addr))
+        VAULT_ADDR: http://vault.cisco-sdwan-labs.com:8200
         SSH_TOKEN: ((ssh-token.token))
 
 resource_types:
