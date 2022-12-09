@@ -1,42 +1,12 @@
 display:
-  background_image: https://info.hummingbirdnetworks.com/hubfs/Cisco/cisco%20security.jpg
+  background_image: https://tetacourse.com/uploads/posts/2020-07/1595211523_1.jpg
 jobs:
 - name: lab-prep
   plan:
-    - get: git-cisco-sdwan-devops
+    - get: git-resource
       trigger: true
-    - config:
-        image_resource:
-          name: ""
-          source:
-            repository: sconrod/sdwan-ubuntu
-            tag: 1.0
-          type: docker-image
-        inputs:
-          - name: git-cisco-sdwan-devops
-        platform: linux
-        run:
-          path: sh
-          args:
-            - -cex
-            - |
-              pwd
-              ls -la
-              export AWS_PAGER=""
-              export Name=$NAME
-              echo $NAME
-              aws configure set aws_access_key_id $AWS_KEY_ID
-              aws configure set aws_secret_access_key $AWS_KEY
-              aws configure set default.region $REGION
-              aws sts get-caller-identity --query Account --output text
-              echo "WELCOME TO THE CISCO SDWAN AUTOMATION LAB FOR DEVOPS/NETOPS ENGINEERS"
-      task: check-aws
-      params:
-        AWS_KEY_ID: ((Access_key_ID.Access_key))
-        AWS_KEY: ((Secret_access_key.Secret_access_key))
-        REGION: ((aws.region))
-        NAME: ((az.name))
-        VAULT_ADDR: http://vault.cisco-sdwan-labs.com:8200
+    - task: lab_prep
+      file: git-resource/tasks/aws_deploy/vault_prep.yml
 
 - name: deploy-aws-key
   plan:
@@ -145,9 +115,16 @@ resources:
   - name: git-cisco-sdwan-devops
     source:
       Username: ((Username))
-      branch: cloud-concourse
+      branch: cloud
       email: ((email))
       private_key: ((private_key))
       uri: git@github.com:CiscoDevNet/sdwan-devops.git
     type: git
-
+  - name: git-cisco-sdwan-terraform
+    source:
+      Username: ((Username))
+      branch: cloud
+      email: ((email))
+      private_key: ((private_key))
+      uri: git@github.com:CiscoDevNet/terraform-provider-sdwan.git
+    type: git
