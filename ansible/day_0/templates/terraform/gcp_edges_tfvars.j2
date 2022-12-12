@@ -4,6 +4,9 @@ region = "{{ sdwan_datacenter }}"
 zone = "{{ sdwan_datacenter }}-c"
 subnet_transport = "sdwan-transport-subnet"
 subnet_service = "sdwan-service-subnet"
+{% if acl_cidr_blocks is defined and acl_cidr_blocks != "" %}
+acl_cidr_blocks = [ {{ acl_cidr_blocks }} ]
+{% endif %}
 {% if gcp_image_id is defined and gcp_image_id != "" %}
 image_id = "{{ gcp_image_id }}"
 {% else %}
