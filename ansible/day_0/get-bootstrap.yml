@@ -21,13 +21,12 @@
   # for boostrap are made to vmanage at the same time, it gets corrupted
   tasks:
     - name: Get day0 config
-      vmanage_device_bootstrap:
-        host: "{{ vmanage_ip }}"
+      cisco.sastre.device_bootstrap:
+        address: "{{ vmanage_ip }}"
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
-        model: " {{ sdwan_model }}"
         uuid: "{{ sdwan_uuid }}"
-        version: "{{ cloudinit_type }}"
+        include_default_root_certs: False
       register: result
       retries: 10
       delay: 10
@@ -37,21 +36,18 @@
     # replace filter is a hack to workaround cloud-init defect for enterprise ca in viptela 20.5 and up
     - name: Set variables
       set_fact:
-        bootstrap: "{{ result.bootstrap.bootstrapConfig | replace('- path: /etc/viptela/rootcert_reinstall', '- path: /usr/share/viptela/symantec-root-ca.crt')}}"
+        bootstrap: "{{ result.bootstrap_config | replace('- path: /etc/viptela/rootcert_reinstall', '- path: /usr/share/viptela/symantec-root-ca.crt')}}"
         cacheable: yes
-      when: result.bootstrap.bootstrapConfig is defined
+      when: result.bootstrap_config is defined
 
     - name: Save cloud-init to terraform directory
       template:
         src: templates/sdwan/cedge_user-data.j2
         dest: "{{ generated_cloud_init }}"
       when: '"multipart/mixed" not in bootstrap'
-    - name: Save cloud-init to terraform directory (template is atteched in vmanage)
+
+    - name: Save cloud-init to terraform directory (template is attached in vmanage)
       template:
         src: templates/sdwan/cedge_user-data_attached.j2
         dest: "{{ generated_cloud_init }}"
       when: '"multipart/mixed" in bootstrap'
-
-    # AWS user-data is limited to 16KB
-    - name: Remove root CA certificates from day0 config
-      shell: sed -i '/^   -----BEGIN CERTIFICATE-----/,/^$/c\{{ ca_cert }}' {{ generated_cloud_init }}
