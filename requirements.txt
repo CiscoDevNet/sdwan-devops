@@ -4,3 +4,4 @@ ansible-virl
 netaddr
 viptela
 virl2_client
+cisco-sdwan>=1.21

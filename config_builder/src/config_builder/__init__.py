@@ -9,7 +9,7 @@ from .loader import load_metadata
 METADATA_FILENAME = "metadata.yaml"
 
 
-def setup_logging(logging_config: dict[str, Any]):
+def setup_logging(logging_config: dict[str, Any]) -> None:
     file_handler = logging_config.get("handlers", {}).get("file")
     if file_handler is not None:
         Path(file_handler["filename"]).parent.mkdir(parents=True, exist_ok=True)

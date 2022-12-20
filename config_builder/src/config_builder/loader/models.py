@@ -30,7 +30,7 @@ def formatted_string(v: str, values: Dict[str, Any]) -> str:
 
 class GlobalConfigModel(BaseSettings):
     """
-    GlobalConfigModel is a special config block as field values can be overriden by environment variables
+    GlobalConfigModel is a special config block as field values can use environment variables as their default value
     """
     home_dir: str = Field(..., env='HOME')
     tf_vars_folder: str = ''
