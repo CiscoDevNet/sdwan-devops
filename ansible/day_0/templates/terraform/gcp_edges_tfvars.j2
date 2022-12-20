@@ -1,7 +1,7 @@
 name = "{{ hostvars[inventory_hostname]['inventory_hostname'] }}"
 project = "{{ gcp_project }}"
 region = "{{ sdwan_datacenter }}"
-zone = "{{ sdwan_datacenter }}-c"
+zone = "{{ sdwan_datacenter_zone }}"
 subnet_transport = "sdwan-transport-subnet"
 subnet_service = "sdwan-service-subnet"
 {% if acl_cidr_blocks is defined and acl_cidr_blocks != "" %}

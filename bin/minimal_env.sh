@@ -30,3 +30,9 @@ export SITE2_EDGE1_RANGE=10.128.8.0/23
 
 # TODO: Remove value before commit
 export VAULT_PASS="Cisc0123"
+
+export CEDGE_GCP_IMAGE_ID="cisco-public/cisco-c8k-17-08-01a"
+export CEDGE_GCP_INSTANCE_TYPE="n1-standard-4"
+export GCP_PROJECT="gcp-sdwaniac-nprd-84677"
+export CEDGE_AZURE_IMAGE_ID=""
+export CEDGE_AZURE_INSTANCE_TYPE=""

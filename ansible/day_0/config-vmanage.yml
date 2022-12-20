@@ -41,12 +41,11 @@
       until: result is not failed 
 
     - name: Add the Enterprise CA
-      vmanage_settings:
-        host: "{{ vmanage_ip }}"
+      cisco.sastre.settings_enterprise_ca:
+        address: "{{ vmanage_ip }}"
         user: "{{ vmanage_user }}"
         password: "{{ vmanage_pass }}"
-        ca_type: enterprise
-        root_cert: "{{lookup('file', '{{ sdwan_cert_dir }}/myCA.pem')}}"
+        root_cert: "{{ lookup('file', '{{ sdwan_ca_cert }}') }}"
       register: result
       retries: 10
       delay: 10
