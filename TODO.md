@@ -13,6 +13,7 @@ Some of the tasks listed here relate to the `terraform-sdwan` submodule
 - [x] Fix the network interface detection issue
 - [ ] Fix the `deviceIP` issue affecting 20.9.1 (and DHCP deployments) in the `config-sdwan.yml` play
 - [ ] Discuss Ansible variable approach with some Ansible experts from the team
+- [ ] Take advantage of Ansible's tags feature
 - [x] Support for specifying password and encoding it
 - [ ] Static addressing has some conflicting configurations, clean that up
 - [x] Update Docker container (pull in Nathan's work)
