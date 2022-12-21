@@ -1,25 +1,13 @@
-vedge_device_list = {
-{% for host in groups['sdwan_edge'] -%}
-{% if hostvars[host]['sdwan_model'] == "vedge-cloud" %}
-    "{{ hostvars[host]['inventory_hostname'] }}" = {
-        networks = ["{{ hostvars[host]['vpn512_portgroup'] }}", "{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['servicevpn_portgroup'] }}"]
-        day0 = <<EOF
-{{ hostvars[host]['day0_config'] }}
-EOF
-    }{% if not loop.last %},{% endif %}
-{% endif %}
-{% endfor %}
-}
-
-cedge_device_list = {
-{% for host in groups['sdwan_edge'] -%}
-{% if hostvars[host]['sdwan_model'] == "vedge-CSR-1000v" %}
-    "{{ hostvars[host]['inventory_hostname'] }}" = {
-        networks = ["{{ hostvars[host]['vpn512_portgroup'] }}", "{{ hostvars[host]['vpn0_portgroup'] }}", "{{ hostvars[host]['servicevpn_portgroup'] }}"]
-        day0 = <<EOF
-{{ hostvars[host]['day0_config'] }}
-EOF
-    }{% if not loop.last %},{% endif %}
-{% endif %}
-{% endfor %}
-}
+name             = "{{ hostvars[inventory_hostname]['inventory_hostname'] }}"
+vsphere_server   = "{{ vsphere_server }}"
+vsphere_user     = "{{ vsphere_user }}"
+vsphere_password = "{{ vsphere_password }}"
+datacenter       = "{{ datacenter }}"
+cluster          = "{{ cluster }}"
+datastore        = "{{ datastore }}"
+folder           = "{{ folder }}"
+template         = "{{ iosxe_sdwan_image }}"
+vm_num_cpus      = 4
+vm_memory        = 8192
+subnet_transport = "{{ vpn0_portgroup }}"
+subnet_service   = "{{ servicevpn_portgroup }}"

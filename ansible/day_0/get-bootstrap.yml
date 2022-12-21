@@ -40,6 +40,12 @@
         cacheable: yes
       when: result.bootstrap_config is defined
 
+    # VMware can't have hostname in cloud-init file name
+    - name: Set correct file name for VMware cloud-init
+      set_fact:
+        generated_cloud_init: "{{ terraform_project_path[infra]['edges'] }}/cloud-init/ciscosdwan_cloud_init.cfg"
+      when: infra == "vmware"
+
     - name: Save cloud-init to terraform directory
       template:
         src: templates/sdwan/cedge_user-data.j2

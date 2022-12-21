@@ -25,14 +25,22 @@ system
 !
 interface GigabitEthernet1
  description   TRANSPORT - INET
+{% if vpn0_ip_netmask is defined %}
+ ip address {{ vpn0_ip_netmask }}
+{% else %}
  ip address dhcp
+{% endif %}{# vpn0_ip_netmask #}
  negotiation auto
  no mop enabled
  no mop sysid
 !
 interface GigabitEthernet2
  description   SERVICE
+{% if vpn1_ip_netmask is defined %}
+ ip address {{ vpn1_ip_netmask }}
+{% else %}
  ip address dhcp
+{% endif %}{# vpn1_ip_netmask #}
  negotiation auto
  no mop enabled
  no mop sysid
@@ -60,12 +68,16 @@ sdwan
    no allow-service snmp
    no allow-service bfd
 !
+{% if vpn0_default_gateway is defined %}
+ip route 0.0.0.0 0.0.0.0 {{ vpn0_default_gateway }}
+!
+{% endif %}{# vpn0_default_gateway #}
 {% if ssh_pubkey_fp is defined and ssh_pubkey_fp != "" %}
 ip ssh pubkey-chain
  username admin
   key-hash ssh-rsa {{ ssh_pubkey_fp }}
 !
-{% endif %}
+{% endif %}{# ssh_pubkey_fp #}
 line vty 0 4
  transport input ssh
 !

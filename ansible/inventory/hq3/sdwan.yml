@@ -26,6 +26,7 @@ all:
         edge_network: "/sdwan-edge/Catalyst8000v/azure/vnet"
         edges: "/sdwan-edge/Catalyst8000v/azure/cedge"
     ntp_servers:
+      vmware: "pool.ntp.org"
       aws: "169.254.169.123"
       gcp: "metadata.google.internal"
       azure: "pool.ntp.org"
@@ -220,7 +221,7 @@ all:
             #   vpn0_ip: "{{ vpn0_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('11') }}"
             #   ansible_host: "{{ vpn0_ip | ansible.utils.ipaddr('address') }}"
             #   sdwan_system_ip: '1.1.1.6'
-            #   sdwan_site_id: 104
+            #   sdwan_site_id: 103
             #   sdwan_model: vedge-C8000V
             #   sdwan_uuid: "C8K-0EEBC36C-18EC-2FF6-40F4-A9DEC1BBB25D"
             #   cloudinit_type: v1
@@ -241,6 +242,37 @@ all:
             #       'system_system_ip': "{{ sdwan_system_ip }}"
             #       'banner_login': "{{ login_banner }}"
             #       'banner_motd': "Welcome to {{ inventory_hostname }}!"
+            cedge-dc:
+              infra: "vmware"
+              vpn0_range: "22.1.140.0/24"
+              vpn1_range: "22.1.11.0/24"
+              vpn0_ip: "22.1.140.100/24"
+              vpn0_ip_netmask: "{{ vpn0_ip | ansible.utils.ipaddr('address') }} {{ vpn0_ip | ansible.utils.ipaddr('netmask') }}"
+              vpn0_default_gateway:  "{{ vpn0_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('1') | ansible.utils.ipaddr('address') }}"
+              ansible_host: "{{ vpn0_ip | ansible.utils.ipaddr('address') }}"
+              sdwan_system_ip: '1.1.1.7'
+              sdwan_site_id: 104
+              sdwan_model: vedge-C8000V
+              sdwan_uuid: "C8K-B63650AB-5DB8-BAC8-2A63-D32EA7676FC2"
+              sdwan_vbond: "{{ vbond_vpn0_ipv4 | ansible.utils.ipaddr('address') }}"
+              cloudinit_type: v1
+              sdwan_template:
+                name: hq-c8000v
+                variables:
+                  'vpn512_interface': GigabitEthernet3
+                  'vpn0_interface': GigabitEthernet1
+                  'vpn0_internet_ipv4_address': "{{ vpn0_ip }}"
+                  'vpn0_default_gateway': "{{ vpn0_default_gateway }}"
+                  'vpn1_ipv4_address': "{{ vpn1_range | ansible.utils.ipaddr('net') | ansible.utils.ipaddr('11') }}"
+                  'vpn1_interface': GigabitEthernet2
+                  'vpn1_ospf_interface': GigabitEthernet2
+                  'system_latitude': '37.411343'
+                  'system_longitude': '-121.938803'
+                  'system_site_id': "{{ sdwan_site_id }}"
+                  'system_host_name': "{{ inventory_hostname }}"
+                  'system_system_ip': "{{ sdwan_system_ip }}"
+                  'banner_login': "{{ login_banner }}"
+                  'banner_motd': "Welcome to {{ inventory_hostname }}!"
     system:
       vars:
         virl_config_template: "{{ lookup('env', 'PROJ_ROOT') }}/ansible/templates/virl/host.j2"
