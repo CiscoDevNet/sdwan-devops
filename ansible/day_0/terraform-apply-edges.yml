@@ -15,7 +15,7 @@
         src: "terraform/{{ infra }}_{{ sdwan_component }}_tfvars.j2"
         dest: "{{ project_path }}/{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfvars"
       tags: [tfvars, plan]
-      when: sdwan_component is defined
+      when: not (sdwan_component == "edge_network" and infra == "vmware")
 
     - name: Terraform plan
       community.general.terraform:
@@ -26,7 +26,7 @@
         variables_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfvars"
         force_init: yes
       tags: [plan, apply]
-      when: sdwan_component is defined
+      when: not (sdwan_component == "edge_network" and infra == "vmware")
 
     - name: Terraform apply
       community.general.terraform:
@@ -36,7 +36,7 @@
         workspace: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}"
         variables_file: "{{ infra }}_{{ sdwan_component }}_{{ inventory_hostname }}.tfvars"
       tags: apply
-      when: sdwan_component is defined
+      when: not (sdwan_component == "edge_network" and infra == "vmware")
       register: outputs
 
     - name: Save VPC ID
@@ -48,6 +48,10 @@
     - debug:
         msg: "cEdge external IP: {{ outputs.outputs.cedge_transport_public_ip.value }}"
       when: sdwan_component == "edges" and (infra == "aws" or infra == "gcp")
+
+    - debug:
+        msg: "cEdge IP: {{ outputs.outputs.cedge_transport_ip.value }}"
+      when: sdwan_component == "edges" and infra == "vmware"
 
     - meta: refresh_inventory
       tags: always

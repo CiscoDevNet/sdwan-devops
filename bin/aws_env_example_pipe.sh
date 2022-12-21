@@ -49,16 +49,24 @@ export VBOND1_IP=10.128.1.12/24
 export VSMART1_IP=10.128.1.13/24
 export VPN0_GATEWAY=10.128.1.1
 
-# This should be the VPC ID eventually
-#export VPN0_PORTGROUP="cpn-rtp-colab4"
-#export VPN512_PORTGROUP="cpn-rtp-colab4"
-#export SERVICEVPN_PORTGROUP="cpn-rtp-colab4"
+# VMware
+#export TF_VAR_vsphere_server=
+#export TF_VAR_vsphere_user="administrator@vsphere.local"
+#export TF_VAR_vsphere_password=
+#export TF_VAR_datacenter=
+#export TF_VAR_cluster=
+#export TF_VAR_datastore=
+#export TF_VAR_folder=
+
+#export VPN0_PORTGROUP="VM Network"
+#export VPN512_PORTGROUP="VM Network"
+#export SERVICEVPN_PORTGROUP="VM Network"
 
 export HQ_EDGE1_IP=1.1.1.4/24
 export SITE1_EDGE1_IP=1.1.1.5/24
 export SITE2_EDGE1_IP=1.1.1.6/24
 
-export IOSXE_SDWAN_IMAGE=iosxe-sdwan-16.12.5
+export IOSXE_SDWAN_IMAGE="c8000v-${IOSXE_VERSION}"
 
 export VIPTELA_VERSION=20.8.1
 

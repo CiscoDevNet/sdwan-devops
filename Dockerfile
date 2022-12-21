@@ -17,7 +17,7 @@ LABEL org.opencontainers.image.title="Cisco SD-WAN" \
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt update && \
-    apt install -y curl python-is-python3 python3-pip unzip git && \
+    apt install -y curl genisoimage git python-is-python3 python3-pip unzip && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
