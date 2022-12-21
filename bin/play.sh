@@ -97,7 +97,7 @@ docker run -it --rm -v $PROJ_ROOT/ansible:/ansible \
    -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan \
    -v $PROJ_ROOT/sdwan-edge:/sdwan-edge \
    `# Uncomment the following line if you are using a container image with the Azure CLI included and want to deploy a cEdge on Azure` \
-   `#-v $HOME/.azure:/root/.azure`` \
+   `#-v $HOME/.azure:/root/.azure` \
    --env PWD="/ansible" \
    --env USER="$USER" \
    --env VMANAGE_ORG="$VMANAGE_ORG" \
