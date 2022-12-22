@@ -11,3 +11,6 @@ image_id = "{{ aws_cedge_ami }}"
 {% if aws_cedge_instance_type is defined and aws_cedge_instance_type != "" %}
 instance_type = "{{ aws_cedge_instance_type }}"
 {% endif %}
+{% if aws_route53_zone is defined and aws_route53_zone != "" %}
+route53_zone = "{{ aws_route53_zone }}"
+{% endif %}
