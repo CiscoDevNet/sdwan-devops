@@ -4,6 +4,7 @@ viptela_api_cookie
 topo.virl
 /ansible/licenses
 /ansible/facts_cache
+/ansible/inventory/sdwan_inventory.yml
 .virlrc
 /.virl
 set*.sh

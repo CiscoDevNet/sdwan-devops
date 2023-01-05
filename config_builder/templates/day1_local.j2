@@ -1,10 +1,10 @@
-vmanage_user: "{{ control_plane_infra.vmanage.config.username }}"
-vmanage_pass: "{{ control_plane_infra.vmanage.config.password }}"
-viptela_encrypted_pass: "{{ control_plane_infra.vmanage.config.password_hashed }}"
-vmanage_org: "{{ control_plane_infra.vmanage.config.organization_name }}"
-ansible_user: "{{ control_plane_infra.vmanage.config.username }}"
-ansible_password: "{{ control_plane_infra.vmanage.config.password }}"
+vmanage_org: "{{ controllers.config.organization_name }}"
+vmanage_user: "{{ controllers.vmanage.config.username }}"
+vmanage_pass: "{{ controllers.vmanage.config.password }}"
+viptela_encrypted_pass: "{{ controllers.vmanage.config.password_hashed }}"
+ansible_user: "{{ controllers.vmanage.config.username }}"
+ansible_password: "{{ controllers.vmanage.config.password }}"
 ssh_pubkey: "{{ global_config.ssh_public_key }}"
-sdwan_datacenter: "{{ control_plane_infra.datacenter }}"
+
 
 
