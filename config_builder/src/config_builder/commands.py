@@ -1,6 +1,8 @@
 import argparse
 import logging
+from typing import Union
 from pathlib import Path
+from ipaddress import IPv4Interface, IPv4Network
 from .loader import load_yaml, LoaderException, ConfigModel
 from . import app_config
 from jinja2 import (Environment, FileSystemLoader, select_autoescape, TemplateNotFound, StrictUndefined,
@@ -13,10 +15,47 @@ logger = logging.getLogger('config_builder.commands')
 #
 # Custom Jinja2 filters
 #
+class FilterError(ValueError):
+    """ Filter processing exception """
+    pass
+
 
 def read_file_filter(left_value: str) -> str:
     with open(left_value) as f:
         return f.read()
+
+
+def ipv4_address_filter(left_value: Union[IPv4Interface, str]) -> str:
+    try:
+        interface = left_value if isinstance(left_value, IPv4Interface) else IPv4Interface(left_value)
+        return str(interface.ip)
+
+    except ValueError as ex:
+        raise FilterError(ex) from None
+
+
+def ipv4_subnet_filter(left_value: Union[IPv4Network, str], prefix_len: int, subnet_index: int) -> IPv4Network:
+    try:
+        network = left_value if isinstance(left_value, IPv4Network) else IPv4Network(left_value)
+        return list(network.subnets(new_prefix=prefix_len))[subnet_index]
+
+    except IndexError:
+        raise FilterError(
+            f"subnet_index {subnet_index} is out of bounds for /{prefix_len} subnets in {left_value}") from None
+    except ValueError as ex:
+        raise FilterError(ex) from None
+
+
+def ipv4_subnet_host_filter(left_value: Union[IPv4Network, str], host_index: int) -> IPv4Interface:
+    try:
+        subnet = left_value if isinstance(left_value, IPv4Network) else IPv4Network(left_value)
+        return IPv4Interface((list(subnet.hosts())[host_index], subnet.prefixlen))
+
+    except IndexError:
+        raise FilterError(
+            f"host_index {host_index} is out of bounds for {left_value.prefixlen}") from None
+    except ValueError as ex:
+        raise FilterError(ex) from None
 
 
 #
@@ -48,6 +87,9 @@ def render_cmd(cli_args: argparse.Namespace) -> None:
     )
     custom_filters = {
         'read_file': read_file_filter,
+        'ipv4_address': ipv4_address_filter,
+        'ipv4_subnet': ipv4_subnet_filter,
+        'ipv4_subnet_host': ipv4_subnet_host_filter,
     }
     jinja_env.filters.update(custom_filters)
     jinja_env.globals = config_obj.dict(by_alias=True)
@@ -72,6 +114,8 @@ def render_cmd(cli_args: argparse.Namespace) -> None:
             logger.critical(f"Template '{jinja_target.template}' syntax error: {ex}")
         except UndefinedError as ex:
             logger.critical(f"Template '{jinja_target.template}' error: {ex}")
+        except FilterError as ex:
+            logger.critical(f"Template '{jinja_target.template}' filter error: {ex}")
 
 
 def export_cmd(cli_args: argparse.Namespace) -> None:

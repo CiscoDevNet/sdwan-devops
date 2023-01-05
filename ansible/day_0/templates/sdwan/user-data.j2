@@ -9,7 +9,7 @@ users:
 {% endif %}{# if ssh_pubkey is defined #}
 {% if sdwan_personality == 'vmanage' %}
 {% if sdwan_control_infra == 'aws' %}
-{% if aws_vmanage_instance_type.startswith('t2.') %}
+{% if vmanage_instance_type.startswith('t2.') %}
 fs_setup:
 - device: /dev/xvdb
   label: data
@@ -31,7 +31,7 @@ fs_setup:
   overwrite: false
 mounts:
 - [ /dev/nvme1n1, /opt/data ]
-{% endif %}{# if aws_vmanage_instance_type.startswith('t2.') #}
+{% endif %}{# if vmanage_instance_type.startswith('t2.') #}
 {% else %}
 fs_setup:
 - device: /dev/sdb

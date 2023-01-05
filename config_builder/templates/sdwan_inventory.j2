@@ -1,0 +1,215 @@
+all:
+  vars:
+    sdwan_control_infra: "{{ controllers.infra.provider }}"
+    sdwan_control_datacenter: "{{ controllers.infra.region }}"
+    cloudinit_type: "{{ controllers.infra.cloud_init_format }}"
+    sdwan_control_cidr: "{{ controllers.config.cidr }}"
+    viptela_version: "{{ controllers.infra.sw_version }}"
+    sdwan_vbond: "{{ controllers.vbond.config.vpn0_interface_ipv4 | ipv4_address }}"
+    vmanage_templates_file: "{{ global_config.project_root }}/ansible/files/hq3_vmanage_templates_v20.yml"
+    vmanage_policy_file: "{{ global_config.project_root }}/ansible/files/hq3_vmanage_policy_v20.yml"
+    sdwan_central_policy_name: hq3-centralized-policy
+    acl_cidr_blocks: '{{ controllers.config.acl_ingress_ipv4 }}'
+    acl6_cidr_blocks: '{{ controllers.config.acl_ingress_ipv6 }}'
+    vmanage_image_id: "{{ controllers.vmanage.infra.image_id }}"
+    vbond_image_id: "{{ controllers.vbond.infra.image_id }}"
+    vsmart_image_id: "{{ controllers.vsmart.infra.image_id }}"
+    vmanage_instance_type: "{{ controllers.vmanage.infra.instance_type }}"
+    vbond_instance_type: "{{ controllers.vbond.infra.instance_type }}"
+    vsmart_instance_type: "{{ controllers.vsmart.infra.instance_type }}"
+  {% if controllers.infra.dns_domain %}
+    aws_route53_zone: "{{ controllers.infra.dns_domain }}"
+  {% endif %}
+    ntp_servers:
+    {% if infra_providers.aws %}
+      aws: "{{ infra_providers.aws.ntp_server }}"
+    {% endif %}
+    {% if infra_providers.gcp %}
+      gcp: "{{ infra_providers.gcp.ntp_server }}"
+    {% endif %}
+    {% if infra_providers.azure %}
+      azure: "{{ infra_providers.azure.ntp_server }}"
+    {% endif %}
+    {% if infra_providers.vmware %}
+      vmware: "{{ infra_providers.vmware.ntp_server }}"
+    {% endif %}
+
+  children:
+    sdwan:
+      children:
+        sdwan_control:
+          vars:            
+            infra: "{{ controllers.infra.provider }}"
+            vpn0_portgroup: "{{ "{{ lookup('env','VPN0_PORTGROUP') }}" }}"
+            vpn0_gateway: "{{ controllers.config.vpn0_gateway }}"
+            vpn512_portgroup: "{{ "{{ lookup('env','VPN512_PORTGROUP') }}" }}"
+            sdwan_domain_id: 1
+          children:
+            vmanage_hosts:
+              vars:
+                sdwan_personality: vmanage
+                sdwan_device_model: vmanage
+                mgmt_interface: vpn0_ip
+                virl_image_definition: "viptela-manage-{{ controllers.infra.sw_version }}"
+                virl_config_template: "sdwan/user-data.j2"
+              hosts:
+                vmanage1:
+                  sdwan_system_ip: "{{ controllers.vmanage.config.system_ip }}"
+                  vpn0_ip: "{{ controllers.vmanage.config.vpn0_interface_ipv4 }}"
+                  sdwan_site_id: "{{ controllers.config.site_id }}"
+                  vpn_instances:
+                    - vpn_id: 0
+                      interfaces:
+                        - if_name: eth1
+                          enabled: true
+                          ip:
+                            address: "{{ controllers.vmanage.config.vpn0_interface_ipv4 }}"
+                          tunnel_interface:
+                            allow_service:
+                              - all
+                      routes:
+                        - prefix: 0.0.0.0/0
+                          next_hop:
+                            address: "{{ controllers.config.vpn0_gateway }}"
+                    - vpn_id: 512
+                      interfaces:
+                        - if_name: eth0
+                          enabled: true
+                          ip:
+                            dhcp_client: true
+            vbond_hosts:
+              vars:
+                sdwan_personality: vbond
+                sdwan_device_model: vbond
+                mgmt_interface: vpn0_ip
+                virl_image_definition: "viptela-bond-{{ controllers.infra.sw_version }}"
+                virl_config_template: "sdwan/vbond_user-data.j2"
+              hosts:
+                vbond1:
+                  sdwan_system_ip: "{{ controllers.vbond.config.system_ip }}"
+                  vpn0_ip: "{{ controllers.vbond.config.vpn0_interface_ipv4 }}"
+                  sdwan_site_id: "{{ controllers.config.site_id }}"
+                  vpn_instances:
+                    - vpn_id: 0
+                      interfaces:
+                        - if_name: ge0/0
+                          enabled: true
+                          ip:
+                            address: "{{ controllers.vbond.config.vpn0_interface_ipv4 }}"
+                      routes:
+                        - prefix: 0.0.0.0/0
+                          next_hop:
+                            address: "{{ controllers.config.vpn0_gateway }}"
+                    - vpn_id: 512
+                      interfaces:
+                        - if_name: eth0
+                          enabled: true
+                          ip:
+                            dhcp_client: true
+            vsmart_hosts:
+              vars:
+                sdwan_personality: vsmart
+                sdwan_device_model: vsmart
+                mgmt_interface: vpn0_ip
+                virl_image_definition: "viptela-smart-{{ controllers.infra.sw_version }}"
+                virl_config_template: "sdwan/user-data.j2"
+              hosts:
+                vsmart1:
+                  sdwan_system_ip: "{{ controllers.vsmart.config.system_ip }}"
+                  vpn0_ip: "{{ controllers.vsmart.config.vpn0_interface_ipv4 }}"
+                  sdwan_site_id: "{{ controllers.config.site_id }}"
+                  sdwan_template:
+                    name: vsmart
+                    variables:
+                      'vpn0_internet_ipv4_address': "{{ controllers.vsmart.config.vpn0_interface_ipv4 }}"
+                      'vpn0_default_gateway': "{{ controllers.config.vpn0_gateway }}"
+                  vpn_instances:
+                    - vpn_id: 0
+                      interfaces:
+                        - if_name: eth1
+                          enabled: true
+                          ip:
+                            address: "{{ controllers.vsmart.config.vpn0_interface_ipv4 }}"
+                          tunnel_interface:
+                            allow_service:
+                              - all
+                      routes:
+                        - prefix: 0.0.0.0/0
+                          next_hop:
+                            address: "{{ controllers.config.vpn0_gateway }}"
+                    - vpn_id: 512
+                      interfaces:
+                        - if_name: eth0
+                          enabled: true
+                          ip:
+                            dhcp_client: true
+
+        sdwan_edge:
+          vars:
+            sdwan_personality: vedge
+            login_banner: "Hello!"
+            vpn0_gateway: "{{ controllers.config.vpn0_gateway }}"
+            vpn0_portgroup: "{{ "{{ lookup('env','VPN0_PORTGROUP') }}" }}"
+            vpn512_portgroup: "{{ "{{ lookup('env','VPN512_PORTGROUP') }}" }}"
+            servicevpn_portgroup: "{{ "{{ lookup('env','SERVICEVPN_PORTGROUP') }}" }}"
+          hosts:
+          {% for wan_edge_name, wan_edge_info in wan_edges.items() %}
+            {{ wan_edge_name }}:
+              infra: "{{ wan_edge_info.infra.provider }}"
+              sdwan_datacenter: "{{ wan_edge_info.infra.region }}"
+            {% if wan_edge_info.infra.zone %}
+              sdwan_datacenter_zone: "{{ wan_edge_info.infra.zone }}"
+            {% endif %}
+            {% if wan_edge_info.infra.provider == 'gcp' and infra_providers.gcp %}
+              gcp_project: "{{ infra_providers.gcp.project }}"
+            {% endif %}
+              edge_image_id: "{{ wan_edge_info.infra.image_id }}"
+              edge_instance_type: "{{ wan_edge_info.infra.instance_type }}"
+              iosxe_sdwan_image: "{{ wan_edge_info.infra.iosxe_sdwan_image }}"
+              sdwan_model: "{{ wan_edge_info.infra.sdwan_model }}"
+              sdwan_uuid: "{{ wan_edge_info.infra.sdwan_uuid }}"
+              cloudinit_type: "{{ wan_edge_info.infra.cloud_init_format }}"
+              sdwan_system_ip: "{{ wan_edge_info.config.system_ip }}"
+              sdwan_site_id: "{{ wan_edge_info.config.site_id }}"
+              cidr_range: "{{ wan_edge_info.config.cidr }}"
+              vpn0_range: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) }}"
+              vpn1_range: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 1) }}"
+              vpn0_ip: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(10) }}"
+              ansible_host: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(10) | ipv4_address }}"
+              sdwan_template:
+                name: hq-c8000v
+                variables:
+                  'vpn512_interface': GigabitEthernet3
+                  'vpn0_interface': GigabitEthernet1
+                  'vpn0_internet_ipv4_address': "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(10) }}"
+                  'vpn0_default_gateway': "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(0) | ipv4_address }}"
+                  'vpn1_ipv4_address': "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 1) | ipv4_subnet_host(10) }}"
+                  'vpn1_interface': GigabitEthernet2
+                  'vpn1_ospf_interface': GigabitEthernet2
+                  'system_latitude': '37.411343'
+                  'system_longitude': '-121.938803'
+                  'system_host_name': "{{ wan_edge_name }}"
+                  'system_system_ip': "{{ wan_edge_info.config.system_ip }}"
+                  'system_site_id': "{{ wan_edge_info.config.site_id }}"
+                  'banner_login': "{{ "{{ login_banner }}" }}"
+                  'banner_motd': "Welcome to {{ wan_edge_name }}!"
+          {% endfor %}
+    system:
+      vars:
+        virl_config_template: "{{ global_config.project_root }}/ansible/day_0/templates/virl/host.j2"
+        virl_image_defintion: "{{ global_config.ubuntu_image }}"
+        host_interface: ens2
+      children:
+        client:
+          hosts:
+            site1-host1:
+              host_ip: 192.168.1.10/24
+              host_gateway: '192.168.1.1'
+            site2-host1:
+              host_ip: 192.168.2.10/24
+              host_gateway: '192.168.2.1'
+        public_hosts:
+          hosts:
+            hq-host1:    
+              host_ip: 10.0.1.10/24
+              host_gateway: '10.0.1.1'
