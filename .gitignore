@@ -22,4 +22,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# IDE project files
+.vscode/
+.idea
+
 
