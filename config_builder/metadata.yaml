@@ -15,6 +15,9 @@ targets_config:
       - description: "Ansible day_1 vars"
         template: "day1_local.j2"
         filename: "../ansible/day_1/group_vars/all/local.yml"
+      - description: "Ansible SDWAN inventory"
+        template: "sdwan_inventory.j2"
+        filename: "../ansible/inventory/sdwan_inventory.yml"
 
 
 logging_config:

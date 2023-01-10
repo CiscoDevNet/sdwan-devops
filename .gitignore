@@ -4,11 +4,13 @@ viptela_api_cookie
 topo.virl
 /ansible/licenses
 /ansible/facts_cache
+/ansible/inventory/sdwan_inventory.yml
 .virlrc
 /.virl
 set*.sh
 *_env_*.sh
 logs/
+bin/key.json
 # python
 __pycache__/
 *.py[cod]
@@ -21,4 +23,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# IDE project files
+.vscode/
+.idea
+
 

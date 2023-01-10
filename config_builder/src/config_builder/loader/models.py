@@ -1,27 +1,38 @@
 from functools import partial
 from secrets import token_urlsafe
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Iterable, Union
 from enum import Enum
+from pathlib import Path
 from ipaddress import IPv4Network, IPv6Network, IPv4Interface, IPv4Address
-from pydantic import BaseModel, BaseSettings, Field, validator, constr
+from pydantic import BaseModel, BaseSettings, Field, validator, root_validator, constr, conint
 from passlib.hash import sha512_crypt
+from .validators import (formatted_string, unique_system_ip, constrained_cidr, cidr_subnet, subnet_interface,
+                         subnet_address)
 
 
 #
-# Reusable validators
+# Common
 #
 
-def formatted_string(v: str, values: Dict[str, Any]) -> str:
-    """
-    Process v as a python formatted string
-    :param v: Value to be validated
-    :param values: {<field name>: <field value> ...} dict of previously validated model fields
-    :return: Expanded formatted string
-    """
-    try:
-        return v.format(**values) if v is not None else v
-    except KeyError as ex:
-        raise ValueError(f"Variable not found: {ex}") from None
+class CloudInitEnum(str, Enum):
+    v1 = 'v1'
+    v2 = 'v2'
+
+
+class InfraProviderOptionsEnum(str, Enum):
+    aws = 'aws'
+    gcp = 'gcp'
+    azure = 'azure'
+    vmware = 'vmware'
+
+
+class InfraProviderControllerOptionsEnum(str, Enum):
+    aws = 'aws'
+
+
+class ComputeInstanceModel(BaseModel):
+    image_id: str
+    instance_type: Optional[str] = None
 
 
 #
@@ -33,8 +44,8 @@ class GlobalConfigModel(BaseSettings):
     GlobalConfigModel is a special config block as field values can use environment variables as their default value
     """
     home_dir: str = Field(..., env='HOME')
+    project_root: str = Field(..., env='PROJ_ROOT')
     tf_vars_folder: str = ''
-    csr1000v_image: str
     ubuntu_image: str
     ssh_public_key_file: str = Field(None, description='Can use python format string syntax to reference other '
                                                        'previous fields in this model')
@@ -43,7 +54,7 @@ class GlobalConfigModel(BaseSettings):
     _validate_formatted_strings = validator('ssh_public_key_file', allow_reuse=True)(formatted_string)
 
     @validator('ssh_public_key', always=True)
-    def resolve_ssh_public_key(cls, v: str, values: Dict[str, Any]) -> str:
+    def resolve_ssh_public_key(cls, v, values: Dict[str, Any]):
         pub_key_file = values.get('ssh_public_key_file')
 
         if v is None and pub_key_file is not None:
@@ -58,13 +69,68 @@ class GlobalConfigModel(BaseSettings):
 
         raise ValueError("Either 'ssh_public_key_file' or 'ssh_public_key' must be provided")
 
+    @validator('project_root')
+    def resolve_project_root(cls, v: str) -> str:
+        return str(Path(v).resolve())
+
     class Config:
         case_sensitive = True
 
 
 #
-# control_plane_infra block
+# infra providers block
 #
+class InfraProviderConfigModel(BaseModel):
+    ntp_server: constr(regex=r'^[a-zA-Z0-9.-]+$')
+
+
+class GCPConfigModel(InfraProviderConfigModel):
+    project: str
+
+
+class VmwareConfigModel(InfraProviderConfigModel):
+    vsphere_server: str
+    vsphere_user: str = "administrator@vsphere.local"
+    vsphere_password: str
+
+
+class InfraProvidersModel(BaseModel):
+    aws: Optional[InfraProviderConfigModel] = None
+    gcp: Optional[GCPConfigModel] = None
+    azure: Optional[InfraProviderConfigModel] = None
+    vmware: Optional[VmwareConfigModel] = None
+
+
+#
+# controllers block
+#
+
+class ControllerCommonInfraModel(BaseModel):
+    provider: InfraProviderControllerOptionsEnum
+    region: str
+    dns_domain: constr(regex=r'^[a-zA-Z0-9.-]+$') = Field(
+        '', description="If set, add A records for control plane element external addresses in AWS Route 53")
+    sw_version: constr(regex=r'^\d+(?:\.\d+)+$')
+    cloud_init_format: CloudInitEnum = CloudInitEnum.v1
+
+    class Config:
+        use_enum_values = True
+
+
+class ControllerCommonConfigModel(BaseModel):
+    organization_name: str
+    site_id: conint(ge=0, le=4294967295)
+    acl_ingress_ipv4: List[IPv4Network]
+    acl_ingress_ipv6: List[IPv6Network]
+    cidr: IPv4Network
+    vpn0_gateway: IPv4Address
+
+    @validator('acl_ingress_ipv4', 'acl_ingress_ipv6')
+    def acl_str(cls, v: Iterable[IPv4Network]) -> str:
+        return ', '.join(f'"{entry}"' for entry in v)
+
+    _validate_cidr = validator('cidr', allow_reuse=True)(constrained_cidr(max_length=23))
+
 
 class CertAuthModel(BaseModel):
     passphrase: str = Field(default_factory=partial(token_urlsafe, 15))
@@ -74,19 +140,21 @@ class CertAuthModel(BaseModel):
     _validate_formatted_strings = validator('ca_cert', always=True, allow_reuse=True)(formatted_string)
 
 
-class ComputeInstanceModel(BaseModel):
-    image_id: str
-    instance_type: str = 't2.medium'
+class ControllerConfigModel(BaseModel):
+    system_ip: IPv4Address
+    vpn0_interface_ipv4: IPv4Interface
+
+    # Validators
+    _validate_system_ip = validator('system_ip', allow_reuse=True)(unique_system_ip)
 
 
-class VmanageConfigModel(BaseModel):
+class VmanageConfigModel(ControllerConfigModel):
     username: str = 'admin'
     password: str = Field(default_factory=partial(token_urlsafe, 12))
     password_hashed: Optional[str] = None
-    organization_name: str
 
     @validator('password_hashed', always=True)
-    def hash_password(cls, v: str, values: Dict[str, Any]) -> str:
+    def hash_password(cls, v: Union[str, None], values: Dict[str, Any]) -> str:
         if v is None:
             clear_password = values.get('password')
             if clear_password is None:
@@ -99,72 +167,115 @@ class VmanageConfigModel(BaseModel):
         return hashed
 
 
-class VmanageModel(ComputeInstanceModel):
-    sw_version: constr(regex=r'^\d+(?:\.\d+)+$')
+class ControllerModel(BaseModel):
+    infra: ComputeInstanceModel
+    config: ControllerConfigModel
+
+
+class VmanageModel(ControllerModel):
     config: VmanageConfigModel
-    instance_type: str = 't2.2xlarge'
 
 
-class VbondConfigModel(BaseModel):
-    vpn0_interface_ipv4: IPv4Interface
-
-
-class VbondModel(ComputeInstanceModel):
-    config: VbondConfigModel
-
-
-class ControlPlaneInfraModel(BaseModel):
-    provider: str
-    datacenter: str
-    dns_domain: constr(regex=r'^[a-zA-Z0-9.-]+$') = Field(
-        '', description="If set, add A records for control plane element external addresses in AWS Route 53")
-    ntp_server: IPv4Address
+class ControllersModel(BaseModel):
+    infra: ControllerCommonInfraModel
+    config: ControllerCommonConfigModel
     certificate_authority: CertAuthModel
-    acl_ingress_ipv4: List[IPv4Network]
-    acl_ingress_ipv6: List[IPv6Network]
-    cidr: IPv4Network
     vmanage: VmanageModel
-    vbond: VbondModel
-    vsmart: ComputeInstanceModel
-
-    @validator('acl_ingress_ipv4', 'acl_ingress_ipv6')
-    def acl_str(cls, v):
-        return ', '.join(f'"{entry}"' for entry in v)
+    vbond: ControllerModel
+    vsmart: ControllerModel
 
 
 #
-# wan_edge_infra block
+# wan_edges block
 #
 
-class CloudInitEnum(str, Enum):
-    v1 = 'v1'
-    v2 = 'v2'
-
-
-class EdgeModel(ComputeInstanceModel):
-    provider: str
+class InfraVmwareModel(BaseModel):
     datacenter: str
-    sw_version: constr(regex=r'^\d+(?:\.\d+)+')
-    iosxe_sdwan_image: str = Field(None, description="The default value is 'iosxe-sdwan-<sw_version>'")
-    cloud_init_format: CloudInitEnum = CloudInitEnum.v2
-    instance_type: str = 't3.medium'
+    cluster: str
+    datastore: str
+    vpn0_portgroup: str
+    vpn512_portgroup: str
+    servicevpn_portgroup: str
 
-    @validator('iosxe_sdwan_image', always=True)
-    def resolve_iosxe_sdwan_image(cls, v: str, values: Dict[str, Any]) -> str:
-        if v is None:
-            try:
-                return f"iosxe-sdwan-{values['sw_version']}"
-            except KeyError:
-                raise ValueError("Field 'sw_version' is not present") from None
+
+class EdgeInfraModel(ComputeInstanceModel):
+    provider: InfraProviderOptionsEnum
+    region: Optional[str] = None
+    zone: Optional[str] = None
+    sw_version: constr(regex=r'^\d+(?:\.\d+)+')
+    cloud_init_format: CloudInitEnum = CloudInitEnum.v1
+    sdwan_model: str
+    sdwan_uuid: str
+    vmware: Optional[InfraVmwareModel] = None
+
+    @validator('region', always=True)
+    def region_validate(cls, v, values: Dict[str, Any]):
+        if v is None and values['provider'] != InfraProviderOptionsEnum.vmware:
+            raise ValueError(f"{values['provider']} provider requires 'region' to be defined")
+        if v is not None and values['provider'] == InfraProviderOptionsEnum.vmware:
+            raise ValueError(f"'region' is not allowed when provider is {InfraProviderOptionsEnum.vmware}")
 
         return v
+
+    @validator('zone', always=True)
+    def zone_validate(cls, v, values: Dict[str, Any]):
+        if v is None and values['provider'] == InfraProviderOptionsEnum.gcp:
+            raise ValueError("GCP requires zone to be defined")
+
+        return v
+
+    @validator('vmware', always=True)
+    def vmware_section(cls, v, values: Dict[str, Any]):
+        if v is None and values['provider'] == InfraProviderOptionsEnum.vmware:
+            raise ValueError(f"{InfraProviderOptionsEnum.vmware} provider requires 'vmware' section to be defined")
+        if v is not None and values['provider'] != InfraProviderOptionsEnum.vmware:
+            raise ValueError(f"'vmware' section is only allowed when provider is {InfraProviderOptionsEnum.vmware}")
+
+        return v
+
+    @root_validator
+    def instance_type_validate(cls, values: Dict[str, Any]):
+        if values['instance_type'] is None and values['provider'] != InfraProviderOptionsEnum.vmware:
+            raise ValueError(f"{values['provider']} provider requires 'instance_type' to be defined")
+        if values['instance_type'] is not None and values['provider'] == InfraProviderOptionsEnum.vmware:
+            raise ValueError(f"'instance_type' is not allowed when provider is {InfraProviderOptionsEnum.vmware}")
+
+        return values
 
     class Config:
         use_enum_values = True
 
 
-class EdgeInfraModel(BaseModel):
-    wan_edge_defaults: EdgeModel
+class EdgeConfigModel(BaseModel):
+    site_id: conint(ge=0, le=4294967295)
+    system_ip: IPv4Address
+    cidr: Optional[IPv4Network] = None
+    vpn0_range: Optional[IPv4Network] = None
+    vpn0_interface_ipv4: Optional[IPv4Interface] = None
+    vpn0_gateway: Optional[IPv4Address] = None
+    vpn1_range: Optional[IPv4Network] = None
+    vpn1_interface_ipv4: Optional[IPv4Interface] = None
+
+    # Validators
+    _validate_system_ip = validator('system_ip', allow_reuse=True)(unique_system_ip)
+    _validate_cidr = validator('cidr', allow_reuse=True)(constrained_cidr(max_length=23))
+    _validate_vpn_range = validator('vpn0_range', 'vpn1_range', always=True, allow_reuse=True)(
+        cidr_subnet(cidr_field='cidr', prefix_len=24)
+    )
+    _validate_vpn0_ipv4 = validator('vpn0_interface_ipv4', always=True, allow_reuse=True)(
+        subnet_interface(subnet_field='vpn0_range', host_index=10)
+    )
+    _validate_vpn1_ipv4 = validator('vpn1_interface_ipv4', always=True, allow_reuse=True)(
+        subnet_interface(subnet_field='vpn1_range', host_index=10)
+    )
+    _validate_vpn0_gw = validator('vpn0_gateway', always=True, allow_reuse=True)(
+        subnet_address(subnet_field='vpn0_range', host_index=0)
+    )
+
+
+class EdgeModel(BaseModel):
+    infra: EdgeInfraModel
+    config: EdgeConfigModel
 
 
 #
@@ -173,5 +284,6 @@ class EdgeInfraModel(BaseModel):
 
 class ConfigModel(BaseModel):
     global_config: GlobalConfigModel
-    control_plane_infra: ControlPlaneInfraModel
-    wan_edge_infra: EdgeInfraModel
+    infra_providers: InfraProvidersModel
+    controllers: ControllersModel
+    wan_edges: Dict[str, EdgeModel]

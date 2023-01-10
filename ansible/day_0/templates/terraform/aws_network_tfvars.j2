@@ -1,5 +1,5 @@
-region = "{{ sdwan_datacenter }}"
-cidr_block = "{{ sdwan_cidr }}"
+region = "{{ sdwan_control_datacenter }}"
+cidr_block = "{{ sdwan_control_cidr }}"
 {% if ssh_pubkey is defined and ssh_pubkey != "" %}
 ssh_pubkey = "{{ ssh_pubkey }}"
 {% endif %}

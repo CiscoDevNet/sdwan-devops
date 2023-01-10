@@ -1,47 +1,43 @@
-vmanage_user: "{{ control_plane_infra.vmanage.config.username }}"
-vmanage_pass: "{{ control_plane_infra.vmanage.config.password }}"
-viptela_encrypted_pass: "{{ control_plane_infra.vmanage.config.password_hashed }}"
-vmanage_org: "{{ control_plane_infra.vmanage.config.organization_name }}"
-ansible_user: "{{ control_plane_infra.vmanage.config.username }}"
-ansible_password: "{{ control_plane_infra.vmanage.config.password }}"
+vmanage_org: "{{ controllers.config.organization_name }}"
+vmanage_user: "{{ controllers.vmanage.config.username }}"
+vmanage_pass: "{{ controllers.vmanage.config.password }}"
+viptela_encrypted_pass: "{{ controllers.vmanage.config.password_hashed }}"
+ansible_user: "{{ controllers.vmanage.config.username }}"
+ansible_password: "{{ controllers.vmanage.config.password }}"
 ssh_pubkey: "{{ global_config.ssh_public_key }}"
 sdwan_serial_file: "/ansible/licenses/serialFile.viptela"
 
-sdwan_datacenter: "{{ control_plane_infra.datacenter }}"
-sdwan_cidr: "{{ control_plane_infra.cidr }}"
-acl_cidr_blocks: '{{ control_plane_infra.acl_ingress_ipv4 }}'
-acl6_cidr_blocks: '{{ control_plane_infra.acl_ingress_ipv6 }}'
+sdwan_ca_passphrase: "{{ controllers.certificate_authority.passphrase }}"
+sdwan_cert_dir: "{{ controllers.certificate_authority.cert_dir }}"
+sdwan_ca_cert: "{{ controllers.certificate_authority.ca_cert }}"
 
-csr1000v_image: "{{ global_config.csr1000v_image }}"
-ubuntu_image: "{{ global_config.ubuntu_image }}"
-iosxe_sdwan_image: "{{ wan_edge_infra.wan_edge_defaults.iosxe_sdwan_image }}"
-viptela_version: "{{ control_plane_infra.vmanage.sw_version }}"
-cloudinit_type: "{{ wan_edge_infra.wan_edge_defaults.cloud_init_format }}"
-sdwan_control_infra: "{{ control_plane_infra.provider }}"
-vbond_vpn0_ipv4: "{{ control_plane_infra.vbond.config.vpn0_interface_ipv4 }}"
-
-sdwan_ca_passphrase: "{{ control_plane_infra.certificate_authority.passphrase }}"
-sdwan_cert_dir: "{{ control_plane_infra.certificate_authority.cert_dir }}"
-sdwan_ca_cert: "{{ control_plane_infra.certificate_authority.ca_cert }}"
+terraform_project_path:
+  vmware:
+    network: ""
+    control: "/terraform-sdwan/vmware"
+    edge_network: ""
+    edges: "/sdwan-edge/Catalyst8000v/vmware/cedge"
+  aws:
+    network: "/terraform-sdwan/aws/Provision_VPC"
+    control: "/terraform-sdwan/aws/Provision_Instances"
+    edge_network: "/sdwan-edge/Catalyst8000v/aws/vpc"
+    edges: "/sdwan-edge/Catalyst8000v/aws/cedge"
+  gcp:
+    network: ""
+    control: ""
+    edge_network: "/sdwan-edge/Catalyst8000v/gcp/vpc"
+    edges: "/sdwan-edge/Catalyst8000v/gcp/cedge"
+  azure:
+    network: ""
+    control: ""
+    edge_network: "/sdwan-edge/Catalyst8000v/azure/vnet"
+    edges: "/sdwan-edge/Catalyst8000v/azure/cedge"
 
 # VMware
-vmware_vmanage_template: "viptela-manage-{{ control_plane_infra.vmanage.sw_version }}"
-vmware_vsmart_template: "viptela-smart-{{ control_plane_infra.vmanage.sw_version }}"
-vmware_vbond_template: "viptela-edge-{{ control_plane_infra.vmanage.sw_version }}"
-vmware_vedge_template: "viptela-edge-{{ control_plane_infra.vmanage.sw_version }}"
-vmware_cedge_template: "{{ wan_edge_infra.wan_edge_defaults.iosxe_sdwan_image }}"
+vmware_vmanage_template: "viptela-manage-{{ controllers.infra.sw_version }}"
+vmware_vsmart_template: "viptela-smart-{{ controllers.infra.sw_version }}"
+vmware_vbond_template: "viptela-edge-{{ controllers.infra.sw_version }}"
+vmware_vedge_template: "viptela-edge-{{ controllers.infra.sw_version }}"
+vmware_cedge_template: "iosxe-sdwan-16.12.5"
 folder: "{{ global_config.tf_vars_folder }}"
 
-# AWS
-aws_ntp_server: "{{ control_plane_infra.ntp_server }}"
-aws_vmanage_ami: "{{ control_plane_infra.vmanage.image_id }}"
-aws_vbond_ami: "{{ control_plane_infra.vbond.image_id }}"
-aws_vsmart_ami: "{{ control_plane_infra.vsmart.image_id }}"
-aws_vmanage_instance_type: "{{ control_plane_infra.vmanage.instance_type }}"
-aws_vbond_instance_type: "{{ control_plane_infra.vbond.instance_type }}"
-aws_vsmart_instance_type: "{{ control_plane_infra.vbond.instance_type }}"
-aws_cedge_ami: "{{ wan_edge_infra.wan_edge_defaults.image_id }}"
-aws_cedge_instance_type: "{{ wan_edge_infra.wan_edge_defaults.instance_type }}"
-{% if control_plane_infra.dns_domain %}
-aws_route53_zone: "{{ control_plane_infra.dns_domain }}"
-{% endif %}
