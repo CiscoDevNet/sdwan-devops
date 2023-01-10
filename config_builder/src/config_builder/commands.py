@@ -25,12 +25,12 @@ def read_file_filter(left_value: str) -> str:
         return f.read()
 
 
-def ipv4_address_filter(left_value: Union[IPv4Interface, str]) -> str:
+def ipv4_address_filter(left_value: Union[IPv4Interface, str], attribute: str = 'ip') -> str:
     try:
         interface = left_value if isinstance(left_value, IPv4Interface) else IPv4Interface(left_value)
-        return str(interface.ip)
+        return str(getattr(interface, attribute))
 
-    except ValueError as ex:
+    except (ValueError, AttributeError) as ex:
         raise FilterError(ex) from None
 
 
@@ -49,13 +49,14 @@ def ipv4_subnet_filter(left_value: Union[IPv4Network, str], prefix_len: int, sub
 def ipv4_subnet_host_filter(left_value: Union[IPv4Network, str], host_index: int) -> IPv4Interface:
     try:
         subnet = left_value if isinstance(left_value, IPv4Network) else IPv4Network(left_value)
-        return IPv4Interface((list(subnet.hosts())[host_index], subnet.prefixlen))
-
-    except IndexError:
-        raise FilterError(
-            f"host_index {host_index} is out of bounds for {left_value.prefixlen}") from None
     except ValueError as ex:
         raise FilterError(ex) from None
+
+    try:
+        return IPv4Interface((list(subnet.hosts())[host_index], subnet.prefixlen))
+    except IndexError:
+        raise FilterError(
+            f"host_index {host_index} is out of bounds for /{subnet.prefixlen}") from None
 
 
 #
@@ -127,7 +128,7 @@ def export_cmd(cli_args: argparse.Namespace) -> None:
     try:
         config_obj = load_yaml(ConfigModel, 'config', app_config.loader_config.top_level_config)
         with open(cli_args.file, 'w') as export_file:
-            export_file.write(config_obj.json(indent=2))
+            export_file.write(config_obj.json(by_alias=True, indent=2))
 
         logger.info(f"Exported source configuration as '{cli_args.file}'")
 

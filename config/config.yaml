@@ -13,6 +13,12 @@ infra_providers:
     project: "gcp-sdwaniac-nprd-84677"
   azure:
     ntp_server: "pool.ntp.org"
+  vmware:
+    ntp_server: "pool.ntp.org"
+    vsphere_server: ""
+    vsphere_user: ""
+    vsphere_password: ""
+
 
 controllers:
   infra:
@@ -62,8 +68,6 @@ wan_edges:
       image_id: "ami-09db869a0fe05bd4e"
       instance_type: "c5n.large"
       sw_version: "17.08.01a"
-      iosxe_sdwan_image: "iosxe-sdwan-16.12.5"
-      cloud_init_format: v1
       sdwan_model: vedge-C8000V
       sdwan_uuid: "C8K-F6A3B082-EDDB-BA43-93DB-2AA42DFE58DB"
     config:
@@ -78,8 +82,6 @@ wan_edges:
       image_id: "cisco-public/cisco-c8k-17-08-01a"
       instance_type: "n1-standard-4"
       sw_version: "17.08.01a"
-      iosxe_sdwan_image: "iosxe-sdwan-16.12.5"
-      cloud_init_format: v1
       sdwan_model: vedge-C8000V
       sdwan_uuid: "C8K-6DF43510-2590-5146-3AAA-EEF129DAC175"
     config:
@@ -93,14 +95,31 @@ wan_edges:
       image_id: "17_08_01a-byol"
       instance_type: "Standard_DS1_v2"
       sw_version: "17.08.01a"
-      iosxe_sdwan_image: "iosxe-sdwan-16.12.5"
-      cloud_init_format: v1
       sdwan_model: vedge-C8000V
       sdwan_uuid: "C8K-0EEBC36C-18EC-2FF6-40F4-A9DEC1BBB25D"
     config:
-      site_id: 104
+      site_id: 103
       system_ip: "1.1.1.6"
       cidr: "10.128.8.0/23"
-
+  cedge-dc:
+    infra:
+      provider: "vmware"
+      image_id: "c8000v-17.08.01a"
+      sw_version: "17.08.01a"
+      sdwan_model: vedge-C8000V
+      sdwan_uuid: "C8K-B63650AB-5DB8-BAC8-2A63-D32EA7676FC2"
+      vmware:
+        datacenter: ""
+        cluster: ""
+        datastore: ""
+        vpn0_portgroup: "VM Network"
+        vpn512_portgroup: "VM Network"
+        servicevpn_portgroup: "VM Network"
+    config:
+      site_id: 104
+      system_ip: "1.1.1.7"
+      vpn0_range: "22.1.140.0/24"
+      vpn1_range: "22.1.11.0/24"
+      vpn0_interface_ipv4: "22.1.140.100/24"
 
 ...
