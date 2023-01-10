@@ -10,6 +10,7 @@ topo.virl
 set*.sh
 *_env_*.sh
 logs/
+bin/key.json
 # python
 __pycache__/
 *.py[cod]

@@ -1,5 +1,5 @@
-from typing import Set, Dict, Any, Optional, Callable
-from ipaddress import IPv4Address, IPv4Network
+from typing import Set, Dict, Any, Optional, Callable, Iterator
+from ipaddress import IPv4Address, IPv4Network, IPv4Interface
 
 
 #
@@ -35,7 +35,7 @@ def constrained_cidr(
     max_length: Optional[int] = None,
     length: Optional[int] = None
 ) -> Callable[[IPv4Network], IPv4Network]:
-    def validator(ipv4_network: IPv4Network):
+    def validator(ipv4_network: IPv4Network) -> IPv4Network:
         if length is not None and ipv4_network.prefixlen != length:
             raise ValueError(f'IPv4 prefix length needs to be /{length}')
         if max_length is not None and ipv4_network.prefixlen > max_length:
@@ -44,5 +44,74 @@ def constrained_cidr(
             raise ValueError(f'IPv4 prefix length needs to be >= /{min_length}')
 
         return ipv4_network
+
+    return validator
+
+
+def cidr_subnet(
+        *,
+        cidr_field: str,
+        prefix_len: int = 24
+) -> Callable[[IPv4Network, Dict[str, Any]], IPv4Network]:
+
+    subnet_gen_map: Dict[IPv4Network, Iterator[IPv4Network]] = {}
+
+    def validator(subnet: IPv4Network, values: Dict[str, Any]) -> IPv4Network:
+        if subnet is None:
+            cidr = values.get(cidr_field, ...)
+            if cidr is ...:
+                raise ValueError(f"no cidr_field name {cidr_field}")
+            if cidr is None:
+                raise ValueError(f"{cidr_field} needs to be provided when subnet is not specified")
+            try:
+                subnet = next(subnet_gen_map.setdefault(cidr, cidr.subnets(new_prefix=prefix_len)))
+            except StopIteration:
+                raise ValueError(f"no more /{prefix_len} subnets available in CIDR {cidr}") from None
+
+        return subnet
+
+    return validator
+
+
+def subnet_interface(
+        *,
+        subnet_field: str,
+        host_index: int
+) -> Callable[[IPv4Interface, Dict[str, Any]], IPv4Interface]:
+    def validator(ipv4_interface: IPv4Interface, values: Dict[str, Any]) -> IPv4Interface:
+        if ipv4_interface is None:
+            subnet = values.get(subnet_field, ...)
+            if subnet is ...:
+                raise ValueError(f"no subnet_field name {subnet_field}")
+            if subnet is None:
+                raise ValueError(f"{subnet_field} was not set")
+            try:
+                ipv4_interface = IPv4Interface((list(subnet.hosts())[host_index], subnet.prefixlen))
+            except IndexError:
+                raise ValueError(f"host_index {host_index} is out of bounds for /{subnet.prefixlen}") from None
+
+        return ipv4_interface
+
+    return validator
+
+
+def subnet_address(
+        *,
+        subnet_field: str,
+        host_index: int
+) -> Callable[[IPv4Address, Dict[str, Any]], IPv4Address]:
+    def validator(ipv4_address: IPv4Address, values: Dict[str, Any]) -> IPv4Address:
+        if ipv4_address is None:
+            subnet = values.get(subnet_field, ...)
+            if subnet is ...:
+                raise ValueError(f"no subnet_field name {subnet_field}")
+            if subnet is None:
+                raise ValueError(f"{subnet_field} was not set")
+            try:
+                ipv4_address = list(subnet.hosts())[host_index]
+            except IndexError:
+                raise ValueError(f"host_index {host_index} is out of bounds for /{subnet.prefixlen}") from None
+
+        return ipv4_address
 
     return validator

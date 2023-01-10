@@ -20,6 +20,11 @@ all:
   {% if controllers.infra.dns_domain %}
     aws_route53_zone: "{{ controllers.infra.dns_domain }}"
   {% endif %}
+  {% if infra_providers.vmware %}
+    vsphere_server: "{{ infra_providers.vmware.vsphere_server }}"
+    vsphere_user: "{{ infra_providers.vmware.vsphere_user }}"
+    vsphere_password: "{{ infra_providers.vmware.vsphere_password }}"
+  {% endif %}
     ntp_servers:
     {% if infra_providers.aws %}
       aws: "{{ infra_providers.aws.ntp_server }}"
@@ -40,9 +45,7 @@ all:
         sdwan_control:
           vars:            
             infra: "{{ controllers.infra.provider }}"
-            vpn0_portgroup: "{{ "{{ lookup('env','VPN0_PORTGROUP') }}" }}"
             vpn0_gateway: "{{ controllers.config.vpn0_gateway }}"
-            vpn512_portgroup: "{{ "{{ lookup('env','VPN512_PORTGROUP') }}" }}"
             sdwan_domain_id: 1
           children:
             vmanage_hosts:
@@ -148,15 +151,13 @@ all:
           vars:
             sdwan_personality: vedge
             login_banner: "Hello!"
-            vpn0_gateway: "{{ controllers.config.vpn0_gateway }}"
-            vpn0_portgroup: "{{ "{{ lookup('env','VPN0_PORTGROUP') }}" }}"
-            vpn512_portgroup: "{{ "{{ lookup('env','VPN512_PORTGROUP') }}" }}"
-            servicevpn_portgroup: "{{ "{{ lookup('env','SERVICEVPN_PORTGROUP') }}" }}"
           hosts:
           {% for wan_edge_name, wan_edge_info in wan_edges.items() %}
             {{ wan_edge_name }}:
               infra: "{{ wan_edge_info.infra.provider }}"
+            {% if wan_edge_info.infra.region %}
               sdwan_datacenter: "{{ wan_edge_info.infra.region }}"
+            {% endif %}
             {% if wan_edge_info.infra.zone %}
               sdwan_datacenter_zone: "{{ wan_edge_info.infra.zone }}"
             {% endif %}
@@ -164,26 +165,39 @@ all:
               gcp_project: "{{ infra_providers.gcp.project }}"
             {% endif %}
               edge_image_id: "{{ wan_edge_info.infra.image_id }}"
+            {% if wan_edge_info.infra.instance_type %}
               edge_instance_type: "{{ wan_edge_info.infra.instance_type }}"
-              iosxe_sdwan_image: "{{ wan_edge_info.infra.iosxe_sdwan_image }}"
+            {% endif %}
               sdwan_model: "{{ wan_edge_info.infra.sdwan_model }}"
               sdwan_uuid: "{{ wan_edge_info.infra.sdwan_uuid }}"
               cloudinit_type: "{{ wan_edge_info.infra.cloud_init_format }}"
               sdwan_system_ip: "{{ wan_edge_info.config.system_ip }}"
               sdwan_site_id: "{{ wan_edge_info.config.site_id }}"
+            {% if wan_edge_info.config.cidr %}
               cidr_range: "{{ wan_edge_info.config.cidr }}"
-              vpn0_range: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) }}"
-              vpn1_range: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 1) }}"
-              vpn0_ip: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(10) }}"
-              ansible_host: "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(10) | ipv4_address }}"
+            {% endif %}
+              vpn0_range: "{{ wan_edge_info.config.vpn0_range }}"
+              vpn1_range: "{{ wan_edge_info.config.vpn1_range }}"
+              vpn0_ip: "{{ wan_edge_info.config.vpn0_interface_ipv4 }}"
+            {% if wan_edge_info.infra.provider == 'vmware' %}
+              vpn0_ip_netmask: "{{ wan_edge_info.config.vpn0_interface_ipv4 | ipv4_address }} {{ wan_edge_info.config.vpn0_interface_ipv4 | ipv4_address('netmask') }}"
+              vpn1_ip_netmask: "{{ wan_edge_info.config.vpn1_interface_ipv4 | ipv4_address }} {{ wan_edge_info.config.vpn1_interface_ipv4 | ipv4_address('netmask') }}"
+              vpn0_portgroup: "{{ wan_edge_info.infra.vmware.vpn0_portgroup }}"
+              vpn512_portgroup: "{{ wan_edge_info.infra.vmware.vpn512_portgroup }}"
+              servicevpn_portgroup: "{{ wan_edge_info.infra.vmware.servicevpn_portgroup }}"
+              datacenter: "{{ wan_edge_info.infra.vmware.datacenter }}"
+              cluster: "{{ wan_edge_info.infra.vmware.cluster }}"
+              datastore: "{{ wan_edge_info.infra.vmware.datastore }}"
+            {% endif %}
+              ansible_host: "{{ wan_edge_info.config.vpn0_interface_ipv4 | ipv4_address }}"
               sdwan_template:
                 name: hq-c8000v
                 variables:
                   'vpn512_interface': GigabitEthernet3
                   'vpn0_interface': GigabitEthernet1
-                  'vpn0_internet_ipv4_address': "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(10) }}"
-                  'vpn0_default_gateway': "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 0) | ipv4_subnet_host(0) | ipv4_address }}"
-                  'vpn1_ipv4_address': "{{ wan_edge_info.config.cidr | ipv4_subnet(24, 1) | ipv4_subnet_host(10) }}"
+                  'vpn0_internet_ipv4_address': "{{ wan_edge_info.config.vpn0_interface_ipv4 }}"
+                  'vpn0_default_gateway': "{{ wan_edge_info.config.vpn0_gateway }}"
+                  'vpn1_ipv4_address': "{{ wan_edge_info.config.vpn1_interface_ipv4 }}"
                   'vpn1_interface': GigabitEthernet2
                   'vpn1_ospf_interface': GigabitEthernet2
                   'system_latitude': '37.411343'
