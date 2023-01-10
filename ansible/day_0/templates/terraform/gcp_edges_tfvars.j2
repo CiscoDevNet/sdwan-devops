@@ -7,11 +7,5 @@ subnet_service = "sdwan-service-subnet"
 {% if acl_cidr_blocks is defined and acl_cidr_blocks != "" %}
 acl_cidr_blocks = [ {{ acl_cidr_blocks }} ]
 {% endif %}
-{% if gcp_image_id is defined and gcp_image_id != "" %}
-image_id = "{{ gcp_image_id }}"
-{% else %}
-image_id = "{{ gcp_cedge_image_id }}"
-{% endif %}
-{% if gcp_cedge_instance_type is defined and gcp_cedge_instance_type != "" %}
-instance_type = "{{ gcp_cedge_instance_type }}"
-{% endif %}
+image_id = "{{ edge_image_id }}"
+instance_type = "{{ edge_instance_type }}"
