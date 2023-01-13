@@ -1,3 +1,4 @@
+.DS_Store
 *.retry
 /ansible/myCA
 viptela_api_cookie
@@ -8,7 +9,7 @@ topo.virl
 .virlrc
 /.virl
 set*.sh
-*_env_*.sh
+*env_*.sh
 logs/
 bin/key.json
 # python
