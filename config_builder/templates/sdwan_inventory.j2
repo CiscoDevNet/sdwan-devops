@@ -181,6 +181,7 @@ all:
               vpn0_ip: "{{ wan_edge_info.config.vpn0_interface_ipv4 }}"
             {% if wan_edge_info.infra.provider == 'vmware' %}
               vpn0_ip_netmask: "{{ wan_edge_info.config.vpn0_interface_ipv4 | ipv4_address }} {{ wan_edge_info.config.vpn0_interface_ipv4 | ipv4_address('netmask') }}"
+              vpn0_default_gateway: "{{ wan_edge_info.config.vpn0_gateway }}"
               vpn1_ip_netmask: "{{ wan_edge_info.config.vpn1_interface_ipv4 | ipv4_address }} {{ wan_edge_info.config.vpn1_interface_ipv4 | ipv4_address('netmask') }}"
               vpn0_portgroup: "{{ wan_edge_info.infra.vmware.vpn0_portgroup }}"
               vpn512_portgroup: "{{ wan_edge_info.infra.vmware.vpn512_portgroup }}"
