@@ -1,5 +1,5 @@
 """
-Config Builder Tool
+SDWAN Config Builder Tool
 
 """
 import argparse
@@ -9,12 +9,12 @@ from .__version__ import __version__ as version
 from .commands import render_cmd, export_cmd, schema_cmd
 
 
-logger = logging.getLogger('config_builder.main')
+logger = logging.getLogger('sdwan_config_builder.main')
 
 
 def main():
     cli_parser = argparse.ArgumentParser(description=__doc__)
-    cli_parser.add_argument("--version", action="version", version=f"Config Builder Tool Version {version}.")
+    cli_parser.add_argument("--version", action="version", version=f"SDWAN Config Builder Tool Version {version}")
     commands = cli_parser.add_subparsers(title="commands")
     commands.required = True
 
