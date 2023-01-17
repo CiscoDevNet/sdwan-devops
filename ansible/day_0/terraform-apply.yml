@@ -28,7 +28,7 @@
 
     - name: Terraform apply
       community.general.terraform:
-        project_path: "{{ lookup('env', 'PROJ_ROOT') }}{{ project_path }}"
+        project_path: "{{ project_path }}"
         state: present
         plan_file: "{{ infra }}_{{ sdwan_component }}.tfplan"
         workspace: "{{ infra }}_{{ sdwan_component }}"
