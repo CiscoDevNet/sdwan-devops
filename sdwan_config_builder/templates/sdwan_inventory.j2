@@ -189,6 +189,7 @@ all:
               datacenter: "{{ wan_edge_info.infra.vmware.datacenter }}"
               cluster: "{{ wan_edge_info.infra.vmware.cluster }}"
               datastore: "{{ wan_edge_info.infra.vmware.datastore }}"
+              folder: "{{ wan_edge_info.infra.vmware.folder }}"
             {% endif %}
               ansible_host: "{{ wan_edge_info.config.vpn0_interface_ipv4 | ipv4_address }}"
               sdwan_template:

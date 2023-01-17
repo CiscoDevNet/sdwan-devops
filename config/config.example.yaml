@@ -1,6 +1,5 @@
 ---
 global_config:
-  # tf_vars_folder: ""
   ubuntu_image: "ubuntu-22-04"
   ssh_public_key_file: "{home_dir}/.ssh/id_rsa.pub"
   # ssh_public_key: "test"
@@ -112,6 +111,7 @@ wan_edges:
         datacenter: ""
         cluster: ""
         datastore: ""
+        folder: ""
         vpn0_portgroup: "VM Network"
         vpn512_portgroup: "VM Network"
         servicevpn_portgroup: "VM Network"

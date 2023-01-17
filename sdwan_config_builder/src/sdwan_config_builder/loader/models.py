@@ -45,7 +45,6 @@ class GlobalConfigModel(BaseSettings):
     """
     home_dir: str = Field(..., env='HOME')
     project_root: str = Field(..., env='PROJ_ROOT')
-    tf_vars_folder: str = ''
     ubuntu_image: str
     ssh_public_key_file: str = Field(None, description='Can use python format string syntax to reference other '
                                                        'previous fields in this model')
@@ -193,6 +192,7 @@ class InfraVmwareModel(BaseModel):
     datacenter: str
     cluster: str
     datastore: str
+    folder: str = ''
     vpn0_portgroup: str
     vpn512_portgroup: str
     servicevpn_portgroup: str
