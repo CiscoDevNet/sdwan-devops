@@ -40,8 +40,9 @@ SDWAN Config Builder Tool Version 0.7
 
 ## Running
 
-The 'metadata.yaml' file should be in the same directory where sdwan_config_build command is run. It defines the location of
-the source configuration file as well as where the output files should be saved.
+The metadata file defines the location of the source configuration file, jinja2 templates, and where the output files 
+should be saved. By default sdwan_config_build look for a 'metadata.yaml' file in the same directory where it is run. 
+The CONFIG_BUILDER_METADATA environment variable can be used to specify a custom location for the metadata file.
 
 ```
 (venv) % % sdwan_config_build --help   

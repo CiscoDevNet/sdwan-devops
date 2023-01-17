@@ -4,7 +4,7 @@ loader_config:
 
 targets_config:
   jinja_renderer:
-    templates_dir: "templates"
+    templates_dir: "../config/templates"
     targets:
       - description: "Ansible day_-1 vars"
         template: "day-1_local.j2"
