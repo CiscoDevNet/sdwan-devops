@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "config_builder"
+name = "sdwan_config_builder"
 description = "Cisco SDWAN Configuration Builder Tool"
 license = "MIT"
 classifiers = [
@@ -28,10 +28,10 @@ dependencies = [
 dynamic = ["version"]
 
 [project.scripts]
-config_build = "config_builder.__main__:main"
+sdwan_config_build = "sdwan_config_builder.__main__:main"
 
 [tool.hatch.version]
-path = "src/config_builder/__version__.py"
+path = "src/sdwan_config_builder/__version__.py"
 
 [tool.hatch.build.targets.sdist]
 include = [

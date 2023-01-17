@@ -6,6 +6,9 @@ topo.virl
 /ansible/licenses
 /ansible/facts_cache
 /ansible/inventory/sdwan_inventory.yml
+/ansible/day_-1/group_vars/all/local.yml
+/ansible/day_0/group_vars/all/local.yml
+/ansible/day_1/group_vars/all/local.yml
 .virlrc
 /.virl
 set*.sh

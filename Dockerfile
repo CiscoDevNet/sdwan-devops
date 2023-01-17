@@ -45,4 +45,8 @@ RUN git clone https://github.com/reismarcelo/sastre-ansible.git /tmp/sastre-ansi
     ansible-galaxy collection install -f /tmp/sastre-ansible/cisco-sastre-1.0.16.tar.gz && \
     rm -fr /tmp/sastre-ansible
 
+COPY sdwan_config_builder/ /tmp/sdwan_config_builder/
+RUN pip install /tmp/sdwan_config_builder && \
+    rm -fr /tmp/sdwan_config_builder
+
 WORKDIR /ansible

@@ -1,12 +1,12 @@
 #! /usr/bin/env python3
 """
-Config Builder Tool
+SDWAN Config Builder Tool
 
 """
 import re
 import sys
 
-from src.config_builder.__main__ import main
+from src.sdwan_config_builder.__main__ import main
 
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])

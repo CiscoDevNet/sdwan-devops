@@ -9,7 +9,7 @@ from jinja2 import (Environment, FileSystemLoader, select_autoescape, TemplateNo
                     UndefinedError, TemplateSyntaxError)
 
 
-logger = logging.getLogger('config_builder.commands')
+logger = logging.getLogger('sdwan_config_builder.commands')
 
 
 #
