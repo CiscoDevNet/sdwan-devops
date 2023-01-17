@@ -6,8 +6,8 @@ all:
     sdwan_control_cidr: "{{ controllers.config.cidr }}"
     viptela_version: "{{ controllers.infra.sw_version }}"
     sdwan_vbond: "{{ controllers.vbond.config.vpn0_interface_ipv4 | ipv4_address }}"
-    vmanage_templates_file: "{{ global_config.project_root }}/ansible/files/hq3_vmanage_templates_v20.yml"
-    vmanage_policy_file: "{{ global_config.project_root }}/ansible/files/hq3_vmanage_policy_v20.yml"
+    vmanage_templates_file: "/ansible/files/hq3_vmanage_templates_v20.yml"
+    vmanage_policy_file: "/ansible/files/hq3_vmanage_policy_v20.yml"
     sdwan_central_policy_name: hq3-centralized-policy
     acl_cidr_blocks: '{{ controllers.config.acl_ingress_ipv4 }}'
     acl6_cidr_blocks: '{{ controllers.config.acl_ingress_ipv6 }}'
@@ -212,7 +212,7 @@ all:
           {% endfor %}
     system:
       vars:
-        virl_config_template: "{{ global_config.project_root }}/ansible/day_0/templates/virl/host.j2"
+        virl_config_template: "/ansible/day_0/templates/virl/host.j2"
         virl_image_defintion: "{{ global_config.ubuntu_image }}"
         host_interface: ens2
       children:
