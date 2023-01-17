@@ -1,12 +1,13 @@
 import logging
 import logging.config
 import logging.handlers
+from os import environ
 from pathlib import Path
 from typing import Any
 from .loader import load_metadata
 
 
-METADATA_FILENAME = "metadata.yaml"
+METADATA_FILENAME = Path(environ.get("CONFIG_BUILDER_METADATA", "metadata.yaml"))
 
 
 def setup_logging(logging_config: dict[str, Any]) -> None:

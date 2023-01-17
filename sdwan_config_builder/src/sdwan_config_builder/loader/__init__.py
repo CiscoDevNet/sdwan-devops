@@ -54,7 +54,7 @@ class MetadataModel(BaseModel):
     logging_config: dict[str, Any]
 
 
-def load_metadata(filename: str) -> MetadataModel:
+def load_metadata(filename: Union[os.PathLike, str]) -> MetadataModel:
     try:
         return load_yaml(MetadataModel, 'metadata', filename)
     except LoaderException as ex:
