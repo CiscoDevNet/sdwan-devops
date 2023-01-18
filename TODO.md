@@ -18,7 +18,7 @@ Some of the tasks listed here relate to the `terraform-sdwan` submodule
 - [ ] Static addressing has some conflicting configurations, clean that up
 - [x] Update Docker container (pull in Nathan's work)
 - [x] Split out day 1 automation (pull in Marcelo's work)
-- [ ] Decouple serial file management from certificate authority, as it is related to edge deployment
+- [x] Decouple serial file management from certificate authority, as it is related to edge deployment
 - [x] Optimize Docker image (it's very large, and every little update changes all layers!)
 
 ### Generic multi-infra support

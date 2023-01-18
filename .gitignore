@@ -4,6 +4,7 @@
 viptela_api_cookie
 topo.virl
 /ansible/licenses
+/ansible/files/vault-password-file
 /ansible/facts_cache
 /ansible/inventory/sdwan_inventory.yml
 /ansible/day_-1/group_vars/all/local.yml
