@@ -23,7 +23,8 @@ dependencies = [
     "Jinja2",
     "PyYAML",
     "pydantic",
-    "passlib"
+    "passlib",
+    "sshpubkeys"
 ]
 dynamic = ["version"]
 

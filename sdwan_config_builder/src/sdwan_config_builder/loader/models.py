@@ -6,6 +6,7 @@ from pathlib import Path
 from ipaddress import IPv4Network, IPv6Network, IPv4Interface, IPv4Address
 from pydantic import BaseModel, BaseSettings, Field, validator, root_validator, constr, conint
 from passlib.hash import sha512_crypt
+from sshpubkeys import SSHKey, InvalidKeyError
 from .validators import (formatted_string, unique_system_ip, constrained_cidr, cidr_subnet, subnet_interface,
                          subnet_address)
 
@@ -39,6 +40,20 @@ class ComputeInstanceModel(BaseModel):
 # global_config block
 #
 
+def resolve_ssh_public_key(pub_key: Union[str, None], pub_key_file: Union[str, None]) -> str:
+    if pub_key is None and pub_key_file is not None:
+        try:
+            with open(pub_key_file) as f:
+                return f.read()
+        except FileNotFoundError as ex:
+            raise ValueError(f"Error loading 'ssh_public_key_file': {ex}") from None
+
+    if pub_key is not None and pub_key_file is None:
+        return pub_key
+
+    raise ValueError("Either 'ssh_public_key_file' or 'ssh_public_key' must be provided")
+
+
 class GlobalConfigModel(BaseSettings):
     """
     GlobalConfigModel is a special config block as field values can use environment variables as their default value
@@ -54,19 +69,16 @@ class GlobalConfigModel(BaseSettings):
 
     @validator('ssh_public_key', always=True)
     def resolve_ssh_public_key(cls, v, values: Dict[str, Any]):
-        pub_key_file = values.get('ssh_public_key_file')
+        pub_key = resolve_ssh_public_key(v, values.get('ssh_public_key_file'))
+        try:
+            ssh_key = SSHKey(pub_key, strict=True)
+            ssh_key.parse()
+        except InvalidKeyError as ex:
+            raise ValueError(f"Invalid SSH key: {ex}") from None
+        except NotImplementedError as ex:
+            raise ValueError(f"Invalid SSH key type: {ex}") from None
 
-        if v is None and pub_key_file is not None:
-            try:
-                with open(pub_key_file) as f:
-                    return f.read()
-            except FileNotFoundError as ex:
-                raise ValueError(f"Error loading 'ssh_public_key_file': {ex}") from None
-
-        if v is not None and pub_key_file is None:
-            return v
-
-        raise ValueError("Either 'ssh_public_key_file' or 'ssh_public_key' must be provided")
+        return pub_key
 
     @validator('project_root')
     def resolve_project_root(cls, v: str) -> str:
