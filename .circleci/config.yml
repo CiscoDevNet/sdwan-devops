@@ -16,7 +16,7 @@ jobs:
     # IP ranges are only supported for Docker executors, disabling for now
     #circleci_ip_ranges: true        # https://circleci.com/docs/ip-ranges
     machine:
-      image: ubuntu-2204:2022.10.1  # https://circleci.com/docs/configuration-reference#available-linux-machine-images-cloud
+      image: ubuntu-2204:2022.10.2  # https://circleci.com/docs/configuration-reference#available-linux-machine-images-cloud
     resource_class: medium          # https://circleci.com/docs/configuration-reference/#linuxvm-execution-environment
     steps:
       - checkout
@@ -39,7 +39,7 @@ jobs:
     # IP ranges are only supported for Docker executors, disabling for now
     #circleci_ip_ranges: true        # https://circleci.com/docs/ip-ranges
     machine:
-      image: ubuntu-2204:2022.10.1  # https://circleci.com/docs/configuration-reference#available-linux-machine-images-cloud
+      image: ubuntu-2204:2022.10.2  # https://circleci.com/docs/configuration-reference#available-linux-machine-images-cloud
     resource_class: medium          # https://circleci.com/docs/configuration-reference/#linuxvm-execution-environment
     environment:
       SDWAN_CONTROL_INFRA: << pipeline.parameters.deploy-infra >>
