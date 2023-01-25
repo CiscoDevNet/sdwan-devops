@@ -5,6 +5,7 @@ viptela_encrypted_pass: "{{ controllers.vmanage.config.password_hashed }}"
 ansible_user: "{{ controllers.vmanage.config.username }}"
 ansible_password: "{{ controllers.vmanage.config.password }}"
 ssh_pubkey: "{{ global_config.ssh_public_key }}"
+ssh_pubkey_fp: "{{ global_config.ssh_public_key_fp }}"
 sdwan_serial_file: "/ansible/licenses/serialFile.viptela"
 
 sdwan_ca_passphrase: "{{ controllers.certificate_authority.passphrase }}"

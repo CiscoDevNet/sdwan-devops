@@ -64,6 +64,7 @@ class GlobalConfigModel(BaseSettings):
     ssh_public_key_file: str = Field(None, description='Can use python format string syntax to reference other '
                                                        'previous fields in this model')
     ssh_public_key: Optional[str] = None
+    ssh_public_key_fp: Optional[str] = None
 
     _validate_formatted_strings = validator('ssh_public_key_file', allow_reuse=True)(formatted_string)
 
@@ -79,6 +80,20 @@ class GlobalConfigModel(BaseSettings):
             raise ValueError(f"Invalid SSH key type: {ex}") from None
 
         return pub_key
+
+    @validator('ssh_public_key_fp', always=True)
+    def resolve_ssh_public_key_fp(cls, v: Union[str, None], values: Dict[str, Any]) -> str:
+        if v is None:
+            pub_key = values.get('ssh_public_key')
+            if pub_key is None:
+                raise ValueError("Field 'ssh_public_key' or 'ssh_public_key_file' not present")
+            ssh_key = SSHKey(pub_key, strict=True)
+            ssh_key.parse()
+            fp = ssh_key.hash_md5().replace('MD5:', '').replace(':', '').upper() + " " + ssh_key.comment
+        else:
+            fp = v
+
+        return fp
 
     @validator('project_root')
     def resolve_project_root(cls, v: str) -> str:
