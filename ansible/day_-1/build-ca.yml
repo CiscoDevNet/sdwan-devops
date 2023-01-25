@@ -26,7 +26,8 @@
         basic_constraints_critical: true
         basic_constraints:
           - CA:TRUE
-        common_name: viptelaCA.local
+        common_name: CiscoCA.local
+        organizational_unit_name: "{{ vmanage_org }}"
 
     - name: Generate a Self Signed OpenSSL certificate.
       openssl_certificate:
