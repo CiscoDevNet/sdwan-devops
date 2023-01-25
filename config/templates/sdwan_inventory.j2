@@ -43,7 +43,7 @@ all:
     sdwan:
       children:
         sdwan_control:
-          vars:            
+          vars:
             infra: "{{ controllers.infra.provider }}"
             vpn0_gateway: "{{ controllers.config.vpn0_gateway }}"
             sdwan_domain_id: 1
@@ -226,6 +226,6 @@ all:
               host_gateway: '192.168.2.1'
         public_hosts:
           hosts:
-            hq-host1:    
+            hq-host1:
               host_ip: 10.0.1.10/24
               host_gateway: '10.0.1.1'
