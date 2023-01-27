@@ -6,10 +6,11 @@
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
     vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ansible.utils.ipaddr('address') }}"
     file: vmanage-templates.yml
+  environment: "{{ proxy_env }}"
   gather_facts: no
   tasks:
     - vmanage_template_export:
-        user: "{{ ansible_user }}"
+        user: "{{ vmanage_user }}"
         host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
+        password: "{{ vmanage_pass }}"
         file: "{{ file }}"
