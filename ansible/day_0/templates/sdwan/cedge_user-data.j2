@@ -18,6 +18,7 @@ ntp server {{ ntp_server }}
 !
 system
  system-ip             {{ sdwan_system_ip }}
+ overlay-id            1
  site-id               {{ sdwan_site_id }}
  organization-name     "{{ vmanage_org }}"
  sp-organization-name  "{{ vmanage_org }}"
@@ -36,6 +37,7 @@ interface GigabitEthernet1
 !
 interface GigabitEthernet2
  description   SERVICE
+ vrf forwarding 1
 {% if vpn1_ip_netmask is defined %}
  ip address {{ vpn1_ip_netmask }}
 {% else %}
@@ -54,6 +56,7 @@ sdwan
  interface GigabitEthernet1
   tunnel-interface
    encapsulation ipsec
+   color default
    allow-service all
    no allow-service bgp
    allow-service dhcp
@@ -72,6 +75,17 @@ sdwan
 ip route 0.0.0.0 0.0.0.0 {{ vpn0_default_gateway }}
 !
 {% endif %}{# vpn0_default_gateway #}
+vrf definition 1
+ rd 1:1
+ address-family ipv4
+  route-target export 1:1
+  route-target import 1:1
+  exit-address-family
+ !
+ address-family ipv6
+  exit-address-family
+ !
+!
 {% if ssh_pubkey_fp is defined and ssh_pubkey_fp != "" %}
 ip ssh pubkey-chain
  username admin
