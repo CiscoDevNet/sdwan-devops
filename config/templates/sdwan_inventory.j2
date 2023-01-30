@@ -6,7 +6,7 @@ all:
     sdwan_control_cidr: "{{ controllers.config.cidr }}"
     viptela_version: "{{ controllers.infra.sw_version }}"
     sdwan_vbond: "{{ controllers.vbond.config.vpn0_interface_ipv4 | ipv4_address }}"
-    vmanage_templates_file: "/ansible/files/hq3_vmanage_templates_v20.yml"
+    vmanage_templates_file: "/ansible/files/vmanage-templates.yml"
     vmanage_policy_file: "/ansible/files/hq3_vmanage_policy_v20.yml"
     sdwan_central_policy_name: hq3-centralized-policy
     acl_cidr_blocks: '{{ controllers.config.acl_ingress_ipv4 }}'
@@ -193,22 +193,13 @@ all:
             {% endif %}
               ansible_host: "{{ wan_edge_info.config.vpn0_interface_ipv4 | ipv4_address }}"
               sdwan_template:
-                name: hq-c8000v
+                name: branch-c8000v
                 variables:
-                  'vpn512_interface': GigabitEthernet3
-                  'vpn0_interface': GigabitEthernet1
-                  'vpn0_internet_ipv4_address': "{{ wan_edge_info.config.vpn0_interface_ipv4 }}"
-                  'vpn0_default_gateway': "{{ wan_edge_info.config.vpn0_gateway }}"
-                  'vpn1_ipv4_address': "{{ wan_edge_info.config.vpn1_interface_ipv4 }}"
-                  'vpn1_interface': GigabitEthernet2
-                  'vpn1_ospf_interface': GigabitEthernet2
-                  'system_latitude': '37.411343'
-                  'system_longitude': '-121.938803'
-                  'system_host_name': "{{ wan_edge_name }}"
-                  'system_system_ip': "{{ wan_edge_info.config.system_ip }}"
-                  'system_site_id': "{{ wan_edge_info.config.site_id }}"
-                  'banner_login': "{{ "{{ login_banner }}" }}"
-                  'banner_motd': "Welcome to {{ wan_edge_name }}!"
+                  'bootstrap_interface': GigabitEthernet2
+                  'vpn_if_tunnel_color_value': default
+                  'host-name': "{{ wan_edge_name }}"
+                  'system-ip': "{{ wan_edge_info.config.system_ip }}"
+                  'site-id': "{{ wan_edge_info.config.site_id }}"
           {% endfor %}
     system:
       vars:

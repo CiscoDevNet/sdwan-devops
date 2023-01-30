@@ -9,8 +9,8 @@
   environment: "{{ proxy_env }}"
   tasks:
     - vmanage_template_import:
-        user: "{{ ansible_user }}"
+        user: "{{ vmanage_user }}"
         host: "{{ vmanage_ip }}"
-        password: "{{ ansible_password }}"
+        password: "{{ vmanage_pass }}"
         file: "{{ vmanage_templates_file }}"
       when: vmanage_templates_file is defined

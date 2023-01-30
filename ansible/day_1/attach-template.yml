@@ -13,7 +13,7 @@
       assert:
         that:
           - (cidr_range | ansible.utils.ipaddr('prefix')) == 23
-      when: passed == "sdwan_edge"
+      when: passed == "sdwan_edge" and cidr_range is defined
 
     - name: Attach template to device
       vmanage_device_attachment:

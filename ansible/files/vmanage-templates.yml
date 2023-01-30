@@ -1,0 +1,68 @@
+vmanage_device_templates:
+-   templateId: 9b29a576-1807-4b0d-9c2a-545eb1172689
+    templateName: branch-c8000v
+    templateDescription: Branch C8000v Template
+    deviceType: vedge-C8000V
+    deviceRole: sdwan-edge
+    configType: template
+    factoryDefault: false
+    policyId: ''
+    featureTemplateUidRange: []
+    draftMode: false
+    connectionPreferenceRequired: true
+    connectionPreference: true
+    templateClass: cedge
+    attached_devices: []
+    input:
+        columns:
+        -   title: Prefix(vpn_ipv4_ip_prefix)
+            property: /1/vpn-instance/ip/route/vpn_ipv4_ip_prefix/prefix
+            variable: vpn_ipv4_ip_prefix
+        -   title: Address(lan_next_hop_ipaddress)
+            property: /1/vpn-instance/ip/route/vpn_ipv4_ip_prefix/next-hop/lan_next_hop_ipaddress/address
+            variable: lan_next_hop_ipaddress
+        -   title: Interface Name(bootstrap_interface)
+            property: /1/bootstrap_interface/interface/if-name
+            variable: bootstrap_interface
+        -   title: Color(vpn_if_tunnel_color_value)
+            property: /0/GigabitEthernet1/interface/tunnel-interface/color/value
+            variable: vpn_if_tunnel_color_value
+        -   title: Hostname(host-name)
+            property: //system/host-name
+            variable: host-name
+        -   title: System IP(system-ip)
+            property: //system/system-ip
+            variable: system-ip
+        -   title: Site ID(site-id)
+            property: //system/site-id
+            variable: site-id
+        data: []
+    generalTemplates:
+    -   templateName: Factory_Default_AAA_CISCO_Template
+        templateType: cedge_aaa
+    -   templateName: Default_BFD_Cisco_V01
+        templateType: cisco_bfd
+    -   templateName: Default_GCP_C8000V_OMP_IPv46_V01
+        templateType: cisco_omp
+    -   templateName: Default_Security_Cisco_V01
+        templateType: cisco_security
+    -   templateName: Default_System_Cisco_V01
+        templateType: cisco_system
+        subTemplates:
+        -   templateName: Default_Logging_Cisco_V01
+            templateType: cisco_logging
+    -   templateName: Default_GCP_C8000V_VPN0_V01
+        templateType: cisco_vpn
+        subTemplates:
+        -   templateName: Default_GCP_C8000V_VPN0_INTF_GE1_V01
+            templateType: cisco_vpn_interface
+    -   templateName: Default_GCP_C8000V_VPN512_V01
+        templateType: cisco_vpn
+    -   templateName: Default_SDBranch_Service_VPN1_V01
+        templateType: cisco_vpn
+        subTemplates:
+        -   templateName: Default_BOOTSTRAP_DHCP_V01
+            templateType: cisco_vpn_interface
+    -   templateName: Factory_Default_Global_CISCO_Template
+        templateType: cedge_global
+vmanage_feature_templates: []
