@@ -1,5 +1,5 @@
 # Version 7.0.0 of Ansible just got released. Let's wait a bit until adopting
-ansible==6.*
+ansible==7.2.*
 ansible-virl
 netaddr
 viptela
