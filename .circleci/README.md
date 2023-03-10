@@ -21,6 +21,10 @@ See the list of possible environment variables in the follwoing table. They can 
 | ARM_SUBSCRIPTION_ID     | optional    | -              | -                      | Required if deploying something on Azure |
 | ARM_TENANT_ID           | optional    | -              | -                      | Required if deploying something on Azure |
 | CONFIG_BUILDER_METADATA | required    | -              | ../config/metadata.yaml| Configure the sdwan_config_builder |
+| VPN_GW                  | optional    | -              | -                      | OpenConnect compatible VPN gateway hostname, for setting up an OpenConnect VPN (used for on-prem access) |
+| VPN_USER                | optional    | -              | -                      | VPN gateway username |
+| VPN_PASS                | optional    | -              | -                      | VPN gateway password |
+| VPN_HOST                | optional    | -              | -                      | DC host to ping to check connectivity |
 
 ### External pipeline
 

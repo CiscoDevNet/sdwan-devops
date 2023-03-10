@@ -57,6 +57,9 @@ jobs:
           name: Generate Ansible inventory and variable files based on YAML config
           command: cd bin && ./decrypt_secrets.sh && ./config_build.sh
       - run:
+          name: Connect VPN to on-prem DC
+          command: sudo apt install -y openconnect && ./bin/vpn.sh
+      - run:
           name: Creating networks and VMs
           command: cd bin && ./play.sh -v /ansible/day_0/deploy-control-plane.yml
       - run:
@@ -68,7 +71,7 @@ jobs:
       # For now we can't reliably deploy Azure and VMware edges, so exclude them from host list
       - run:
           name: Onboarding SD-WAN edges
-          command: cd bin && ./play.sh -v /ansible/day_0/onboard-edges.yml --limit 'all:!cedge-azure:!cedge-dc'
+          command: cd bin && ./play.sh -v /ansible/day_0/onboard-edges.yml --limit 'all:!cedge-azure'
       - run:
           name: SD-WAN control plane day 1 configuration
           command: cd bin && ./play.sh -v /ansible/day_1/config-sdwan.yml
@@ -79,7 +82,7 @@ jobs:
           command: export VMANAGE_EXTERNAL_IP=$(jq -r '.outputs.vmanages_vmanageEth0EIP.value[0]' terraform-sdwan/aws/Provision_Instances/terraform.tfstate.d/aws_control/terraform.tfstate) && echo $VMANAGE_EXTERNAL_IP
       - run:
           name: Cleaning up due to failure
-          command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure:!cedge-dc'; ./play.sh -v /ansible/day_0/clean-control-plane.yml
+          command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure'; ./play.sh -v /ansible/day_0/clean-control-plane.yml
           when: on_fail
       - unless:
           condition:
@@ -100,7 +103,7 @@ jobs:
           steps:
             - run:
                 name: Removing edge devices deployment (VMs and networks)
-                command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure:!cedge-dc'
+                command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure'
             - run:
                 name: Removing control plane deployment (VMs and networks)
                 command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
