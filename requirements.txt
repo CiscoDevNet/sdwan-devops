@@ -1,7 +1,6 @@
-# Version 7.0.0 of Ansible just got released. Let's wait a bit until adopting
 ansible==7.2.*
-ansible-virl
+ansible-virl==0.0.7
 netaddr
-viptela
-virl2_client
-cisco-sdwan>=1.21
+viptela==0.3.9
+virl2_client==2.5.0
+cisco-sdwan==1.21
