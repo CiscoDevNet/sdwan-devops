@@ -5,7 +5,7 @@ FROM ubuntu:22.04
 # https://pythonspeed.com/articles/base-image-python-docker-images/
 
 ARG build_date=unspecified
-ARG terraform_version=1.4.0
+ARG terraform_version=1.4.1
 ARG arch=amd64
 
 LABEL org.opencontainers.image.title="Cisco SD-WAN" \
