@@ -56,7 +56,7 @@ Check the [whitepaper on CCO](https://www.cisco.com/c/en/us/td/docs/routers/sdwa
 
 C8000v can be deployed in a transit VPC/VNET in AWS, Azure and GCP, and can also be deployed on VMware and Openstack.
 
-[Deploying C8000v](sdwan-edge/README.md)
+[Deploying C8000v](https://github.com/CiscoDevNet/sdwan-edge/blob/main/README.md)
 
 - Generates bootstrap configuration (cloud-init format)
 - Creates transit VPC if required
