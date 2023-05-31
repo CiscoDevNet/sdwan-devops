@@ -40,7 +40,7 @@ ENV ANSIBLE_SSH_PIPELINING=true
 ENV ANSIBLE_LOCAL_TMP=/tmp
 ENV ANSIBLE_REMOTE_TMP=/tmp
 
-RUN git clone https://github.com/reismarcelo/sastre-ansible.git /tmp/sastre-ansible && \
+RUN git clone https://github.com/CiscoDevNet/sastre-ansible /tmp/sastre-ansible && \
     ansible-galaxy collection build /tmp/sastre-ansible/cisco/sastre --output-path /tmp/sastre-ansible && \
     ansible-galaxy collection install -f /tmp/sastre-ansible/cisco-sastre-1.0.16.tar.gz && \
     rm -fr /tmp/sastre-ansible
