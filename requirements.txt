@@ -3,4 +3,4 @@ ansible-virl==0.0.7
 netaddr
 viptela==0.3.9
 virl2_client==2.5.0
-cisco-sdwan==1.21
+cisco-sdwan==1.21.2
