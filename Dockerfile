@@ -5,7 +5,10 @@ FROM ubuntu:22.04
 # https://pythonspeed.com/articles/base-image-python-docker-images/
 
 ARG build_date=unspecified
-ARG terraform_version=1.5.4
+# After releasing 1.5.5, Hashicorp changed the license from MPL to BSL.
+# Unless OSPO/Cisco Legal confirms that we can keep using Terraform under the
+# new license, we shouldn't update this version.
+ARG terraform_version=1.5.5
 ARG arch=amd64
 
 LABEL org.opencontainers.image.title="Cisco SD-WAN" \
