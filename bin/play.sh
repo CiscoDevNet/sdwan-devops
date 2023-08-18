@@ -29,21 +29,37 @@ done
 OPTIONS="$OPTIONS --env ANSIBLE_ROLES_PATH=/ansible/roles --env ANSIBLE_STDOUT_CALLBACK=debug"
 
 while getopts ":dlc" opt; do
-  case $opt in
-    d)
-      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/config:/config -v $PWD/../python-viptela:/python-viptela \
-        --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE /bin/bash
+   case $opt in
+   d)
+      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible \
+      -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan \
+      -v $PROJ_ROOT/sdwan-edge:/sdwan-edge \
+      -v $PROJ_ROOT/config:/config \
+      -v $PWD/../python-viptela:/python-viptela \
+      --env PWD="/ansible" \
+      --env USER="$USER" \
+      $OPTIONS \
+      $IMAGE /bin/bash
       exit
       ;;
-    l)
-      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE ansible-lint
+   l)
+      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible \
+         --env PWD="/ansible" \
+         --env USER="$USER" \
+         $OPTIONS \
+         $IMAGE ansible-lint
       exit
       ;;
-    c)
+   c)
       shift $((OPTIND-1))
-      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan \
-       -v $PROJ_ROOT/sdwan-edge:/sdwan-edge -v $PROJ_ROOT/config:/config \
-       --env PWD="/ansible" --env USER="$USER" $OPTIONS $IMAGE sdwan_config_build "$@"
+      docker run -it --rm -v $PROJ_ROOT/ansible:/ansible \
+         -v $PROJ_ROOT/terraform-sdwan:/terraform-sdwan \
+         -v $PROJ_ROOT/sdwan-edge:/sdwan-edge \
+         -v $PROJ_ROOT/config:/config \
+         --env PWD="/ansible" \
+         --env USER="$USER" \
+         $OPTIONS \
+         $IMAGE sdwan_config_build "$@"
       exit
       ;;
   esac
