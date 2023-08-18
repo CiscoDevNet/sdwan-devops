@@ -14,6 +14,12 @@ export AWS_SESSION_TOKEN=$(aws configure get $AWS_PROFILE.aws_session_token)
 # export GOOGLE_OAUTH_ACCESS_TOKEN=$(gcloud auth print-access-token)
 # export GOOGLE_CREDENTIALS=$(cat key.json | tr -s '\n' ' ')
 
+# Azure credentials, if you have a service principal configured
+# export ARM_SUBSCRIPTION_ID="00000000-0000-0000-0000-000000000000"
+# export ARM_TENANT_ID="00000000-0000-0000-0000-000000000000"
+# export ARM_CLIENT_ID="00000000-0000-0000-0000-000000000000"
+# export ARM_CLIENT_SECRET="00000000-0000-0000-0000-000000000000"
+
 # TODO: Remove value before commit
 export VAULT_PASS=
 
