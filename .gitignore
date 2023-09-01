@@ -30,6 +30,5 @@ env.bak/
 venv.bak/
 # IDE project files
 .vscode/
+*.code-workspace
 .idea
-
-
