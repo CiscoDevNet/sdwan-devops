@@ -99,6 +99,10 @@ all:
                           enabled: true
                           ip:
                             address: "{{ controllers.vbond.config.vpn0_interface_ipv4 }}"
+                          tunnel_interface:
+                            encapsulation: ipsec
+                            allow_service:
+                              - all
                       routes:
                         - prefix: 0.0.0.0/0
                           next_hop:
