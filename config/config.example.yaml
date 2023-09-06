@@ -24,10 +24,10 @@ controllers:
     provider: "aws"
     region: "us-east-1"
   # dns_domain: "acme.com"
-    sw_version: "20.8.1"
+    sw_version: "20.12.1"
     cloud_init_format: v2
   config:
-    organization_name: "Cisco CX Canada"
+    organization_name: "Cisco DevOps"
     site_id: 1
     acl_ingress_ipv4: [ "0.0.0.0/1", "128.0.0.0/1" ]
     acl_ingress_ipv6: [ "::/0" ]
@@ -38,7 +38,7 @@ controllers:
   vmanage:
     infra:
       image_id: "ami-02b3d4da3fc136dab"
-      instance_type: "c5.2xlarge"
+      instance_type: "c5.4xlarge"
     config:
       username: "admin"
       password: "C1sco12345"

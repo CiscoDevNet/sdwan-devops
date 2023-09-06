@@ -1,0 +1,100 @@
+- name: Configure certificates
+  hosts: localhost
+  vars:
+    vmanage_host: "{{ groups.vmanage_hosts | first }}"
+    vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ansible.utils.ipaddr('address') }}"
+    vbond_controller: "{{ groups.vbond_hosts[0] }}"
+  tags:
+    - control
+    - vmanage
+  any_errors_fatal: true
+  gather_facts: no
+  environment: "{{ proxy_env }}"
+  tasks:
+    - name: Add the Enterprise CA
+      cisco.sastre.settings_enterprise_ca:
+        address: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        root_cert: "{{ lookup('file', '{{ sdwan_ca_cert }}') }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed
+
+    - name: Generate CSRs
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        name: "{{ item }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ansible.utils.ipaddr('address')}}"
+        state: csr
+      loop: "{{ groups.sdwan_control }}"
+      register: control_devices
+      retries: 10
+      delay: 10
+      until: control_devices is not failed
+
+    - name: Write out CSR
+      copy:
+        content: "{{ item.deviceCSR }}"
+        dest: "{{ sdwan_cert_dir }}/{{ item.item }}.csr"
+      loop: "{{ control_devices.results }}"
+      delegate_to: localhost
+
+    - name: Sign Controller Cert
+      openssl_certificate:
+        csr_path: "{{ sdwan_cert_dir }}/{{ item }}.csr"
+        path: "{{ sdwan_cert_dir }}/{{ item }}.crt"
+        provider: ownca
+        ownca_path: "{{ sdwan_cert_dir }}/myCA.pem"
+        ownca_privatekey_path: "{{ sdwan_cert_dir }}/myCA.key"
+        ownca_privatekey_passphrase: "{{ sdwan_ca_passphrase }}"
+      loop: "{{ groups.sdwan_control }}"
+      delegate_to: localhost
+
+    - name: Add Certificate to Control Hosts
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        name: "{{ item }}"
+        transport_ip: "{{ hostvars[item].vpn0_ip | ansible.utils.ipaddr('address')}}"
+        cert: "{{lookup('file', '{{ sdwan_cert_dir }}/{{ item }}.crt')}}"
+      loop: "{{ groups.sdwan_control }}"
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed
+
+    - name: Push Certs to Controllers
+      vmanage_device_certificate:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        state: push
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed
+
+    - name: Install Serial File
+      vmanage_fileupload:
+        host: "{{ vmanage_ip }}"
+        user: "{{ vmanage_user }}"
+        password: "{{ vmanage_pass }}"
+        file: "{{ sdwan_serial_file }}"
+      delegate_to: localhost
+      register: result
+      retries: 10
+      delay: 10
+      until: result is not failed
+
+    - debug:
+        msg: "vManage IP: {{ vmanage_ip }}"
+
+    - debug:
+        msg: "vManage external IP: {{ sdwan_vmanage }}"
+      when: sdwan_vmanage is defined

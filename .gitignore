@@ -30,6 +30,8 @@ env.bak/
 venv.bak/
 # IDE project files
 .vscode/
+*.code-workspace
 .idea
-
-
+config/config_20_9.yaml
+config/config_20_10.yaml
+docs/NOTES.md

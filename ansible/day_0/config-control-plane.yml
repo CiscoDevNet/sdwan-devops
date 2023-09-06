@@ -3,3 +3,5 @@
 - import_playbook: check-vmanage.yml
 
 - import_playbook: config-vmanage.yml
+
+- import_playbook: config-certificates.yml
