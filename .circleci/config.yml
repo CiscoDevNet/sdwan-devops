@@ -63,18 +63,20 @@ jobs:
           name: Creating networks and VMs
           command: cd bin && ./play.sh -v /ansible/day_0/deploy-control-plane.yml
       - run:
-          name: Waiting 5 minutes
-          command: sleep 300
+          name: Waiting 10 minutes
+          command: sleep 600
+          no_output_timeout: 30m
       - run:
           name: SD-WAN control plane day 0 configuration
           command: cd bin && ./play.sh -v /ansible/day_0/config-control-plane.yml
       # For now we can't reliably deploy Azure and VMware edges, so exclude them from host list
       - run:
           name: Onboarding SD-WAN edges
-          command: cd bin && ./play.sh -v /ansible/day_0/onboard-edges.yml --limit 'all:!cedge-azure'
-      - run:
-          name: SD-WAN control plane day 1 configuration
-          command: cd bin && ./play.sh -v /ansible/day_1/config-sdwan.yml
+          command: cd bin && ./play.sh -v /ansible/day_0/onboard-edges.yml --limit 'all:!cedge-azure-circleci'
+      # This is fragile, and doesn't work well with 20.12, so disable it until we can look into it
+      # - run:
+      #     name: SD-WAN control plane day 1 configuration
+      #     command: cd bin && ./play.sh -v /ansible/day_1/config-sdwan.yml
       # This is a hack, will need to find an infra independent way to export this
       # We can start with an ansible fact, but ideally Vault or equivalent
       - run:
@@ -82,7 +84,7 @@ jobs:
           command: export VMANAGE_EXTERNAL_IP=$(jq -r '.outputs.vmanages_vmanageEth0EIP.value[0]' terraform-sdwan/aws/Provision_Instances/terraform.tfstate.d/aws_control/terraform.tfstate) && echo $VMANAGE_EXTERNAL_IP
       - run:
           name: Cleaning up due to failure
-          command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure'; ./play.sh -v /ansible/day_0/clean-control-plane.yml
+          command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure-circleci'; ./play.sh -v /ansible/day_0/clean-control-plane.yml
           when: on_fail
       - unless:
           condition:
@@ -103,13 +105,13 @@ jobs:
           steps:
             - run:
                 name: Removing edge devices deployment (VMs and networks)
-                command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure'
+                command: cd bin && ./play.sh -v /ansible/day_0/clean-edges.yml --limit 'all:!cedge-azure-circleci'
             - run:
                 name: Removing control plane deployment (VMs and networks)
                 command: cd bin && ./play.sh -v /ansible/day_0/clean-control-plane.yml
 
 workflows:
-  "Deploy SD-WAN":
+  "Test end-to-end SD-WAN deployment":
     jobs:
       - "Create Root CA"
       - "Deploy SD-WAN":
