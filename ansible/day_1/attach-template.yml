@@ -29,7 +29,7 @@
         wait: yes
         state: present
       when: sdwan_template is defined
-      async: 90
+      async: 120
       poll: 10
       register: attachment_results
       tags:
