@@ -9,3 +9,11 @@ acl_cidr_blocks = [ {{ acl_cidr_blocks }} ]
 {% if acl6_cidr_blocks is defined and acl6_cidr_blocks != "" %}
 acl6_cidr_blocks = [ {{ acl6_cidr_blocks }} ]
 {% endif %}
+{% if common_tags is defined and common_tags != "" %}
+common_tags = {
+{% for key, value in common_tags.items() %}
+    "{{ key }}" = "{{ value }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+}
+{% endif %}
