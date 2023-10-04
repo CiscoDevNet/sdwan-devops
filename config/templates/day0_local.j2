@@ -7,6 +7,10 @@ ansible_password: "{{ controllers.vmanage.config.password }}"
 ssh_pubkey: "{{ global_config.ssh_public_key }}"
 ssh_pubkey_fp: "{{ global_config.ssh_public_key_fp }}"
 sdwan_serial_file: "/ansible/licenses/serialFile.viptela"
+common_tags:
+  {% for key, value in global_config.common_tags.items() %}
+  {{ key }}: "{{ value }}"
+  {% endfor %}
 
 sdwan_ca_passphrase: "{{ controllers.certificate_authority.passphrase }}"
 sdwan_cert_dir: "{{ controllers.certificate_authority.cert_dir }}"

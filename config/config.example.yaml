@@ -1,5 +1,9 @@
 ---
 global_config:
+  common_tags:
+    Owner: "Owner Name"
+    Project: "Project Name"
+    Automation: "sdwan-devops"
   ubuntu_image: "ubuntu-22-04"
   # ssh_public_key_file: "{home_dir}/.ssh/id_rsa.pub"
   ssh_public_key: "<your public key>"

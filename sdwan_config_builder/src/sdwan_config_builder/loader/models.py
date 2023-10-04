@@ -60,6 +60,7 @@ class GlobalConfigModel(BaseSettings):
     """
     home_dir: str = Field(..., env='HOME')
     project_root: str = Field(..., env='PROJ_ROOT')
+    common_tags: Dict[str, str] = None
     ubuntu_image: str
     ssh_public_key_file: str = Field(None, description='Can use python format string syntax to reference other '
                                                        'previous fields in this model')
