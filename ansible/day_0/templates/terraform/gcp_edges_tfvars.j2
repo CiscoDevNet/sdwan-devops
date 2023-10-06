@@ -9,3 +9,11 @@ acl_cidr_blocks = [ {{ acl_cidr_blocks }} ]
 {% endif %}
 image_id = "{{ edge_image_id }}"
 instance_type = "{{ edge_instance_type }}"
+{% if common_tags is defined and common_tags != "" %}
+common_tags = {
+{% for key, value in common_tags.items() %}
+    "{{ key | lower }}" = "{{ value | lower }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+}
+{% endif %}
