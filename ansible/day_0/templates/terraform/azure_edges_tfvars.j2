@@ -8,3 +8,11 @@ account_username = "cisco"
 account_password = "{{ vmanage_pass }}"
 image_id = "{{ edge_image_id }}"
 instance_type = "{{ edge_instance_type }}"
+{% if common_tags is defined and common_tags != "" %}
+common_tags = {
+{% for key, value in common_tags.items() %}
+    "{{ key }}" = "{{ value }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+}
+{% endif %}

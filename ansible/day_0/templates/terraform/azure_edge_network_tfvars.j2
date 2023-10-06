@@ -5,3 +5,11 @@ subnet_name_prefix = "sdwan-subnet"
 address_space = "{{ cidr_range }}"
 subnet_transport_prefix = "{{ vpn0_range }}"
 subnet_service_prefix = "{{ vpn1_range }}"
+{% if common_tags is defined and common_tags != "" %}
+common_tags = {
+{% for key, value in common_tags.items() %}
+    "{{ key }}" = "{{ value }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+}
+{% endif %}

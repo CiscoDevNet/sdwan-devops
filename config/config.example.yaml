@@ -1,8 +1,12 @@
 ---
 global_config:
+  # Different cloud have diufferent restrictions on the characters allowed in
+  # the tags. AWS is the most permisive, GCP is the most restrictive, Azure is
+  # somewhere in the middle. If you use all lowercase letters and numbers, you
+  # should be fine.
   common_tags:
-    Owner: "Owner Name"
-    Project: "Project Name"
+    Owner: "Owner_Name"
+    Project: "Project_Name"
     Automation: "sdwan-devops"
   ubuntu_image: "ubuntu-22-04"
   # ssh_public_key_file: "{home_dir}/.ssh/id_rsa.pub"
