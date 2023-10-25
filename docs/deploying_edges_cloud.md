@@ -1,10 +1,14 @@
 # Deploying C8000v on Cloud (AWS, Azure and GCP)
 
+Details in [Deploying C8000v](https://github.com/CiscoDevNet/sdwan-edge/blob/main/README.md)
+
 ## Cloning repo
 
-Clone the sdwan-devops repo using the cloud branch (most up to date):
+Clone the sdwan-devops repo using the main branch (default: origin/main):
 
-- `git clone --branch cloud --single-branch --recursive https://github.com/ciscodevnet/sdwan-devops.git`
+```shell
+git clone --single-branch --recursive https://github.com/ciscodevnet/sdwan-devops.git
+```
 
 Make sure you use `--recursive` to also clone folders sdwan-edge and terraform-sdwan.
 
@@ -13,6 +17,7 @@ All operations are run out of the sdwan-devops directory: `cd sdwan-devops`
 ## C8000v AWS AMI
 
 To find Image id:
+
 - Go to the [AWS Marketplace](https://aws.amazon.com/marketplace/) page
 - search for the image called: 'Cisco Catalyst 8000V Edge Software - BYOL'
 - Click on the image title.
