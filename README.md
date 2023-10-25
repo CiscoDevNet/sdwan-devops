@@ -14,16 +14,23 @@ A video demonstration of the use of this repository is available on [Vidcast](ht
 
 ## Clone repository
 
-Clone the sdwan-devops repo using the cloud branch (most up to date):
+Clone the sdwan-devops repo using the main branch (default: origin/main):
 
-- `git clone --branch cloud --single-branch --recursive https://github.com/ciscodevnet/sdwan-devops.git`
+```shell
+git clone --single-branch --recursive https://github.com/ciscodevnet/sdwan-devops.git
+```
 
 Make sure you use `--recursive` to also clone folders sdwan-edge and terraform-sdwan.
 
-If you are on a Mac, upgrade openssl:
+## Openssl version3
 
-- We need version3, while on mac this is LibreSSL
-- `brew install openssl@3`
+If you are on a Mac: we need openssl version3, while on mac this is LibreSSL.
+
+Upgrade openssl:
+
+```shell
+brew install openssl@3
+```
 
 ## Software Dependencies
 
@@ -45,18 +52,16 @@ This will start the docker container published in the GitHub Container Registry,
 
 The sdwan-devops can be used to instantiates controllers on AWS.
 
-Check the [whitepaper on CCO](https://www.cisco.com/c/en/us/td/docs/routers/sdwan/configuration/sdwan-xe-gs-book/controller-aws.html) for more information.
-
 [Deploying Controllers on AWS](docs/deploying_controllers_cloud.md)
 
-- Deploy vBond/vSmart and vManage controllers in a VPC
+- Deploy vBond, vSmart and vManage controllers in a VPC
 - Provides bootstrap configuration
 
 ## Deploying C8000v
 
 C8000v can be deployed in a transit VPC/VNET in AWS, Azure and GCP, and can also be deployed on VMware and Openstack.
 
-[Deploying C8000v](https://github.com/CiscoDevNet/sdwan-edge/blob/main/README.md)
+[Deploying C8000v](docs/deploying_edges_cloud.md)
 
 - Generates bootstrap configuration (cloud-init format)
 - Creates transit VPC if required

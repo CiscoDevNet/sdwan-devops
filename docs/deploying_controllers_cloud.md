@@ -1,20 +1,32 @@
 # Deploying Controllers on AWS
 
+Check the [whitepaper on CCO](https://www.cisco.com/c/en/us/td/docs/routers/sdwan/configuration/sdwan-xe-gs-book/controller-aws.html) for more information.
+
 ## Cloning repo
 
-Clone the sdwan-devops repo using the cloud branch (most up to date):
+Clone the sdwan-devops repo using the main branch (default: origin/main):
 
-- `git clone --branch cloud --single-branch --recursive https://github.com/ciscodevnet/sdwan-devops.git`
+```shell
+git clone --single-branch --recursive https://github.com/ciscodevnet/sdwan-devops.git
+```
 
 Make sure you use `--recursive` to also clone folders sdwan-edge and terraform-sdwan.
 
 All operations are run out of the sdwan-devops directory: `cd sdwan-devops`
 
+## Openssl version3
+
+If you are on a Mac: we need openssl version3, while on mac this is LibreSSL.
+
+Upgrade openssl:
+
+```shell
+brew install openssl@3
+```
+
 ## License file
 
-Generate a licence file corresponding to your org-name that will contain your device UUIDs:
-
-- https://software.cisco.com/software/csws/ws/platform/home?locale=en_US#pnp-devices
+Generate a licence file corresponding to your org-name that will contain your device UUIDs. Go to CCO under [Network Plug and Play](https://software.cisco.com/software/csws/ws/platform/home?locale=en_US#pnp-devices) using your Smart Account / Virtual Account (SA/VA).
 
 Download and copy into `ansible/licences`
 
