@@ -1,0 +1,28 @@
+instance_type_support_matrix:
+  20.8:
+    aws:
+      vmanage:
+        - c5.2xlarge
+        - c5.4xlarge
+        - c5.9xlarge
+        - c5.12xlarge
+      controllers:
+        - c5.large
+        - c5.xlarge
+        - c5.2xlarge
+        - c5.4xlarge
+        - c5.9xlarge
+        - c5.12xlarge
+  20.12:
+    aws:
+      vmanage:
+        - c5.4xlarge
+        - c5.9xlarge
+        - c5.12xlarge
+      controllers:
+        - c5.large
+        - c5.xlarge
+        - c5.2xlarge
+        - c5.4xlarge
+        - c5.9xlarge
+        - c5.12xlarge
