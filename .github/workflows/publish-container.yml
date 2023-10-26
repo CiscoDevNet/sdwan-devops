@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - main
       - cloud
     # Publish semver tags as releases.
     tags: [ '*.*.*' ]
