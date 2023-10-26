@@ -2,7 +2,7 @@
 
 set -o pipefail
 
-IMAGE=${IMAGE:-ghcr.io/ciscodevnet/sdwan-devops:cloud}
+IMAGE=${IMAGE:-ghcr.io/ciscodevnet/sdwan-devops:main}
 
 if [ -z ${PROJ_ROOT+x} ]; then echo "PROJ_ROOT is unset, please source the env script"; exit 1; else echo "PROJ_ROOT is set to '$PROJ_ROOT'"; fi
 
