@@ -4,12 +4,12 @@ FROM ubuntu:22.04
 # https://pythonspeed.com/articles/alpine-docker-python/
 # https://pythonspeed.com/articles/base-image-python-docker-images/
 
-ARG build_date=unspecified
+ARG build_date=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 # After releasing 1.5.5, Hashicorp changed the license from MPL to BSL.
 # Unless OSPO/Cisco Legal confirms that we can keep using Terraform under the
 # new license, we shouldn't update this version.
 ARG terraform_version=1.5.5
-ARG arch=amd64
+ARG TARGETARCH
 
 LABEL org.opencontainers.image.title="Cisco SD-WAN" \
       org.opencontainers.image.description="Cisco SD-WAN DevOps" \
@@ -24,10 +24,10 @@ RUN apt update && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -#O https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_${arch}.zip
-RUN unzip terraform_${terraform_version}_linux_${arch}.zip
+RUN curl -#O https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_${TARGETARCH}.zip
+RUN unzip terraform_${terraform_version}_linux_${TARGETARCH}.zip
 RUN mv terraform /usr/bin
-RUN rm terraform_${terraform_version}_linux_${arch}.zip
+RUN rm terraform_${terraform_version}_linux_${TARGETARCH}.zip
 
 # This adds almost 1GB to the container size. Installing the .deb package has
 # similar results, and it doesn't support arm64. We really need to find a way
