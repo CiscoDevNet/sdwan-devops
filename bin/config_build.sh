@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONFTEST_VERSION=${CONFTEST_VERSION:-v0.46.0}
+CONFTEST_VERSION=${CONFTEST_VERSION:-v0.47.0}
 
 set -o pipefail
 
