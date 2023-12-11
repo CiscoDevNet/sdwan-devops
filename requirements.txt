@@ -1,4 +1,4 @@
-ansible==8.5.*
+ansible==8.6.*
 ansible-virl==0.0.7
 netaddr
 pydantic>=1.10,<2
