@@ -2,7 +2,9 @@
 
 ## Variables
 
-See the list of possible environment variables in the follwoing table. They can be set in the project settings, or part of an organization-wide context. Without setting the **required** variables, the pipeline will fail.
+See the list of possible environment variables in the following table. They can be set in the project settings, or part of an organization-wide context. Without setting the **required** variables, the pipeline will fail.
+
+Note that the required variables are also set in the [minimal_env.sh](../bin/minimal_env.sh) script.
 
 > **NOTE** The default values usually come from Terraform defaults defined in the `terraform-sdwan` submodule, not as variables defined in the Ansible code. That means that the variables themselves may not be defined at all, even if the table shows they have a default value.
 
