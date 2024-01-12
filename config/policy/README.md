@@ -1,0 +1,3 @@
+The [config.rego](./config.rego) file in this directory implements [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/policy-language/) uses the contents of [data.yaml](./data.yaml) to check that the correct AWS VM instance types are being used with respect to the given SD-WAN contoller versions.
+
+If this policy is not enforced, then the controllers and vManage might not start up correctly.
