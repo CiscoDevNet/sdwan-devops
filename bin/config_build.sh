@@ -4,7 +4,8 @@ CONFTEST_VERSION=${CONFTEST_VERSION:-v0.47.0}
 
 set -o pipefail
 
-# Uncomment the line below if you want to enforce the OPA rules in `config/policy/config.rego`
+# Uncomment the line below if you want to enforce the OPA rules in `config/policy/config.rego` that check the AWS instance types for given SD-WAN versions.
+# See config/policy/README for further explanation.
 #set -e
 
 echo "[i] Running conftest on config.yaml ..."
