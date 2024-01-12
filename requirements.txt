@@ -1,5 +1,5 @@
-ansible==8.6.*
-ansible-lint==6.18.*
+ansible==8.7.*
+ansible-lint==6.22.1
 ansible-virl==0.0.7
 netaddr
 pydantic>=1.10,<2
