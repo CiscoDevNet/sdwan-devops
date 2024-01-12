@@ -47,7 +47,7 @@ while getopts ":dlc" opt; do
          --env PWD="/ansible" \
          --env USER="$USER" \
          $OPTIONS \
-         $IMAGE ansible-lint
+         $IMAGE ansible-lint --offline
       exit
       ;;
    c)
