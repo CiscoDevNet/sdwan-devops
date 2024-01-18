@@ -1,14 +1,12 @@
 all:
   vars:
-    ansible_user: admin
-    ansible_password: admin
     ansible_network_os: ios
     netconf_template_os: ios
   children:
     network:
       vars:
-        virl_image_definition: "{{ csr1000v_image }}"
-        virl_node_definition: "{{ csr1000v_nodedef }}"
+        cml_image_definition: "{{ csr1000v_image }}"
+        cml_node_definition: "{{ csr1000v_nodedef }}"
       children:
         internet_routers:
           hosts:

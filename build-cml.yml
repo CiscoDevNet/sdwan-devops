@@ -1,0 +1,175 @@
+- name: Build the topology
+  hosts: localhost
+  gather_facts: no
+  tags:
+    - cml
+    - network
+  tasks:
+    - name: Check for the lab file
+      stat:
+        path: "{{ cml_lab_file }}"
+      register: stat_result
+      delegate_to: localhost
+      run_once: yes
+
+    - assert:
+        that:
+          - stat_result.stat.exists
+          - cml_host != ""
+          - cml_username != ""
+          - cml_password != ""
+          - cml_lab != ""
+        msg: "CML host, credentials, and topology file are required.  Verify the requirements in README are met."
+      delegate_to: localhost
+      run_once: yes
+
+    - name: Create the lab
+      cisco.cml.cml_lab:
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
+        state: present
+        topology: "{{ lookup('template', cml_lab_file) }}"
+      register: results
+
+    - name: Refresh Inventory
+      meta: refresh_inventory    
+
+- name: Start unmanaged nodes
+  hosts: external_connector:unmanaged_switch
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - network
+  tasks:
+    - name: Start dumb stuff (not a judgement)
+      cisco.cml.cml_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
+        state: started
+
+- name: Start the network
+  hosts: network:&cml_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - network
+  tasks:
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ lookup('template', cml_config_template) }}"
+      when: cml_config_template is defined
+
+    - name: Start Node
+      cisco.cml.cml_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
+        state: started
+        image_definition: "{{ cml_image_definition | default(omit) }}"
+        node_definition: "{{ cml_node_definition | default(omit) }}"
+        config: "{{ day0_config | default(omit) }}"
+
+- name: Check initial topology connectivity
+  hosts: internet:&cml_hosts
+  connection: local
+  tags:
+    - check_control
+    - check_all
+    - network
+    - CA
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: Wait until the mgmt interface comes up
+      cisco.cml.cml_lab_facts:
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
+      register: result
+      until: result.cml_facts.nodes[inventory_hostname].ansible_host is defined and result.cml_facts.nodes[inventory_hostname].ansible_host
+      # when: cml_mgmt_interface is defined
+      retries: 60
+      delay: 10
+
+    - name: Refresh Inventory
+      meta: refresh_inventory
+
+    - name: Ping outside interface of Internet routers
+      ios_ping:
+        dest: "{{ hostvars[item].interfaces.GigabitEthernet2.ip.primary | ansible.utils.ipaddr('address') }}"
+      loop: "{{ groups.internet_routers | intersect(groups.cml_hosts) }}"
+      register: result
+      retries: 60
+      delay: 10
+      until: result is not failed
+      connection: network_cli
+
+    - name: Ping inside interface of Internet routers
+      ios_ping:
+        dest: "{{ hostvars[item].interfaces.GigabitEthernet3.ip.primary | ansible.utils.ipaddr('address') }}"
+      loop: "{{ groups.internet_routers | intersect(groups.cml_hosts) }}"
+      register: result
+      retries: 60
+      delay: 10
+      until: result is not failed
+      connection: network_cli
+
+- name: Start Systems
+  hosts: system:&cml_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start
+    - network
+  tasks:
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ lookup('template', cml_config_template) }}"
+      when: cml_config_template is defined
+
+    - name: Start Node
+      cisco.cml.cml_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
+        state: started
+        image_definition: "{{ cml_image_definition | default(omit) }}"
+        node_definition: "{{ cml_node_definition | default(omit) }}"
+        config: "{{ day0_config | default(omit) }}"
+
+- name: Start the SD-WAN control nodes
+  hosts: sdwan_control:&cml_hosts
+  connection: local
+  gather_facts: no
+  tags:
+    - start_control
+    - control
+  tasks:
+    - name: Generating day0 config
+      set_fact:
+        day0_config: "{{ lookup('template', cml_config_template) }}"
+      when: cml_config_template is defined
+
+    - name: Start Node
+      cisco.cml.cml_node:
+        name: "{{ inventory_hostname }}"
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
+        state: started
+        image_definition: "{{ cml_image_definition | default(omit) }}"
+        node_definition: "{{ cml_node_definition | default(omit) }}"
+        config: "{{ day0_config | default(omit) }}"

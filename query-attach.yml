@@ -6,14 +6,14 @@
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
-    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ansible.utils.ipaddr('address') }}"
   tasks:
     - name: Query Attach Template
       vmanage_device_attachment:
         user: "{{ vmanage_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
-        template: "{{ templateName }}"
+        template: "{{ template_name }}"
         state: "query"
       register: attachment_results_query
 
@@ -52,7 +52,7 @@
     - name: Mix Variables already available plus the new ones from the template
       set_fact:
         missingVariables: "{{ missingVariables \
-           | combine({inventory_hostname : { 'templateName': templateName, \
+           | combine({inventory_hostname : { 'template_name': template_name, \
            'variables': parameterDict | combine(mandatoryVariables) }}) }}"
 
     - debug:

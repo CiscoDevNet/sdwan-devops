@@ -7,9 +7,9 @@ on:
       - master
 
 env:
-  VIRL_HOST: '${{ secrets.VIRL_HOST }}'
-  VIRL_USERNAME: '${{ secrets.VIRL_USERNAME }}'
-  VIRL_PASSWORD: '${{ secrets.VIRL_PASSWORD }}'
+  CML_HOST: '${{ secrets.CML_HOST }}'
+  CML_USERNAME: '${{ secrets.CML_USERNAME }}'
+  CML_PASSWORD: '${{ secrets.CML_PASSWORD }}'
   VMANAGE_ORG: '${{ secrets.VMANAGE_ORG }}'
   VMANAGE1_IP: '${{ secrets.VMANAGE1_IP }}'
   VSMART1_IP: '${{ secrets.VSMART1_IP }}'
@@ -18,6 +18,12 @@ env:
   SITE1_EDGE1_IP: '${{ secrets.SITE1_EDGE1_IP }}'
   SITE2_EDGE1_IP: '${{ secrets.SITE2_EDGE1_IP }}'
   VPN0_GATEWAY: '${{ secrets.VPN0_GATEWAY }}'
+  VMANAGE_NODEDEF: 'cat-sdwan-manager'
+  VSMART_NODEDEF: 'cat-sdwan-controller'
+  VEDGE_NODEDEF: 'vEdge'
+  CEDGE_NODEDEF: 'cEdge'
+  CSR1000V_IMAGE: 'csr1000v-170304a'
+  UBUNTU_IMAGE: 'ubuntu-20-04-20210927'
   ANSIBLE_VAULT_PASSWORD: '${{ secrets.ANSIBLE_VAULT_PASSWORD }}'
 
 jobs:
@@ -30,111 +36,150 @@ jobs:
           submodules: recursive
       - name: Run ansible-lint
         run: ansible-lint
-  test_19_2_1:
+  # test_19_2_1:
+  #   runs-on: self-hosted
+  #   concurrency: hq2
+  #   needs: lint
+  #   env:
+  #     CML_LAB: 'sdwan-devops-hq2'
+  #     VIPTELA_VERSION: '19.2.1'
+  #     CLOUDINIT_TYPE: 'v1'
+  #     CEDGE_IMAGE: 'cEdge-17.3.8'
+  #     CSR1000V_IMAGE: 'csr1000v-170101'    
+  #   steps:
+  #     - name: Checkout Inventory
+  #       uses: actions/checkout@v2
+  #       with:
+  #         submodules: recursive
+  #     - name: Clean Existing Deployment
+  #       run: ansible-playbook -i inventory/hq2 clean-cml.yml --tags delete
+  #     - name: Install Licenses
+  #       run: |
+  #         mkdir licenses
+  #         echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
+  #         ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
+  #     - name: Build CA
+  #       run: ansible-playbook -i inventory/hq2 build-ca.yml
+  #     - name: Build Simulation
+  #       run: ansible-playbook -i inventory/hq2 build-cml.yml
+  #     - name: Configure Control Plane
+  #       run: ansible-playbook -i inventory/hq2 config-sdwan.yml
+  #     - name: Deploy Edges
+  #       run: ansible-playbook -i inventory/hq2 deploy-cml.yml
+  #     - name: Wait for Edges to Sync
+  #       run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
+  #     - name: Check SD-WAN
+  #       run: ansible-playbook -i inventory/hq2 check-sdwan.yml
+  #     - name: Cleanup
+  #       run: ansible-playbook -i inventory/hq2 clean-cml.yml
+  # test_20_3_2:
+  #   runs-on: self-hosted
+  #   concurrency: hq2
+  #   needs: lint
+  #   env:
+  #     CML_LAB: 'sdwan-devops-hq2'
+  #     VIPTELA_VERSION: '20.3.2'
+  #     CLOUDINIT_TYPE: 'v1'
+  #     CEDGE_IMAGE: 'cEdge-17.3.8'
+  #     CSR1000V_IMAGE: 'csr1000v-170101'
+  #   steps:
+  #     - name: Checkout Inventory
+  #       uses: actions/checkout@v2
+  #       with:
+  #         submodules: recursive
+  #     - name: Clean Existing Deployment
+  #       run: ansible-playbook -i inventory/hq2 clean-cml.yml --tags delete
+  #     - name: Install Licenses
+  #       run: |
+  #         mkdir licenses
+  #         echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
+  #         ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
+  #     - name: Build CA
+  #       run: ansible-playbook -i inventory/hq2 build-ca.yml
+  #     - name: Build Simulation
+  #       run: ansible-playbook -i inventory/hq2 build-cml.yml
+  #     - name: Configure Control Plane
+  #       run: ansible-playbook -i inventory/hq2 config-sdwan.yml
+  #     - name: Deploy Edges
+  #       run: ansible-playbook -i inventory/hq2 deploy-cml.yml
+  #     - name: Wait for Edges to Sync
+  #       run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
+  #     - name: Check SD-WAN
+  #       run: ansible-playbook -i inventory/hq2 check-sdwan.yml
+  #     - name: Cleanup
+  #       run: ansible-playbook -i inventory/hq2 clean-cml.yml
+  # test_20_7_1:
+  #   runs-on: self-hosted
+  #   concurrency: hq2
+  #   needs: lint
+  #   env:
+  #     CML_LAB: 'sdwan-devops-hq2'
+  #     VIPTELA_VERSION: '20.7.1'
+  #     CLOUDINIT_TYPE: 'v2'
+  #     CEDGE_SDWAN_IMAGE: 'cEdge-17.3.8'
+  #     CSR1000V_IMAGE: 'csr1000v-170101'
+  #   steps:
+  #     - name: Checkout Inventory
+  #       uses: actions/checkout@v2
+  #       with:
+  #         submodules: recursive
+  #     - name: Clean Existing Deployment
+  #       run: ansible-playbook -i inventory/hq2 clean-cml.yml
+  #     - name: Install Licenses
+  #       run: |
+  #         mkdir licenses
+  #         echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
+  #         ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
+  #     - name: Build CA
+  #       run: ansible-playbook -i inventory/hq2 build-ca.yml
+  #     - name: Build Simulation
+  #       run: ansible-playbook -i inventory/hq2 build-cml.yml
+  #     - name: Configure Control Plane
+  #       run: ansible-playbook -i inventory/hq2 config-sdwan.yml
+  #     - name: Deploy Edges
+  #       run: ansible-playbook -i inventory/hq2 deploy-cml.yml
+  #     - name: Wait for Edges to Sync
+  #       run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
+  #     - name: Check SD-WAN
+  #       run: ansible-playbook -i inventory/hq2 check-sdwan.yml
+  #     - name: Cleanup
+  #       run: ansible-playbook -i inventory/hq2 clean-cml.yml
+
+  test_20_9_4:
     runs-on: self-hosted
-    concurrency: hq2
+    concurrency: hq1
     needs: lint
     env:
-      VIRL_LAB: 'sdwan-devops-hq2'
-      VIPTELA_VERSION: '19.2.1'
-      CLOUDINIT_TYPE: 'v1'
-      IOSXE_SDWAN_IMAGE: 'iosxe-sdwan-16.12.2r'
-      CSR1000V_IMAGE: 'csr1000v-170101'    
-    steps:
-      - name: Checkout Inventory
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Clean Existing Deployment
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
-      - name: Install Licenses
-        run: |
-          mkdir licenses
-          echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
-          ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
-      - name: Build CA
-        run: ansible-playbook -i inventory/hq2 build-ca.yml
-      - name: Build VMware
-        run: ansible-playbook -i inventory/hq2 build-virl.yml
-      - name: Configure Control Plane
-        run: ansible-playbook -i inventory/hq2 config-sdwan.yml
-      - name: Deploy Edges
-        run: ansible-playbook -i inventory/hq2 deploy-virl.yml
-      - name: Wait for Edges to Sync
-        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
-      - name: Check SD-WAN
-        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
-      - name: Cleanup
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml
-  test_20_3_2:
-    runs-on: self-hosted
-    concurrency: hq2
-    needs: lint
-    env:
-      VIRL_LAB: 'sdwan-devops-hq2'
-      VIPTELA_VERSION: '20.3.2'
-      CLOUDINIT_TYPE: 'v1'
-      IOSXE_SDWAN_IMAGE: 'iosxe-sdwan-16.12.2r'
-      CSR1000V_IMAGE: 'csr1000v-170101'
-    steps:
-      - name: Checkout Inventory
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Clean Existing Deployment
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml --tags delete
-      - name: Install Licenses
-        run: |
-          mkdir licenses
-          echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
-          ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
-      - name: Build CA
-        run: ansible-playbook -i inventory/hq2 build-ca.yml
-      - name: Build VMware
-        run: ansible-playbook -i inventory/hq2 build-virl.yml
-      - name: Configure Control Plane
-        run: ansible-playbook -i inventory/hq2 config-sdwan.yml
-      - name: Deploy Edges
-        run: ansible-playbook -i inventory/hq2 deploy-virl.yml
-      - name: Wait for Edges to Sync
-        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
-      - name: Check SD-WAN
-        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
-      - name: Cleanup
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml
-  test_20_7_1:
-    runs-on: self-hosted
-    concurrency: hq2
-    needs: lint
-    env:
-      VIRL_LAB: 'sdwan-devops-hq2'
-      VIPTELA_VERSION: '20.7.1'
+      CML_LAB: 'sdwan-devops-hq1'
+      VIPTELA_VERSION: '20.9.4'
       CLOUDINIT_TYPE: 'v2'
-      IOSXE_SDWAN_IMAGE: 'iosxe-sdwan-16.12.2r'
-      CSR1000V_IMAGE: 'csr1000v-170101'
+      VMANAGE_IMAGE: sdwan-manager-20.9.4
+      VSMART_IMAGE: sdwan-controller-20.9.4
+      VEDGE_IMAGE: vEdge-20.9.4
+      CEDGE_IMAGE: cEdge-17.3.8
     steps:
       - name: Checkout Inventory
         uses: actions/checkout@v2
         with:
           submodules: recursive
       - name: Clean Existing Deployment
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml
+        run: ansible-playbook -i inventory/hq1 clean-cml.yml
       - name: Install Licenses
         run: |
           mkdir licenses
           echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
           ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
       - name: Build CA
-        run: ansible-playbook -i inventory/hq2 build-ca.yml
-      - name: Build VMware
-        run: ansible-playbook -i inventory/hq2 build-virl.yml
+        run: ansible-playbook -i inventory/hq1 build-ca.yml
+      - name: Build Simulation
+        run: ansible-playbook -i inventory/hq1 build-cml.yml
       - name: Configure Control Plane
-        run: ansible-playbook -i inventory/hq2 config-sdwan.yml
+        run: ansible-playbook -i inventory/hq1 config-sdwan.yml
       - name: Deploy Edges
-        run: ansible-playbook -i inventory/hq2 deploy-virl.yml
+        run: ansible-playbook -i inventory/hq1 deploy-cml.yml
       - name: Wait for Edges to Sync
-        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
+        run: ansible-playbook -i inventory/hq1 waitfor-sync.yml
       - name: Check SD-WAN
-        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
+        run: ansible-playbook -i inventory/hq1 check-sdwan.yml
       - name: Cleanup
-        run: ansible-playbook -i inventory/hq2 clean-virl.yml
+        run: ansible-playbook -i inventory/hq1 clean-cml.yml

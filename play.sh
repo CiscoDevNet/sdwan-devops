@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-IMAGE="ghcr.io/ciscodevnet/sdwan-devops:0.0.7"
+IMAGE="sdwan-devops"
 OPTIONS=""
 
 if [[ ! -z "$ANSIBLE_VAULT_PASSWORD_FILE" ]]; then
@@ -7,10 +7,10 @@ if [[ ! -z "$ANSIBLE_VAULT_PASSWORD_FILE" ]]; then
 fi
 
 OPTION_LIST=( \
-   "VIRL_HOST" \
-   "VIRL_USERNAME" \
-   "VIRL_PASSWORD" \
-   "VIRL_LAB" \
+   "CML_HOST" \
+   "CML_USERNAME" \
+   "CML_PASSWORD" \
+   "CML_LAB" \
    "VMANAGE_HOST" \
    "VMANAGE_ORG" \
    "VMANAGE_USERNAME" \
@@ -22,30 +22,20 @@ OPTION_LIST=( \
    "SITE1_EDGE1_IP" \
    "SITE2_EDGE1_IP" \
    "VPN0_GATEWAY" \
-   "TF_VAR_vsphere_user" \
-   "TF_VAR_vsphere_password" \
-   "TF_VAR_vsphere_server" \
-   "TF_VAR_datacenter" \
-   "TF_VAR_cluster" \
-   "TF_VAR_folder" \
-   "TF_VAR_resource_pool" \
-   "TF_VAR_datastore" \
-   "TF_VAR_iso_datastore" \
-   "TF_VAR_iso_path" \
-   "VPN0_PORTGROUP" \
-   "VPN512_PORTGROUP" \
-   "SERVICEVPN_PORTGROUP" \
-   "IOSXE_SDWAN_IMAGE" \
+   "VIPTELA_VERSION" \
+   "VMANAGE_IMAGE" \
+   "VSMART_IMAGE" \
+   "VEDGE_IMAGE" \
+   "CEDGE_IMAGE" \
    "CSR1000V_IMAGE" \
    "UBUNTU_IMAGE" \
-   "VIPTELA_VERSION" \
    "CLOUDINIT_TYPE" \
    "CSR1000V_NODEDEF" \
-   "IOSXE_SDWAN_NODEDEF" \
    "UBUNTU_NODEDEF" \
    "VMANAGE_NODEDEF" \
    "VSMART_NODEDEF" \
    "VEDGE_NODEDEF" \
+   "CEDGE_NODEDEF" \
    "ANSIBLE_VAULT_PASSWORD" \
    )
 

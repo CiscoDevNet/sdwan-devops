@@ -13,4 +13,3 @@
     passed: vsmart_hosts
 
 - import_playbook: activate-policy.yml
-

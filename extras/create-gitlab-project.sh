@@ -6,10 +6,10 @@
 # GITLAB_USER=foo
 # GITLAB_API_TOKEN=abc123
 # GITLAB_PROJECT=sdwan-devops
-# VIRL_HOST=cml.example.com
-# VIRL_USERNAME=foo
-# VIRL_PASSWORD=bar
-# VIRL_LAB=sdwan-devops
+# CML_HOST=cml.example.com
+# CML_USERNAME=foo
+# CML_PASSWORD=bar
+# CML_LAB=sdwan-devops
 # VMANAGE_ORG=your-org
 
 # Add new project
@@ -17,10 +17,10 @@ curl --request POST -sSLk --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "$GITLAB_H
 
 # Add new vars
 OPTION_LIST=( \
-   "VIRL_HOST" \
-   "VIRL_USERNAME" \
-   "VIRL_PASSWORD" \
-   "VIRL_LAB" \
+   "CML_HOST" \
+   "CML_USERNAME" \
+   "CML_PASSWORD" \
+   "CML_LAB" \
    "VMANAGE_HOST" \
    "VMANAGE_ORG" \
    "VMANAGE_USERNAME" \
@@ -32,30 +32,20 @@ OPTION_LIST=( \
    "SITE1_EDGE1_IP" \
    "SITE2_EDGE1_IP" \
    "VPN0_GATEWAY" \
-   "TF_VAR_vsphere_user" \
-   "TF_VAR_vsphere_password" \
-   "TF_VAR_vsphere_server" \
-   "TF_VAR_datacenter" \
-   "TF_VAR_cluster" \
-   "TF_VAR_folder" \
-   "TF_VAR_resource_pool" \
-   "TF_VAR_datastore" \
-   "TF_VAR_iso_datastore" \
-   "TF_VAR_iso_path" \
-   "VPN0_PORTGROUP" \
-   "VPN512_PORTGROUP" \
-   "SERVICEVPN_PORTGROUP" \
-   "IOSXE_SDWAN_IMAGE" \
+   "VIPTELA_VERSION" \
+   "VMANAGE_IMAGE" \
+   "VSMART_IMAGE" \
+   "VEDGE_IMAGE" \
+   "CEDGE_IMAGE" \
    "CSR1000V_IMAGE" \
    "UBUNTU_IMAGE" \
-   "VIPTELA_VERSION" \
    "CLOUDINIT_TYPE" \
    "CSR1000V_NODEDEF" \
-   "IOSXE_SDWAN_NODEDEF" \
    "UBUNTU_NODEDEF" \
    "VMANAGE_NODEDEF" \
    "VSMART_NODEDEF" \
    "VEDGE_NODEDEF" \
+   "CEDGE_NODEDEF" \
    "ANSIBLE_VAULT_PASSWORD" \
    )
 

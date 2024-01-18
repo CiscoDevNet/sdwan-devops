@@ -24,15 +24,15 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     
 1. Set the needed environment variables for access to your CML infrastucture.  Replace the values below with your server, credentials and lab name.
     ```
-    export VIRL_HOST=myvirlhost.example.com
-    export VIRL_USERNAME=myusername
-    export VIRL_PASSWORD=mypasword
-    export VIRL_LAB=myusername_sdwan
+    export CML_HOST=mycmlhost.example.com
+    export CML_USERNAME=myusername
+    export CML_PASSWORD=mypasword
+    export CML_LAB=myusername_sdwan
     ```
 
 1. Set the version of IOS-XE image to use for edge devices.
     ```
-    export IOSXE_SDWAN_IMAGE=iosxe-sdwan-16.12.2r
+    export CEDGE_IMAGE=cEdge-17.3.8
     ```
 
 1. Set the version of CSR1000v image to use for underlay devices.
@@ -56,7 +56,7 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
 
 1. Build out the underlay and control plane.
     ```
-    ./play.sh build-virl.yml
+    ./play.sh build-cml.yml
     ```
 
 1. Configure the SD-WAN control plane using the supplied inventory data.
@@ -66,7 +66,7 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
 
 1. Provision and bootstrap the edges.
     ```
-    ./play.sh deploy-virl.yml
+    ./play.sh deploy-cml.yml
     ```
 
 1. Wait for the edges to sync in vManage.
@@ -77,12 +77,12 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
 
 1. Get inventory information.
     ```
-    ./play.sh virl-inventory.yml
+    ./play.sh cisco.cml.inventory.yml
     ```
 
 1. Get detailed inventory information for a single host.
     ```
-    ./play.sh virl-inventory.yml --tags=detail --limit=vmanage1
+    ./play.sh cisco.cml.inventory.yml --tags=detail --limit=vmanage1
     ```
 
 1. Run the `check-sdwan.yml` playbook to validate the topology.
@@ -94,10 +94,10 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
 
 To stop and wipe all of the nodes in the lab.
 ```
-./play.sh clean-virl.yml
+./play.sh clean-cml.yml
 ```
 
 To clean individual nodes, use `--limit`.
 ```
-./play.sh clean-virl.yml --limit=site1-cedge1
+./play.sh clean-cml.yml --limit=site1-cedge1
 ```

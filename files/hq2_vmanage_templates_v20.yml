@@ -1,261 +1,70 @@
 vmanage_device_templates:
--   templateName: branch-csr1000v
-    templateDescription: Branch CSR1000v Template
-    deviceType: vedge-CSR-1000v
+-   templateName: vsmart
+    templateDescription: vSmart Device Template
+    deviceType: vsmart
     factoryDefault: false
     configType: template
     featureTemplateUidRange: []
     policyId: ''
     securityPolicyId: ''
-    templateId: 2ad5c518-a889-4078-8962-d93bd6559736
-    templateClass: cedge
+    templateId: 248dd069-8efd-4ead-a2de-17a1ab03784c
+    templateClass: vedge
     deviceRole: sdwan-edge
     draftMode: false
     attached_devices:
-    - site1-cedge1
+    - vsmart1
     input:
         columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-            editable: true
-            optional: false
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-            editable: true
-            optional: false
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-            editable: true
-            optional: false
-        -   title: IPv4 Address/ prefix-length(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-            editable: true
-            optional: false
-        -   title: Interface Name(vpn512_interface)
-            property: /512/vpn512_interface/interface/if-name
-            variable: vpn512_interface
-            editable: true
-            optional: false
         -   title: Address(vpn0_default_gateway)
             property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
             variable: vpn0_default_gateway
-            editable: true
-            optional: false
-        -   title: Interface Name(vpn0_interface)
-            property: /0/vpn0_interface/interface/if-name
-            variable: vpn0_interface
-            editable: true
-            optional: false
-        -   title: IPv4 Address/ prefix-length(vpn0_internet_ipv4_address)
-            property: /0/vpn0_interface/interface/ip/address
+        -   title: IPv4 Address(vpn0_internet_ipv4_address)
+            property: /0/eth1/interface/ip/address
             variable: vpn0_internet_ipv4_address
-            editable: true
-            optional: false
-        -   title: Hostname(system_host_name)
+        -   title: Hostname
             property: //system/host-name
-            variable: system_host_name
-            editable: true
-            optional: false
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-            editable: true
-            optional: false
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-            editable: true
-            optional: false
-        -   title: System IP(system_system_ip)
+            variable: 'Set the hostname: //system/host-name'
+        -   title: System IP
             property: //system/system-ip
-            variable: system_system_ip
-            editable: true
-            optional: false
-        -   title: Site ID(system_site_id)
+            variable: 'Set the system IP address: //system/system-ip'
+        -   title: Site ID
             property: //system/site-id
-            variable: system_site_id
-            editable: true
-            optional: false
+            variable: 'Set the site ID: //system/site-id'
         data: []
     generalTemplates:
-    -   templateName: Factory_Default_AAA_CISCO_Template
-        templateType: cedge_aaa
-    -   templateName: Default_BFD_Cisco_V01
-        templateType: cisco_bfd
-    -   templateName: Factory_Default_Cisco_OMP_ipv46_Template
-        templateType: cisco_omp
-    -   templateName: Default_Security_Cisco_V01
-        templateType: cisco_security
-    -   templateName: cedge_system
-        templateType: cisco_system
+    -   templateName: aaa
+        templateType: aaa
+    -   templateName: Factory_Default_vSmart_OMP_Template
+        templateType: omp-vsmart
+    -   templateName: Factory_Default_vSmart_vManage_Security_Template
+        templateType: security-vsmart
+    -   templateName: Factory_Default_vSmart_vManage_System_Template
+        templateType: system-vsmart
         subTemplates:
-        -   templateName: Default_Logging_Cisco_V01
-            templateType: cisco_logging
-    -   templateName: cedge_vpn0
-        templateType: cisco_vpn
+        -   templateName: Factory_Default_Logging_Template_V01
+            templateType: logging
+    -   templateName: vsmart_vpn0
+        templateType: vpn-vsmart
         subTemplates:
-        -   templateName: cedge_vpn0_interface
-            templateType: cisco_vpn_interface
-    -   templateName: cedge_vpn512
-        templateType: cisco_vpn
+        -   templateName: vsmart_vpn0_interface
+            templateType: vpn-vsmart-interface
+    -   templateName: Factory_Default_vSmart_vManage_VPN_512_Template
+        templateType: vpn-vsmart
         subTemplates:
-        -   templateName: cedge_vpn512_interface
-            templateType: cisco_vpn_interface
-    -   templateName: cedge_vpn1
-        templateType: cisco_vpn
-        subTemplates:
-        -   templateName: cedge_vpn1_interface
-            templateType: cisco_vpn_interface
-    -   templateName: Factory_Default_Global_CISCO_Template
-        templateType: cedge_global
-    -   templateName: cedge_banner
-        templateType: cisco_banner
--   templateName: branch-csr1000v-vrrp
-    templateDescription: Branch CSR1000v Template w/VRRP
-    deviceType: vedge-CSR-1000v
+        -   templateName: vsmart_vpn512_interface
+            templateType: vpn-vsmart-interface
+-   templateName: branch-vedge-cloud
+    templateDescription: Branch vEdge Cloud Template
+    deviceType: vedge-cloud
     factoryDefault: false
     configType: template
     featureTemplateUidRange: []
     policyId: ''
     securityPolicyId: ''
-    templateId: 8085d1ac-0736-49a7-a090-2baa0c3ed295
-    templateClass: cedge
-    deviceRole: sdwan-edge
-    draftMode: false
-    attached_devices: []
-    input:
-        columns:
-        -   title: Login Banner(banner_login)
-            property: //banner/login
-            variable: banner_login
-            editable: true
-            optional: false
-        -   title: MOTD Banner(banner_motd)
-            property: //banner/motd
-            variable: banner_motd
-            editable: true
-            optional: false
-        -   title: Interface Name(vpn1_interface)
-            property: /1/vpn1_interface/interface/if-name
-            variable: vpn1_interface
-            editable: true
-            optional: false
-        -   title: IPv4 Address/ prefix-length(vpn1_ipv4_address)
-            property: /1/vpn1_interface/interface/ip/address
-            variable: vpn1_ipv4_address
-            editable: true
-            optional: false
-        -   title: Group ID(vpn1_vrrp_grpid)
-            property: /1/vpn1_interface/interface/vrrp/vpn1_vrrp_grpid/grp-id
-            variable: vpn1_vrrp_grpid
-            editable: true
-            optional: false
-        -   title: Priority(vpn1_vrrp_priority)
-            property: /1/vpn1_interface/interface/vrrp/vpn1_vrrp_grpid/priority
-            variable: vpn1_vrrp_priority
-            editable: true
-            optional: false
-        -   title: IP Address(vpn1_vrrp_ipaddress)
-            property: /1/vpn1_interface/interface/vrrp/vpn1_vrrp_grpid/ipv4/address
-            variable: vpn1_vrrp_ipaddress
-            editable: true
-            optional: false
-        -   title: Interface Name(vpn512_interface)
-            property: /512/vpn512_interface/interface/if-name
-            variable: vpn512_interface
-            editable: true
-            optional: false
-        -   title: Address(vpn0_default_gateway)
-            property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
-            variable: vpn0_default_gateway
-            editable: true
-            optional: false
-        -   title: Interface Name(vpn0_interface)
-            property: /0/vpn0_interface/interface/if-name
-            variable: vpn0_interface
-            editable: true
-            optional: false
-        -   title: IPv4 Address/ prefix-length(vpn0_internet_ipv4_address)
-            property: /0/vpn0_interface/interface/ip/address
-            variable: vpn0_internet_ipv4_address
-            editable: true
-            optional: false
-        -   title: Hostname(system_host_name)
-            property: //system/host-name
-            variable: system_host_name
-            editable: true
-            optional: false
-        -   title: Latitude(system_latitude)
-            property: //system/gps-location/latitude
-            variable: system_latitude
-            editable: true
-            optional: false
-        -   title: Longitude(system_longitude)
-            property: //system/gps-location/longitude
-            variable: system_longitude
-            editable: true
-            optional: false
-        -   title: System IP(system_system_ip)
-            property: //system/system-ip
-            variable: system_system_ip
-            editable: true
-            optional: false
-        -   title: Site ID(system_site_id)
-            property: //system/site-id
-            variable: system_site_id
-            editable: true
-            optional: false
-        data: []
-    generalTemplates:
-    -   templateName: Factory_Default_AAA_CISCO_Template
-        templateType: cedge_aaa
-    -   templateName: Default_BFD_Cisco_V01
-        templateType: cisco_bfd
-    -   templateName: Factory_Default_Cisco_OMP_ipv46_Template
-        templateType: cisco_omp
-    -   templateName: Default_Security_Cisco_V01
-        templateType: cisco_security
-    -   templateName: cedge_system
-        templateType: cisco_system
-        subTemplates:
-        -   templateName: Default_Logging_Cisco_V01
-            templateType: cisco_logging
-    -   templateName: cedge_vpn0
-        templateType: cisco_vpn
-        subTemplates:
-        -   templateName: cedge_vpn0_interface
-            templateType: cisco_vpn_interface
-    -   templateName: cedge_vpn512
-        templateType: cisco_vpn
-        subTemplates:
-        -   templateName: cedge_vpn512_interface
-            templateType: cisco_vpn_interface
-    -   templateName: cedge_vpn1
-        templateType: cisco_vpn
-        subTemplates:
-        -   templateName: cedge_vpn1_interface_vrrp
-            templateType: cisco_vpn_interface
-    -   templateName: Factory_Default_Global_CISCO_Template
-        templateType: cedge_global
-    -   templateName: cedge_banner
-        templateType: cisco_banner
--   templateId: d77b77a2-9c5e-4259-892f-9c2ae003dec9
-    templateName: branch-vedge-cloud
-    templateDescription: Branch vEdge Cloud Template
-    deviceType: vedge-cloud
-    deviceRole: sdwan-edge
-    configType: template
-    factoryDefault: false
-    policyId: ''
-    featureTemplateUidRange: []
-    draftMode: false
-    connectionPreferenceRequired: true
-    connectionPreference: true
+    templateId: 33c8f2ce-46ae-4982-9b38-790cb315e9a7
     templateClass: vedge
+    deviceRole: sdwan-edge
+    draftMode: false
     attached_devices:
     - site2-vedge1
     input:
@@ -263,68 +72,42 @@ vmanage_device_templates:
         -   title: Login Banner(banner_login)
             property: //banner/login
             variable: banner_login
-            editable: true
-            optional: false
         -   title: MOTD Banner(banner_motd)
             property: //banner/motd
             variable: banner_motd
-            editable: true
-            optional: false
         -   title: Interface Name(vpn1_interface)
             property: /1/vpn1_interface/interface/if-name
             variable: vpn1_interface
-            editable: true
-            optional: false
         -   title: IPv4 Address(vpn1_ipv4_address)
             property: /1/vpn1_interface/interface/ip/address
             variable: vpn1_ipv4_address
-            editable: true
-            optional: false
         -   title: Interface Name(vpn512_interface)
             property: /512/vpn512_interface/interface/if-name
             variable: vpn512_interface
-            editable: true
-            optional: false
         -   title: Address(vpn0_default_gateway)
             property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
             variable: vpn0_default_gateway
-            editable: true
-            optional: false
         -   title: Interface Name(vpn0_interface)
             property: /0/vpn0_interface/interface/if-name
             variable: vpn0_interface
-            editable: true
-            optional: false
         -   title: IPv4 Address(vpn0_internet_ipv4_address)
             property: /0/vpn0_interface/interface/ip/address
             variable: vpn0_internet_ipv4_address
-            editable: true
-            optional: false
         -   title: Hostname(system_host_name)
             property: //system/host-name
             variable: system_host_name
-            editable: true
-            optional: false
         -   title: Latitude(system_latitude)
             property: //system/gps-location/latitude
             variable: system_latitude
-            editable: true
-            optional: false
         -   title: Longitude(system_longitude)
             property: //system/gps-location/longitude
             variable: system_longitude
-            editable: true
-            optional: false
         -   title: System IP(system_system_ip)
             property: //system/system-ip
             variable: system_system_ip
-            editable: true
-            optional: false
         -   title: Site ID(system_site_id)
             property: //system/site-id
             variable: system_site_id
-            editable: true
-            optional: false
         data: []
     generalTemplates:
     -   templateName: aaa
@@ -357,18 +140,19 @@ vmanage_device_templates:
             templateType: vpn-vedge-interface
     -   templateName: banner
         templateType: banner
--   templateName: hq-csr1000v
+-   templateId: 5054a30f-5bf2-4d03-b346-bb918ee5c3aa
+    templateName: hq-csr1000v
     templateDescription: HQ CSR1000v Template
     deviceType: vedge-CSR-1000v
-    factoryDefault: false
-    configType: template
-    featureTemplateUidRange: []
-    policyId: ''
-    securityPolicyId: ''
-    templateId: 3131f594-2c09-48b5-9203-6eb8fe6bf019
-    templateClass: cedge
     deviceRole: sdwan-edge
+    configType: template
+    factoryDefault: false
+    policyId: ''
+    featureTemplateUidRange: []
     draftMode: false
+    connectionPreferenceRequired: true
+    connectionPreference: true
+    templateClass: cedge
     attached_devices:
     - hq-cedge1
     input:
@@ -376,76 +160,48 @@ vmanage_device_templates:
         -   title: Login Banner(banner_login)
             property: //banner/login
             variable: banner_login
-            editable: true
-            optional: false
         -   title: MOTD Banner(banner_motd)
             property: //banner/motd
             variable: banner_motd
-            editable: true
-            optional: false
         -   title: Interface Name(vpn1_interface)
             property: /1/vpn1_interface/interface/if-name
             variable: vpn1_interface
-            editable: true
-            optional: false
         -   title: IPv4 Address/ prefix-length(vpn1_ipv4_address)
             property: /1/vpn1_interface/interface/ip/address
             variable: vpn1_ipv4_address
-            editable: true
-            optional: false
         -   title: Interface Name(vpn1_ospf_interface)
             property: /1//router/ospf/area/0/interface/vpn1_ospf_interface/name
             variable: vpn1_ospf_interface
-            editable: true
-            optional: false
         -   title: Interface Name(vpn512_interface)
             property: /512/vpn512_interface/interface/if-name
             variable: vpn512_interface
-            editable: true
-            optional: false
         -   title: Address(vpn0_default_gateway)
             property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
             variable: vpn0_default_gateway
-            editable: true
-            optional: false
         -   title: Interface Name(vpn0_interface)
             property: /0/vpn0_interface/interface/if-name
             variable: vpn0_interface
-            editable: true
-            optional: false
         -   title: IPv4 Address/ prefix-length(vpn0_internet_ipv4_address)
             property: /0/vpn0_interface/interface/ip/address
             variable: vpn0_internet_ipv4_address
-            editable: true
-            optional: false
         -   title: Hostname(system_host_name)
             property: //system/host-name
             variable: system_host_name
-            editable: true
-            optional: false
         -   title: Latitude(system_latitude)
             property: //system/gps-location/latitude
             variable: system_latitude
-            editable: true
-            optional: false
         -   title: Longitude(system_longitude)
             property: //system/gps-location/longitude
             variable: system_longitude
-            editable: true
-            optional: false
         -   title: System IP(system_system_ip)
             property: //system/system-ip
             variable: system_system_ip
-            editable: true
-            optional: false
         -   title: Site ID(system_site_id)
             property: //system/site-id
             variable: system_site_id
-            editable: true
-            optional: false
         data: []
     generalTemplates:
-    -   templateName: Factory_Default_AAA_CISCO_Template
+    -   templateName: cedge_aaa
         templateType: cedge_aaa
     -   templateName: Default_BFD_Cisco_V01
         templateType: cisco_bfd
@@ -479,71 +235,196 @@ vmanage_device_templates:
         templateType: cedge_global
     -   templateName: cedge_banner
         templateType: cisco_banner
--   templateId: 7918599c-c4dd-4e7b-b8ee-4a7a1f8765c1
-    templateName: vsmart
-    templateDescription: vSmart Device Template
-    deviceType: vsmart
+-   templateId: c60a7034-d945-402b-a8d9-753675e9ceee
+    templateName: branch-csr1000v
+    templateDescription: Branch CSR1000v Template
+    deviceType: vedge-CSR-1000v
     deviceRole: sdwan-edge
     configType: template
     factoryDefault: false
     policyId: ''
     featureTemplateUidRange: []
     draftMode: false
-    templateClass: vedge
+    connectionPreferenceRequired: true
+    connectionPreference: true
+    templateClass: cedge
     attached_devices:
-    - vsmart1
+    - site1-cedge1
     input:
         columns:
+        -   title: Login Banner(banner_login)
+            property: //banner/login
+            variable: banner_login
+        -   title: MOTD Banner(banner_motd)
+            property: //banner/motd
+            variable: banner_motd
+        -   title: Interface Name(vpn1_interface)
+            property: /1/vpn1_interface/interface/if-name
+            variable: vpn1_interface
+        -   title: IPv4 Address/ prefix-length(vpn1_ipv4_address)
+            property: /1/vpn1_interface/interface/ip/address
+            variable: vpn1_ipv4_address
+        -   title: Interface Name(vpn512_interface)
+            property: /512/vpn512_interface/interface/if-name
+            variable: vpn512_interface
         -   title: Address(vpn0_default_gateway)
             property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
             variable: vpn0_default_gateway
-            editable: true
-            optional: false
-        -   title: IPv4 Address(vpn0_internet_ipv4_address)
-            property: /0/eth1/interface/ip/address
+        -   title: Interface Name(vpn0_interface)
+            property: /0/vpn0_interface/interface/if-name
+            variable: vpn0_interface
+        -   title: IPv4 Address/ prefix-length(vpn0_internet_ipv4_address)
+            property: /0/vpn0_interface/interface/ip/address
             variable: vpn0_internet_ipv4_address
-            editable: true
-            optional: false
-        -   title: Hostname
+        -   title: Hostname(system_host_name)
             property: //system/host-name
-            variable: //system/host-name
-            editable: true
-            optional: false
-        -   title: System IP
+            variable: system_host_name
+        -   title: Latitude(system_latitude)
+            property: //system/gps-location/latitude
+            variable: system_latitude
+        -   title: Longitude(system_longitude)
+            property: //system/gps-location/longitude
+            variable: system_longitude
+        -   title: System IP(system_system_ip)
             property: //system/system-ip
-            variable: //system/system-ip
-            editable: true
-            optional: false
-        -   title: Site ID
+            variable: system_system_ip
+        -   title: Site ID(system_site_id)
             property: //system/site-id
-            variable: //system/site-id
-            editable: true
-            optional: false
+            variable: system_site_id
         data: []
     generalTemplates:
-    -   templateName: aaa
-        templateType: aaa
-    -   templateName: Factory_Default_vSmart_OMP_Template
-        templateType: omp-vsmart
-    -   templateName: Factory_Default_vSmart_vManage_Security_Template
-        templateType: security-vsmart
-    -   templateName: Factory_Default_vSmart_vManage_System_Template
-        templateType: system-vsmart
+    -   templateName: cedge_aaa
+        templateType: cedge_aaa
+    -   templateName: Default_BFD_Cisco_V01
+        templateType: cisco_bfd
+    -   templateName: Factory_Default_Cisco_OMP_ipv46_Template
+        templateType: cisco_omp
+    -   templateName: Default_Security_Cisco_V01
+        templateType: cisco_security
+    -   templateName: cedge_system
+        templateType: cisco_system
         subTemplates:
-        -   templateName: Factory_Default_Logging_Template_V01
-            templateType: logging
-    -   templateName: vsmart_vpn0
-        templateType: vpn-vsmart
+        -   templateName: Default_Logging_Cisco_V01
+            templateType: cisco_logging
+    -   templateName: cedge_vpn0
+        templateType: cisco_vpn
         subTemplates:
-        -   templateName: vsmart_vpn0_interface
-            templateType: vpn-vsmart-interface
-    -   templateName: Factory_Default_vSmart_vManage_VPN_512_Template
-        templateType: vpn-vsmart
+        -   templateName: cedge_vpn0_interface
+            templateType: cisco_vpn_interface
+    -   templateName: cedge_vpn512
+        templateType: cisco_vpn
         subTemplates:
-        -   templateName: vsmart_vpn512_interface
-            templateType: vpn-vsmart-interface
+        -   templateName: cedge_vpn512_interface
+            templateType: cisco_vpn_interface
+    -   templateName: cedge_vpn1
+        templateType: cisco_vpn
+        subTemplates:
+        -   templateName: cedge_vpn1_interface
+            templateType: cisco_vpn_interface
+    -   templateName: Factory_Default_Global_CISCO_Template
+        templateType: cedge_global
+    -   templateName: cedge_banner
+        templateType: cisco_banner
+-   templateId: c78e6a1d-3059-42df-a98b-321510ef46fd
+    templateName: branch-csr1000v-vrrp
+    templateDescription: Branch CSR1000v Template w/VRRP
+    deviceType: vedge-CSR-1000v
+    deviceRole: sdwan-edge
+    configType: template
+    factoryDefault: false
+    policyId: ''
+    featureTemplateUidRange: []
+    draftMode: false
+    connectionPreferenceRequired: true
+    connectionPreference: true
+    templateClass: cedge
+    attached_devices: []
+    input:
+        columns:
+        -   title: Login Banner(banner_login)
+            property: //banner/login
+            variable: banner_login
+        -   title: MOTD Banner(banner_motd)
+            property: //banner/motd
+            variable: banner_motd
+        -   title: Interface Name(vpn1_interface)
+            property: /1/vpn1_interface/interface/if-name
+            variable: vpn1_interface
+        -   title: IPv4 Address/ prefix-length(vpn1_ipv4_address)
+            property: /1/vpn1_interface/interface/ip/address
+            variable: vpn1_ipv4_address
+        -   title: Group ID(vpn1_vrrp_grpid)
+            property: /1/vpn1_interface/interface/vrrp/vpn1_vrrp_grpid/grp-id
+            variable: vpn1_vrrp_grpid
+        -   title: Priority(vpn1_vrrp_priority)
+            property: /1/vpn1_interface/interface/vrrp/vpn1_vrrp_grpid/priority
+            variable: vpn1_vrrp_priority
+        -   title: IP Address(vpn1_vrrp_ipaddress)
+            property: /1/vpn1_interface/interface/vrrp/vpn1_vrrp_grpid/ipv4/address
+            variable: vpn1_vrrp_ipaddress
+        -   title: Interface Name(vpn512_interface)
+            property: /512/vpn512_interface/interface/if-name
+            variable: vpn512_interface
+        -   title: Address(vpn0_default_gateway)
+            property: /0/vpn-instance/ip/route/0.0.0.0/0/next-hop/vpn0_default_gateway/address
+            variable: vpn0_default_gateway
+        -   title: Interface Name(vpn0_interface)
+            property: /0/vpn0_interface/interface/if-name
+            variable: vpn0_interface
+        -   title: IPv4 Address/ prefix-length(vpn0_internet_ipv4_address)
+            property: /0/vpn0_interface/interface/ip/address
+            variable: vpn0_internet_ipv4_address
+        -   title: Hostname(system_host_name)
+            property: //system/host-name
+            variable: system_host_name
+        -   title: Latitude(system_latitude)
+            property: //system/gps-location/latitude
+            variable: system_latitude
+        -   title: Longitude(system_longitude)
+            property: //system/gps-location/longitude
+            variable: system_longitude
+        -   title: System IP(system_system_ip)
+            property: //system/system-ip
+            variable: system_system_ip
+        -   title: Site ID(system_site_id)
+            property: //system/site-id
+            variable: system_site_id
+        data: []
+    generalTemplates:
+    -   templateName: cedge_aaa
+        templateType: cedge_aaa
+    -   templateName: Default_BFD_Cisco_V01
+        templateType: cisco_bfd
+    -   templateName: Factory_Default_Cisco_OMP_ipv46_Template
+        templateType: cisco_omp
+    -   templateName: Default_Security_Cisco_V01
+        templateType: cisco_security
+    -   templateName: cedge_system
+        templateType: cisco_system
+        subTemplates:
+        -   templateName: Default_Logging_Cisco_V01
+            templateType: cisco_logging
+    -   templateName: cedge_vpn0
+        templateType: cisco_vpn
+        subTemplates:
+        -   templateName: cedge_vpn0_interface
+            templateType: cisco_vpn_interface
+    -   templateName: cedge_vpn512
+        templateType: cisco_vpn
+        subTemplates:
+        -   templateName: cedge_vpn512_interface
+            templateType: cisco_vpn_interface
+    -   templateName: cedge_vpn1
+        templateType: cisco_vpn
+        subTemplates:
+        -   templateName: cedge_vpn1_interface_vrrp
+            templateType: cisco_vpn_interface
+    -   templateName: Factory_Default_Global_CISCO_Template
+        templateType: cedge_global
+    -   templateName: cedge_banner
+        templateType: cisco_banner
 vmanage_feature_templates:
--   templateId: bc9674cf-8e87-4a3b-96af-6011ea0c6308
+-   templateId: bf74368c-f8e7-4bac-8c9f-0099c1aa6df8
     templateName: aaa
     templateDescription: AAA template settings
     templateType: aaa
@@ -564,14 +445,14 @@ vmanage_feature_templates:
     - vedge-ISR1100-4G
     - vedge-ISR1100X-4G
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644523278793
+    lastUpdatedOn: 1703187572277
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 2
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644523278793
+    createdOn: 1703129700237
     resourceGroup: global
     templateDefinition:
         aaa:
@@ -834,6 +715,7 @@ vmanage_feature_templates:
                         vipObjectType: tree
                         vipPrimaryKey:
                         - mode
+                    viewMode: edit
                 vipObjectType: tree
                 vipPrimaryKey:
                 - name
@@ -848,7 +730,7 @@ vmanage_feature_templates:
                     password:
                         vipObjectType: object
                         vipType: constant
-                        vipValue: $6$siwKBQ==$wT2lUa9BSreDPI6gB8sl4E6PAJoVXgMbgv/whJ8F1C6sWdRazdxorYYTLrL6syiG6qnLABTnrE96HJiKF6QRq1
+                        vipValue: $6$c2f200a8324126df$DC84wSDFYPx1p.dh4GDyLzldEq9WCPHozC5/65SJ8LSb.49r.EqmH/xDzV//BNRLUgbH0Nv12JDDkJ3wcoGdq.
                     pubkey-chain:
                         vipObjectType: tree
                         vipType: ignore
@@ -923,9 +805,17 @@ vmanage_feature_templates:
                 vipObjectType: object
                 objectType: object
                 deleteFlag: false
-                vipValue: 'false'
                 vipType: ignore
+                vipValue: 'false'
                 vipVariableName: aaa_accounting
+            ciscotacro-user:
+                vipObjectType: object
+                vipType: constant
+                vipValue: true
+            ciscotacrw-user:
+                vipObjectType: object
+                vipType: constant
+                vipValue: true
         tacacs:
             timeout:
                 vipObjectType: object
@@ -948,21 +838,21 @@ vmanage_feature_templates:
                 vipType: ignore
                 vipValue: 3
                 vipVariableName: retransmit
--   templateId: ca60036b-73f1-44ba-a2a7-6294a32cbf80
+-   templateId: 94bb8659-0332-4e8f-9e0a-8f2b79e9984b
     templateName: banner
     templateDescription: banner
     templateType: banner
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522346432
+    lastUpdatedOn: 1703129700684
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522346432
+    createdOn: 1703129700684
     resourceGroup: global
     templateDefinition:
         login:
@@ -975,21 +865,21 @@ vmanage_feature_templates:
             vipType: variableName
             vipValue: ''
             vipVariableName: banner_motd
--   templateId: a7874436-3410-497c-a003-e9e15810b6bc
+-   templateId: d830cdac-cd00-4c86-aeae-b26ef6b0a996
     templateName: cedge_banner
     templateDescription: cEdge Banner
     templateType: cisco_banner
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522350584
+    lastUpdatedOn: 1703129701078
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 3
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522350584
+    createdOn: 1703129701078
     resourceGroup: global
     templateDefinition:
         login:
@@ -1002,21 +892,21 @@ vmanage_feature_templates:
             vipType: variableName
             vipValue: ''
             vipVariableName: banner_motd
--   templateId: 72aa3cb1-8f6c-43d5-bc1a-8e05a0a859c4
+-   templateId: 4780e540-8e81-4288-bb42-22e4f94d6c5a
     templateName: cedge_system
     templateDescription: cEdge System
     templateType: cisco_system
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522345418
+    lastUpdatedOn: 1703129701604
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 3
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522345418
+    createdOn: 1703129701604
     resourceGroup: global
     templateDefinition:
         clock:
@@ -1125,21 +1015,21 @@ vmanage_feature_templates:
             vipObjectType: tree
             vipPrimaryKey:
             - name
--   templateId: 109badec-030d-4c15-ac17-da36b3f80f18
+-   templateId: cdefc339-0968-4ae2-94fa-a4f2b0ef324f
     templateName: cedge_vpn0
     templateDescription: cEdge VPN0
     templateType: cisco_vpn
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522343485
+    lastUpdatedOn: 1703129702164
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 3
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522343485
+    createdOn: 1703129702164
     resourceGroup: global
     templateDefinition:
         vpn-id:
@@ -1255,21 +1145,21 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - protocol
--   templateId: b26b3faa-ce23-4542-b1a6-7240ac4b244f
+-   templateId: f660dfdb-2ec0-4cc5-8ce0-9d02b062b244
     templateName: cedge_vpn0_interface
     templateDescription: cEdge VPN0 Interface
     templateType: cisco_vpn_interface
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522350985
+    lastUpdatedOn: 1703129702568
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 3
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522350985
+    createdOn: 1703129702568
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -1617,21 +1507,21 @@ vmanage_feature_templates:
             vipObjectType: tree
             vipPrimaryKey:
             - grp-id
--   templateId: a11428b6-f930-4954-a6b4-60c4eb5cc66a
+-   templateId: 20c628ed-58af-4401-aea8-4be2288c3007
     templateName: cedge_vpn1
     templateDescription: cEdge VPN1
     templateType: cisco_vpn
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522354105
+    lastUpdatedOn: 1703129702978
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 3
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522354105
+    createdOn: 1703129702978
     resourceGroup: global
     templateDefinition:
         vpn-id:
@@ -1689,21 +1579,21 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - protocol
--   templateId: 40b714e9-0738-4bc9-b8b7-7c60b6962953
+-   templateId: 1e43542e-22e5-488c-ba78-873cbc62dc79
     templateName: cedge_vpn1_interface
     templateDescription: cEdge VPN1 Interface
     templateType: cisco_vpn_interface
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522354444
+    lastUpdatedOn: 1703129703458
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 2
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522354444
+    createdOn: 1703129703458
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -1880,21 +1770,21 @@ vmanage_feature_templates:
             vipObjectType: tree
             vipPrimaryKey:
             - grp-id
--   templateId: aa992dc7-79a5-4be8-bbaf-b260ab0dd688
+-   templateId: 400f439d-c27e-4b5c-b650-5011ec4f9b93
     templateName: cedge_vpn1_interface_vrrp
     templateDescription: cEdge VPN1 Interface w/VRRP
     templateType: cisco_vpn_interface
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522347296
+    lastUpdatedOn: 1703129704017
     factoryDefault: false
     devicesAttached: 0
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522347296
+    createdOn: 1703129704017
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -2108,21 +1998,21 @@ vmanage_feature_templates:
             vipObjectType: tree
             vipPrimaryKey:
             - grp-id
--   templateId: 1f9e15ed-8d41-49db-a7ea-0e57d19a07d0
+-   templateId: db50d87a-31cb-40b1-b2f0-e8afe73269a6
     templateName: cedge_vpn512
     templateDescription: cEdge VPN512
     templateType: cisco_vpn
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522348151
+    lastUpdatedOn: 1703129704407
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 3
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522348151
+    createdOn: 1703129704407
     resourceGroup: global
     templateDefinition:
         vpn-id:
@@ -2180,21 +2070,21 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - protocol
--   templateId: 324a0436-b893-45d9-8ab7-a4537d3694b9
+-   templateId: 6463e657-11c5-4fa4-afd8-2e0ee2b9b8e4
     templateName: cedge_vpn512_interface
     templateDescription: cEdge VPN512 Interface
     templateType: cisco_vpn_interface
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522346942
+    lastUpdatedOn: 1703129704936
     factoryDefault: false
     devicesAttached: 2
     attachedMastersCount: 3
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522346942
+    createdOn: 1703129704936
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -2375,21 +2265,21 @@ vmanage_feature_templates:
             vipObjectType: tree
             vipPrimaryKey:
             - grp-id
--   templateId: 0c8d5e39-1759-4f3e-a82b-729b4d944d19
+-   templateId: eee78573-57ed-498f-b214-286d68f66e51
     templateName: cedge_vpn_ospf1
     templateDescription: cEdge OSPF for VPN1
     templateType: cisco_ospf
     deviceType:
     - vedge-CSR-1000v
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522352673
+    lastUpdatedOn: 1703129705438
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522352673
+    createdOn: 1703129705438
     resourceGroup: global
     templateDefinition:
         ospf:
@@ -2579,21 +2469,21 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - a-num
--   templateId: ca9508b2-291f-4413-b589-461febbddc08
+-   templateId: 9d51c73d-a391-47f7-a163-0db815d8d222
     templateName: system
     templateDescription: system
     templateType: system-vedge
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522342996
+    lastUpdatedOn: 1703129705966
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522342996
+    createdOn: 1703129705966
     resourceGroup: global
     templateDefinition:
         clock:
@@ -2748,21 +2638,21 @@ vmanage_feature_templates:
             vipObjectType: tree
             vipPrimaryKey:
             - name
--   templateId: 3a279243-0593-47ae-88f2-4a229d173fef
+-   templateId: 87cc0cff-fb5b-4ef8-843b-f195525914a9
     templateName: vpn0
     templateDescription: vEdge vpn0
     templateType: vpn-vedge
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522347659
+    lastUpdatedOn: 1703129706353
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522347659
+    createdOn: 1703129706353
     resourceGroup: global
     templateDefinition:
         vpn-id:
@@ -2858,21 +2748,21 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - protocol
--   templateId: 36dbbe03-005f-4de6-8490-cccf46aa585e
+-   templateId: 2ccb32f8-c8ad-464e-bb1c-c29377443a69
     templateName: vpn0_interface
     templateDescription: vpn0_interface
     templateType: vpn-vedge-interface
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644523648030
+    lastUpdatedOn: 1703129706844
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522351863
+    createdOn: 1703129706844
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -3245,21 +3135,21 @@ vmanage_feature_templates:
         dot1x:
             vipType: ignore
             vipObjectType: node-only
--   templateId: abb78f57-0007-4c2d-af07-d6f1b6c61787
+-   templateId: 63f52013-10d3-4966-a53c-99264adb2b29
     templateName: vpn1
     templateDescription: vEdge vpn1
     templateType: vpn-vedge
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522344547
+    lastUpdatedOn: 1703129707285
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522344547
+    createdOn: 1703129707285
     resourceGroup: global
     templateDefinition:
         vpn-id:
@@ -3322,21 +3212,21 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - protocol
--   templateId: 4f687315-1c08-48eb-9d05-e6d874220a69
+-   templateId: cecb9795-ce18-43fc-997a-e69a88ac8953
     templateName: vpn1_interface
     templateDescription: vpn1_interface
     templateType: vpn-vedge-interface
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522353287
+    lastUpdatedOn: 1703129707681
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522353287
+    createdOn: 1703129707681
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -3533,21 +3423,21 @@ vmanage_feature_templates:
         dot1x:
             vipType: ignore
             vipObjectType: node-only
--   templateId: d17a6b7e-5908-4b19-8abf-145eba5c204d
+-   templateId: f791430f-eaf7-450c-9f53-88cd9371d715
     templateName: vpn512
     templateDescription: vpn512
     templateType: vpn-vedge
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522352258
+    lastUpdatedOn: 1703129708157
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522352258
+    createdOn: 1703129708157
     resourceGroup: global
     templateDefinition:
         vpn-id:
@@ -3610,21 +3500,21 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - protocol
--   templateId: f6393d3e-9c66-4747-910b-841cebe3d531
+-   templateId: c556d715-b6e3-47de-8742-bf82f5451c43
     templateName: vpn512_interface
     templateDescription: vpn512_interface
     templateType: vpn-vedge-interface
     deviceType:
     - vedge-cloud
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522346001
+    lastUpdatedOn: 1703129708566
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522346001
+    createdOn: 1703129708566
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -3825,21 +3715,21 @@ vmanage_feature_templates:
         dot1x:
             vipType: ignore
             vipObjectType: node-only
--   templateId: cf0da3c3-235a-4e5d-bb3a-baa148408499
+-   templateId: 42b1b7c1-3509-4650-970e-e9f07e3d2667
     templateName: vsmart_vpn0
     templateDescription: vsmart_vpn0
     templateType: vpn-vsmart
     deviceType:
     - vsmart
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522353694
+    lastUpdatedOn: 1703129708980
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522353694
+    createdOn: 1703129708980
     resourceGroup: global
     templateDefinition:
         vpn-id:
@@ -3892,21 +3782,21 @@ vmanage_feature_templates:
             vipObjectType: object
             vipType: ignore
             vipVariableName: vpn_name
--   templateId: 6c98c50a-e318-42d2-a2b0-223e0e87c656
+-   templateId: 7a87cbeb-c238-450a-9c38-5d96d2cf3332
     templateName: vsmart_vpn0_interface
     templateDescription: vSmart VPN0 Interface
     templateType: vpn-vsmart-interface
     deviceType:
     - vsmart
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522350222
+    lastUpdatedOn: 1703129709384
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522350222
+    createdOn: 1703129709384
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -4061,21 +3951,21 @@ vmanage_feature_templates:
             group:
                 vipObjectType: list
                 vipType: ignore
--   templateId: 7b4ec535-5d7c-4800-b89a-f5f6d6a01970
+-   templateId: e7f84154-4bdc-48e2-90ab-19825f1d9815
     templateName: vsmart_vpn512_interface
     templateDescription: vSmart VPN512 Interface
     templateType: vpn-vsmart-interface
     deviceType:
     - vsmart
     lastUpdatedBy: admin
-    lastUpdatedOn: 1644522348512
+    lastUpdatedOn: 1703129709796
     factoryDefault: false
     devicesAttached: 1
     attachedMastersCount: 1
     templateMinVersion: 15.0.0
     configType: xml
     createdBy: admin
-    createdOn: 1644522348512
+    createdOn: 1703129709796
     resourceGroup: global
     templateDefinition:
         if-name:
@@ -4156,3 +4046,173 @@ vmanage_feature_templates:
                 vipObjectType: tree
                 vipPrimaryKey:
                 - addr
+-   templateId: 3c79d1c8-4761-4fb7-9951-3aafb594269e
+    templateName: cedge_aaa
+    templateDescription: cEdge AAA
+    templateType: cedge_aaa
+    deviceType:
+    - vedge-CSR-1000v
+    - vedge-ISRv
+    - vedge-C8000V
+    lastUpdatedBy: admin
+    lastUpdatedOn: 1703188067488
+    factoryDefault: false
+    devicesAttached: 2
+    attachedMastersCount: 3
+    templateMinVersion: 15.0.0
+    configType: xml
+    createdBy: admin
+    createdOn: 1703188009511
+    resourceGroup: global
+    templateDefinition:
+        user:
+            vipType: constant
+            vipValue:
+            -   vipOptional: false
+                name:
+                    vipObjectType: object
+                    vipType: constant
+                    vipValue: admin
+                    vipVariableName: user_name_0
+                password:
+                    vipObjectType: object
+                    vipType: constant
+                    vipValue: $6$bdae598c67b920e8$ZERj8TRcdXtK73ELkT34.X4JNSEx/dls1FK4hB.zq2R2X9FPXuFGcYH3issgAJejO3nHaZfxQiNzGYi5dQcrC1
+                    vipVariableName: user_password
+                secret:
+                    vipObjectType: object
+                    vipType: constant
+                    vipValue: $9$3FUL4.wG2/IL2k$KTh8eOVs75u.s3yXkpXMAaq4H6Q561V088qmHfPJRQE
+                    vipVariableName: password_secret
+                pubkey-chain:
+                    vipObjectType: tree
+                    vipType: ignore
+                    vipValue: []
+                    vipVariableName: user_pubkey_chain_0
+                    vipPrimaryKey:
+                    - key-string
+                privilege:
+                    vipObjectType: object
+                    vipType: constant
+                    vipValue: '15'
+                    vipVariableName: user_privilege_0
+                priority-order:
+                - name
+                - password
+                - secret
+                - pubkey-chain
+                - privilege
+            vipObjectType: tree
+            vipPrimaryKey:
+            - name
+        tacacs:
+            vipType: ignore
+            vipValue: []
+        radius:
+            vipType: ignore
+            vipValue: []
+        accounting:
+            dot1x:
+                default:
+                    start-stop:
+                        accounting_group:
+                            vipObjectType: object
+                            vipType: ignore
+                            vipValue: 'false'
+                            vipVariableName: dot1x_acct_group
+            accounting-rule:
+                vipObjectType: tree
+                vipType: ignore
+                vipValue: []
+                vipPrimaryKey:
+                - rule-id
+        authorization:
+            authorization-console:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 'false'
+                vipVariableName: auth_console
+            authorization-config-commands:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 'false'
+                vipVariableName: auth_config_cmds
+            authorization-rule:
+                vipObjectType: tree
+                vipType: ignore
+                vipValue: []
+                vipPrimaryKey:
+                - rule-id
+        authentication:
+            dot1x:
+                default:
+                    authentication_group:
+                        key: authentication_group
+                        description: Authentication Param
+                        details: Authentication configurations parameters
+                        optionType:
+                        -   value: constant
+                            display: Global
+                            iconClass: language
+                            iconColor: icon-global
+                        -   value: variable
+                            display: Device Specific
+                            iconClass: router
+                            iconColor: icon-variable
+                        -   value: ignore
+                            display: Default
+                            iconClass: check_circle
+                            iconColor: icon-default
+                        originalDefaultOption: ignore
+                        defaultOption: ignore
+                        dataType:
+                            type: boolean
+                            default: 'false'
+                        dataPath:
+                        - default
+                        vipObjectType: object
+                        objectType: object
+                        deleteFlag: false
+                        vipType: ignore
+                        vipValue: 'false'
+                        vipVariableName: dot1x_auth_group
+        server-auth-order:
+            vipObjectType: object
+            vipType: constant
+            vipValue: local
+        radius-dynamic-author:
+            radius-client:
+                vipObjectType: tree
+                vipType: ignore
+                vipValue: []
+                vipPrimaryKey:
+                - ip
+            rda-server-key:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: radius_client_server_key
+                vipNeedsEncryption: 'true'
+            domain-stripping:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 'no'
+                vipVariableName: radius_client_domain_stripping
+            auth-type:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: any
+                vipVariableName: radius_client_auth_type
+            port:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: 1700
+                vipVariableName: radius_client_port
+        radius-trustsec:
+            cts-auth-list:
+                vipObjectType: object
+                vipType: ignore
+                vipVariableName: trustsec_auth_list
+            radius-trustsec-group:
+                vipObjectType: object
+                vipType: ignore
+                vipValue: _empty

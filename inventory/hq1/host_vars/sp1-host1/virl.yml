@@ -1,1 +1,1 @@
-virl_config_template: virl/lxc.j2
+cml_config_template: cml/lxc.j2

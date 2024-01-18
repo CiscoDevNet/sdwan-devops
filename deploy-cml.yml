@@ -15,13 +15,13 @@
     - edge
   tasks:
     - name: Start Node
-      virl_node:
+      cisco.cml.cml_node:
         name: "{{ inventory_hostname }}"
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
-        lab: "{{ virl_lab }}"
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
         state: started
-        image_definition: "{{ virl_image_definition | default(omit) }}"
-        node_definition: "{{ virl_node_definition | default(omit) }}"
+        image_definition: "{{ cml_image_definition | default(omit) }}"
+        node_definition: "{{ cml_node_definition | default(omit) }}"
         config: "{{ day0_config | default(omit) }}"

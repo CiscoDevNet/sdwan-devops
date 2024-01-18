@@ -1,0 +1,15 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - ansible-virl
+  tasks:
+    - cisco.cml.cml_lab_facts:
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
+      register: result
+
+    - debug:
+        var: result.cml_facts.details

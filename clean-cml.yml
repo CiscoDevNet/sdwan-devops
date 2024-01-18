@@ -17,10 +17,11 @@
   gather_facts: no
   tags:
     - vmanage
+    - never
   vars:
     vmanage_host: "{{ groups.vmanage_hosts | first }}"
     vmanage_mgmt_interface: "{{ hostvars[vmanage_host].mgmt_interface | default('ansible_host') }}"
-    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ipaddr('address') }}"
+    vmanage_ip: "{{ hostvars[vmanage_host][vmanage_mgmt_interface] | ansible.utils.ipaddr('address') }}"
   tasks:
     - block:
       - name: Remove device from vManage
@@ -40,31 +41,31 @@
       when: inventory_hostname in groups.sdwan
 
 
-- hosts: virl_hosts
+- hosts: cml_hosts
   connection: local
   gather_facts: no
   tags:
     - always
   tasks:
     - name: Stop the node
-      virl_node:
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
+      cisco.cml.cml_node:
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
         name: "{{ inventory_hostname }}"
-        lab: "{{ virl_lab }}"
+        lab: "{{ cml_lab }}"
         state: stopped
       tags:
         - stop
         - wipe
 
     - name: Wipe the node
-      virl_node:
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
+      cisco.cml.cml_node:
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
         name: "{{ inventory_hostname }}"
-        lab: "{{ virl_lab }}"
+        lab: "{{ cml_lab }}"
         state: wiped
       tags:
         - wipe
@@ -76,9 +77,9 @@
     - delete
   tasks:
     - name: Delete the lab
-      virl_lab:
-        host: "{{ virl_host }}"
-        user: "{{ virl_username }}"
-        password: "{{ virl_password }}"
-        lab: "{{ virl_lab }}"
+      cisco.cml.cml_lab:
+        host: "{{ cml_host }}"
+        user: "{{ cml_username }}"
+        password: "{{ cml_password }}"
+        lab: "{{ cml_lab }}"
         state: absent

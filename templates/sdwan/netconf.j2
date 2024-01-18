@@ -25,7 +25,7 @@
         {% endif %}
         {% if sdwan_personality is defined and sdwan_personality == 'vbond' %}
         <vbond>
-            <remote>{{ vpn0_ip | ipaddr('address') }}</remote>
+            <remote>{{ vpn0_ip | ansible.utils.ipaddr('address') }}</remote>
             {% if sdwan_vbond_port is defined %}
             <port>{{ sdwan_vbond_port }}</port>
             {% endif %}

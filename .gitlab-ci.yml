@@ -25,10 +25,10 @@ cache:
 clean:
   stage: clean
   script:
-    - ansible-playbook --tags "delete" clean-virl.yml
+    - ansible-playbook --tags "delete" clean-cml.yml
   only:
     changes:
-      - files/hq1.yaml
+      - files/hq1.yaml.j2
 
 build-ca:
   stage: build-ca
@@ -36,7 +36,7 @@ build-ca:
     - ansible-playbook build-ca.yml
   only:
     changes:
-      - files/hq1.yaml
+      - files/hq1.yaml.j2
 
 decrypt-license:
   stage: decrypt-license
@@ -47,15 +47,15 @@ decrypt-license:
 
   only:
     changes:
-      - files/hq1.yaml
+      - files/hq1.yaml.j2
 
 build-control:
   stage: build-control
   script:
-    - ansible-playbook build-virl.yml
+    - ansible-playbook build-cml.yml
   only:
     changes:
-      - files/hq1.yaml
+      - files/hq1.yaml.j2
     
 config-control:
   stage: config-control
@@ -63,15 +63,15 @@ config-control:
     - ansible-playbook config-sdwan.yml
   only:
     changes:
-      - files/hq1.yaml
+      - files/hq1.yaml.j2
   
 deploy-edges:
   stage: deploy-edges
   script:
-    - ansible-playbook deploy-virl.yml
+    - ansible-playbook deploy-cml.yml
   only:
     changes:
-      - files/hq1.yaml
+      - files/hq1.yaml.j2
 
 attach-templates:
   stage: attach-templates

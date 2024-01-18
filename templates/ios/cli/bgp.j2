@@ -15,14 +15,14 @@ router bgp {{ router.bgp.id }}
 {%         for address_family, address_family_config in address_family_list.items() %}
  address-family {{ address_family }} {{ '' if vrf == 'global' else 'vrf ' + address_family }}
 {%           for network in address_family_config.networks|default([]) %}
-  network {{ network.network|ipaddr('network') }} mask {{ network.network|ipaddr('netmask') }}
+  network {{ network.network|ansible.utils.ipaddr('network') }} mask {{ network.network|ansible.utils.ipaddr('netmask') }}
 {%           endfor %}
 {%           for aggregate in address_family_config.aggregate_address|default([]) %}
 {%             set options = '' %}
 {%             if aggregate.summary_only is sameas true %}
 {%               set options = options + ' summary-only' %}
 {%             endif %}
-  aggregate-address {{ aggregate.network|ipaddr('network') }} {{ aggregate.network|ipaddr('netmask') }} {{ options | trim }}
+  aggregate-address {{ aggregate.network|ansible.utils.ipaddr('network') }} {{ aggregate.network|ansible.utils.ipaddr('netmask') }} {{ options | trim }}
 {%           endfor %}
 {%           for neighbor in address_family_config.neighbors|default([]) %}
 {%             if neighbor.activate is sameas true %}

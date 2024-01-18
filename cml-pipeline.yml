@@ -1,11 +1,11 @@
 # Provision SD-WAN control plane in CML
-- import_playbook: build-virl.yml
+- import_playbook: build-cml.yml
 
 # Configure SD-WAN control plane
 - import_playbook: config-sdwan.yml
 
 # Provision SD-WAN edges in CML
-- import_playbook: deploy-virl.yml
+- import_playbook: deploy-cml.yml
 
 # Wait for edges to sync in vManage
 - import_playbook: waitfor-sync.yml

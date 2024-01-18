@@ -1,5 +1,5 @@
 hostname {{ inventory_hostname }}
-useradd -p virl virl
+useradd -p cml cml
 {% if interfaces is defined %}
 {%   for key, value in interfaces.items() %}
 {%     if value.enabled is defined and value.enabled is sameas true and value.ip is defined and value.ip.primary is defined %}

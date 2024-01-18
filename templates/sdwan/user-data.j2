@@ -61,7 +61,7 @@ vinitparam:
  - format-partition : 1
 {% endif %}{# sdwan_personality == 'vmanage' #}
 {% if sdwan_personality == "vbond" %}
- - vbond : {{ vpn0_ip | ipaddr('address') }}
+ - vbond : {{ vpn0_ip | ansible.utils.ipaddr('address') }}
 {% elif sdwan_vbond is defined %}
  - vbond : {{ sdwan_vbond }}
 {% endif %}{# sdwan_vbond is defined #}   
@@ -96,7 +96,7 @@ system
  organization-name       "{{ vmanage_org }}"
 {% endif %}{# sdwan_org is defined #}
 {% if sdwan_personality == "vbond" %}
- vbond                   {{ vpn0_ip | ipaddr('address') }} local
+ vbond                   {{ vpn0_ip | ansible.utils.ipaddr('address') }} local
 {% elif sdwan_vbond is defined %}
  vbond                   {{ sdwan_vbond }}
 {% endif %}{# sdwan_vbond is defined #}   

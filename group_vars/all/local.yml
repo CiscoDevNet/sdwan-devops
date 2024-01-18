@@ -9,24 +9,20 @@ ansible_user: "{{ vmanage_user }}"
 ansible_password: "{{ vmanage_pass }}"
 sdwan_serial_file: "{{ playbook_dir }}/licenses/serialFile.viptela"
 sdwan_cert_dir: "{{ lookup('env', 'PWD') }}/myCA"
-# Set these as env vars to match your CML node definition IDs
+# Set these as env vars to match your CML node definition IDs (or update the defaults)
 csr1000v_nodedef: "{{ lookup('env','CSR1000V_NODEDEF') | default('csr1000v', true) }}"
-iosxe_sdwan_nodedef: "{{ lookup('env','IOSXE_SDWAN_NODEDEF') | default('viptela-cedge', true) }}"
 ubuntu_nodedef: "{{ lookup('env','UBUNTU_NODEDEF') | default('ubuntu', true) }}"
-vmanage_nodedef: "{{ lookup('env','VMANAGE_NODEDEF') | default('viptela-manage', true) }}"
-vsmart_nodedef: "{{ lookup('env','VSMART_NODEDEF') | default('viptela-smart', true) }}"
-vedge_nodedef: "{{ lookup('env','VEDGE_NODEDEF') | default('viptela-edge') }}"
-# Set these as env vars to match your CML image definition IDs
+vmanage_nodedef: "{{ lookup('env','VMANAGE_NODEDEF') | default('cat-sdwan-manager', true) }}"
+vsmart_nodedef: "{{ lookup('env','VSMART_NODEDEF') | default('cat-sdwan-controller', true) }}"
+vedge_nodedef: "{{ lookup('env','VEDGE_NODEDEF') | default('vEdge', true) }}"
+cedge_nodedef: "{{ lookup('env','CEDGE_NODEDEF') | default('cEdge', true) }}"
+# Set these as env vars to match your CML image definition IDs (or update the defaults)
+vmanage_image: "{{ lookup('env','VMANAGE_IMAGE') | default('sdwan-manager-20.9.4', true) }}"
+vsmart_image: "{{ lookup('env','VSMART_IMAGE') | default('sdwan-controller-20.9.4', true) }}"
+vedge_image: "{{ lookup('env','VEDGE_IMAGE') | default('vEdge-20.9.4', true) }}"
+cedge_image: "{{ lookup('env','CEDGE_IMAGE') | default('cEdge-17.3.8', true) }}"
 csr1000v_image: "{{ lookup('env','CSR1000V_IMAGE') | default('csr1000v-16.12.02r', true) }}"
-iosxe_sdwan_image: "{{ lookup('env','IOSXE_SDWAN_IMAGE') | default('csr1000v-16.12.2r', true) }}"
 ubuntu_image: "{{ lookup('env','UBUNTU_IMAGE') | default('ubuntu-20-04', true) }}"
 # Encrypt/Vault this in real life
 sdwan_ca_passphrase: Cisc0123
 sdwan_ca_cert: "{{ sdwan_cert_dir }}/myCA.pem"
-# VMware
-vmware_vmanage_template: "viptela-manage-{{ viptela_version }}"
-vmware_vsmart_template: "viptela-smart-{{ viptela_version }}"
-vmware_vbond_template: "viptela-edge-{{ viptela_version }}"
-vmware_vedge_template: "viptela-edge-{{ viptela_version }}"
-vmware_cedge_template: "{{ iosxe_sdwan_image }}"
-folder: "{{ lookup('env','TF_VAR_folder') | default('', true) }}"

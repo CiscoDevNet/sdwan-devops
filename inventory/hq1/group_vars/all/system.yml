@@ -1,4 +1,4 @@
-domain_name: virl.local
+domain_name: cml.local
 
 ntp_servers:
   - '192.5.41.40'

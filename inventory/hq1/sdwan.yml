@@ -1,6 +1,6 @@
 all:
   vars:
-    virl_lab_file: "{{ playbook_dir }}/files/hq1.yaml"
+    cml_lab_file: "{{ playbook_dir }}/files/hq1.yaml.j2"
     viptela_version: "{{ lookup('env','VIPTELA_VERSION') | default('19.2.1', true) }}"
     cloudinit_type: "{{ lookup('env','CLOUDINIT_TYPE') | default('v1')}}"
     viptela_major_version: "{{ viptela_version | regex_replace('^(\\d*)\\..*$', '\\1') }}"
@@ -21,9 +21,9 @@ all:
                 sdwan_personality: vmanage
                 sdwan_device_model: vmanage
                 mgmt_interface: ansible_host
-                virl_image_definition: "viptela-manage-{{ viptela_version }}"
-                virl_node_definition: "{{ vmanage_nodedef }}"
-                virl_config_template: sdwan/user-data.j2
+                cml_image_definition: "{{ vmanage_image }}"
+                cml_node_definition: "{{ vmanage_nodedef }}"
+                cml_config_template: sdwan/user-data.j2
               hosts:
                 vmanage1:
                   sdwan_system_ip: '1.1.1.1'
@@ -53,9 +53,9 @@ all:
               vars:
                 sdwan_personality: vbond
                 sdwan_device_model: vbond
-                virl_image_definition: "viptela-edge-{{ viptela_version }}"
-                virl_node_definition: "{{ vedge_nodedef }}"
-                virl_config_template: sdwan/vbond_user-data.j2
+                cml_image_definition: "{{ vedge_nodedef }}-{{ viptela_version }}"
+                cml_node_definition: "{{ vedge_nodedef }}"
+                cml_config_template: sdwan/vbond_user-data.j2
               hosts:
                 vbond1:
                   sdwan_system_ip: '1.1.1.2'
@@ -86,9 +86,9 @@ all:
               vars:
                 sdwan_personality: vsmart
                 sdwan_device_model: vsmart
-                virl_image_definition: "viptela-smart-{{ viptela_version }}"
-                virl_node_definition: "{{ vsmart_nodedef }}"
-                virl_config_template: sdwan/user-data.j2
+                cml_image_definition: "{{ vsmart_nodedef}}-{{ viptela_version }}"
+                cml_node_definition: "{{ vsmart_nodedef }}"
+                cml_config_template: sdwan/user-data.j2
               hosts:
                 vsmart1:
                   sdwan_system_ip: '1.1.1.3'
@@ -125,8 +125,8 @@ all:
             login_banner: Hello!
           hosts:
             hq-cedge1:
-              virl_image_definition: "{{ iosxe_sdwan_image }}"
-              virl_node_definition: "{{ iosxe_sdwan_nodedef }}"
+              cml_image_definition: "{{ cedge_image }}"
+              cml_node_definition: "{{ cedge_nodedef }}"
               sdwan_system_ip: '1.1.1.4'
               sdwan_site_id: 1
               sdwan_model: vedge-CSR-1000v
@@ -150,8 +150,8 @@ all:
                   'banner_login': "{{ login_banner }}"
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
             site1-cedge1:
-              virl_image_definition: "{{ iosxe_sdwan_image }}"
-              virl_node_definition: "{{ iosxe_sdwan_nodedef }}"
+              cml_image_definition: "{{ cedge_image }}"
+              cml_node_definition: "{{ cedge_nodedef }}"
               sdwan_system_ip: '1.1.2.1'
               sdwan_site_id: 2
               sdwan_model: vedge-CSR-1000v
@@ -174,8 +174,8 @@ all:
                   'banner_login': "{{ login_banner }}"
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
             site2-vedge1:
-              virl_image_definition: "viptela-edge-{{ viptela_version }}"
-              virl_node_definition: "{{ vedge_nodedef }}"
+              cml_image_definition: "{{ vedge_image }}"
+              cml_node_definition: "{{ vedge_nodedef }}"
               sdwan_system_ip: '1.1.3.1'
               sdwan_site_id: 3
               sdwan_model: vedge-cloud
@@ -198,10 +198,10 @@ all:
                   'banner_motd': "Welcome to {{ inventory_hostname }}!"
     system:
       vars:
-        virl_config_template: virl/host.j2
+        cml_config_template: cml/host.j2
         host_interface: ens2
-        virl_image_definition: "{{ ubuntu_image }}"
-        virl_node_definition: "{{ ubuntu_nodedef }}"
+        cml_image_definition: "{{ ubuntu_image }}"
+        cml_node_definition: "{{ ubuntu_nodedef }}"
       children:
         client:
           hosts:

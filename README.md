@@ -5,7 +5,7 @@ This repo contains a set of tools to automate workflows and build CI/CD pipeline
 
 > Note: The tools in this repo only work from a Unix environment with Docker (e.g. Linux, MacOS, etc.) due to issues with Ansible and file permissions mapping between Windows and the Linux container used in `play.sh`.  WSL2 may fix this issue and we will revisit when WSL2 is released.
 
-> Note: This repo is tested against CML^2 and VMware vCenter 6.7.
+> Note: This repo is tested against CML^2
 
 ## Cloning the repo
 
@@ -25,7 +25,6 @@ If you want to skip all the info and documentation below and just run the automa
 
 - [Build the hq1 topology in CML](docs/virl-hq1.md)
 - [Build the hq2 topology in CML](docs/virl-hq2.md)
-- [Build the hq2 topology in VMware](docs/vmware-hq2.md)
 - [GitLab CI pipeline](docs/gitlab.md)
 
 ## Software Dependancies
@@ -61,13 +60,13 @@ To run playbooks in this repo, use the `play.sh` shell script as shown below:
 
 ### Simulation
 
-Simulation can be used for developing new deployments as well as testing changes to current deployments.  Simulation capabilities are provided by CML^2 or VMware.  The [Ansible CML^2 Modules](https://github.com/ciscodevnet/ansible-virl) are used to automate deployments in CML^2.  The [Terraform Modules](https://github.com/CiscoDevNet/terraform-sdwan) are used to automate deployments in VMware.
+Simulation can be used for developing new deployments as well as testing changes to current deployments.  Simulation capabilities are provided by CML^2.  The [Ansible CML^2 Modules](https://github.com/ciscodevnet/ansible-cml) are used to automate deployments in CML^2.
 
 ### Automation Playbooks
 
 * `build-ca.yml`
   * Create a local CA in `./myCA`
-* `build-virl.yml` or `build-vmware.yml`
+* `build-cml.yml`
   * Creates Day0 config for VNFs based on the data in the `sdwan.yml` file
   * Provision and start VNFs on virtual infrastructure
 * `config-sdwan.yml`
@@ -78,7 +77,7 @@ Simulation can be used for developing new deployments as well as testing changes
   * Push certificates to controllers
   * Import templates if present
   * Import policy if present
-* `deploy-virl.yml` or `deploy-vmware.yml`
+* `deploy-cml.yml`
   * Create Day0 config for edge VNFs
   * Provision and boot edge VNFs on virtual infrastructure
 * `import-templates.yml`
@@ -107,8 +106,8 @@ Jenkins CI is used for automatic and manual testing.  The various Jenkinsfiles i
 
 The repo contains a set of playbooks, roles, and templates that are fed from the included inventories. Several built-in topologies located in the inventory and more can be added.  There are two topologies that are provided in the `inventory` directory:
 
-* `hq1` builds only on CML^2 and includes an underlay network, SD-WAN control plane and SD-WAN edges (see [hq1.png](docs/images/hq1.png))
-* `hq2` builds on CML^2 and VMware and includes the SD-WAN control plane and SD-WAN edges in a flat network (see [hq2.png](docs/images/hq2.png))
+* `hq1` includes an underlay network, SD-WAN control plane and SD-WAN edges (see [hq1.png](docs/images/hq1.png))
+* `hq2` includes the SD-WAN control plane and SD-WAN edges in a flat network (see [hq2.png](docs/images/hq2.png))
 
 To switch between topologies, either edit `ansible.cfg` and point `inventory` to the proper directory:
 
@@ -121,7 +120,7 @@ to
 inventory = ./inventory/hq2
 ```
 
-or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-virl.yml`)
+or specify `-i` with every command (e.g. `./play.sh -i inventory/hq1 build-cml.yml`)
 
 The local defaults for all inventories are set in `sdwan-devops/group_vars/all/local.yml`
 

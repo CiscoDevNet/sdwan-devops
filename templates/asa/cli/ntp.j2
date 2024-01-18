@@ -1,4 +1,0 @@
-#jinja2: lstrip_blocks: True, trim_blocks: True
-{% for server in ntp_servers|default([]) %}
-ntp server {{ server }}
-{%  endfor %}
