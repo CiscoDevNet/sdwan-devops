@@ -71,6 +71,8 @@ sdwan
    no allow-service snmp
    no allow-service bfd
 !
+no ip http server
+no ip http secure-server
 {% if vpn0_default_gateway is defined %}
 ip route 0.0.0.0 0.0.0.0 {{ vpn0_default_gateway }}
 !
