@@ -53,7 +53,7 @@ all:
               vars:
                 sdwan_personality: vbond
                 sdwan_device_model: vbond
-                cml_image_definition: "{{ vedge_nodedef }}-{{ viptela_version }}"
+                cml_image_definition: "{{ vedge_image }}"
                 cml_node_definition: "{{ vedge_nodedef }}"
                 cml_config_template: sdwan/vbond_user-data.j2
               hosts:
@@ -86,7 +86,7 @@ all:
               vars:
                 sdwan_personality: vsmart
                 sdwan_device_model: vsmart
-                cml_image_definition: "{{ vsmart_nodedef}}-{{ viptela_version }}"
+                cml_image_definition: "{{ vsmart_image }}"
                 cml_node_definition: "{{ vsmart_nodedef }}"
                 cml_config_template: sdwan/user-data.j2
               hosts:
