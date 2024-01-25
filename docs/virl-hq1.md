@@ -30,9 +30,20 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     export CML_LAB=myusername_sdwan
     ```
 
-1. Set the version of IOS-XE image to use for edge devices.
+1. Set the node definitions IDs used for control plane and edge devices.
     ```
-    export CEDGE_IMAGE=cEdge-17.3.8
+    export VMANAGE_NODEDEF=viptela-manage
+    export VSMART_NODEDEF=viptela-smart
+    export VEDGE_NODEDEF=viptela-edge
+    export CEDGE_NODEDEF=viptela-cedge
+    ```
+
+1. Set the image IDs to use for control plane and edge devices.
+    ```
+    export VMANAGE_IMAGE=viptela-manage-20.9.3.2
+    export VSMART_IMAGE=viptela-smart-20.9.3.1
+    export VEDGE_IMAGE=viptela-edge-20.9.3.1
+    export CEDGE_IMAGE=iosxe-sdwan-17.3.5
     ```
 
 1. Set the version of CSR1000v image to use for underlay devices.
@@ -40,12 +51,17 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     export CSR1000V_IMAGE=csr1000v-170301
     ```
 
-1. And finally, set the version of control plane to use.
+1. Set the cloud-init format as needed.  `v2` for later versions of vmanage and `v1` for earlier versions.
     ```
-    export VIPTELA_VERSION=19.2.1
+    export CLOUDINIT_TYPE=v2
     ```
 
->Note: This value gets appended to the image name (e.g. viptela-manage, viptela-smart, etc.) so make sure these names line up with the image definitions you have in CML.
+1. And finally, set the version of the control plane.
+    ```
+    export VIPTELA_VERSION=20.9.3
+    ```
+
+>Note: This value gets used to determine which version of device and feature templates to import into vManage.
 
 ## Run the playbooks
 

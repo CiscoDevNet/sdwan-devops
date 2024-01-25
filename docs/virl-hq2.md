@@ -30,6 +30,22 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     export CML_LAB=myusername_sdwan
     ```
 
+1. Set the node definitions IDs used for control plane and edge devices.
+    ```
+    export VMANAGE_NODEDEF=viptela-manage
+    export VSMART_NODEDEF=viptela-smart
+    export VEDGE_NODEDEF=viptela-edge
+    export CEDGE_NODEDEF=viptela-cedge
+    ```
+
+1. Set the image IDs to use for control plane and edge devices.
+    ```
+    export VMANAGE_IMAGE=viptela-manage-20.9.3.2
+    export VSMART_IMAGE=viptela-smart-20.9.3.1
+    export VEDGE_IMAGE=viptela-edge-20.9.3.1
+    export CEDGE_IMAGE=iosxe-sdwan-17.3.5
+    ```
+
 1. Set the IP addressing for your control plane components.  Make sure these are valid and reachable IP addresses for your environment and that they are specified in CIDR notation (except for the `VPN0_GATEWAY`).
     ```
     export VMANAGE1_IP=1.1.1.1/24
@@ -46,17 +62,17 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     ```
 >Note: You do not need to supply this info if you are not going to deploy edges.
 
-1. Set the version of IOS-XE to use for edge devices.  Set this to the ID of the image you want to use in CML.
+1. Set the cloud-init format as needed.  `v2` for later versions of vmanage and `v1` for earlier versions.
     ```
-    export CEDGE_IMAGE=cEdge-17.3.8
+    export CLOUDINIT_TYPE=v2
     ```
 
 1. And finally, set the version of control plane to use.
     ```
-    export VIPTELA_VERSION=19.2.1
+    export VIPTELA_VERSION=20.9.3
     ```
 
->Note: This value gets appended to the image name (e.g. viptela-manage, viptela-smart, etc.) so make sure these names line up with the image definitions you have in CML.
+>Note: This value gets used to determine which version of device and feature templates to import into vManage.
 
 ## Run the playbooks
 
