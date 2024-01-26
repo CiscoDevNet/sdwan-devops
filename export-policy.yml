@@ -8,7 +8,7 @@
     file: vmanage-policy.yml
   gather_facts: no
   tasks:   
-    - vmanage_export_policy:
+    - vmanage_policy_export:
         user: "{{ ansible_user }}"
         host: "{{ vmanage_ip }}"
         password: "{{ ansible_password }}"
