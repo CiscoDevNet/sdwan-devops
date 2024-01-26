@@ -96,9 +96,9 @@ If your CML server does not have the SD-WAN images installed, follow the steps [
     ./play.sh cisco.cml.inventory.yml
     ```
 
-1. Get detailed inventory information for a single host.
+1. Get inventory information for a single host.
     ```
-    ./play.sh cisco.cml.inventory.yml --tags=detail --limit=vmanage1
+    ./play.sh cisco.cml.inventory.yml --limit=vmanage1
     ```
 
 1. Run the `check-sdwan.yml` playbook to validate the topology.
