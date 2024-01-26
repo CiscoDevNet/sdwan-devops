@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - master
+      - cml
 
 env:
   CML_HOST: '${{ secrets.CML_HOST }}'
@@ -150,9 +150,13 @@ jobs:
     concurrency: hq1
     needs: lint
     env:
-      CML_LAB: 'sdwan-devops-hq1'
+      CML_LAB: sdwan-devops-hq2
       VIPTELA_VERSION: '20.9.4'
-      CLOUDINIT_TYPE: 'v2'
+      CLOUDINIT_TYPE: v2
+      VMANAGE_NODEDEF: cat-sdwan-manager
+      VSMART_NODEDEF: cat-sdwan-controller
+      VEDGE_NODEDEF: vEdge
+      CEDGE_NODEDEF: cEdge
       VMANAGE_IMAGE: sdwan-manager-20.9.4
       VSMART_IMAGE: sdwan-controller-20.9.4
       VEDGE_IMAGE: vEdge-20.9.4
@@ -163,23 +167,23 @@ jobs:
         with:
           submodules: recursive
       - name: Clean Existing Deployment
-        run: ansible-playbook -i inventory/hq1 clean-cml.yml
+        run: ansible-playbook -i inventory/hq2 clean-cml.yml
       - name: Install Licenses
         run: |
           mkdir licenses
           echo $ANSIBLE_VAULT_PASSWORD > vault-password-file
           ansible-vault decrypt --vault-password-file vault-password-file files/serialFile.viptela --output licenses/serialFile.viptela
       - name: Build CA
-        run: ansible-playbook -i inventory/hq1 build-ca.yml
+        run: ansible-playbook -i inventory/hq2 build-ca.yml
       - name: Build Simulation
-        run: ansible-playbook -i inventory/hq1 build-cml.yml
+        run: ansible-playbook -i inventory/hq2 build-cml.yml
       - name: Configure Control Plane
-        run: ansible-playbook -i inventory/hq1 config-sdwan.yml
+        run: ansible-playbook -i inventory/hq2 config-sdwan.yml
       - name: Deploy Edges
-        run: ansible-playbook -i inventory/hq1 deploy-cml.yml
+        run: ansible-playbook -i inventory/hq2 deploy-cml.yml
       - name: Wait for Edges to Sync
-        run: ansible-playbook -i inventory/hq1 waitfor-sync.yml
+        run: ansible-playbook -i inventory/hq2 waitfor-sync.yml
       - name: Check SD-WAN
-        run: ansible-playbook -i inventory/hq1 check-sdwan.yml
+        run: ansible-playbook -i inventory/hq2 check-sdwan.yml
       - name: Cleanup
-        run: ansible-playbook -i inventory/hq1 clean-cml.yml
+        run: ansible-playbook -i inventory/hq2 clean-cml.yml
