@@ -1,16 +1,13 @@
 name: Publish container
 
 on:
-  push:
-    branches:
-      - master
-      - cloud
-    # Publish semver tags as releases.
-    tags: [ '*.*.*' ]
-  pull_request:
-    branches: [ master ]
-    paths:
-      - 'Dockerfile'
+  # push:
+  #   branches: [ cml ]
+  #   # Publish semver tags as releases.
+  #   tags: [ '*.*.*' ]
+  # pull_request:
+  #   branches: [ cml ]
+  #   paths: [ Dockerfile ]
   workflow_dispatch:
 
 env:
