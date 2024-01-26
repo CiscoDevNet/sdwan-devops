@@ -31,7 +31,9 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout Inventory
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          ref: cml
       - name: Run ansible-lint
         run: ansible-lint
   # test_19_2_1:
