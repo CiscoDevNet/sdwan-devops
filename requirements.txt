@@ -6,3 +6,6 @@ pydantic>=1.10,<2
 viptela==0.3.9
 virl2_client==2.5.0
 cisco-sdwan==1.22
+
+# pytz is required by netbox.netbox.nb_inventory
+pytz
