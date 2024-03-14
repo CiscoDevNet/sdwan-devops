@@ -4,7 +4,7 @@ from typing import List, Dict, Any, Optional, Iterable, Union
 from enum import Enum
 from pathlib import Path
 from ipaddress import IPv4Network, IPv6Network, IPv4Interface, IPv4Address
-from pydantic import BaseModel, BaseSettings, Field, validator, root_validator, constr, conint
+from pydantic.v1 import BaseModel, BaseSettings, Field, validator, root_validator, constr, conint
 from passlib.hash import sha512_crypt
 from sshpubkeys import SSHKey, InvalidKeyError
 from .validators import (formatted_string, unique_system_ip, constrained_cidr, cidr_subnet, subnet_interface,

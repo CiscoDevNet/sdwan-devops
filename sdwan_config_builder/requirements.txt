@@ -1,4 +1,4 @@
-pydantic>=1.10,<2
+pydantic>=2
 PyYAML>=6.0
 Jinja2>=3.1
 passlib>=1.7.4

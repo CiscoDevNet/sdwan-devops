@@ -2,7 +2,7 @@ import os
 import sys
 import yaml
 from typing import Any, TypeVar, Type, Union, List
-from pydantic import BaseModel, ValidationError
+from pydantic.v1 import BaseModel, ValidationError
 from .models import ConfigModel
 
 
