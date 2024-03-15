@@ -35,7 +35,7 @@ Install config builder:
 Validate that config builder is installed:
 ```
 (venv) % sdwan_config_build --version
-SDWAN Config Builder Tool Version 0.7
+SDWAN Config Builder Tool Version 0.9
 ```
 
 ## Running
@@ -45,7 +45,7 @@ should be saved. By default sdwan_config_build looks for a 'metadata.yaml' file 
 The CONFIG_BUILDER_METADATA environment variable can be used to specify a custom location for the metadata file.
 
 ```
-(venv) % % sdwan_config_build --help   
+(venv) % sdwan_config_build --help   
 usage: sdwan_config_build [-h] [--version] {render,export,schema} ...
 
 SDWAN Config Builder Tool

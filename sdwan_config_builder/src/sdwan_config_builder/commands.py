@@ -1,5 +1,6 @@
 import argparse
 import logging
+import json
 from typing import Union
 from pathlib import Path
 from ipaddress import IPv4Interface, IPv4Network
@@ -93,7 +94,7 @@ def render_cmd(cli_args: argparse.Namespace) -> None:
         'ipv4_subnet_host': ipv4_subnet_host_filter,
     }
     jinja_env.filters.update(custom_filters)
-    jinja_env.globals = config_obj.dict(by_alias=True)
+    jinja_env.globals = config_obj.model_dump(by_alias=True)
 
     for jinja_target in app_config.targets_config.jinja_renderer.targets:
         try:
@@ -128,7 +129,7 @@ def export_cmd(cli_args: argparse.Namespace) -> None:
     try:
         config_obj = load_yaml(ConfigModel, 'config', app_config.loader_config.top_level_config)
         with open(cli_args.file, 'w') as export_file:
-            export_file.write(config_obj.json(by_alias=True, indent=2))
+            export_file.write(config_obj.model_dump_json(by_alias=True, indent=2))
 
         logger.info(f"Exported source configuration as '{cli_args.file}'")
 
@@ -143,6 +144,6 @@ def schema_cmd(cli_args: argparse.Namespace) -> None:
     :return: None
     """
     with open(cli_args.file, 'w') as schema_file:
-        schema_file.write(ConfigModel.schema_json(indent=2))
+        schema_file.write(json.dumps(ConfigModel.model_json_schema(), indent=2))
 
     logger.info(f"Saved configuration schema as '{cli_args.file}'")
