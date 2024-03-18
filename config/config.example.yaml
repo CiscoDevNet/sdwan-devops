@@ -1,7 +1,7 @@
 ---
 global_config:
   # Different cloud have different restrictions on the characters allowed in
-  # the tags. AWS is the most permisive, GCP is the most restrictive, Azure is
+  # the tags. AWS is the most permissive, GCP is the most restrictive, Azure is
   # somewhere in the middle. If you use all lowercase letters and numbers, you
   # should be fine.
   common_tags:

@@ -1,19 +1,20 @@
-from typing import Set, Dict, Any, Optional, Callable, Iterator
+from typing import Set, Dict, Optional, Callable, Iterator
 from ipaddress import IPv4Address, IPv4Network, IPv4Interface
+from pydantic import ValidationInfo
 
 
 #
 # Reusable validators
 #
-def formatted_string(v: str, values: Dict[str, Any]) -> str:
+def formatted_string(v: str, info: ValidationInfo) -> str:
     """
     Process v as a python formatted string
     :param v: Value to be validated
-    :param values: {<field name>: <field value> ...} dict of previously validated model fields
+    :param info: A ValidationInfo instance with previously validated model fields
     :return: Expanded formatted string
     """
     try:
-        return v.format(**values) if v is not None else v
+        return v.format(**info.data) if v is not None else v
     except KeyError as ex:
         raise ValueError(f"Variable not found: {ex}") from None
 
@@ -52,13 +53,13 @@ def cidr_subnet(
         *,
         cidr_field: str,
         prefix_len: int = 24
-) -> Callable[[IPv4Network, Dict[str, Any]], IPv4Network]:
+) -> Callable[[IPv4Network, ValidationInfo], IPv4Network]:
 
     subnet_gen_map: Dict[IPv4Network, Iterator[IPv4Network]] = {}
 
-    def validator(subnet: IPv4Network, values: Dict[str, Any]) -> IPv4Network:
+    def validator(subnet: IPv4Network, info: ValidationInfo) -> IPv4Network:
         if subnet is None:
-            cidr = values.get(cidr_field, ...)
+            cidr = info.data.get(cidr_field, ...)
             if cidr is ...:
                 raise ValueError(f"no cidr_field name {cidr_field}")
             if cidr is None:
@@ -77,10 +78,10 @@ def subnet_interface(
         *,
         subnet_field: str,
         host_index: int
-) -> Callable[[IPv4Interface, Dict[str, Any]], IPv4Interface]:
-    def validator(ipv4_interface: IPv4Interface, values: Dict[str, Any]) -> IPv4Interface:
+) -> Callable[[IPv4Interface, ValidationInfo], IPv4Interface]:
+    def validator(ipv4_interface: IPv4Interface, info: ValidationInfo) -> IPv4Interface:
         if ipv4_interface is None:
-            subnet = values.get(subnet_field, ...)
+            subnet = info.data.get(subnet_field, ...)
             if subnet is ...:
                 raise ValueError(f"no subnet_field name {subnet_field}")
             if subnet is None:
@@ -99,10 +100,10 @@ def subnet_address(
         *,
         subnet_field: str,
         host_index: int
-) -> Callable[[IPv4Address, Dict[str, Any]], IPv4Address]:
-    def validator(ipv4_address: IPv4Address, values: Dict[str, Any]) -> IPv4Address:
+) -> Callable[[IPv4Address, ValidationInfo], IPv4Address]:
+    def validator(ipv4_address: IPv4Address, info: ValidationInfo) -> IPv4Address:
         if ipv4_address is None:
-            subnet = values.get(subnet_field, ...)
+            subnet = info.data.get(subnet_field, ...)
             if subnet is ...:
                 raise ValueError(f"no subnet_field name {subnet_field}")
             if subnet is None:
