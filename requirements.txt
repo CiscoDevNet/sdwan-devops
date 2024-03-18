@@ -2,6 +2,7 @@ ansible==9.1.*
 ansible-lint==6.22.2
 ansible-virl==0.0.7
 netaddr
+pydantic-settings
 viptela==0.3.9
 virl2_client==2.5.0
 cisco-sdwan==1.23
