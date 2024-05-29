@@ -45,7 +45,7 @@ ENV ANSIBLE_REMOTE_TMP=/tmp
 
 RUN git clone https://github.com/CiscoDevNet/sastre-ansible /tmp/sastre-ansible && \
     ansible-galaxy collection build /tmp/sastre-ansible/cisco/sastre --output-path /tmp/sastre-ansible && \
-    ansible-galaxy collection install -f /tmp/sastre-ansible/cisco-sastre-1.0.19.tar.gz && \
+    ansible-galaxy collection install -f /tmp/sastre-ansible/cisco-sastre-1.0.20.tar.gz && \
     rm -fr /tmp/sastre-ansible
 
 COPY sdwan_config_builder/ /tmp/sdwan_config_builder/
