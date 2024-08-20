@@ -56,9 +56,10 @@ jobs:
       - run:
           name: Generate Ansible inventory and variable files based on YAML config
           command: cd bin && ./decrypt_secrets.sh && ./config_build.sh
-      - run:
-          name: Connect VPN to on-prem DC
-          command: sudo apt install -y openconnect && ./bin/vpn.sh
+      # Openconnect doesn't seem to work anymore with the Meraki VPN
+      # - run:
+      #     name: Connect VPN to on-prem DC
+      #     command: sudo apt install -y openconnect && ./bin/vpn.sh
       - run:
           name: Creating networks and VMs
           command: cd bin && ./play.sh -v /ansible/day_0/deploy-control-plane.yml
